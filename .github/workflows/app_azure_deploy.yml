@@ -1,0 +1,66 @@
+name: Full Application Deploy
+
+on:
+  push:
+    branches:
+      - main
+      - cicd
+
+jobs:
+  backend-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set env
+        run: echo APPNAME=${{ secrets.AzureAppService_AppName }}-backend >> $GITHUB_ENV
+
+      - uses: actions/checkout@master
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "5.0.x"
+
+      - name: Build with dotnet
+        run: |
+          dotnet build
+          dotnet build -c Release
+          dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/appdeploy
+        working-directory: backend
+
+      - name: Deploy Backend to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.APPNAME  }}
+          slot-name: "production"
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_Backend }}
+          package: ${{env.DOTNET_ROOT}}/appdeploy
+
+  frontend-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set env
+        run: echo APPNAME=${{ secrets.AzureAppService_AppName }}-frontend >> $GITHUB_ENV
+
+      - uses: actions/checkout@master
+
+      - name: Set up Node.js version 14
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+
+      - name: Build Frontend
+        run: |
+          npm install
+          npm run build --if-present
+          rm -rf node_modules
+        working-directory: frontend
+
+      - name: "Deploy Frontend to Azure Web App"
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.APPNAME  }}
+          slot-name: "production"
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_Frontend }}
+          package: frontend

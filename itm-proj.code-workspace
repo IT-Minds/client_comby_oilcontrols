@@ -1,0 +1,36 @@
+{
+  "folders": [
+    {
+      "path": "frontend"
+    },
+    {
+      "path": "backend"
+    },
+    {
+      "path": "docs"
+    },
+    {
+      "path": ".github"
+    },
+    {
+      "path": "iac"
+    }
+  ],
+  "extensions": {
+    "recommendations": [
+      "aaron-bond.better-comments",
+      "streetsidesoftware.code-spell-checker",
+      "dbaeumer.vscode-eslint",
+      "ms-vsliveshare.vsliveshare",
+      "jebbs.plantuml"
+    ],
+    "unwantedRecommendations": []
+  },
+  "settings": {
+    "editor.detectIndentation": false,
+    "editor.tabSize": 2,
+    "editor.codeActionsOnSave": {
+      "source.fixAll": true
+    }
+  }
+}

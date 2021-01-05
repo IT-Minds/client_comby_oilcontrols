@@ -1,0 +1,184 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "appName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the application"
+      },
+      "minLength": 3,
+      "maxLength": 24
+    },
+    "department": {
+      "type": "string",
+      "metadata": {
+        "description": "Department who is responsible for this project"
+      },
+      "allowedValues": ["CPH", "AAR", "AAL", "OSL"]
+    },
+    "techLead": {
+      "type": "string",
+      "metadata": {
+        "description": "Initials of the responsible tech lead (all caps)"
+      },
+      "minLength": 3,
+      "maxLength": 3
+    },
+    "followupDate": {
+      "type": "string",
+      "metadata": {
+        "description": "Require time for when the project might be done and this resource needs to be closed"
+      },
+      "defaultValue": "[dateTimeAdd(utcNow('u'), 'P3M' ,'yyyy-MM-dd')]"
+    }
+  },
+  "functions": [],
+  "variables": {
+    "asp-name": "[concat(parameters('appName'), '-plan')]",
+    "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('asp-name'))]",
+    "sqlserverAdminLogin": "[concat('l', uniqueString(resourceGroup().id, '5be781a6-10bd-493e-b06c-30034b8a8770'))]",
+    "sqlserverAdminPassword": "[concat('P', uniqueString(resourceGroup().id, '38b07ffa-6060-4d17-8640-7fe1d5842def'), 'x', '!')]"
+  },
+  "resources": [
+    {
+      "name": "[variables('asp-name')]",
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2018-02-01",
+      "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "B1",
+        "capacity": 1
+      },
+      "tags": {
+        "department": "[parameters('department')]",
+        "techLead": "[parameters('techLead')]",
+        "followupDate": "[parameters('followupDate')]",
+        "automated": "template"
+      },
+      "properties": {
+        "name": "[variables('asp-name')]"
+      }
+    },
+    {
+      "name": "[concat(parameters('appName'), '-frontend')]",
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2018-11-01",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', variables('asp-name'))]": "Resource",
+        "displayName": "frontend",
+        "automated": "template"
+      },
+      "dependsOn": ["[variables('serverFarmId')]"],
+      "properties": {
+        "name": "[concat(parameters('appName'), '-frontend')]",
+        "serverFarmId": "[variables('serverFarmId')]",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "WEBSITE_NODE_DEFAULT_VERSION",
+              "value": "~14"
+            },
+            {
+              "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",
+              "value": "true"
+            }
+          ],
+          "httpsOnly": true,
+          "ftpsState": "FtpsOnly"
+        }
+      },
+      "identity": {
+        "type": "SystemAssigned"
+      }
+    },
+    {
+      "name": "[concat(parameters('appName'), '-backend')]",
+      "type": "Microsoft.Web/sites",
+      "kind": "app",
+      "apiVersion": "2018-11-01",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', variables('asp-name'))]": "Resource",
+        "displayName": "backend",
+        "automated": "template"
+      },
+      "dependsOn": ["[variables('serverFarmId')]"],
+      "properties": {
+        "name": "[concat(parameters('appName'), '-backend')]",
+        "serverFarmId": "[variables('serverFarmId')]",
+
+        "siteConfig": {
+          "httpsOnly": true,
+          "ftpsState": "FtpsOnly",
+          "netFrameworkVersion": "v5.0",
+
+          "apiDefinition": {
+            "url": "[concat('https://',parameters('appName'), '-backend', '.azurewebsites.net/swagger/specification.json')]"
+          },
+
+          "connectionStrings": [
+            {
+              "name": "DefaultConnection",
+              "type": "SQLServer",
+              "connectionString": "[concat('Server=tcp:',reference(concat(parameters('appName'), '-dbserver')).fullyQualifiedDomainName,',1433;Initial Catalog=',concat(parameters('appName'), '-dbtest'),';Persist Security Info=False;User ID=',variables('sqlserverAdminLogin'),';Password=',variables('sqlserverAdminPassword'),';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
+            }
+          ]
+        }
+      },
+      "identity": {
+        "type": "SystemAssigned"
+      }
+    },
+    {
+      "name": "[concat(parameters('appName'), '-dbserver')]",
+      "type": "Microsoft.Sql/servers",
+      "apiVersion": "2019-06-01-preview",
+      "location": "[resourceGroup().location]",
+
+      "properties": {
+        "administratorLogin": "[variables('sqlserverAdminLogin')]",
+        "administratorLoginPassword": "[variables('sqlserverAdminPassword')]",
+        "createMode": "Default",
+        "publicNetworkAccess": "Enabled",
+        "minimalTlsVersion": "1.2"
+      },
+      "tags": {
+        "automated": "template"
+      },
+      "resources": [
+        {
+          "type": "databases",
+          "apiVersion": "2020-08-01-preview",
+          "name": "[concat(parameters('appName'), '-dbtest')]",
+          "location": "[resourceGroup().location]",
+          "sku": {
+            "name": "Standard",
+            "tier": "Standard"
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.Sql/servers', concat(parameters('appName'), '-dbserver'))]"
+          ],
+          "tags": {
+            "automated": "template"
+          },
+          "properties": {}
+        }
+      ],
+      "identity": {
+        "type": "SystemAssigned"
+      }
+    }
+  ],
+  "outputs": {
+    "sqlserverAdminPassword": {
+      "type": "string",
+      "value": "[variables('sqlserverAdminPassword')]"
+    },
+    "sqlserverAdminLogin": {
+      "type": "string",
+      "value": "[variables('sqlserverAdminLogin')]"
+    }
+  }
+}

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>mediatr + cqrs</Title>
+      <Author>Mathias Roikjaer</Author>
+      <Description>Default boilerplate code for MediatR + CQRS</Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>cqrs</Shortcut>
+    </Header>
+    <Snippet>
+      <Imports>
+        <Import>
+          <Namespace>MediatR</Namespace>
+        </Import>
+        <Import>
+          <Namespace>System.Threading</Namespace>
+        </Import>
+        <Import>
+          <Namespace>System.Threading.Tasks</Namespace>
+        </Import>
+      </Imports>
+      <Declarations>
+        <Object Editable="true">
+          <ID>ModelClass</ID>
+          <ToolTip>ModelClass</ToolTip>
+          <Default>ModelClass</Default>
+          <Function>
+          </Function>
+          <Type>
+          </Type>
+        </Object>
+        <Object Editable="true">
+          <ID>ResponseClass</ID>
+          <ToolTip>ResponseClass</ToolTip>
+          <Default>ResponseClass</Default>
+          <Function>
+          </Function>
+          <Type>
+          </Type>
+        </Object>
+        <Object Editable="true">
+          <ID>HandlerClass</ID>
+          <ToolTip>HandlerClass</ToolTip>
+          <Default>HandlerClass</Default>
+          <Function>
+          </Function>
+          <Type>
+          </Type>
+        </Object>
+      </Declarations>
+      <Code Language="csharp" Delimiter="$">
+      <![CDATA[    public class $ModelClass$ : IRequest<$ResponseClass$>
+      {
+          // Add in
+
+      public class $ModelClass$Handler : IRequestHandler<$ModelClass$, $ResponseClass$>
+      {
+
+          public $ModelClass$Handler()
+          {
+
+          }
+
+          public Task<$ResponseClass$> Handle($ModelClass$ request, CancellationToken cancellationToken)
+          {
+              return null;
+          }
+      }
+    }]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

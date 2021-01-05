@@ -1,0 +1,52 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital@0;1&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,400;1,500;1,700&display=swap");
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  padding: 1em;
+  margin: 0;
+  font-family: var(--font-monospace);
+
+  background: var(--color-white-alt);
+  color: var(--color-purple);
+
+  overflow: hidden;
+}
+
+body #__next {
+  height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --font-normal: "Ubuntu", sans-serif;
+  --font-monospace: "Ubuntu Mono", monospace;
+
+  --color-purple: #bb86fc;
+  --color-black: #222137;
+  --color-black-alt: #1e1e1e;
+
+  --color-white: #f5f5f5;
+  --color-white-alt: #e4e4e4;
+
+  --color-grey: #646464;
+  --color-grey-alt: #d3d3d3;
+}
+
+@media (max-width: 800px) {
+  /*  */
+}
+
+@media (max-width: 600px) {
+  /*  */
+}
+
+@media (max-width: 400px) {
+  body {
+    padding: 0;
+  }
+}

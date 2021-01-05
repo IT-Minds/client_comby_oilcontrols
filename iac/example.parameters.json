@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "appName": {
+      "value": "MyApp"
+    },
+    "department": {
+      "value": "CPH"
+    },
+    "techLead": {
+      "value": "MJH"
+    },
+    "followupDate": {
+      "value": "2021-03-15"
+    }
+  }
+}

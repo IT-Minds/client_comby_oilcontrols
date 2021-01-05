@@ -1,0 +1,32 @@
+.code {
+  color: white;
+  background: var(--color-black);
+  padding: 0.5em;
+
+  font-size: 1.3em;
+
+  overflow-x: auto;
+}
+
+.title {
+  color: green;
+}
+
+@media (max-width: 800px) {
+  .title {
+    color: red;
+  }
+}
+
+@media (max-width: 600px) {
+  .title {
+    margin: 0;
+    color: yellow;
+  }
+}
+
+@media (max-width: 400px) {
+  .title {
+    color: pink;
+  }
+}

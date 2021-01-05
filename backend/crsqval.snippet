@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>CQRS Validator</Title>
+      <Author>Mathias Roikjaer</Author>
+      <Description>Default boilerplate CQRS command validator</Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>cqrsval</Shortcut>
+    </Header>
+    <Snippet>
+      <Imports>
+        <Import>
+          <Namespace>FluentValidation</Namespace>
+        </Import>
+      </Imports>
+      <Declarations>
+        <Object Editable="true">
+          <ID>ModelClass</ID>
+          <ToolTip>ModelClass</ToolTip>
+          <Default>ModelClass</Default>
+          <Function>
+          </Function>
+          <Type>
+          </Type>
+        </Object>
+        <Object Editable="true">
+          <ID>ModelClassValidator</ID>
+          <ToolTip>ModelClassValidator</ToolTip>
+          <Default>ModelClassValidator</Default>
+          <Function>
+          </Function>
+          <Type>
+          </Type>
+        </Object>
+      </Declarations>
+      <Code Language="csharp" Delimiter="$"><![CDATA[
+    public class $ModelClass$Validator : AbstractValidator<$ModelClass$>
+    {
+        public $ModelClass$Validator()
+        {
+            //RuleFor(x => x.Name).NotEmpty();
+        }
+    }]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>
