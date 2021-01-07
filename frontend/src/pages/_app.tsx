@@ -68,6 +68,12 @@ MyApp.getInitialProps = async ({ Component, ctx }: AppContextType) => {
 
   const envSettings = isomorphicEnvSettings();
 
+  if (process.browser) {
+    console.log("Browser side env", envSettings);
+  } else {
+    console.log("Server side env", envSettings);
+  }
+
   return { pageProps, envSettings };
 };
 
