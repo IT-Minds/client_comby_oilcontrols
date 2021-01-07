@@ -41,11 +41,16 @@ enum TankState {
   PARTIALLY_FILLED
 }
 
+class Coupon {
+
+}
+
 Truck --> "0..*" Refill 
 Refill --> "1" Building
 Refill ..> FuelType
 Building ..> TankType
 Refill ..> TankState
+Truck --> "0..*" Coupon
 @enduml
 
 ```
