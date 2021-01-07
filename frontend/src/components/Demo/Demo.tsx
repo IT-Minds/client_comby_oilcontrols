@@ -30,7 +30,7 @@ type Props = {
   preLoadedData?: ExampleEntityDto[];
 };
 
-const PAGE_SHOW_SIZE = 15;
+export const PAGE_SHOW_SIZE = 15;
 
 const Demo: FC<Props> = ({ buildTime, preLoadedData = [] }) => {
   const toast = useToast();
@@ -44,10 +44,11 @@ const Demo: FC<Props> = ({ buildTime, preLoadedData = [] }) => {
     dataDispatch
   );
 
-  const pages = useMemo(
-    () => [...new Array(Math.ceil(data.length / PAGE_SHOW_SIZE))].map((x, i) => i),
-    [data]
-  );
+  const pages = useMemo(() => {
+    const pageCount = Math.ceil(data.length / PAGE_SHOW_SIZE);
+    return [...new Array(pageCount)].map((x, i) => i);
+  }, [data]);
+
   const pageHasMore = useMemo(
     () =>
       !done && pages.length - 1 === pageShowing && (pageShowing + 1) * PAGE_SHOW_SIZE > data.length,

@@ -1,5 +1,5 @@
 import { Box, Container } from "@chakra-ui/react";
-import Demo from "components/Demo/Demo";
+import Demo, { PAGE_SHOW_SIZE } from "components/Demo/Demo";
 import { GetServerSideProps, NextPage } from "next";
 import { genExampleClient } from "services/backend/apiClients";
 import { ExampleEntityDto } from "services/backend/nswagts";
@@ -22,13 +22,12 @@ const DemoPage: NextPage<Props> = ({ exampleEntities }) => {
 };
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
-  const data = await genExampleClient().get(0, 15, "");
-  const jsonData = data.results.map(x => x.toJSON());
-  console.log(jsonData);
+  const data = await genExampleClient().get(0, PAGE_SHOW_SIZE, "");
 
   return {
     props: {
-      exampleEntities: jsonData
+      // !This is a hack to get around undefined values in dataset
+      exampleEntities: JSON.parse(JSON.stringify(data.results))
     }
   };
 };
