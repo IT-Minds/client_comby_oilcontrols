@@ -35,7 +35,7 @@ export class ClientBase {
 
 export interface IExampleEntityClient {
     create(command: CreateExampleEntityCommand): Promise<number>;
-    get(): Promise<ExampleEntitiesViewModel>;
+    get(skip?: number | undefined, size?: number | undefined, sortBy?: string | null | undefined): Promise<PageResultOfExampleEntityDto>;
     update(id: number, command: UpdateExampleEntityCommand): Promise<FileResponse>;
     delete(id: number): Promise<FileResponse>;
 }
@@ -91,8 +91,18 @@ export class ExampleEntityClient extends ClientBase implements IExampleEntityCli
         return Promise.resolve<number>(<any>null);
     }
 
-    get(): Promise<ExampleEntitiesViewModel> {
-        let url_ = this.baseUrl + "/api/ExampleEntity";
+    get(skip?: number | undefined, size?: number | undefined, sortBy?: string | null | undefined): Promise<PageResultOfExampleEntityDto> {
+        let url_ = this.baseUrl + "/api/ExampleEntity?";
+        if (skip === null)
+            throw new Error("The parameter 'skip' cannot be null.");
+        else if (skip !== undefined)
+            url_ += "skip=" + encodeURIComponent("" + skip) + "&";
+        if (size === null)
+            throw new Error("The parameter 'size' cannot be null.");
+        else if (size !== undefined)
+            url_ += "size=" + encodeURIComponent("" + size) + "&";
+        if (sortBy !== undefined && sortBy !== null)
+            url_ += "sortBy=" + encodeURIComponent("" + sortBy) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -109,14 +119,14 @@ export class ExampleEntityClient extends ClientBase implements IExampleEntityCli
         });
     }
 
-    protected processGet(response: Response): Promise<ExampleEntitiesViewModel> {
+    protected processGet(response: Response): Promise<PageResultOfExampleEntityDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ExampleEntitiesViewModel.fromJS(resultData200);
+            result200 = PageResultOfExampleEntityDto.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -124,7 +134,7 @@ export class ExampleEntityClient extends ClientBase implements IExampleEntityCli
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<ExampleEntitiesViewModel>(<any>null);
+        return Promise.resolve<PageResultOfExampleEntityDto>(<any>null);
     }
 
     update(id: number, command: UpdateExampleEntityCommand): Promise<FileResponse> {
@@ -357,10 +367,14 @@ export interface IUpdateExampleEntityCommand {
     exampleEntityListId?: number | undefined;
 }
 
-export class ExampleEntitiesViewModel implements IExampleEntitiesViewModel {
-    exampleEntities?: ExampleEntityDto[] | undefined;
+export class PageResultOfExampleEntityDto implements IPageResultOfExampleEntityDto {
+    sizeRequested?: number;
+    skipRequested?: number;
+    sortByRequested?: string | undefined;
+    results?: ExampleEntityDto[] | undefined;
+    hasMore?: boolean;
 
-    constructor(data?: IExampleEntitiesViewModel) {
+    constructor(data?: IPageResultOfExampleEntityDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -371,34 +385,46 @@ export class ExampleEntitiesViewModel implements IExampleEntitiesViewModel {
 
     init(_data?: any) {
         if (_data) {
-            if (Array.isArray(_data["exampleEntities"])) {
-                this.exampleEntities = [] as any;
-                for (let item of _data["exampleEntities"])
-                    this.exampleEntities!.push(ExampleEntityDto.fromJS(item));
+            this.sizeRequested = _data["sizeRequested"];
+            this.skipRequested = _data["skipRequested"];
+            this.sortByRequested = _data["sortByRequested"];
+            if (Array.isArray(_data["results"])) {
+                this.results = [] as any;
+                for (let item of _data["results"])
+                    this.results!.push(ExampleEntityDto.fromJS(item));
             }
+            this.hasMore = _data["hasMore"];
         }
     }
 
-    static fromJS(data: any): ExampleEntitiesViewModel {
+    static fromJS(data: any): PageResultOfExampleEntityDto {
         data = typeof data === 'object' ? data : {};
-        let result = new ExampleEntitiesViewModel();
+        let result = new PageResultOfExampleEntityDto();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.exampleEntities)) {
-            data["exampleEntities"] = [];
-            for (let item of this.exampleEntities)
-                data["exampleEntities"].push(item.toJSON());
+        data["sizeRequested"] = this.sizeRequested;
+        data["skipRequested"] = this.skipRequested;
+        data["sortByRequested"] = this.sortByRequested;
+        if (Array.isArray(this.results)) {
+            data["results"] = [];
+            for (let item of this.results)
+                data["results"].push(item.toJSON());
         }
+        data["hasMore"] = this.hasMore;
         return data; 
     }
 }
 
-export interface IExampleEntitiesViewModel {
-    exampleEntities?: ExampleEntityDto[] | undefined;
+export interface IPageResultOfExampleEntityDto {
+    sizeRequested?: number;
+    skipRequested?: number;
+    sortByRequested?: string | undefined;
+    results?: ExampleEntityDto[] | undefined;
+    hasMore?: boolean;
 }
 
 export class ExampleEntityDto implements IExampleEntityDto {

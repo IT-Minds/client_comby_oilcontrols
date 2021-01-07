@@ -1,3 +1,4 @@
+using Application.Common;
 using Application.ExampleEntities.Queries.GetExampleEntities;
 using AutoMapper;
 using FluentAssertions;
@@ -29,8 +30,8 @@ namespace Application.UnitTests.ExampleEntities.Queries.GetExampleEntities
 
       var result = await handler.Handle(query, CancellationToken.None);
 
-      result.Should().BeOfType<ExampleEntitiesViewModel>();
-      result.ExampleEntities.Count.Should().Be(5);
+      result.Should().BeOfType<PageResult<ExampleEntityDto>>();
+      result.Results.Count.Should().Be(5);
     }
   }
 }
