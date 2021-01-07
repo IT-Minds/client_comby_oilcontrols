@@ -8,6 +8,6 @@ namespace Domain.Entities
   public class Truck : AuditableEntity
   {
     public int Id { get; set; }
-    public ICollection<Route> Routes { get; set; }
+    public ICollection<Refill> Route { get; set; }
   }
 }

@@ -8,13 +8,10 @@ class Truck {
 
 }
 
-class Route {
-
-}
-
-class Location {
+class Building {
+    id 
     type
-    number
+    address
 }
 
 class Refill {
@@ -22,7 +19,7 @@ class Refill {
     couponNumber
     date
     fuelType
-    isTankFull
+    tankState
 }
 
 enum FuelType {
@@ -38,11 +35,17 @@ enum TankType {
     SHIP
 }
 
-Truck --> "0..*" Route
-Route --> "0..*" Location 
-Location --> "0..*" Refill
+enum TankState {
+  EMPTY
+  FULL
+  PARTIALLY_FILLED
+}
+
+Truck --> "0..*" Refill 
+Refill --> "1" Building
 Refill ..> FuelType
-Location ..> TankType
+Building ..> TankType
+Refill ..> TankState
 @enduml
 
 ```

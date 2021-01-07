@@ -10,7 +10,8 @@ namespace Domain.Entities
     public int CouponNumber { get; set; }
     public FuelType Type { get; set; }
     public int Amount { get; set; }
-    public bool IsTankFull { get; set; }
-    public DateTime date { get; set; }
+    public TankState TankState { get; set; }
+    public DateTime Date { get; set; }
+    public Building Building { get; set; }
   }
 }

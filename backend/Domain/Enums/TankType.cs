@@ -2,8 +2,8 @@ namespace Domain.Enums
 {
   public enum TankType
   {
-    BUILDING,
-    SHIP,
-    TANK
+    BUILDING = 0,
+    SHIP = 1,
+    TANK = 2
   }
 }

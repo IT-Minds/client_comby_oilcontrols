@@ -4,11 +4,11 @@ using Domain.Enums;
 
 namespace Domain.Entities
 {
-  public class Location : AuditableEntity
+  public class Building : AuditableEntity
   {
     public int Id { get; set; }
     public TankType Type { get; set; }
     public int TankNumber { get; set; }
-    public ICollection<Refill> RefillList { get; set; }
+    
   }
 }
