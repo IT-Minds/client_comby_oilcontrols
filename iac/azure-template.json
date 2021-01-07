@@ -77,6 +77,10 @@
         "siteConfig": {
           "appSettings": [
             {
+              "name": "BACKEND_URL",
+              "value": "[concat('https://',  parameters('appName'), '-backend.azurewebsites.net')]"
+            },
+            {
               "name": "WEBSITE_NODE_DEFAULT_VERSION",
               "value": "~14"
             },
@@ -136,7 +140,6 @@
       "type": "Microsoft.Sql/servers",
       "apiVersion": "2019-06-01-preview",
       "location": "[resourceGroup().location]",
-
       "properties": {
         "administratorLogin": "[variables('sqlserverAdminLogin')]",
         "administratorLoginPassword": "[variables('sqlserverAdminPassword')]",
