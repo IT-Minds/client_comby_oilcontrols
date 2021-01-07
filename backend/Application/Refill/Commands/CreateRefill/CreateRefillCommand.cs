@@ -1,3 +1,4 @@
+using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Domain.Entities;
 using Domain.Enums;
@@ -32,6 +33,10 @@ namespace Application.Refill.Commands.CreateRefill
       {
 
         var Building = _context.Buildings.First( x => x.Type == request.TankType && x.TankNumber == request.TankNumber);
+        if (Building == null){
+          throw new NotFoundException(nameof(Building), request.TankType+" "+request.TankNumber);
+        }
+
         var refill = new Domain.Entities.Refill
         {
           Amount = request.Amount,
