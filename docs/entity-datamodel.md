@@ -50,7 +50,7 @@ Refill --> "1" Building
 Refill ..> FuelType
 Building ..> TankType
 Refill ..> TankState
-Truck --> "0..*" Coupon
+Truck "1" <-- Coupon
 @enduml
 
 ```
