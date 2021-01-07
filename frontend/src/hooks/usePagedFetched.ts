@@ -26,6 +26,8 @@ export const usePagedFetched = <T extends IPageResult<V>, V = unknown>(
   const [error, setError] = useState(false);
 
   const fetchData = useCallback(async (initialSkip: number) => {
+    setDone(false);
+    setError(false);
     try {
       let resultSize = 100;
       let pages = 0;
@@ -45,7 +47,7 @@ export const usePagedFetched = <T extends IPageResult<V>, V = unknown>(
             type: ListReducerActionType.AddOrUpdate,
             data: pageResult.results
           });
-        else setDone(true);
+        if (resultSize < size) setDone(true);
       }
     } catch (err) {
       setError(true);
