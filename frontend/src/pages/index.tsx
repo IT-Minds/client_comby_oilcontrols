@@ -1,20 +1,8 @@
 import Demo from "components/Demo/Demo";
-import { GetStaticProps, NextPage } from "next";
+import { NextPage } from "next";
 
-type Props = {
-  buildTime: number;
-};
-
-const IndexPage: NextPage<Props> = ({ buildTime }) => {
-  return <Demo buildTime={buildTime} />;
-};
-
-export const getStaticProps: GetStaticProps<Props> = async () => {
-  return {
-    props: {
-      buildTime: Date.now()
-    }
-  };
+const IndexPage: NextPage = () => {
+  return <Demo buildTime={0} />;
 };
 
 export default IndexPage;
