@@ -1,47 +1,37 @@
-import { FC, useCallback, useEffect, useState } from "react";
+import { usePagedFetched } from "hooks/usePagedFetched";
+import { FC, useCallback, useReducer } from "react";
+import ListReducer from "react-list-reducer";
 import { genExampleClient } from "services/backend/apiClients";
 import {
   CreateExampleEntityCommand,
   ExampleEntityDto,
   ExampleEnum
 } from "services/backend/nswagts";
-import { logger } from "utils/logger";
 
 import styles from "./styles.module.css";
 
 type Props = {
   buildTime: number;
+  preLoadedData?: ExampleEntityDto[];
 };
 
-const Demo: FC<Props> = ({ buildTime }) => {
-  const [data, setData] = useState<ExampleEntityDto[]>([]);
+const Demo: FC<Props> = ({ buildTime, preLoadedData = [] }) => {
+  const [data, dataDispatch] = useReducer(ListReducer<ExampleEntityDto>("id"), preLoadedData);
 
-  const fetchData = useCallback(async () => {
-    try {
-      const exampleClient = genExampleClient();
-      const data = await exampleClient.get(0, 100);
-      if (data?.results && data.results.length > 0) setData(data.results);
-      else logger.info("exampleClient.get no data");
-    } catch (err) {
-      // logger.warn("exampleClient.get Error", err);
-      console.error(err);
-    }
-  }, []);
+  const { done, error, fetchData } = usePagedFetched(
+    (x, y, z) => genExampleClient().get(x, y, z),
+    dataDispatch
+  );
 
   const addNewData = useCallback(async () => {
-    const exampleClient = genExampleClient();
-    await exampleClient.create(
+    await genExampleClient().create(
       new CreateExampleEntityCommand({
         exampleEnum: ExampleEnum.A,
         name: Date.now().toString(32)
       })
     );
-    await fetchData();
+    await fetchData(0);
   }, []);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
 
   return (
     <main>
@@ -49,6 +39,7 @@ const Demo: FC<Props> = ({ buildTime }) => {
       <h2 data-testid="buildTime" data-value={buildTime}>
         Build Time: {buildTime}
       </h2>
+      <h3>Done loading: {done ? "yes" : error ? "error" : "no"}.</h3>
       <p>When data is loading it is displayed below</p>
 
       <pre data-testid="data" data-value={data.length}>

@@ -1,4 +1,7 @@
+import { errorToJSON } from "./errorToJSON";
+
 const logCreator = (log: Console["log"]) => (message: string, ...args: unknown[]) => {
+  errorToJSON();
   if (!process.browser) {
     const logObj = JSON.stringify({
       message,

@@ -40,11 +40,11 @@ const MyApp = ({ Component, pageProps, envSettings }: AppPropsType & Props): Rea
   return (
     <main>
       <Head>
-        <title>APPNAMEHERE</title>
+        <title>Oil Controls</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta charSet="utf-8" />
         <meta name="theme-color" content="#2196f3" />
-        <meta name="description" content="APPNAMEHERE" />
+        <meta name="description" content="Oil Controls" />
         <meta name="robots" content="noindex" />
 
         <link rel="manifest" href="/manifest.json" />
@@ -67,12 +67,6 @@ MyApp.getInitialProps = async ({ Component, ctx }: AppContextType) => {
   }
 
   const envSettings = isomorphicEnvSettings();
-
-  if (process.browser) {
-    console.log("Browser side env", envSettings);
-  } else {
-    console.log("Server side env", envSettings);
-  }
 
   return { pageProps, envSettings };
 };
