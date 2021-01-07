@@ -32,6 +32,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-list-reducer": "^1.0.3",
+    "react-webcam": "^5.2.2",
     "ts-array-ext": "^2.0.0",
     "uuid": "^8.3.2"
   },
