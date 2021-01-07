@@ -9,6 +9,5 @@ namespace Domain.Entities
   {
     public int Id { get; set; }
     public ICollection<Refill> Route { get; set; }
-    public ICollection<Coupon> Couopns { get; set; }
   }
 }
