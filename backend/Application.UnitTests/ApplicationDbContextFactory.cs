@@ -48,6 +48,11 @@ namespace Application.UnitTests
           new ExampleEntity { Id = 4, ExampleEntityListId = null, Name = "Sugar", ExampleEnum = ExampleEnum.C },
           new ExampleEntity { Id = 5, ExampleEntityListId = null, Name = "Coffee", ExampleEnum = ExampleEnum.D }
       );
+
+
+      context.Buildings.Add(
+        new Building {Id = 1, TankNumber = 80, Type = Domain.Enums.TankType.BUILDING}
+      );
       context.SaveChanges();
     }
 
