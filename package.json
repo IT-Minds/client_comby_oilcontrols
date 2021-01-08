@@ -13,4 +13,8 @@
     "Daniel Velando <dve@it-minds.dk>",
     "Jeppe Trip Kofoed <jtk@it-minds.dk>"
   ]
+  },
+  "dependencies": {
+    "react-webcam": "^5.2.2"
+  }
 }
