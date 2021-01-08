@@ -66,10 +66,10 @@ namespace Application.UnitTests
       );
 
       context.Coupons.AddRange(
-        new Coupon { Id = 1, Status = Domain.Enums.CouponStatus.AVAILABLE, Truck = truck1},
-        new Coupon { Id = 2, Status = Domain.Enums.CouponStatus.AVAILABLE, Truck = truck2},
-        new Coupon { Id = 3, Status = Domain.Enums.CouponStatus.AVAILABLE, Truck = truck2},
-        new Coupon { Id = 4, Status = Domain.Enums.CouponStatus.AVAILABLE, Truck = truck3}
+        new Coupon { Id = 1, CouponNumber = 1001, Status = Domain.Enums.CouponStatus.AVAILABLE, Truck = truck1},
+        new Coupon { Id = 2, CouponNumber = 1002, Status = Domain.Enums.CouponStatus.AVAILABLE, Truck = truck2},
+        new Coupon { Id = 3, CouponNumber = 1003, Status = Domain.Enums.CouponStatus.AVAILABLE, Truck = truck2},
+        new Coupon { Id = 4, CouponNumber = 1004, Status = Domain.Enums.CouponStatus.AVAILABLE, Truck = truck3}
       );
       context.SaveChanges();
     }

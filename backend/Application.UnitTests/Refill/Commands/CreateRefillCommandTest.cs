@@ -17,7 +17,7 @@ namespace Application.UnitTests.Refill.Commands.CreateRefill
       {
         TruckId = 1,
         Amount = 100,
-        CouponNumber = 1,
+        CouponNumber = 1001,
         Date = new DateTime(),
         FuelType = Domain.Enums.FuelType.PETROLEUM,
         TankState = Domain.Enums.TankState.FULL,
@@ -48,7 +48,7 @@ namespace Application.UnitTests.Refill.Commands.CreateRefill
       {
         TruckId = 2,
         Amount = 100,
-        CouponNumber = 3,
+        CouponNumber = 1003,
         Date = new DateTime(),
         FuelType = Domain.Enums.FuelType.PETROLEUM,
         TankState = Domain.Enums.TankState.FULL,

@@ -39,12 +39,12 @@ namespace Application.Refill.Commands.CreateRefill
         }
         
         var Coupons = _context.Coupons.Where(x => x.Status == Domain.Enums.CouponStatus.AVAILABLE && x.Truck.Id == request.TruckId);
-        Coupons = Coupons.OrderBy(x => x.Id);
+        Coupons = Coupons.OrderBy(x => x.CouponNumber);
         var Coupon = Coupons.First();
         if(Coupon == null) {
           throw new NotFoundException(nameof(Coupon), request.CouponNumber);
         }
-        if(request.CouponNumber != Coupon.Id){
+        if(request.CouponNumber != Coupon.CouponNumber){
           throw new ValidationException();
         }
 
