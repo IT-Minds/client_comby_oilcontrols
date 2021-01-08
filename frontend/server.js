@@ -4,8 +4,9 @@
 const { createServer } = require("http");
 const { parse } = require("url");
 const next = require("next");
+const conf = require("./next.config");
 
-const app = next({ dev: false });
+const app = next({ conf });
 const handle = app.getRequestHandler();
 
 const port = process.env.PORT || 3000;

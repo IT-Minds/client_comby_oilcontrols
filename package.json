@@ -5,5 +5,12 @@
   },
   "devDependencies": {
     "husky": "^5.0.6"
-  }
+  },
+  "author": "Martin Johannesson <mjh@it-minds.dk> (<it-minds.dk>)",
+  "contributors": [
+    "Martin Johannesson <mjh@it-minds.dk>",
+    "Christopher Schmidt <csc@it-minds.dk>",
+    "Daniel Velando <dve@it-minds.dk>",
+    "Jeppe Trip Kofoed <jtk@it-minds.dk>"
+  ]
 }

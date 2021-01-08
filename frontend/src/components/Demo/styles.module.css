@@ -14,14 +14,14 @@
 
 @media (max-width: 800px) {
   .title {
-    color: red;
+    color: yellow;
   }
 }
 
 @media (max-width: 600px) {
   .title {
     margin: 0;
-    color: yellow;
+    color: red;
   }
 }
 
