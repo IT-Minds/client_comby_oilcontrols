@@ -25,10 +25,11 @@ namespace Infrastructure.Persistence
     public DbSet<ExampleEntity> ExampleEntities { get; set; }
 
     public DbSet<ExampleEntityList> ExampleEntityLists { get; set; }
-    public DbSet<Building> Buildings {get; set;}
+    public DbSet<Location> Locations {get; set;}
     public DbSet<Coupon> Coupons { get; set; }
     public DbSet<Refill> Refills { get; set; }
     public DbSet<Truck> Trucks { get; set; }
+    public DbSet<Route> Routes { get; set; }
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
       foreach (var entry in ChangeTracker.Entries<AuditableEntity>())

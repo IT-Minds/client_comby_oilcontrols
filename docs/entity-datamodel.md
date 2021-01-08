@@ -8,7 +8,11 @@ class Truck {
 
 }
 
-class Building {
+class Route {
+
+}
+
+class Location {
     id 
     type
     address
@@ -45,10 +49,11 @@ class Coupon {
 
 }
 
-Truck --> "0..*" Refill 
-Refill --> "1" Building
+Truck --> "1" Route
+Route --> "0..*" Refill 
+Refill --> "1" Location
 Refill ..> FuelType
-Building ..> TankType
+Location ..> TankType
 Refill ..> TankState
 Truck "1" <-- Coupon
 @enduml
@@ -56,10 +61,7 @@ Truck "1" <-- Coupon
 ```
 
 ## Entities
-
+### Building
+### Coupon 
 ### Refill
-
-### Route 
-### Tank
-
-
+### Truck
