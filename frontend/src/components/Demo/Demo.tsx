@@ -1,67 +1,132 @@
-import { FC, useCallback, useEffect, useState } from "react";
+import {
+  Button,
+  Container,
+  Heading,
+  Skeleton,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+  useToast
+} from "@chakra-ui/react";
+import { usePagedFetched } from "hooks/usePagedFetched";
+import { FC, useCallback, useEffect, useMemo, useReducer, useState } from "react";
+import ListReducer from "react-list-reducer";
 import { genExampleClient } from "services/backend/apiClients";
 import {
   CreateExampleEntityCommand,
   ExampleEntityDto,
   ExampleEnum
 } from "services/backend/nswagts";
-import { logger } from "utils/logger";
 
+import ExampleTableRow from "./components/ExampleTableRow";
+import PageIndicator from "./components/PageIndicator";
 import styles from "./styles.module.css";
 
 type Props = {
   buildTime: number;
+  preLoadedData?: ExampleEntityDto[];
 };
 
-const Demo: FC<Props> = ({ buildTime }) => {
-  const [data, setData] = useState<ExampleEntityDto[]>([]);
+export const PAGE_SHOW_SIZE = 15;
 
-  const fetchData = useCallback(async () => {
-    try {
-      const exampleClient = genExampleClient();
-      const data = await exampleClient.get(0, 100);
-      if (data?.results && data.results.length > 0) setData(data.results);
-      else logger.info("exampleClient.get no data");
-    } catch (err) {
-      // logger.warn("exampleClient.get Error", err);
-      console.error(err);
-    }
-  }, []);
+const Demo: FC<Props> = ({ buildTime, preLoadedData = [] }) => {
+  const toast = useToast();
+
+  const [data, dataDispatch] = useReducer(ListReducer<ExampleEntityDto>("id"), preLoadedData);
+  const [isAddingData, setIsAddingData] = useState(false);
+  const [pageShowing, setPageShowing] = useState(0);
+
+  const { done, error, fetchData } = usePagedFetched(
+    (x, y, z) => genExampleClient().get(x, y, z),
+    dataDispatch
+  );
+
+  const pages = useMemo(() => {
+    const pageCount = Math.ceil(data.length / PAGE_SHOW_SIZE);
+    return [...new Array(pageCount)].map((x, i) => i);
+  }, [data]);
+
+  const pageHasMore = useMemo(
+    () =>
+      !done && pages.length - 1 === pageShowing && (pageShowing + 1) * PAGE_SHOW_SIZE > data.length,
+    [done, pages, data, pageShowing]
+  );
 
   const addNewData = useCallback(async () => {
-    const exampleClient = genExampleClient();
-    await exampleClient.create(
+    setIsAddingData(true);
+    await genExampleClient().create(
       new CreateExampleEntityCommand({
         exampleEnum: ExampleEnum.A,
         name: Date.now().toString(32)
       })
     );
-    await fetchData();
-  }, []);
+    await fetchData(data.length);
+    setIsAddingData(false);
+  }, [data]);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    if (done)
+      toast({
+        title: "All data loaded",
+        description:
+          "All the pages for the table is now loaded and the skeleton should not be visible",
+        status: "success",
+        duration: 3000,
+        isClosable: true
+      });
+    if (error)
+      toast({
+        title: "Error during data fetch!",
+        description: "An error occurred during fetch of all page data",
+        status: "error",
+        duration: 5000,
+        isClosable: true
+      });
+  }, [done, error]);
 
   return (
-    <main>
-      <h1 className={styles.title}>Hello World</h1>
-      <h2 data-testid="buildTime" data-value={buildTime}>
-        Build Time: {buildTime}
-      </h2>
-      <p>When data is loading it is displayed below</p>
+    <Container centerContent padding="2">
+      <Heading className={styles.title} data-testid="buildTime" data-value={buildTime}>
+        Pagination table example
+      </Heading>
 
-      <pre data-testid="data" data-value={data.length}>
-        {data.map(dat => (
-          <div key={dat.id}>
-            id: {dat.id} name: {dat.name} enum: {ExampleEnum[dat.exampleEnum]}
-          </div>
-        ))}
-      </pre>
-      <button data-testid="addNewBtn" onClick={addNewData}>
+      <Table size="sm" data-testid="data" data-value={data.length}>
+        <Thead>
+          <Tr>
+            <Th isNumeric>ID</Th>
+            <Th>Name</Th>
+            <Th>Enum</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {data.slice(pageShowing * PAGE_SHOW_SIZE, (pageShowing + 1) * PAGE_SHOW_SIZE).map(dat => (
+            <ExampleTableRow key={dat.id} rowData={dat} />
+          ))}
+
+          {pageHasMore && (
+            <Tr>
+              <Td colSpan={3}>
+                <Skeleton height="18px" />
+              </Td>
+            </Tr>
+          )}
+        </Tbody>
+      </Table>
+
+      <PageIndicator activePage={pageShowing} onClickPage={setPageShowing} pages={pages} />
+
+      <Button
+        data-testid="addNewBtn"
+        onClick={addNewData}
+        colorScheme="purple"
+        variant="solid"
+        isLoading={isAddingData}>
         Add new data element
-      </button>
-    </main>
+      </Button>
+    </Container>
   );
 };
 
