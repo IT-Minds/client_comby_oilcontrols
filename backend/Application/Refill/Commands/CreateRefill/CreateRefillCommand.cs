@@ -12,6 +12,7 @@ namespace Application.Refill.Commands.CreateRefill
 {
   public class CreateRefillCommand : IRequest<int>
   {
+    public int TruckId { get; set; }
     public TankType TankType { get; set; }
     public int TankNumber { get; set; }
     public int Amount { get; set; }
@@ -36,6 +37,12 @@ namespace Application.Refill.Commands.CreateRefill
         if (Location == null){
           throw new NotFoundException(nameof(Location), request.TankType+" "+request.TankNumber);
         }
+        var Coupons = _context.Coupons.Where(x => x.Status == Domain.Enums.CouponStatus.AVAILABLE && x.Truck.Id == request.TruckId);
+        Coupons = Coupons.OrderBy(x => x.Id);
+        var Coupon = Coupons.First();
+        if(Coupon != null && request.CouponNumber != Coupon.Id){
+          throw new ValidationException();
+        }
 
         var refill = new Domain.Entities.Refill
         {
@@ -46,9 +53,9 @@ namespace Application.Refill.Commands.CreateRefill
           TankState = request.TankState,
           Location = Location
         };
-
+        Coupon.Status = Domain.Enums.CouponStatus.USED;
+        _context.Coupons.Update(Coupon);
         _context.Refills.Add(refill);
-
         await _context.SaveChangesAsync(cancellationToken);
 
         return refill.Id;

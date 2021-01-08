@@ -608,6 +608,7 @@ export interface ICreateExampleEntityListCommand {
 }
 
 export class CreateRefillCommand implements ICreateRefillCommand {
+    truckId?: number;
     tankType?: TankType;
     tankNumber?: number;
     amount?: number;
@@ -627,6 +628,7 @@ export class CreateRefillCommand implements ICreateRefillCommand {
 
     init(_data?: any) {
         if (_data) {
+            this.truckId = _data["truckId"];
             this.tankType = _data["tankType"];
             this.tankNumber = _data["tankNumber"];
             this.amount = _data["amount"];
@@ -646,6 +648,7 @@ export class CreateRefillCommand implements ICreateRefillCommand {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["truckId"] = this.truckId;
         data["tankType"] = this.tankType;
         data["tankNumber"] = this.tankNumber;
         data["amount"] = this.amount;
@@ -658,6 +661,7 @@ export class CreateRefillCommand implements ICreateRefillCommand {
 }
 
 export interface ICreateRefillCommand {
+    truckId?: number;
     tankType?: TankType;
     tankNumber?: number;
     amount?: number;
