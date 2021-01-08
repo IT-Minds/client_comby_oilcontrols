@@ -6,9 +6,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Application.Common.Exceptions;
+using System.Linq;
 
 namespace Application.Coupons.Commands.AssignCoupons
 {
+  // The command assumes that all coupon numbers are handed out sequentially.
   public class AssignCouponsCommand : IRequest<List<int>>
   {
     public int TruckId {get; set; }
