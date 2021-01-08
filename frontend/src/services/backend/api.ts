@@ -19,6 +19,10 @@ type BaseConstructor<T> = {
 export const api = <T, U extends BaseConstructor<T>>(Client: U, offlineData?: unknown): T => {
   const envSettings = isomorphicEnvSettings();
 
+  if (!process.browser) {
+    process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
+  }
+
   const initilizedClient = new Client(
     new AuthClient(envSettings.backendToken),
     envSettings.backendUrl,

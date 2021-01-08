@@ -1,12 +1,11 @@
 import "../styles.global.css";
 import "isomorphic-unfetch";
 
-import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
-import { SignalRContext } from "contexts/SignalRContext";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { usePWA } from "hooks/usePWA";
 import { AppContextType, AppPropsType } from "next/dist/next-server/lib/utils";
 import Head from "next/head";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect } from "react";
 import EnvSettings from "types/EnvSettings";
 import isomorphicEnvSettings, { setEnvSettings } from "utils/envSettings";
 import { logger } from "utils/logger";
@@ -15,36 +14,43 @@ type Props = {
   envSettings: EnvSettings;
 };
 
-const MyApp = ({ Component, pageProps, envSettings }: AppPropsType & Props): ReactElement => {
-  const [connection, setConnection] = useState<HubConnection>(null);
+const colors = {
+  brand: {
+    900: "#1a365d",
+    800: "#153e75",
+    700: "#2a69ac"
+  }
+};
+const theme = extendTheme({ colors });
 
+const MyApp = ({
+  Component,
+  pageProps,
+  envSettings,
+  __N_SSG,
+  router
+}: AppPropsType & Props): ReactElement => {
   usePWA();
 
   useEffect(() => {
-    setEnvSettings(envSettings);
-
-    if (process.browser) {
-      const connection = new HubConnectionBuilder()
-        .withUrl(envSettings.backendUrl + "/examplehub")
-        .build();
-
-      connection.start().then(
-        () => setConnection(connection),
-        err => {
-          logger.warn("SignalR not connecting:", err);
-        }
-      );
+    if (!__N_SSG || __N_SSG === undefined) {
+      logger.info("Environment should be readable");
+      setEnvSettings(envSettings);
     }
+
+    // router.events.on("routeChangeStart", () => NProgress.start());
+    // router.events.on("routeChangeComplete", () => NProgress.done());
+    // router.events.on("routeChangeError", () => NProgress.done());
   }, []);
 
   return (
     <main>
       <Head>
-        <title>APPNAMEHERE</title>
+        <title>Oil Controls</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta charSet="utf-8" />
         <meta name="theme-color" content="#2196f3" />
-        <meta name="description" content="APPNAMEHERE" />
+        <meta name="description" content="Oil Controls" />
         <meta name="robots" content="noindex" />
 
         <link rel="manifest" href="/manifest.json" />
@@ -53,9 +59,9 @@ const MyApp = ({ Component, pageProps, envSettings }: AppPropsType & Props): Rea
       <noscript>
         <h1>JavaScript must be enabled!</h1>
       </noscript>
-      <SignalRContext.Provider value={{ connection }}>
+      <ChakraProvider theme={theme}>
         <Component {...pageProps} />
-      </SignalRContext.Provider>
+      </ChakraProvider>
     </main>
   );
 };
@@ -67,12 +73,6 @@ MyApp.getInitialProps = async ({ Component, ctx }: AppContextType) => {
   }
 
   const envSettings = isomorphicEnvSettings();
-
-  if (process.browser) {
-    console.log("Browser side env", envSettings);
-  } else {
-    console.log("Server side env", envSettings);
-  }
 
   return { pageProps, envSettings };
 };
