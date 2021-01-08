@@ -41,7 +41,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TruckId")
+                    b.Property<int>("TruckId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -148,7 +148,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("Amount")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CouponId")
+                    b.Property<int>("CouponId")
                         .HasColumnType("int");
 
                     b.Property<DateTimeOffset>("Created")
@@ -166,7 +166,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("LocationId")
+                    b.Property<int>("LocationId")
                         .HasColumnType("int");
 
                     b.Property<int?>("RouteId")
@@ -232,7 +232,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("RouteId")
+                    b.Property<int>("RouteId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -246,7 +246,9 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     b.HasOne("Domain.Entities.Truck", "Truck")
                         .WithMany()
-                        .HasForeignKey("TruckId");
+                        .HasForeignKey("TruckId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Truck");
                 });
@@ -264,11 +266,15 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     b.HasOne("Domain.Entities.Coupon", "Coupon")
                         .WithMany()
-                        .HasForeignKey("CouponId");
+                        .HasForeignKey("CouponId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.Location", "Location")
                         .WithMany()
-                        .HasForeignKey("LocationId");
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.Route", null)
                         .WithMany("Refills")
@@ -283,7 +289,9 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     b.HasOne("Domain.Entities.Route", "Route")
                         .WithMany()
-                        .HasForeignKey("RouteId");
+                        .HasForeignKey("RouteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Route");
                 });

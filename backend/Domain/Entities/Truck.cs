@@ -1,7 +1,4 @@
-using System;
 using Domain.Common;
-using Domain.Enums;
-using System.Collections.Generic;
 
 namespace Domain.Entities
 {
@@ -9,5 +6,6 @@ namespace Domain.Entities
   {
     public int Id { get; set; }
     public Route Route { get; set; }
+    public int RouteId { get; set; }
   }
 }
