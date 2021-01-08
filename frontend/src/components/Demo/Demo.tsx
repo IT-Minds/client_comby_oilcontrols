@@ -2,7 +2,7 @@ import { FC, useCallback, useEffect, useState } from "react";
 import { genExampleClient } from "services/backend/apiClients";
 import {
   CreateExampleEntityCommand,
-  ExampleEntitiesViewModel,
+  ExampleEntityDto,
   ExampleEnum
 } from "services/backend/nswagts";
 import { logger } from "utils/logger";
@@ -14,13 +14,13 @@ type Props = {
 };
 
 const Demo: FC<Props> = ({ buildTime }) => {
-  const [data, setData] = useState<ExampleEntitiesViewModel["exampleEntities"]>([]);
+  const [data, setData] = useState<ExampleEntityDto[]>([]);
 
   const fetchData = useCallback(async () => {
     try {
       const exampleClient = genExampleClient();
-      const data = await exampleClient.get();
-      if (data?.exampleEntities && data.exampleEntities.length > 0) setData(data.exampleEntities);
+      const data = await exampleClient.get(0, 100);
+      if (data?.results && data.results.length > 0) setData(data.results);
       else logger.info("exampleClient.get no data");
     } catch (err) {
       // logger.warn("exampleClient.get Error", err);

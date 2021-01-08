@@ -1,3 +1,4 @@
+using Application.Common;
 using Application.ExampleEntities.Commands.CreateExampleEntity;
 using Application.ExampleEntities.Commands.DeleteExampleEntity;
 using Application.ExampleEntities.Commands.UpdateExampleEntity;
@@ -39,9 +40,15 @@ namespace Web.Controllers
     }
 
     [HttpGet]
-    public async Task<ActionResult<ExampleEntitiesViewModel>> Get()
+    public async Task<ActionResult<PageResult<ExampleEntityDto>>> Get(
+      [FromQuery] int skip, [FromQuery] int size, [FromQuery] string sortBy
+    )
     {
-      return await Mediator.Send(new GetExampleEntitiesQuery());
+      return await Mediator.Send(new GetExampleEntitiesQuery {
+        Size = size,
+        Skip = skip,
+        SortBy = sortBy
+      });
     }
 
   }

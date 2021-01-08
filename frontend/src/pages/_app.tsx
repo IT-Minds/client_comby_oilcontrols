@@ -25,7 +25,7 @@ const MyApp = ({ Component, pageProps, envSettings }: AppPropsType & Props): Rea
 
     if (process.browser) {
       const connection = new HubConnectionBuilder()
-        .withUrl(envSettings.backendUrl + "/signalr/chat")
+        .withUrl(envSettings.backendUrl + "/examplehub")
         .build();
 
       connection.start().then(
