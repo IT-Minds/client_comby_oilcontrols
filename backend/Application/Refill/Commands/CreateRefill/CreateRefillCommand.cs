@@ -51,7 +51,7 @@ namespace Application.Refill.Commands.CreateRefill
         var refill = new Domain.Entities.Refill
         {
           Amount = request.Amount,
-          CouponNumber = request.CouponNumber,
+          Coupon = Coupon,
           Date = request.Date,
           Type = request.FuelType,
           TankState = request.TankState,

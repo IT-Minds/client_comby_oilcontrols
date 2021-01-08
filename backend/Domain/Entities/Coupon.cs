@@ -8,6 +8,7 @@ namespace Domain.Entities
   public class Coupon : AuditableEntity
   {
     public int Id { get; set; }
+    public int CouponNumber { get; set; }
     public Truck Truck { get; set; }
     public CouponStatus Status { get; set; }
   }

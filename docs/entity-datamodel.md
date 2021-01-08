@@ -5,38 +5,38 @@
 ```plantuml
 @startuml
 class Truck {
-
+  id
 }
 
 class Route {
-
+  id
 }
 
 class Location {
-    id 
-    type
-    address
+  id
+  type
+  tankNumber
 }
 
 class Refill {
-    amount
-    couponNumber
-    date
-    fuelType
-    tankState
+  id
+  amount
+  date
+  fuelType
+  tankState
 }
 
 enum FuelType {
-    OIL
-    PETROLEUM
-    GASOLINE
-    OTHER
+  OIL
+  PETROLEUM
+  GASOLINE
+  OTHER
 }
 
 enum TankType {
-    BUILDING
-    TANK
-    SHIP
+  BUILDING
+  TANK
+  SHIP
 }
 
 enum TankState {
@@ -46,12 +46,13 @@ enum TankState {
 }
 
 class Coupon {
-
+  couponNumber
 }
 
 Truck --> "1" Route
-Route --> "0..*" Refill 
+Route --> "0..*" Refill
 Refill --> "1" Location
+Refill --> Coupon
 Refill ..> FuelType
 Location ..> TankType
 Refill ..> TankState
@@ -61,7 +62,11 @@ Truck "1" <-- Coupon
 ```
 
 ## Entities
+
 ### Building
-### Coupon 
+
+### Coupon
+
 ### Refill
+
 ### Truck
