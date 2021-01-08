@@ -12,6 +12,6 @@ namespace Domain.Entities
     public int Amount { get; set; }
     public TankState TankState { get; set; }
     public DateTime Date { get; set; }
-    public Building Building { get; set; }
+    public Location Location { get; set; }
   }
 }

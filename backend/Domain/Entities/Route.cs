@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace Domain.Entities
 {
-  public class Truck : AuditableEntity
+  public class Route : AuditableEntity
   {
     public int Id { get; set; }
-    public Route Route { get; set; }
+    public ICollection<Refill> Refills { get; set; }
   }
 }
