@@ -59,7 +59,7 @@ Finally you should add the same `appName` as in [Parameters](###Parameters) to G
 
 This section has yet to be completed.
 
-<!-- ! this is disables unless source is public -->
+<!-- ! this is disabled unless source is public -->
 
 <!-- ### Quick deploy
 

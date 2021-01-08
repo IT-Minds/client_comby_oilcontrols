@@ -1,12 +1,13 @@
 import {
-  ExampleEntitiesViewModel,
   ExampleEntityDto,
   ExampleEntityListDto,
-  ExampleEnum
+  ExampleEnum,
+  PageResultOfExampleEntityDto
 } from "./nswagts";
 
-export const exampleClientOfflineData = new ExampleEntitiesViewModel({
-  exampleEntities: [
+export const exampleClientOfflineData = new PageResultOfExampleEntityDto({
+  hasMore: false,
+  results: [
     new ExampleEntityDto({
       id: 1,
       name: "mock-1",

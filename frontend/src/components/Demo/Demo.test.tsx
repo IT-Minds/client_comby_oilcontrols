@@ -2,7 +2,7 @@ import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import FetchMock from "fetch-mock";
 import _fetchMock from "isomorphic-unfetch";
-import { ExampleEntitiesViewModel } from "services/backend/nswagts";
+import { PageResultOfExampleEntityDto } from "services/backend/nswagts";
 import { exampleClientOfflineData } from "services/backend/offline.data";
 
 import Demo from "./Demo";
@@ -85,8 +85,8 @@ describe("AppName render", () => {
     process.env.TEST_NAME = "renders even with empty data";
 
     fetchMock.once(/.*/, {
-      body: new ExampleEntitiesViewModel({
-        exampleEntities: []
+      body: new PageResultOfExampleEntityDto({
+        results: []
       })
     });
 
