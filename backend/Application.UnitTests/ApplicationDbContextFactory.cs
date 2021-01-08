@@ -50,8 +50,8 @@ namespace Application.UnitTests
       );
 
 
-      context.Buildings.Add(
-        new Building {Id = 1, TankNumber = 80, Type = Domain.Enums.TankType.BUILDING}
+      context.Locations.Add(
+        new Location {Id = 1, TankNumber = 80, Type = Domain.Enums.TankType.BUILDING}
       );
       context.SaveChanges();
     }

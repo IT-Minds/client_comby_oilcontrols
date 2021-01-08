@@ -36,8 +36,8 @@ namespace Application.UnitTests.Refill.Commands.CreateRefill
       entity.Date.Should().Be(command.Date);
       entity.Type.Should().Be(command.FuelType);
       entity.TankState.Should().Be(command.TankState);
-      entity.Building.Type.Should().Be(command.TankType);
-      entity.Building.TankNumber.Should().Be(command.TankNumber);
+      entity.Location.Type.Should().Be(command.TankType);
+      entity.Location.TankNumber.Should().Be(command.TankNumber);
     }
   }
 }

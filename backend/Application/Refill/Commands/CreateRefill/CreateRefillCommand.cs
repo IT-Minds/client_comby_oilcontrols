@@ -32,9 +32,9 @@ namespace Application.Refill.Commands.CreateRefill
       public async Task<int> Handle(CreateRefillCommand request, CancellationToken cancellationToken)
       {
 
-        var Building = _context.Buildings.First( x => x.Type == request.TankType && x.TankNumber == request.TankNumber);
-        if (Building == null){
-          throw new NotFoundException(nameof(Building), request.TankType+" "+request.TankNumber);
+        var Location = _context.Locations.First( x => x.Type == request.TankType && x.TankNumber == request.TankNumber);
+        if (Location == null){
+          throw new NotFoundException(nameof(Location), request.TankType+" "+request.TankNumber);
         }
 
         var refill = new Domain.Entities.Refill
@@ -44,7 +44,7 @@ namespace Application.Refill.Commands.CreateRefill
           Date = request.Date,
           Type = request.FuelType,
           TankState = request.TankState,
-          Building = Building
+          Location = Location
         };
 
         _context.Refills.Add(refill);
