@@ -56,10 +56,7 @@ Truck "1" <-- Coupon
 ```
 
 ## Entities
-
+### Building
+### Coupon 
 ### Refill
-
-### Route 
-### Tank
-
-
+### Truck
