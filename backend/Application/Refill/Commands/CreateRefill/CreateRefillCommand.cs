@@ -37,10 +37,14 @@ namespace Application.Refill.Commands.CreateRefill
         if (Location == null){
           throw new NotFoundException(nameof(Location), request.TankType+" "+request.TankNumber);
         }
+        
         var Coupons = _context.Coupons.Where(x => x.Status == Domain.Enums.CouponStatus.AVAILABLE && x.Truck.Id == request.TruckId);
         Coupons = Coupons.OrderBy(x => x.Id);
         var Coupon = Coupons.First();
-        if(Coupon != null && request.CouponNumber != Coupon.Id){
+        if(Coupon == null) {
+          throw new NotFoundException(nameof(Coupon), request.CouponNumber);
+        }
+        if(request.CouponNumber != Coupon.Id){
           throw new ValidationException();
         }
 
@@ -53,9 +57,12 @@ namespace Application.Refill.Commands.CreateRefill
           TankState = request.TankState,
           Location = Location
         };
+
         Coupon.Status = Domain.Enums.CouponStatus.USED;
+        
         _context.Coupons.Update(Coupon);
         _context.Refills.Add(refill);
+        
         await _context.SaveChangesAsync(cancellationToken);
 
         return refill.Id;
