@@ -1,9 +1,4 @@
-import {
-  ExampleEntityDto,
-  ExampleEntityListDto,
-  ExampleEnum,
-  PageResultOfExampleEntityDto
-} from "./nswagts";
+import { ExampleEntityDto, ExampleEnum, PageResultOfExampleEntityDto } from "./nswagts";
 
 export const exampleClientOfflineData = new PageResultOfExampleEntityDto({
   hasMore: false,
@@ -12,10 +7,8 @@ export const exampleClientOfflineData = new PageResultOfExampleEntityDto({
       id: 1,
       name: "mock-1",
       exampleEnum: ExampleEnum.A,
-      exampleEntityList: new ExampleEntityListDto({
-        id: 5,
-        name: "mock-list-1"
-      })
+      createdAt: "001",
+      updatedAt: "002"
     })
   ]
 });

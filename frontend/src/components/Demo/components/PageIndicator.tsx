@@ -7,7 +7,7 @@ type Props = {
   onClickPage: (x: number) => void;
 };
 
-const PageIndicator: FC<Props> = ({ activePage, onClickPage, pages }) => {
+const PageIndicator: FC<Props> = ({ activePage, onClickPage, pages, children }) => {
   return (
     <HStack spacing="2" data-value={pages.length} margin="2">
       {pages.map(x => (
@@ -20,6 +20,7 @@ const PageIndicator: FC<Props> = ({ activePage, onClickPage, pages }) => {
           {x + 1}
         </Button>
       ))}
+      {children}
     </HStack>
   );
 };
