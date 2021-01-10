@@ -2,7 +2,7 @@ import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import FetchMock from "fetch-mock";
 import _fetchMock from "isomorphic-unfetch";
-import { PageResultOfExampleEntityDto } from "services/backend/nswagts";
+import { ExampleEntityDto, PageResultOfExampleEntityDto } from "services/backend/nswagts";
 import { exampleClientOfflineData } from "services/backend/offline.data";
 
 import Demo from "./Demo";
@@ -96,6 +96,26 @@ describe("AppName render", () => {
     expect(fetchMock.calls().length).toEqual(1);
 
     expect(screen.getByTestId("data")).toHaveAttribute("data-value", "0");
+  });
+
+  it("renders even continuos page", async () => {
+    process.env.TEST_NAME = "renders even with empty data";
+    process.env.NEXT_PUBLIC_MAX_FETCH_PAGES = "2";
+
+    fetchMock.mock(/.*/, {
+      body: new PageResultOfExampleEntityDto({
+        hasMore: true,
+        newNeedle: "0",
+        results: [new ExampleEntityDto({})]
+      })
+    });
+
+    render(<Demo buildTime={1001} />);
+
+    // await waitFor(() => expect(fetchMock.called()).toEqual(true));
+    await waitFor(() => expect(fetchMock.calls().length).toEqual(1));
+
+    expect(screen.getByTestId("data")).toHaveAttribute("data-value", "1");
   });
 
   it("Clicks button successfully", async () => {
