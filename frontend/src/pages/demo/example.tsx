@@ -9,25 +9,37 @@ import { ExampleEntityDto } from "services/backend/nswagts";
 
 type Props = {
   exampleEntities: ExampleEntityDto[];
+  needle: string;
+  hasMore: boolean;
+  pageCount: number;
 };
 
-const DemoPage: NextPage<Props> = ({ exampleEntities }) => {
+const DemoPage: NextPage<Props> = ({ exampleEntities, needle, hasMore, pageCount }) => {
   return (
     <Container maxW="xl" centerContent>
       <Box padding="4" bg="gray.100" maxW="6xl" maxH="4xl" resize="both" overflow="auto">
-        <Demo buildTime={0} preLoadedData={exampleEntities} />
+        <Demo
+          buildTime={0}
+          preLoadedData={exampleEntities}
+          preloadDataNeedle={needle}
+          preloadLoadedAll={!hasMore}
+          preLoadedPageCount={pageCount}
+        />
       </Box>
     </Container>
   );
 };
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
-  const data = await genExampleClient().get(0, PAGE_SHOW_SIZE, "");
+  const data = await genExampleClient().get("0", PAGE_SHOW_SIZE, "createdAt");
 
   return {
     props: {
       // !This is a hack to get around undefined values in dataset
-      exampleEntities: JSON.parse(JSON.stringify(data.results))
+      exampleEntities: JSON.parse(JSON.stringify(data.results)),
+      needle: data.newNeedle,
+      hasMore: data.hasMore,
+      pageCount: data.pagesRemaining + 1
     }
   };
 };

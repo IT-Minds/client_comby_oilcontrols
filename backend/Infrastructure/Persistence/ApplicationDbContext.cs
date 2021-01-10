@@ -35,10 +35,14 @@ namespace Infrastructure.Persistence
           case EntityState.Added:
             entry.Entity.CreatedBy = _currentUserService.UserId;
             entry.Entity.Created = _dateTimeOffsetService.Now;
+            entry.Entity.LastModifiedBy = _currentUserService.UserId;
+            entry.Entity.LastModified = _dateTimeOffsetService.Now;
+            entry.Entity.ModifiedCount = 0;
             break;
           case EntityState.Modified:
             entry.Entity.LastModifiedBy = _currentUserService.UserId;
             entry.Entity.LastModified = _dateTimeOffsetService.Now;
+            entry.Entity.ModifiedCount++;
             break;
         }
       }

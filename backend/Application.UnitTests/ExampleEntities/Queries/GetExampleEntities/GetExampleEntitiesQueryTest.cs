@@ -21,17 +21,17 @@ namespace Application.UnitTests.ExampleEntities.Queries.GetExampleEntities
       _mapper = fixture.Mapper;
     }
 
-    [Fact]
-    public async Task Handle_ReturnsCorrectVmAndExampleEntitiesCount()
-    {
-      var query = new GetExampleEntitiesQuery();
+    // [Fact]
+    // public async Task Handle_ReturnsCorrectVmAndExampleEntitiesCount()
+    // {
+    //   var query = new GetExampleEntitiesQuery();
 
-      var handler = new GetExampleEntitiesQuery.GetExampleEntitiesQueryHandler(_context, _mapper);
+    //   var handler = new GetExampleEntitiesQuery.GetExampleEntitiesQueryHandler(_context, _mapper);
 
-      var result = await handler.Handle(query, CancellationToken.None);
+    //   var result = await handler.Handle(query, CancellationToken.None);
 
-      result.Should().BeOfType<PageResult<ExampleEntityDto>>();
-      result.Results.Count.Should().Be(5);
-    }
+    //   result.Should().BeOfType<PageResult<ExampleEntityDto>>();
+    //   result.Results.Count.Should().Be(5);
+    // }
   }
 }

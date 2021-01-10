@@ -75,7 +75,6 @@ namespace Infrastructure.IntegrationTests.Persistence
 
       await _context.SaveChangesAsync();
 
-      item.LastModified.Should().NotBeNull();
       item.LastModified.Should().Be(_dateTimeOffset);
       item.LastModifiedBy.Should().Be(_userId);
     }
