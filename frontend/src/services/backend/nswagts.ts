@@ -326,7 +326,7 @@ export class HealthClient extends ClientBase implements IHealthClient {
 
 export interface IRefillClient {
     create(command: CreateRefillCommand): Promise<number>;
-    get(needle?: number | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfRefillDto>;
+    get(tankType?: TankType | undefined, tankNumber?: number | undefined, needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfRefillDto>;
 }
 
 export class RefillClient extends ClientBase implements IRefillClient {
@@ -380,11 +380,17 @@ export class RefillClient extends ClientBase implements IRefillClient {
         return Promise.resolve<number>(<any>null);
     }
 
-    get(needle?: number | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfRefillDto> {
+    get(tankType?: TankType | undefined, tankNumber?: number | undefined, needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfRefillDto> {
         let url_ = this.baseUrl + "/api/Refill?";
-        if (needle === null)
-            throw new Error("The parameter 'needle' cannot be null.");
-        else if (needle !== undefined)
+        if (tankType === null)
+            throw new Error("The parameter 'tankType' cannot be null.");
+        else if (tankType !== undefined)
+            url_ += "tankType=" + encodeURIComponent("" + tankType) + "&";
+        if (tankNumber === null)
+            throw new Error("The parameter 'tankNumber' cannot be null.");
+        else if (tankNumber !== undefined)
+            url_ += "tankNumber=" + encodeURIComponent("" + tankNumber) + "&";
+        if (needle !== undefined && needle !== null)
             url_ += "needle=" + encodeURIComponent("" + needle) + "&";
         if (size === null)
             throw new Error("The parameter 'size' cannot be null.");

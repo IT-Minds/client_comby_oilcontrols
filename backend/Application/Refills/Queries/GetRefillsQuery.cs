@@ -3,6 +3,7 @@ using Application.Common.Interfaces.Pagination;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Entities;
+using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -11,16 +12,19 @@ using System.Threading.Tasks;
 
 namespace Application.Refills.Queries.GetRefills.Location
 {
-  public class GetRefillsLocationQuery : IPageRequest<RefillDto>, IPageBody<Refill, int>
+  public class GetRefillsLocationQuery : IPageRequest<RefillDto>, IPageBody<Refill, DateTimeOffset>
   {
     public int Size { get ; set ; }
-    public int Needle { get; set; }
+    public DateTimeOffset Needle { get; set; }
 
     public int? Skip { get; set; }
 
-    public int GetNewNeedle(IQueryable<Refill> query)
+    public TankType TankType { get; set; }
+    public int TankNumber { get; set; }
+
+    public DateTimeOffset GetNewNeedle(IQueryable<Refill> query)
     {
-      return query.Select(x => x.LocationId).Take(Size).LastOrDefault();
+      return query.Select(x => x.Created).Take(Size).LastOrDefault();
     }
 
     public IQueryable<Refill> PreparePage(IQueryable<Refill> query)
@@ -28,13 +32,13 @@ namespace Application.Refills.Queries.GetRefills.Location
       if (Skip.HasValue)
       {
         return query
-            .OrderBy(x => x.LocationId)
-            .Where(x => x.LocationId == Needle)
+            .OrderBy(x => x.Created)
+            .Where(x => x.Created > Needle)
             .Skip((int)(Skip * Size));
       }
       return query
-            .OrderBy(x => x.LocationId)
-            .Where(x => x.LocationId == Needle);
+            .OrderBy(x => x.Created)
+            .Where(x => x.Created > Needle);
     }
 
     public async Task<int> PagesRemaining(IQueryable<Refill> query)
@@ -69,6 +73,7 @@ namespace Application.Refills.Queries.GetRefills.Location
         page.HasMore = pagesRemaining > 0;
         page.PagesRemaining = pagesRemaining;
         page.Results = await query
+                .Where(x => x.Location.Type == request.TankType && x.Location.TankNumber == request.TankNumber)
                 .Take(request.Size)
                 .ProjectTo<RefillDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);

@@ -1,9 +1,8 @@
-using Application.Common;
 using Application.Common.Interfaces.Pagination;
-using Application.ExampleEntities.Queries.GetExampleEntities;
 using Application.Refills.Queries.GetRefills;
 using Application.Refills.Queries.GetRefills.Location;
 using AutoMapper;
+using Domain.Enums;
 using FluentAssertions;
 using Infrastructure.Persistence;
 using System.Threading;
@@ -30,7 +29,9 @@ namespace Application.UnitTests.Refills.Queries.GetRefills
       var query = new GetRefillsLocationQuery
       {
         Size = 500,
-        Needle = 1
+        Needle = new System.DateTimeOffset(new System.DateTime(2019, 12, 31)),
+        TankNumber = 443,
+        TankType = TankType.BUILDING
       };
       var handler = new GetRefillsLocationQuery.GetRefillsQueryHandler(_context, _mapper);
       var result = await handler.Handle(query, CancellationToken.None);
@@ -44,7 +45,9 @@ namespace Application.UnitTests.Refills.Queries.GetRefills
       var query = new GetRefillsLocationQuery
       {
         Size = 500,
-        Needle = 6969
+        Needle = new System.DateTimeOffset(new System.DateTime(2069, 1, 1)),
+        TankNumber = 443,
+        TankType = TankType.BUILDING
       };
       var handler = new GetRefillsLocationQuery.GetRefillsQueryHandler(_context, _mapper);
       var result = await handler.Handle(query, CancellationToken.None);
