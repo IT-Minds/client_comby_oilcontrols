@@ -58,7 +58,7 @@ namespace Application.UnitTests.Refill.Commands.CreateRefill
 
       var handler = new CreateRefillCommand.CreateRefillCommandHandler(Context);
 
-      await Assert.ThrowsAsync<Application.Common.Exceptions.ValidationException>(
+      await Assert.ThrowsAsync<ArgumentException>(
         async () => { await handler.Handle(command, CancellationToken.None); }
       );
     }
@@ -80,7 +80,7 @@ namespace Application.UnitTests.Refill.Commands.CreateRefill
 
       var handler = new CreateRefillCommand.CreateRefillCommandHandler(Context);
 
-      await Assert.ThrowsAsync<Application.Common.Exceptions.ValidationException>(
+      await Assert.ThrowsAsync<ArgumentException>(
         async () => { await handler.Handle(command, CancellationToken.None); }
       );
     }

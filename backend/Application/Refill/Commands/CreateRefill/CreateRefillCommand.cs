@@ -5,7 +5,6 @@ using Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,7 +40,8 @@ namespace Application.Refill.Commands.CreateRefill
           throw new NotFoundException(nameof(Location), request.TankType + " " + request.TankNumber);
         }
 
-        var Coupon = await _context.Coupons.Where(x => x.Status == Domain.Enums.CouponStatus.AVAILABLE && x.Truck.Id == request.TruckId)
+        var Coupon = await _context.Coupons
+            .Where(x => x.Status == CouponStatus.AVAILABLE && x.Truck.Id == request.TruckId)
             .OrderBy(x => x.CouponNumber)
             .FirstOrDefaultAsync();
 
@@ -52,9 +52,7 @@ namespace Application.Refill.Commands.CreateRefill
 
         if (request.CouponNumber != Coupon.CouponNumber)
         {
-          var error =  new Dictionary<string, string[]>();
-          error.Add("Invalid Coupon Number", new string[]{""+request.CouponNumber});
-          throw new ValidationException();
+          throw new ArgumentException("Invalid Coupon Number: " + request.CouponNumber );
         }
 
         var refill = new Domain.Entities.Refill
@@ -67,7 +65,7 @@ namespace Application.Refill.Commands.CreateRefill
           Location = Location
         };
 
-        Coupon.Status = Domain.Enums.CouponStatus.USED;
+        Coupon.Status = CouponStatus.USED;
 
         _context.Coupons.Update(Coupon);
         _context.Refills.Add(refill);
