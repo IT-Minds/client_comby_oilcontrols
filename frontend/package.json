@@ -24,7 +24,7 @@
     "@emotion/react": "^11.1.4",
     "@emotion/styled": "^11.0.0",
     "@microsoft/signalr": "^5.0.1",
-    "framer-motion": "^3.1.4",
+    "framer-motion": "^3.2.0",
     "isomorphic-unfetch": "^3.1.0",
     "next": "^10.0.5",
     "next-pwa": "^5.0.2",
