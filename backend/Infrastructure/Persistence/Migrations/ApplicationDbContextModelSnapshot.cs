@@ -154,9 +154,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int>("Amount")
-                        .HasColumnType("int");
-
                     b.Property<int>("CouponId")
                         .HasColumnType("int");
 
@@ -168,6 +165,9 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
+
+                    b.Property<double>("EndAmount")
+                        .HasColumnType("float");
 
                     b.Property<DateTimeOffset>("LastModified")
                         .HasColumnType("datetimeoffset");
@@ -183,6 +183,9 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<int?>("RouteId")
                         .HasColumnType("int");
+
+                    b.Property<double>("StartAmount")
+                        .HasColumnType("float");
 
                     b.Property<int>("TankState")
                         .HasColumnType("int");
