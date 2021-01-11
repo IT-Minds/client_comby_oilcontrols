@@ -10,7 +10,7 @@ namespace Web.Controllers
   {
     [HttpGet]
     public async Task<ActionResult<PageResult<RefillDto>>> Get(
-      [FromQuery] string needle, [FromQuery] int size, [FromQuery] int? skip = 0
+      [FromQuery] int needle, [FromQuery] int size, [FromQuery] int? skip = 0
     ){
       return await Mediator.Send(new GetRefillsLocationQuery{
         Size = size,

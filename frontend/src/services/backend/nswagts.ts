@@ -325,7 +325,7 @@ export class HealthClient extends ClientBase implements IHealthClient {
 }
 
 export interface IRefillClient {
-    get(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfRefillDto>;
+    get(needle?: number | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfRefillDto>;
 }
 
 export class RefillClient extends ClientBase implements IRefillClient {
@@ -339,9 +339,11 @@ export class RefillClient extends ClientBase implements IRefillClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    get(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfRefillDto> {
+    get(needle?: number | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfRefillDto> {
         let url_ = this.baseUrl + "/api/Refill?";
-        if (needle !== undefined && needle !== null)
+        if (needle === null)
+            throw new Error("The parameter 'needle' cannot be null.");
+        else if (needle !== undefined)
             url_ += "needle=" + encodeURIComponent("" + needle) + "&";
         if (size === null)
             throw new Error("The parameter 'size' cannot be null.");
