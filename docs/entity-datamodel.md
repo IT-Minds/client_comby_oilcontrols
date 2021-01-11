@@ -20,7 +20,8 @@ class Location {
 
 class Refill {
   id
-  amount
+  startAmount
+  endAmount
   date
   fuelType
   tankState
