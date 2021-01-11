@@ -48,6 +48,11 @@ namespace Application.UnitTests
           new ExampleEntity { Id = 4, ExampleEntityListId = null, Name = "Sugar", ExampleEnum = ExampleEnum.C },
           new ExampleEntity { Id = 5, ExampleEntityListId = null, Name = "Coffee", ExampleEnum = ExampleEnum.D }
       );
+
+      context.Trucks.Add(
+        new Truck{Id = 1337}
+      );
+      
       context.SaveChanges();
     }
 
