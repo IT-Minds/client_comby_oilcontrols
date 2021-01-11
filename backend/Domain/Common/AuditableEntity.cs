@@ -10,6 +10,8 @@ namespace Domain.Common
 
     public string LastModifiedBy { get; set; }
 
-    public DateTimeOffset? LastModified { get; set; }
+    public DateTimeOffset LastModified { get; set; }
+
+    public int ModifiedCount { get; set; }
   }
 }

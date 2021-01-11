@@ -1,9 +1,14 @@
-using Application.Common;
+using Application.Common.Interfaces.Pagination;
 using Application.ExampleEntities.Commands.CreateExampleEntity;
 using Application.ExampleEntities.Commands.DeleteExampleEntity;
 using Application.ExampleEntities.Commands.UpdateExampleEntity;
 using Application.ExampleEntities.Queries.GetExampleEntities;
+using Application.ExampleEntities.Queries.GetExampleEntities.PageCreatedAt;
+using Application.ExampleEntities.Queries.GetExampleEntities.PageName;
+using Application.ExampleEntities.Queries.GetExampleEntities.PageUpdatedAt;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace Web.Controllers
@@ -41,15 +46,43 @@ namespace Web.Controllers
 
     [HttpGet]
     public async Task<ActionResult<PageResult<ExampleEntityDto>>> Get(
-      [FromQuery] int skip, [FromQuery] int size, [FromQuery] string sortBy
+      [FromQuery] string needle, [FromQuery] int size, [FromQuery] string sortBy, [FromQuery] int? skip = 0
     )
     {
-      return await Mediator.Send(new GetExampleEntitiesQuery {
-        Size = size,
-        Skip = skip,
-        SortBy = sortBy
-      });
-    }
+      try
+      {
+        switch (sortBy)
+        {
+          case "createdAt":
+            return await Mediator.Send(new GetExampleEntitiesPageCreatedAtQuery
+            {
+              Needle = new System.DateTimeOffset(Int64.Parse(needle), new TimeSpan()),
+              Size = size,
+              Skip = skip
+            });
+          case "updatedAt":
+            return await Mediator.Send(new GetExampleEntitiesPageUpdatedAtQuery
+            {
+              Needle = new System.DateTimeOffset(Int64.Parse(needle), new TimeSpan()),
+              Size = size,
+              Skip = skip
+            });
+          case "name":
+            return await Mediator.Send(new GetExampleEntitiesPageNameQuery
+            {
+              Needle = needle,
+              Size = size,
+              Skip = skip
+            });
 
+          default:
+            return BadRequest("Pagination SortBy now know.");
+        }
+      }
+      catch (ValidationException e)
+      {
+        return BadRequest(e.Errors);
+      }
+    }
   }
 }

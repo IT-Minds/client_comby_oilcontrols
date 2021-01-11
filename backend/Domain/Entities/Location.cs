@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Domain.Common;
 using Domain.Enums;
 

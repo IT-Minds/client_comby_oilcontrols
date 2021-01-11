@@ -95,7 +95,7 @@ export class CouponsClient extends ClientBase implements ICouponsClient {
 
 export interface IExampleEntityClient {
     create(command: CreateExampleEntityCommand): Promise<number>;
-    get(skip?: number | undefined, size?: number | undefined, sortBy?: string | null | undefined): Promise<PageResultOfExampleEntityDto>;
+    get(needle?: string | null | undefined, size?: number | undefined, sortBy?: string | null | undefined, skip?: number | null | undefined): Promise<PageResultOfExampleEntityDto>;
     update(id: number, command: UpdateExampleEntityCommand): Promise<FileResponse>;
     delete(id: number): Promise<FileResponse>;
 }
@@ -151,18 +151,18 @@ export class ExampleEntityClient extends ClientBase implements IExampleEntityCli
         return Promise.resolve<number>(<any>null);
     }
 
-    get(skip?: number | undefined, size?: number | undefined, sortBy?: string | null | undefined): Promise<PageResultOfExampleEntityDto> {
+    get(needle?: string | null | undefined, size?: number | undefined, sortBy?: string | null | undefined, skip?: number | null | undefined): Promise<PageResultOfExampleEntityDto> {
         let url_ = this.baseUrl + "/api/ExampleEntity?";
-        if (skip === null)
-            throw new Error("The parameter 'skip' cannot be null.");
-        else if (skip !== undefined)
-            url_ += "skip=" + encodeURIComponent("" + skip) + "&";
+        if (needle !== undefined && needle !== null)
+            url_ += "needle=" + encodeURIComponent("" + needle) + "&";
         if (size === null)
             throw new Error("The parameter 'size' cannot be null.");
         else if (size !== undefined)
             url_ += "size=" + encodeURIComponent("" + size) + "&";
         if (sortBy !== undefined && sortBy !== null)
             url_ += "sortBy=" + encodeURIComponent("" + sortBy) + "&";
+        if (skip !== undefined && skip !== null)
+            url_ += "skip=" + encodeURIComponent("" + skip) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -528,9 +528,8 @@ export interface IUpdateExampleEntityCommand {
 }
 
 export class PageResultOfExampleEntityDto implements IPageResultOfExampleEntityDto {
-    sizeRequested?: number;
-    skipRequested?: number;
-    sortByRequested?: string | undefined;
+    newNeedle?: string | undefined;
+    pagesRemaining?: number;
     results?: ExampleEntityDto[] | undefined;
     hasMore?: boolean;
 
@@ -545,9 +544,8 @@ export class PageResultOfExampleEntityDto implements IPageResultOfExampleEntityD
 
     init(_data?: any) {
         if (_data) {
-            this.sizeRequested = _data["sizeRequested"];
-            this.skipRequested = _data["skipRequested"];
-            this.sortByRequested = _data["sortByRequested"];
+            this.newNeedle = _data["newNeedle"];
+            this.pagesRemaining = _data["pagesRemaining"];
             if (Array.isArray(_data["results"])) {
                 this.results = [] as any;
                 for (let item of _data["results"])
@@ -566,9 +564,8 @@ export class PageResultOfExampleEntityDto implements IPageResultOfExampleEntityD
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["sizeRequested"] = this.sizeRequested;
-        data["skipRequested"] = this.skipRequested;
-        data["sortByRequested"] = this.sortByRequested;
+        data["newNeedle"] = this.newNeedle;
+        data["pagesRemaining"] = this.pagesRemaining;
         if (Array.isArray(this.results)) {
             data["results"] = [];
             for (let item of this.results)
@@ -580,9 +577,8 @@ export class PageResultOfExampleEntityDto implements IPageResultOfExampleEntityD
 }
 
 export interface IPageResultOfExampleEntityDto {
-    sizeRequested?: number;
-    skipRequested?: number;
-    sortByRequested?: string | undefined;
+    newNeedle?: string | undefined;
+    pagesRemaining?: number;
     results?: ExampleEntityDto[] | undefined;
     hasMore?: boolean;
 }
@@ -590,8 +586,9 @@ export interface IPageResultOfExampleEntityDto {
 export class ExampleEntityDto implements IExampleEntityDto {
     id?: number;
     name?: string | undefined;
-    exampleEntityList?: ExampleEntityListDto | undefined;
     exampleEnum?: ExampleEnum;
+    createdAt?: string | undefined;
+    updatedAt?: string | undefined;
 
     constructor(data?: IExampleEntityDto) {
         if (data) {
@@ -606,8 +603,9 @@ export class ExampleEntityDto implements IExampleEntityDto {
         if (_data) {
             this.id = _data["id"];
             this.name = _data["name"];
-            this.exampleEntityList = _data["exampleEntityList"] ? ExampleEntityListDto.fromJS(_data["exampleEntityList"]) : <any>undefined;
             this.exampleEnum = _data["exampleEnum"];
+            this.createdAt = _data["createdAt"];
+            this.updatedAt = _data["updatedAt"];
         }
     }
 
@@ -622,8 +620,9 @@ export class ExampleEntityDto implements IExampleEntityDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
-        data["exampleEntityList"] = this.exampleEntityList ? this.exampleEntityList.toJSON() : <any>undefined;
         data["exampleEnum"] = this.exampleEnum;
+        data["createdAt"] = this.createdAt;
+        data["updatedAt"] = this.updatedAt;
         return data; 
     }
 }
@@ -631,48 +630,9 @@ export class ExampleEntityDto implements IExampleEntityDto {
 export interface IExampleEntityDto {
     id?: number;
     name?: string | undefined;
-    exampleEntityList?: ExampleEntityListDto | undefined;
     exampleEnum?: ExampleEnum;
-}
-
-export class ExampleEntityListDto implements IExampleEntityListDto {
-    id?: number;
-    name?: string | undefined;
-
-    constructor(data?: IExampleEntityListDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-        }
-    }
-
-    static fromJS(data: any): ExampleEntityListDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ExampleEntityListDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        return data; 
-    }
-}
-
-export interface IExampleEntityListDto {
-    id?: number;
-    name?: string | undefined;
+    createdAt?: string | undefined;
+    updatedAt?: string | undefined;
 }
 
 export class CreateExampleEntityListCommand implements ICreateExampleEntityListCommand {
