@@ -11,16 +11,16 @@ using System.Threading.Tasks;
 
 namespace Application.Refills.Queries.GetRefills.Location
 {
-  public class GetRefillsLocationQuery : IPageRequest<RefillDto>, IPageBody<Refill, int>
+  public class GetRefillsLocationQuery : IPageRequest<RefillDto>, IPageBody<Refill, string>
   {
     public int Size { get ; set ; }
-    public int Needle { get; set; }
+    public string Needle { get; set; }
 
     public int? Skip { get; set; }
 
-    public int GetNewNeedle(IQueryable<Refill> query)
+    public string GetNewNeedle(IQueryable<Refill> query)
     {
-      return query.Select(x => x.LocationId).Take(Size).LastOrDefault();
+      return query.Select(x => x.LocationId).Take(Size).LastOrDefault()+"";
     }
 
     public IQueryable<Refill> PreparePage(IQueryable<Refill> query)
@@ -29,12 +29,12 @@ namespace Application.Refills.Queries.GetRefills.Location
       {
         return query
             .OrderBy(x => x.LocationId)
-            .Where(x => x.LocationId == Needle)
+            .Where(x => String.Compare(x.LocationId+"", Needle) > 0)
             .Skip((int)(Skip * Size));
       }
       return query
             .OrderBy(x => x.LocationId)
-            .Where(x => x.LocationId == Needle);
+            .Where(x => String.Compare(x.LocationId+"", Needle) > 0);
     }
 
     public async Task<int> PagesRemaining(IQueryable<Refill> query)
@@ -72,7 +72,7 @@ namespace Application.Refills.Queries.GetRefills.Location
                 .Take(request.Size)
                 .ProjectTo<RefillDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
-        page.NewNeedle = needle+"";
+        page.NewNeedle = needle;
 
         return page;
       }
