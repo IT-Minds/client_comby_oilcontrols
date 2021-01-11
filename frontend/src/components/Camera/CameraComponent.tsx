@@ -8,7 +8,7 @@ import Webcam from "react-webcam";
 import styles from "./styles.module.css";
 
 type Props = {
-  imgSource: (x: any) => void;
+  imgSource: (screenshot: string) => void;
 };
 
 const camConstraints: MediaTrackConstraints = {
