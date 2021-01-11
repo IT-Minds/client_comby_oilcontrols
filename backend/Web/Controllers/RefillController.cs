@@ -1,5 +1,5 @@
-using Application.Refill.Commands.CreateRefill;
 using Application.Common.Interfaces.Pagination;
+using Application.Refills.Commands.CreateRefill;
 using Application.Refills.Queries.GetRefills;
 using Application.Refills.Queries.GetRefills.Location;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +19,7 @@ namespace Web.Controllers
         Skip = skip
       });
     }
-    
+
     [HttpGet]
     public async Task<ActionResult<PageResult<RefillDto>>> Get(
       [FromQuery] int needle, [FromQuery] int size, [FromQuery] int? skip = 0
