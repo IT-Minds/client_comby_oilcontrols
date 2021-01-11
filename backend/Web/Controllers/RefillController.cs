@@ -26,7 +26,9 @@ namespace Web.Controllers
       {
         Size = size,
         Needle = new System.DateTimeOffset(Int64.Parse(needle), new TimeSpan()),
-        Skip = skip
+        Skip = skip,
+        TankType = tankType,
+        TankNumber = tankNumber
       });
     }
   }
