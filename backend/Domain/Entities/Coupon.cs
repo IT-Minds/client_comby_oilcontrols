@@ -1,8 +1,5 @@
-using System;
 using Domain.Common;
 using Domain.Enums;
-using System.Collections.Generic;
-
 namespace Domain.Entities
 {
   public class Coupon : AuditableEntity
@@ -11,5 +8,6 @@ namespace Domain.Entities
     public int CouponNumber { get; set; }
     public Truck Truck { get; set; }
     public CouponStatus Status { get; set; }
+    public int TruckId { get; set; }
   }
 }

@@ -25,8 +25,6 @@ namespace Application.UnitTests.Common.Mappings
 
     [Theory]
     [InlineData(typeof(ExampleEntity), typeof(ExampleEntityDto))]
-    [InlineData(typeof(ExampleEntityListDto), typeof(ExampleEntityListDto))]
-    //[InlineData(typeof(ExampleEntity), typeof(ExampleEntityDto))]
     public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination)
     {
       var instance = Activator.CreateInstance(source);

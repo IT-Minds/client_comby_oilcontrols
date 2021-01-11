@@ -1,63 +1,82 @@
-import { Dispatch, useCallback, useEffect, useState } from "react";
+import { Dispatch, useCallback, useEffect, useMemo, useState } from "react";
 import { AllListActions, ListReducerActionType } from "react-list-reducer";
+import { IPageResult } from "services/backend/ext/IPageResult";
 import { logger } from "utils/logger";
 
-type Callback<T> = (skip: number, take: number, sortBy: string) => Promise<T>;
+type Callback<T> = (needle: string, size: number, sortBy: string, skip?: number) => Promise<T>;
 
-interface IPageResult<T> {
-  sizeRequested?: number;
-  skipRequested?: number;
-  sortByRequested?: string | undefined;
-  results?: T[] | undefined;
-  hasMore?: boolean;
-}
+type Settings = {
+  autoStart?: boolean;
+  initialNeedle?: string;
+  pageSize?: number;
+};
+const defaultSettings: Settings = {
+  autoStart: true,
+  initialNeedle: "0",
+  pageSize: 100
+};
 
-export const usePagedFetched = <T extends IPageResult<V>, V = unknown>(
-  callback: Callback<T>,
-  dataDispatch: Dispatch<AllListActions<V>>,
-  initialSkip = 0,
-  maxPages = 1000
-): {
+type Return = {
   done: boolean;
   error: boolean;
-  fetchData: (initialSkip: number) => Promise<void>;
-} => {
-  const [done, setDone] = useState(false);
+  needle: string;
+  fetchData: (initialNeedle?: string, initialSkip?: number) => Promise<void>;
+};
+
+export const usePagedFetched = <T extends IPageResult<V>, V = unknown>(
+  sortBy: string,
+  callback: Callback<T>,
+  dataDispatch: Dispatch<AllListActions<V>>,
+  initSettings: Settings = defaultSettings
+): Return => {
+  const settings = useMemo(() => Object.assign(defaultSettings, initSettings), []);
+
+  const [done, setDone] = useState(!settings.autoStart);
   const [error, setError] = useState(false);
+  const [needle, setNeedle] = useState(settings.initialNeedle);
 
-  const fetchData = useCallback(async (initialSkip: number) => {
-    setDone(false);
-    setError(false);
-    try {
-      let resultSize = 100;
-      let pages = 0;
-      const size = 100;
+  const fetchData = useCallback<Return["fetchData"]>(
+    async (initialNeedle?: string, initialSkip?: number) => {
+      setDone(false);
+      setError(false);
+      try {
+        let resultSize = 100;
+        let pages = 0;
+        let needle = initialNeedle;
+        let skip = initialSkip;
+        let hasMore = needle !== null || skip !== null;
 
-      while (resultSize == size) {
-        if (pages > maxPages) throw new Error("Pagination Max Reached!");
+        while (hasMore) {
+          if (pages > Number.parseInt(process.env.NEXT_PUBLIC_MAX_FETCH_PAGES))
+            throw new Error("Pagination Max Reached!");
 
-        logger.info("Fetching page", pages);
-        const pageResult = await callback(pages++ * size + initialSkip, size, "");
-        resultSize = pageResult?.results ? pageResult.results.length : -1;
+          logger.info("Fetching page", pages++);
+          const pageResult = await callback(needle, settings.pageSize, sortBy, skip);
+          resultSize = pageResult?.results ? pageResult.results.length : -1;
+          needle = pageResult.newNeedle;
+          hasMore = pageResult.hasMore;
+          skip = 0;
 
-        logger.debug("Page fetched", resultSize);
-
-        if (resultSize > 0)
-          dataDispatch({
-            type: ListReducerActionType.AddOrUpdate,
-            data: pageResult.results
-          });
-        if (resultSize < size) setDone(true);
+          logger.debug("Page fetched", resultSize);
+          if (needle) setNeedle(needle);
+          if (resultSize > 0)
+            dataDispatch({
+              type: ListReducerActionType.AddOrUpdate,
+              data: pageResult.results
+            });
+          if (!hasMore) setDone(true);
+        }
+      } catch (err) {
+        setError(true);
+        logger.warn("usePagedFetched Error", err);
       }
-    } catch (err) {
-      setError(true);
-      logger.warn("usePagedFetched Error", err);
-    }
-  }, []);
+    },
+    [settings]
+  );
 
   useEffect(() => {
-    fetchData(initialSkip);
-  }, [fetchData]);
+    if (settings.autoStart) fetchData(settings.initialNeedle);
+  }, [settings, fetchData]);
 
-  return { done, error, fetchData };
+  return { done, error, fetchData, needle };
 };
