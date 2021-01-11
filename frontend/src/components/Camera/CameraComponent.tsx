@@ -33,7 +33,7 @@ const CameraComp: FC<Props> = ({ imgSource }) => {
           <Camera
             audio={false}
             ref={webcamRef}
-            screenshotFormat="image/jpeg"
+            screenshotFormat="image/png"
             videoConstraints={camConstraints}
           />
         )}
@@ -42,7 +42,7 @@ const CameraComp: FC<Props> = ({ imgSource }) => {
           <Webcam
             audio={false}
             ref={webcamRef}
-            screenshotFormat="image/jpeg"
+            screenshotFormat="image/png"
             videoConstraints={webcamConstraints}
           />
         )}
