@@ -27,7 +27,8 @@ namespace Application.UnitTests.Refills.Queries.GetRefills
     [Fact]
     public async Task Handle_ReturnsCorrectPageAndEntitiesCount()
     {
-      var query = new GetRefillsLocationQuery{
+      var query = new GetRefillsLocationQuery
+      {
         Size = 500,
         Needle = 1
       };
