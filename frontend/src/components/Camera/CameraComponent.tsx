@@ -22,7 +22,6 @@ const webcamConstraints = {
 const CameraComp: FC<Props> = () => {
   const [openCam, setOpenCam] = useState(true);
   const [source, setSource] = useState("");
-
   const webcamRef = React.useRef(null);
 
   const capture = React.useCallback(() => {
