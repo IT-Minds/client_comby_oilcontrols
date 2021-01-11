@@ -4,7 +4,7 @@ using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
 
-namespace Application.Refill.Queries.GetRefills
+namespace Application.Refills.Queries.GetRefills
 {
   public class RefillDto : IAutoMap<Domain.Entities.Refill>
   {
