@@ -77,7 +77,7 @@ namespace Application.Refills.Queries.GetRefills.Location
                 .Take(request.Size)
                 .ProjectTo<RefillDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
-        page.NewNeedle = needle;
+        page.NewNeedle = needle+"";
 
         return page;
       }

@@ -26,8 +26,7 @@ namespace Application.UnitTests.Refills.Queries.GetRefills
     [Fact]
     public async Task Handle_ReturnsCorrectPageAndEntitiesCount()
     {
-      var query = new GetRefillsLocationQuery
-      {
+      var query = new GetRefillsLocationQuery{
         Size = 500,
         Needle = new System.DateTimeOffset(new System.DateTime(2019, 12, 31)),
         TankNumber = 443,
