@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Application.Refill.Commands.CreateRefill
+namespace Application.Refills.Commands.CreateRefill
 {
   public class CreateRefillCommandValidator : AbstractValidator<CreateRefillCommand>
   {
@@ -10,9 +10,10 @@ namespace Application.Refill.Commands.CreateRefill
         .NotNull();
       RuleFor(e => e.TankNumber)
         .NotNull();
-      RuleFor(e => e.Amount)
-        .NotNull()
-        .GreaterThan(0);
+      RuleFor(e => e.StartAmount)
+        .NotNull();
+      RuleFor(e => e.EndAmount)
+        .NotNull();
       RuleFor(e => e.CouponNumber)
         .NotNull();
       RuleFor(e => e.TankType)
