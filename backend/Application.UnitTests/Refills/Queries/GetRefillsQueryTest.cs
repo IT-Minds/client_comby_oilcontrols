@@ -27,7 +27,8 @@ namespace Application.UnitTests.Refills.Queries.GetRefills
     [Fact]
     public async Task Handle_ReturnsCorrectPageAndEntitiesCount()
     {
-      var query = new GetRefillsLocationQuery{
+      var query = new GetRefillsLocationQuery
+      {
         Size = 500,
         Needle = 1
       };
@@ -35,6 +36,20 @@ namespace Application.UnitTests.Refills.Queries.GetRefills
       var result = await handler.Handle(query, CancellationToken.None);
       result.Should().BeOfType<PageResult<RefillDto>>();
       result.Results.Count.Should().Be(3);
+    }
+
+    [Fact]
+    public async Task Handle_NonexistentLocationId()
+    {
+      var query = new GetRefillsLocationQuery
+      {
+        Size = 500,
+        Needle = 6969
+      };
+      var handler = new GetRefillsLocationQuery.GetRefillsQueryHandler(_context, _mapper);
+      var result = await handler.Handle(query, CancellationToken.None);
+      result.Should().BeOfType<PageResult<RefillDto>>();
+      result.Results.Count.Should().Be(0);
     }
   }
 }
