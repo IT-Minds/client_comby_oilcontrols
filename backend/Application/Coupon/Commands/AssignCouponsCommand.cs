@@ -31,7 +31,6 @@ namespace Application.Coupons.Commands.AssignCoupons
         if(Truck == null){
           throw new NotFoundException(nameof(Truck), request.TruckId);
         }
-
         foreach( int numb in request.CouponNumbers){
           _context.Coupons.Add(new Coupon{
             CouponNumber = numb,
