@@ -1,6 +1,6 @@
-import { Box, Button, ButtonGroup } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import { FC } from "react";
-import React, { useState } from "react";
+import { useCallback, useRef } from "react";
 import { isBrowser, isMobile } from "react-device-detect";
 import Camera from "react-webcam";
 import Webcam from "react-webcam";
@@ -8,7 +8,7 @@ import Webcam from "react-webcam";
 import styles from "./styles.module.css";
 
 type Props = {
-  buildTime: number;
+  imgSource: (x: any) => void;
 };
 
 const camConstraints: MediaTrackConstraints = {
@@ -19,25 +19,17 @@ const webcamConstraints = {
   facingMode: "user"
 };
 
-const CameraComp: FC<Props> = () => {
-  const [openCam, setOpenCam] = useState(true);
-  const [source, setSource] = useState("");
-  const webcamRef = React.useRef(null);
+const CameraComp: FC<Props> = ({ imgSource }) => {
+  const webcamRef = useRef(null);
 
-  const capture = React.useCallback(() => {
-    setSource(webcamRef.current.getScreenshot());
-    setOpenCam(false);
+  const capture = useCallback(() => {
+    imgSource(webcamRef.current.getScreenshot());
   }, [webcamRef]);
-
-  const openCamera = () => {
-    setOpenCam(true);
-    setSource(null);
-  };
 
   return (
     <main>
       <Box className={styles.marginTop}>
-        {isMobile && openCam && (
+        {isMobile && (
           <Camera
             audio={false}
             ref={webcamRef}
@@ -46,7 +38,7 @@ const CameraComp: FC<Props> = () => {
           />
         )}
 
-        {isBrowser && openCam && (
+        {isBrowser && (
           <Webcam
             audio={false}
             ref={webcamRef}
@@ -55,23 +47,9 @@ const CameraComp: FC<Props> = () => {
           />
         )}
 
-        {source && <img src={source} alt=""></img>}
-
         <Button colorScheme="blue" className={styles.marginTop} onClick={capture}>
           Take picture
         </Button>
-
-        {source && (
-          <ButtonGroup spacing="6" className={styles.marginTop}>
-            {/* TODO: Missing 'save' functionality */}
-            <Button colorScheme="blue" onClick={null}>
-              Save
-            </Button>
-            <Button colorScheme="blue" onClick={openCamera}>
-              Discard
-            </Button>
-          </ButtonGroup>
-        )}
       </Box>
     </main>
   );
