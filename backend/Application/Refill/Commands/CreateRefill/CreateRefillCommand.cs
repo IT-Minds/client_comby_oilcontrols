@@ -3,7 +3,9 @@ using Application.Common.Interfaces;
 using Domain.Entities;
 using Domain.Enums;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,18 +35,25 @@ namespace Application.Refill.Commands.CreateRefill
       public async Task<int> Handle(CreateRefillCommand request, CancellationToken cancellationToken)
       {
 
-        var Location = _context.Locations.First( x => x.Type == request.TankType && x.TankNumber == request.TankNumber);
-        if (Location == null){
-          throw new NotFoundException(nameof(Location), request.TankType+" "+request.TankNumber);
+        var Location = await _context.Locations.FirstOrDefaultAsync(x => x.Type == request.TankType && x.TankNumber == request.TankNumber);
+        if (Location == null)
+        {
+          throw new NotFoundException(nameof(Location), request.TankType + " " + request.TankNumber);
         }
-        
-        var Coupons = _context.Coupons.Where(x => x.Status == Domain.Enums.CouponStatus.AVAILABLE && x.Truck.Id == request.TruckId);
-        Coupons = Coupons.OrderBy(x => x.CouponNumber);
-        var Coupon = Coupons.First();
-        if(Coupon == null) {
+
+        var Coupon = await _context.Coupons.Where(x => x.Status == Domain.Enums.CouponStatus.AVAILABLE && x.Truck.Id == request.TruckId)
+            .OrderBy(x => x.CouponNumber)
+            .FirstOrDefaultAsync();
+
+        if (Coupon == null)
+        {
           throw new NotFoundException(nameof(Coupon), request.CouponNumber);
         }
-        if(request.CouponNumber != Coupon.CouponNumber){
+
+        if (request.CouponNumber != Coupon.CouponNumber)
+        {
+          var error =  new Dictionary<string, string[]>();
+          error.Add("Invalid Coupon Number", new string[]{""+request.CouponNumber});
           throw new ValidationException();
         }
 
@@ -59,10 +68,10 @@ namespace Application.Refill.Commands.CreateRefill
         };
 
         Coupon.Status = Domain.Enums.CouponStatus.USED;
-        
+
         _context.Coupons.Update(Coupon);
         _context.Refills.Add(refill);
-        
+
         await _context.SaveChangesAsync(cancellationToken);
 
         return refill.Id;

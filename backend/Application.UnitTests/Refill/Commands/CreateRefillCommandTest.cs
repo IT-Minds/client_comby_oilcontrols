@@ -59,9 +59,30 @@ namespace Application.UnitTests.Refill.Commands.CreateRefill
       var handler = new CreateRefillCommand.CreateRefillCommandHandler(Context);
 
       await Assert.ThrowsAsync<Application.Common.Exceptions.ValidationException>(
-        async () => {await handler.Handle(command, CancellationToken.None); }
+        async () => { await handler.Handle(command, CancellationToken.None); }
       );
+    }
 
+    [Fact]
+    public async Task Handle_InvalidCouponNumber()
+    {
+      var command = new CreateRefillCommand
+      {
+        TruckId = 2,
+        Amount = 100,
+        CouponNumber = 0,
+        Date = new DateTime(),
+        FuelType = Domain.Enums.FuelType.PETROLEUM,
+        TankState = Domain.Enums.TankState.FULL,
+        TankType = Domain.Enums.TankType.BUILDING,
+        TankNumber = 80
+      };
+
+      var handler = new CreateRefillCommand.CreateRefillCommandHandler(Context);
+
+      await Assert.ThrowsAsync<Application.Common.Exceptions.ValidationException>(
+        async () => { await handler.Handle(command, CancellationToken.None); }
+      );
     }
   }
 }
