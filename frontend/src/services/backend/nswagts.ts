@@ -324,6 +324,62 @@ export class HealthClient extends ClientBase implements IHealthClient {
     }
 }
 
+export interface IRefillClient {
+    create(command: CreateRefillCommand): Promise<number>;
+}
+
+export class RefillClient extends ClientBase implements IRefillClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(configuration: AuthClient, baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super(configuration);
+        this.http = http ? http : <any>window;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    create(command: CreateRefillCommand): Promise<number> {
+        let url_ = this.baseUrl + "/api/Refill";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processCreate(_response);
+        });
+    }
+
+    protected processCreate(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(<any>null);
+    }
+}
+
 export class CreateExampleEntityCommand implements ICreateExampleEntityCommand {
     name?: string | undefined;
     exampleEnum?: ExampleEnum;
@@ -561,6 +617,89 @@ export class CreateExampleEntityListCommand implements ICreateExampleEntityListC
 
 export interface ICreateExampleEntityListCommand {
     name?: string | undefined;
+}
+
+export class CreateRefillCommand implements ICreateRefillCommand {
+    truckId?: number;
+    tankType?: TankType;
+    tankNumber?: number;
+    amount?: number;
+    couponNumber?: number;
+    date?: Date;
+    fuelType?: FuelType;
+    tankState?: TankState;
+
+    constructor(data?: ICreateRefillCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.truckId = _data["truckId"];
+            this.tankType = _data["tankType"];
+            this.tankNumber = _data["tankNumber"];
+            this.amount = _data["amount"];
+            this.couponNumber = _data["couponNumber"];
+            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
+            this.fuelType = _data["fuelType"];
+            this.tankState = _data["tankState"];
+        }
+    }
+
+    static fromJS(data: any): CreateRefillCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateRefillCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["truckId"] = this.truckId;
+        data["tankType"] = this.tankType;
+        data["tankNumber"] = this.tankNumber;
+        data["amount"] = this.amount;
+        data["couponNumber"] = this.couponNumber;
+        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+        data["fuelType"] = this.fuelType;
+        data["tankState"] = this.tankState;
+        return data; 
+    }
+}
+
+export interface ICreateRefillCommand {
+    truckId?: number;
+    tankType?: TankType;
+    tankNumber?: number;
+    amount?: number;
+    couponNumber?: number;
+    date?: Date;
+    fuelType?: FuelType;
+    tankState?: TankState;
+}
+
+export enum TankType {
+    BUILDING = 0,
+    SHIP = 1,
+    TANK = 2,
+}
+
+export enum FuelType {
+    OIL = 0,
+    PETROLEUM = 1,
+    GASOLINE = 2,
+    OTHER = 3,
+}
+
+export enum TankState {
+    EMPTY = 0,
+    FULL = 1,
+    PARTIALLY_FILLED = 2,
 }
 
 export interface FileResponse {

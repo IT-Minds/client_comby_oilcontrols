@@ -1,4 +1,5 @@
 using Domain.Common;
+using Domain.Enums;
 
 namespace Domain.Entities
 {
@@ -8,5 +9,6 @@ namespace Domain.Entities
     public int CouponNumber { get; set; }
     public Truck Truck { get; set; }
     public int TruckId { get; set; }
+    public CouponStatus Status { get; set; }
   }
 }
