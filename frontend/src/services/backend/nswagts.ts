@@ -387,7 +387,7 @@ export class HealthClient extends ClientBase implements IHealthClient {
 export interface IRefillClient {
     create(command: CreateRefillCommand): Promise<number>;
     get(tankType?: TankType | undefined, tankNumber?: number | undefined, needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfRefillDto>;
-    createProjectFile(id: number, refillId?: number | undefined, file?: FileParameter | null | undefined): Promise<string>;
+    createProjectFile(id: number, file?: FileParameter | null | undefined): Promise<string>;
 }
 
 export class RefillClient extends ClientBase implements IRefillClient {
@@ -493,15 +493,11 @@ export class RefillClient extends ClientBase implements IRefillClient {
         return Promise.resolve<PageResultOfRefillDto>(<any>null);
     }
 
-    createProjectFile(id: number, refillId?: number | undefined, file?: FileParameter | null | undefined): Promise<string> {
-        let url_ = this.baseUrl + "/api/Refill/{id}?";
+    createProjectFile(id: number, file?: FileParameter | null | undefined): Promise<string> {
+        let url_ = this.baseUrl + "/api/Refill/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        if (refillId === null)
-            throw new Error("The parameter 'refillId' cannot be null.");
-        else if (refillId !== undefined)
-            url_ += "refillId=" + encodeURIComponent("" + refillId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = new FormData();
