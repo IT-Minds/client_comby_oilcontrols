@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210108223117_EntitiesForRefillReport")]
-    partial class EntitiesForRefillReport
+    [Migration("20210112132324_CleanupFromMerge")]
+    partial class CleanupFromMerge
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -37,11 +37,17 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset?>("LastModified")
+                    b.Property<DateTimeOffset>("LastModified")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ModifiedCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<int>("TruckId")
                         .HasColumnType("int");
@@ -75,11 +81,14 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("ExampleEnum")
                         .HasColumnType("int");
 
-                    b.Property<DateTimeOffset?>("LastModified")
+                    b.Property<DateTimeOffset>("LastModified")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ModifiedCount")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -123,11 +132,14 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset?>("LastModified")
+                    b.Property<DateTimeOffset>("LastModified")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ModifiedCount")
+                        .HasColumnType("int");
 
                     b.Property<int>("TankNumber")
                         .HasColumnType("int");
@@ -162,13 +174,16 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTimeOffset?>("LastModified")
+                    b.Property<DateTimeOffset>("LastModified")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("LocationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ModifiedCount")
                         .HasColumnType("int");
 
                     b.Property<int?>("RouteId")
@@ -204,11 +219,14 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset?>("LastModified")
+                    b.Property<DateTimeOffset>("LastModified")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ModifiedCount")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -228,11 +246,14 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset?>("LastModified")
+                    b.Property<DateTimeOffset>("LastModified")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ModifiedCount")
+                        .HasColumnType("int");
 
                     b.Property<int>("RouteId")
                         .HasColumnType("int");
