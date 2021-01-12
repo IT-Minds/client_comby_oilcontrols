@@ -17,6 +17,7 @@ using Serilog;
 using System.Linq;
 using Web.Filters;
 using Web.Hubs;
+using Application.Common.Options;
 using Web.Services;
 
 namespace Web
@@ -47,6 +48,8 @@ namespace Web
                     builder.AllowAnyMethod();
                   });
       });
+
+      services.Configure<FileDriveOptions>(Configuration.GetSection(FileDriveOptions.FileDrive));
 
       services.AddApplication();
       services.AddInfrastructure(Configuration, Environment);
