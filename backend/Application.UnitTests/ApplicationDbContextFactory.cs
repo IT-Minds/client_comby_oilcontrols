@@ -71,7 +71,6 @@ namespace Application.UnitTests
         new Coupon { Id = 7, CouponNumber = 19997, TruckId = 43 },
         new Coupon { Id = 8, CouponNumber = 19998, TruckId = 44 },
         new Coupon { Id = 9, CouponNumber = 19999, TruckId = 44 }
-
       );
 
       context.Refills.AddRange(
@@ -82,7 +81,7 @@ namespace Application.UnitTests
         new Domain.Entities.Refill { Id = 5, CouponId = 5, Type = FuelType.GASOLINE, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, Date = new DateTime(2020, 12, 16), LocationId = 1, Created = new DateTime(2020, 1, 8) },
         new Domain.Entities.Refill { Id = 7, CouponId = 6, Type = FuelType.GASOLINE, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, Date = new DateTime(2020, 12, 17), LocationId = 4, Created = new DateTime(2020, 1, 9) }
       );
-      
+
       context.SaveChanges();
     }
 
