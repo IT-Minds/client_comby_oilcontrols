@@ -62,7 +62,7 @@ namespace Application.Coupons.Queries.GetCoupons.Truck
 
         var page = new PageResult<CouponDto>();
 
-        var baseQuery = _context.Coupons;
+        var baseQuery = _context.Coupons.Where(x => x.TruckId == request.TruckId);
         var query = request.PreparePage(baseQuery);
         var pagesRemaining = await request.PagesRemaining(query);
         var needle = request.GetNewNeedle(query);
@@ -70,7 +70,6 @@ namespace Application.Coupons.Queries.GetCoupons.Truck
         page.HasMore = pagesRemaining > 0;
         page.PagesRemaining = pagesRemaining;
         page.Results = await query
-                .Where(x => x.TruckId == request.TruckId)
                 .Take(request.Size)
                 .ProjectTo<CouponDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);

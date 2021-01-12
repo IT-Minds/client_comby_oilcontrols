@@ -62,15 +62,15 @@ namespace Application.UnitTests
       );
 
       context.Coupons.AddRange(
-        new Coupon { Id = 1, CouponNumber = 19991, TruckId = 43 },
-        new Coupon { Id = 2, CouponNumber = 19992, TruckId = 43 },
-        new Coupon { Id = 3, CouponNumber = 19993, TruckId = 43 },
-        new Coupon { Id = 4, CouponNumber = 19994, TruckId = 43 },
-        new Coupon { Id = 5, CouponNumber = 19995, TruckId = 43 },
-        new Coupon { Id = 6, CouponNumber = 19996, TruckId = 43 },
-        new Coupon { Id = 7, CouponNumber = 19997, TruckId = 43 },
-        new Coupon { Id = 8, CouponNumber = 19998, TruckId = 44 },
-        new Coupon { Id = 9, CouponNumber = 19999, TruckId = 44 }
+        new Coupon { Id = 1, CouponNumber = 19991, TruckId = 43, Created = DateTimeOffset.Now  },
+        new Coupon { Id = 2, CouponNumber = 19992, TruckId = 43, Created = DateTimeOffset.Now  },
+        new Coupon { Id = 3, CouponNumber = 19993, TruckId = 43, Created = DateTimeOffset.Now  },
+        new Coupon { Id = 4, CouponNumber = 19994, TruckId = 43, Created = DateTimeOffset.Now  },
+        new Coupon { Id = 5, CouponNumber = 19995, TruckId = 43, Created = DateTimeOffset.Now  },
+        new Coupon { Id = 6, CouponNumber = 19996, TruckId = 43, Created = DateTimeOffset.Now  },
+        new Coupon { Id = 7, CouponNumber = 19997, TruckId = 43, Created = DateTimeOffset.Now  },
+        new Coupon { Id = 8, CouponNumber = 19998, TruckId = 44, Created = DateTimeOffset.Now  },
+        new Coupon { Id = 9, CouponNumber = 19999, TruckId = 44, Created = DateTimeOffset.Now }
       );
 
       context.Refills.AddRange(
