@@ -11,10 +11,15 @@ const fetchMock = (_fetchMock as unknown) as typeof FetchMock;
 
 describe("AppName render", () => {
   const OLD_ENV = process.env;
+  const OLD_DOCUMENT_EVENT = document.createEvent;
+  const OLD_WINDOW_EVENT = window.addEventListener;
 
   beforeEach(() => {
     jest.resetModules();
     process.env = { ...OLD_ENV };
+    (process as any).browser = false;
+    document.createEvent = OLD_DOCUMENT_EVENT;
+    window.addEventListener = OLD_WINDOW_EVENT;
 
     fetchMock.restore();
     fetchMock.reset();
@@ -35,39 +40,62 @@ describe("AppName render", () => {
     expect(screen.getByTestId("data")).toHaveAttribute("data-value", "1");
   });
 
-  it("renders with mock data", async () => {
-    process.env.TEST_NAME = "renders with mock data";
-    render(<Demo buildTime={1001} />);
+  it("renders on browser with offline data", async () => {
+    process.env.TEST_NAME = "renders with offline data";
+    process.env.NEXT_PUBLIC_OFFLINE = "true";
 
-    fetchMock.once(/.*/, {
+    const map: any = {};
+    window.addEventListener = jest.fn((event, cb) => {
+      map[event] = cb;
+    });
+
+    document.createEvent = jest.fn((event: string) => {
+      return new Event(event);
+    }) as any;
+
+    fetchMock.mock(/.*/, {
       status: 200,
       body: exampleClientOfflineData
     });
 
-    await waitFor(() => expect(fetchMock.called()).toEqual(true));
-    expect(fetchMock.calls().length).toEqual(1);
+    render(<Demo buildTime={1001} />);
+    await waitFor(() => expect(fetchMock.called()).toEqual(false));
+
+    expect(screen.getByTestId("buildTime")).toHaveAttribute("data-value", "1001");
+    expect(screen.getByTestId("data")).toHaveAttribute("data-value", "1");
+  });
+
+  it("renders with mock data", async () => {
+    process.env.TEST_NAME = "renders with mock data";
+    render(<Demo buildTime={1001} />);
+
+    fetchMock.mock(/.*/, {
+      status: 200,
+      body: exampleClientOfflineData
+    });
+
+    await waitFor(() => expect(fetchMock.calls().length).toEqual(3));
 
     expect(screen.getByTestId("data")).toHaveAttribute("data-value", "1");
   });
 
   it("renders even with no data", async () => {
     process.env.TEST_NAME = "renders even with no data";
-    fetchMock.once(/.*/, {
+    fetchMock.mock(/.*/, {
       status: 204,
       body: null
     });
 
     render(<Demo buildTime={1001} />);
 
-    await waitFor(() => expect(fetchMock.called()).toEqual(true));
-    expect(fetchMock.calls().length).toEqual(1);
+    await waitFor(() => expect(fetchMock.calls().length).toEqual(3));
 
     expect(screen.getByTestId("data")).toHaveAttribute("data-value", "0");
   });
 
   it("renders even with error", async () => {
     process.env.TEST_NAME = "renders even with error";
-    fetchMock.once(/.*/, {
+    fetchMock.mock(/.*/, {
       status: 404,
       ok: false,
       body: null
@@ -75,8 +103,7 @@ describe("AppName render", () => {
 
     render(<Demo buildTime={1001} />);
 
-    await waitFor(() => expect(fetchMock.called()).toEqual(true));
-    expect(fetchMock.calls().length).toEqual(1);
+    await waitFor(() => expect(fetchMock.calls().length).toEqual(3));
 
     expect(screen.getByTestId("data")).toHaveAttribute("data-value", "0");
   });
@@ -84,7 +111,7 @@ describe("AppName render", () => {
   it("renders even with empty data", async () => {
     process.env.TEST_NAME = "renders even with empty data";
 
-    fetchMock.once(/.*/, {
+    fetchMock.mock(/.*/, {
       body: new PageResultOfExampleEntityDto({
         results: []
       })
@@ -92,8 +119,7 @@ describe("AppName render", () => {
 
     render(<Demo buildTime={1001} />);
 
-    await waitFor(() => expect(fetchMock.called()).toEqual(true));
-    expect(fetchMock.calls().length).toEqual(1);
+    await waitFor(() => expect(fetchMock.calls().length).toEqual(3));
 
     expect(screen.getByTestId("data")).toHaveAttribute("data-value", "0");
   });
@@ -112,8 +138,7 @@ describe("AppName render", () => {
 
     render(<Demo buildTime={1001} />);
 
-    // await waitFor(() => expect(fetchMock.called()).toEqual(true));
-    await waitFor(() => expect(fetchMock.calls().length).toEqual(1));
+    await waitFor(() => expect(fetchMock.calls().length).toEqual(3));
 
     expect(screen.getByTestId("data")).toHaveAttribute("data-value", "1");
   });
@@ -127,8 +152,7 @@ describe("AppName render", () => {
 
     render(<Demo buildTime={1001} />);
 
-    await waitFor(() => expect(fetchMock.called()).toEqual(true));
-    expect(fetchMock.calls().length).toEqual(1);
+    await waitFor(() => expect(fetchMock.calls().length).toEqual(3));
 
     const asb = screen.getByTestId("addNewBtn");
 
@@ -136,6 +160,6 @@ describe("AppName render", () => {
       userEvent.click(asb);
     });
 
-    expect(fetchMock.calls().length).toEqual(3);
+    expect(fetchMock.calls().length).toEqual(5);
   });
 });

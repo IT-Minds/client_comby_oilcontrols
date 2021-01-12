@@ -2,26 +2,28 @@ import {
   Button,
   Container,
   Heading,
-  Progress,
   Skeleton,
   Table,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
   useToast
 } from "@chakra-ui/react";
+import { useOffline } from "hooks/useOffline";
 import { usePagedFetched } from "hooks/usePagedFetched";
 import Image from "next/image";
 import { FC, useCallback, useEffect, useMemo, useReducer, useState } from "react";
-import ListReducer from "react-list-reducer";
+import ListReducer, { ListReducerActionType } from "react-list-reducer";
 import { genExampleClient } from "services/backend/apiClients";
 import {
   CreateExampleEntityCommand,
   ExampleEntityDto,
   ExampleEnum
 } from "services/backend/nswagts";
+import { EmptyIdEntity } from "types/EmptyIdEntity";
 
 import ExampleTableRow from "./components/ExampleTableRow";
 import PageIndicator from "./components/PageIndicator";
@@ -47,8 +49,10 @@ const Demo: FC<Props> = ({
   const toast = useToast();
 
   const [data, dataDispatch] = useReducer(ListReducer<ExampleEntityDto>("id"), preLoadedData);
-  const [isAddingData, setIsAddingData] = useState(false);
+  const [ghostData, ghostDataDispatch] = useReducer(ListReducer<EmptyIdEntity>("id"), []);
   const [pageShowing, setPageShowing] = useState(0);
+
+  const { awaitCallback, isOnline } = useOffline();
 
   const { done, error, fetchData, needle } = usePagedFetched(
     "createdAt",
@@ -63,35 +67,110 @@ const Demo: FC<Props> = ({
   );
 
   const pages = useMemo(() => {
-    const pageCount = Math.ceil(data.length / PAGE_SHOW_SIZE);
+    const maxDataLength = data.length + ghostData.length;
+    const allPageMax = maxDataLength > 0 ? Math.ceil(maxDataLength / PAGE_SHOW_SIZE) : 0;
 
-    return [...new Array(pageCount)].map((x, i) => i);
-  }, [data, done]);
+    return [...new Array(allPageMax)].map((x, i) => i);
+  }, [data, done, ghostData]);
 
-  const pageHasMore = useCallback(
-    pageNo =>
-      (!done || isAddingData) &&
-      pages.length - 1 === pageNo &&
-      (pageNo + 1) * PAGE_SHOW_SIZE > data.length,
-    [done, pages, data, isAddingData]
-  );
+  /**
+   * Splits the data into table pages.
+   */
+  const dataSplitter = useMemo(() => {
+    const maxDataLength = data.length + ghostData.length;
+    const realPageMax = data.length > 0 ? Math.ceil(data.length / PAGE_SHOW_SIZE) : 0;
+    const allPageMax = maxDataLength > 0 ? Math.ceil(maxDataLength / PAGE_SHOW_SIZE) : 0;
+    const ghostPages = allPageMax - realPageMax;
+
+    if (allPageMax === 0) {
+      return {
+        data: [],
+        ghosts: []
+      };
+    }
+
+    const realDataOnCurrentPage = data.slice(
+      pageShowing * PAGE_SHOW_SIZE,
+      (pageShowing + 1) * PAGE_SHOW_SIZE
+    );
+
+    if (realDataOnCurrentPage.length >= PAGE_SHOW_SIZE) {
+      return {
+        data: realDataOnCurrentPage,
+        ghosts: []
+      };
+    }
+
+    if (realDataOnCurrentPage.length > 0 || ghostPages === 0) {
+      const fillCount = realPageMax * PAGE_SHOW_SIZE - data.length;
+      console.assert(
+        fillCount === PAGE_SHOW_SIZE - realDataOnCurrentPage.length,
+        "Math is not right"
+      );
+      const ghosts = ghostData.slice(0, fillCount);
+
+      return {
+        data: realDataOnCurrentPage,
+        ghosts
+      };
+    }
+
+    const startIndex =
+      (pageShowing - realPageMax) * PAGE_SHOW_SIZE + (realPageMax * PAGE_SHOW_SIZE - data.length);
+    // const fillCount = realPageMax * PAGE_SHOW_SIZE - data.length;
+
+    const ghosts = ghostData.slice(startIndex, startIndex + PAGE_SHOW_SIZE);
+    return {
+      data: [],
+      ghosts
+    };
+  }, [data, ghostData, pageShowing]);
 
   const addNewData = useCallback(async () => {
-    setIsAddingData(true);
-    await genExampleClient().create(
-      new CreateExampleEntityCommand({
-        exampleEnum: ExampleEnum.A,
-        name: Date.now().toString(32)
-      })
+    const name = Date.now().toString(32);
+    ghostDataDispatch({
+      type: ListReducerActionType.Add,
+      data: {
+        id: name
+      }
+    });
+    awaitCallback(
+      () =>
+        genExampleClient()
+          .create(
+            new CreateExampleEntityCommand({
+              exampleEnum: ExampleEnum.A,
+              name
+            })
+          )
+          .then(
+            x => {
+              ghostDataDispatch({
+                type: ListReducerActionType.Remove,
+                data: name
+              });
+            },
+            x => {
+              ghostDataDispatch({
+                type: ListReducerActionType.Remove,
+                data: name
+              });
+            }
+          ),
+      name
     );
-    await fetchData(needle);
-    setIsAddingData(false);
   }, [data, needle]);
+
+  useEffect(() => {
+    if (ghostData.length === 0) {
+      fetchData();
+    }
+  }, [ghostData]);
 
   const elementsOnLastPage = useMemo(() => {
     const elements = data.slice((pages.length - 1) * PAGE_SHOW_SIZE, pages.length * PAGE_SHOW_SIZE);
     return elements.length;
-  }, [pages, pageHasMore, data]);
+  }, [pages, data]);
 
   useEffect(() => {
     if (done)
@@ -119,15 +198,15 @@ const Demo: FC<Props> = ({
         Pagination table example
       </Heading>
 
-      <Progress hasStripe isAnimated value={(pages.length / preLoadedPageCount) * 100} size="sm" />
+      <Text colorScheme={isOnline ? "green" : "red"}>{isOnline ? "Online" : "Offline"}</Text>
 
-      <Image
+      {/* <Image
         src="/images/icons/icon-512x512.png"
         alt="Picture of the author"
         width={300}
         height={300}
         quality={90}
-      />
+      /> */}
 
       <Table size="sm" data-testid="data" data-value={data.length}>
         <Thead>
@@ -138,32 +217,27 @@ const Demo: FC<Props> = ({
           </Tr>
         </Thead>
         <Tbody>
-          {data.slice(pageShowing * PAGE_SHOW_SIZE, (pageShowing + 1) * PAGE_SHOW_SIZE).map(dat => (
+          {dataSplitter.data.map(dat => (
             <ExampleTableRow key={dat.id} rowData={dat} />
           ))}
 
-          {pageHasMore(pageShowing) && (
-            <Tr>
+          {dataSplitter.ghosts.map(ghost => (
+            <Tr key={ghost.id}>
               <Td colSpan={3}>
                 <Skeleton height="18px" />
               </Td>
             </Tr>
-          )}
+          ))}
         </Tbody>
       </Table>
 
       <PageIndicator activePage={pageShowing} onClickPage={setPageShowing} pages={pages}>
         {!done && elementsOnLastPage >= PAGE_SHOW_SIZE && (
-          <Button colorScheme="blue" size="sm" variant="outline" isLoading={true}></Button>
+          <Button colorScheme="blue" size="sm" variant="outline"></Button>
         )}
       </PageIndicator>
 
-      <Button
-        data-testid="addNewBtn"
-        onClick={addNewData}
-        colorScheme="purple"
-        variant="solid"
-        isLoading={isAddingData}>
+      <Button data-testid="addNewBtn" onClick={addNewData} colorScheme="purple" variant="solid">
         Add new data element
       </Button>
     </Container>
