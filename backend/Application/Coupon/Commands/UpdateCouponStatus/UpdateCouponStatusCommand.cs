@@ -12,6 +12,7 @@ namespace Application.Coupons.Commands.UpdateCouponStatus
 {
   public class UpdateCouponStatusCommand : IRequest<int>
   {
+    public int TruckId { get; set; }
     public int CouponNumber { get; set; }
 
     public class UpdateCouponstatusCommandHandler : IRequestHandler<UpdateCouponStatusCommand, int>
@@ -24,7 +25,8 @@ namespace Application.Coupons.Commands.UpdateCouponStatus
 
       public async Task<int> Handle(UpdateCouponStatusCommand request, CancellationToken cancellationToken)
       {
-        var coupon = _context.Coupons.FirstOrDefault(x => x.CouponNumber == request.CouponNumber);
+        var coupons = _context.Coupons.Where(x => x.TruckId == request.TruckId);
+        var coupon = coupons.FirstOrDefault(x => x.CouponNumber == request.CouponNumber);
         if(coupon == null){
           throw new NotFoundException(nameof(coupon), request.CouponNumber);
         }
