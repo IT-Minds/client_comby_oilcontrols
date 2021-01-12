@@ -34,7 +34,7 @@ export class ClientBase {
 }
 
 export interface ICouponClient {
-    createProjectFile(fileName?: string | null | undefined, file?: FileParameter | null | undefined): Promise<string>;
+    createProjectFile(refillId?: number | undefined, file?: FileParameter | null | undefined): Promise<string>;
 }
 
 export class CouponClient extends ClientBase implements ICouponClient {
@@ -48,10 +48,12 @@ export class CouponClient extends ClientBase implements ICouponClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    createProjectFile(fileName?: string | null | undefined, file?: FileParameter | null | undefined): Promise<string> {
+    createProjectFile(refillId?: number | undefined, file?: FileParameter | null | undefined): Promise<string> {
         let url_ = this.baseUrl + "/api/Coupon?";
-        if (fileName !== undefined && fileName !== null)
-            url_ += "fileName=" + encodeURIComponent("" + fileName) + "&";
+        if (refillId === null)
+            throw new Error("The parameter 'refillId' cannot be null.");
+        else if (refillId !== undefined)
+            url_ += "refillId=" + encodeURIComponent("" + refillId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = new FormData();

@@ -10,12 +10,12 @@ namespace Web.Controllers
   {
         [HttpPost]
         [Consumes("multipart/form-data")]
-        public async Task<ActionResult<string>> CreateProjectFile(IFormFile file, string fileName)
+        public async Task<ActionResult<string>> CreateProjectFile(IFormFile file, int refillId)
         {
             return await Mediator.Send(new SaveCouponImageCommand
             {
                 File = file,
-                FileName = fileName
+                RefillId = refillId
             });
         }
   }
