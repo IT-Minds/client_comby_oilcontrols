@@ -6,6 +6,8 @@ using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using Application.Coupons.Commands.SaveCouponImage;
+using Microsoft.AspNetCore.Http;
 
 namespace Web.Controllers
 {
@@ -24,6 +26,17 @@ namespace Web.Controllers
         TankType = tankType,
         TankNumber = tankNumber
       });
+    }
+
+    [HttpPost("{id}")]
+    [Consumes("multipart/form-data")]
+    public async Task<ActionResult<string>> CreateProjectFile(int id, IFormFile file, int refillId)
+    {
+        return await Mediator.Send(new SaveCouponImageCommand
+        {
+            File = file,
+            RefillId = refillId
+        });
     }
   }
 }
