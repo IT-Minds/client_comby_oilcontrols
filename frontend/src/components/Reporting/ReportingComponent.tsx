@@ -45,7 +45,7 @@ const ReportingComp: FC<Props> = ({
     <Stack>
       <form onSubmit={handleSubmit}>
         <FormControl id="car-id">
-          <FormLabel>Car id.</FormLabel>
+          <FormLabel>Car id:</FormLabel>
           <Input type="text" isReadOnly isDisabled value={carId} />
         </FormControl>
 
