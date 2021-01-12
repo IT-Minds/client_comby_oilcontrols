@@ -13,6 +13,7 @@ import {
   useToast
 } from "@chakra-ui/react";
 import { usePagedFetched } from "hooks/usePagedFetched";
+import Image from "next/image";
 import { FC, useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import ListReducer from "react-list-reducer";
 import { genExampleClient } from "services/backend/apiClients";
@@ -119,6 +120,14 @@ const Demo: FC<Props> = ({
       </Heading>
 
       <Progress hasStripe isAnimated value={(pages.length / preLoadedPageCount) * 100} size="sm" />
+
+      <Image
+        src="/images/icons/icon-512x512.png"
+        alt="Picture of the author"
+        width={300}
+        height={300}
+        quality={90}
+      />
 
       <Table size="sm" data-testid="data" data-value={data.length}>
         <Thead>
