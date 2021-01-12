@@ -9,14 +9,15 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Refill.Commands.CreateRefill
+namespace Application.Refills.Commands.CreateRefill
 {
   public class CreateRefillCommand : IRequest<int>
   {
     public int TruckId { get; set; }
     public TankType TankType { get; set; }
     public int TankNumber { get; set; }
-    public int Amount { get; set; }
+    public double StartAmount { get; set; }
+    public double EndAmount { get; set; }
     public int CouponNumber { get; set; }
     public DateTime Date { get; set; }
     public FuelType FuelType { get; set; }
@@ -55,9 +56,10 @@ namespace Application.Refill.Commands.CreateRefill
           throw new ArgumentException("Invalid Coupon Number: " + request.CouponNumber );
         }
 
-        var refill = new Domain.Entities.Refill
+        var refill = new Refill
         {
-          Amount = request.Amount,
+          StartAmount = request.StartAmount,
+          EndAmount = request.EndAmount,
           Coupon = Coupon,
           Date = request.Date,
           Type = request.FuelType,
