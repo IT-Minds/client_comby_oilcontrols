@@ -25,7 +25,11 @@ namespace Infrastructure.Persistence
     public DbSet<ExampleEntity> ExampleEntities { get; set; }
 
     public DbSet<ExampleEntityList> ExampleEntityLists { get; set; }
-
+    public DbSet<Location> Locations {get; set;}
+    public DbSet<Coupon> Coupons { get; set; }
+    public DbSet<Refill> Refills { get; set; }
+    public DbSet<Truck> Trucks { get; set; }
+    public DbSet<Route> Routes { get; set; }
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
       foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
@@ -35,10 +39,14 @@ namespace Infrastructure.Persistence
           case EntityState.Added:
             entry.Entity.CreatedBy = _currentUserService.UserId;
             entry.Entity.Created = _dateTimeOffsetService.Now;
+            entry.Entity.LastModifiedBy = _currentUserService.UserId;
+            entry.Entity.LastModified = _dateTimeOffsetService.Now;
+            entry.Entity.ModifiedCount = 0;
             break;
           case EntityState.Modified:
             entry.Entity.LastModifiedBy = _currentUserService.UserId;
             entry.Entity.LastModified = _dateTimeOffsetService.Now;
+            entry.Entity.ModifiedCount++;
             break;
         }
       }

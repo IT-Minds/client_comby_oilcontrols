@@ -32,6 +32,12 @@
     "editor.codeActionsOnSave": {
       "source.fixAll": true
     },
-    "files.eol": "\n"
+    "files.eol": "\n",
+    "cSpell.words": [
+      "nswagts",
+      "signalr",
+      "testid",
+      "unfetch"
+    ]
   }
 }

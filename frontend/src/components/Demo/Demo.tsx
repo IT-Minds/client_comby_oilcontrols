@@ -2,6 +2,7 @@ import {
   Button,
   Container,
   Heading,
+  Progress,
   Skeleton,
   Table,
   Tbody,
@@ -12,6 +13,7 @@ import {
   useToast
 } from "@chakra-ui/react";
 import { usePagedFetched } from "hooks/usePagedFetched";
+import Image from "next/image";
 import { FC, useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import ListReducer from "react-list-reducer";
 import { genExampleClient } from "services/backend/apiClients";
@@ -28,31 +30,50 @@ import styles from "./styles.module.css";
 type Props = {
   buildTime: number;
   preLoadedData?: ExampleEntityDto[];
+  preloadDataNeedle?: string;
+  preloadLoadedAll?: boolean;
+  preLoadedPageCount?: number;
 };
 
 export const PAGE_SHOW_SIZE = 15;
 
-const Demo: FC<Props> = ({ buildTime, preLoadedData = [] }) => {
+const Demo: FC<Props> = ({
+  buildTime,
+  preLoadedData = [],
+  preloadDataNeedle = "0",
+  preloadLoadedAll = false,
+  preLoadedPageCount = 1
+}) => {
   const toast = useToast();
 
   const [data, dataDispatch] = useReducer(ListReducer<ExampleEntityDto>("id"), preLoadedData);
   const [isAddingData, setIsAddingData] = useState(false);
   const [pageShowing, setPageShowing] = useState(0);
 
-  const { done, error, fetchData } = usePagedFetched(
-    (x, y, z) => genExampleClient().get(x, y, z),
-    dataDispatch
+  const { done, error, fetchData, needle } = usePagedFetched(
+    "createdAt",
+    (needle, size, sortBy, skip) => genExampleClient().get(needle, size, sortBy, skip),
+    // genExampleClient().get,
+    dataDispatch,
+    {
+      autoStart: !preloadLoadedAll,
+      initialNeedle: preloadDataNeedle,
+      pageSize: PAGE_SHOW_SIZE
+    }
   );
 
   const pages = useMemo(() => {
     const pageCount = Math.ceil(data.length / PAGE_SHOW_SIZE);
-    return [...new Array(pageCount)].map((x, i) => i);
-  }, [data]);
 
-  const pageHasMore = useMemo(
-    () =>
-      !done && pages.length - 1 === pageShowing && (pageShowing + 1) * PAGE_SHOW_SIZE > data.length,
-    [done, pages, data, pageShowing]
+    return [...new Array(pageCount)].map((x, i) => i);
+  }, [data, done]);
+
+  const pageHasMore = useCallback(
+    pageNo =>
+      (!done || isAddingData) &&
+      pages.length - 1 === pageNo &&
+      (pageNo + 1) * PAGE_SHOW_SIZE > data.length,
+    [done, pages, data, isAddingData]
   );
 
   const addNewData = useCallback(async () => {
@@ -63,9 +84,14 @@ const Demo: FC<Props> = ({ buildTime, preLoadedData = [] }) => {
         name: Date.now().toString(32)
       })
     );
-    await fetchData(data.length);
+    await fetchData(needle);
     setIsAddingData(false);
-  }, [data]);
+  }, [data, needle]);
+
+  const elementsOnLastPage = useMemo(() => {
+    const elements = data.slice((pages.length - 1) * PAGE_SHOW_SIZE, pages.length * PAGE_SHOW_SIZE);
+    return elements.length;
+  }, [pages, pageHasMore, data]);
 
   useEffect(() => {
     if (done)
@@ -93,6 +119,16 @@ const Demo: FC<Props> = ({ buildTime, preLoadedData = [] }) => {
         Pagination table example
       </Heading>
 
+      <Progress hasStripe isAnimated value={(pages.length / preLoadedPageCount) * 100} size="sm" />
+
+      <Image
+        src="/images/icons/icon-512x512.png"
+        alt="Picture of the author"
+        width={300}
+        height={300}
+        quality={90}
+      />
+
       <Table size="sm" data-testid="data" data-value={data.length}>
         <Thead>
           <Tr>
@@ -106,7 +142,7 @@ const Demo: FC<Props> = ({ buildTime, preLoadedData = [] }) => {
             <ExampleTableRow key={dat.id} rowData={dat} />
           ))}
 
-          {pageHasMore && (
+          {pageHasMore(pageShowing) && (
             <Tr>
               <Td colSpan={3}>
                 <Skeleton height="18px" />
@@ -116,7 +152,11 @@ const Demo: FC<Props> = ({ buildTime, preLoadedData = [] }) => {
         </Tbody>
       </Table>
 
-      <PageIndicator activePage={pageShowing} onClickPage={setPageShowing} pages={pages} />
+      <PageIndicator activePage={pageShowing} onClickPage={setPageShowing} pages={pages}>
+        {!done && elementsOnLastPage >= PAGE_SHOW_SIZE && (
+          <Button colorScheme="blue" size="sm" variant="outline" isLoading={true}></Button>
+        )}
+      </PageIndicator>
 
       <Button
         data-testid="addNewBtn"
