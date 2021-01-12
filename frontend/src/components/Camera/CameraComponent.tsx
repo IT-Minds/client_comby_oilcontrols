@@ -1,8 +1,7 @@
-import { Button, VStack } from "@chakra-ui/react";
+import { Button, Center, VStack } from "@chakra-ui/react";
 import { FC } from "react";
 import { useCallback, useRef } from "react";
-import { isBrowser, isMobile } from "react-device-detect";
-import Camera from "react-webcam";
+import { isBrowser } from "react-device-detect";
 import Webcam from "react-webcam";
 
 import styles from "./styles.module.css";
@@ -11,47 +10,35 @@ type Props = {
   imgSource: (screenshot: string) => void;
 };
 
-const camConstraints: MediaTrackConstraints = {
+const mobileConstraints: MediaTrackConstraints = {
   facingMode: { exact: "environment" }
 };
 
-const webcamConstraints = {
+const browserContains = {
   facingMode: "user"
 };
 
 const CameraComp: FC<Props> = ({ imgSource }) => {
-  const webcamRef = useRef<Camera>(null);
+  const webcamRef = useRef<Webcam>(null);
 
   const capture = useCallback(() => {
     imgSource(webcamRef.current.getScreenshot());
-  }, [webcamRef]);
+  }, []);
 
   return (
-    <main>
-      <VStack>
-        {isMobile && (
-          <Camera
-            audio={false}
-            ref={webcamRef}
-            screenshotFormat="image/png"
-            videoConstraints={camConstraints}
-          />
-        )}
-
-        {isBrowser && (
-          <Webcam
-            audio={false}
-            ref={webcamRef}
-            screenshotFormat="image/png"
-            videoConstraints={webcamConstraints}
-          />
-        )}
-
-        <Button colorScheme="blue" className={styles.marginTop} onClick={capture}>
+    <VStack>
+      <Webcam
+        audio={false}
+        ref={webcamRef}
+        screenshotFormat="image/webp"
+        videoConstraints={isBrowser ? browserContains : mobileConstraints}
+      />
+      <Center>
+        <Button className={styles.marginTop} colorScheme="teal" onClick={capture}>
           Take picture
         </Button>
-      </VStack>
-    </main>
+      </Center>
+    </VStack>
   );
 };
 
