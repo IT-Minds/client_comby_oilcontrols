@@ -27,15 +27,17 @@ namespace Application.Coupons.Commands.AssignCoupons
 
       public async Task<List<int>> Handle(AssignCouponsCommand request, CancellationToken cancellationToken)
       {
-        var Truck = _context.Trucks.Find(request.TruckId);
+        var Truck = await _context.Trucks.FindAsync(request.TruckId);
+
         if(Truck == null){
           throw new NotFoundException(nameof(Truck), request.TruckId);
         }
+
         foreach( int numb in request.CouponNumbers){
           _context.Coupons.Add(new Coupon{
             CouponNumber = numb,
             Truck = Truck
-            });
+          });
         }
 
         await _context.SaveChangesAsync(cancellationToken);
