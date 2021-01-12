@@ -53,12 +53,14 @@ namespace Application.UnitTests
       var truck2 = new Truck { Id = 2 };
       var truck3 = new Truck { Id = 3 };
       var truck4 = new Truck { Id = 4 };
+      var truck5 = new Truck { Id = 1337 };
 
       context.Trucks.AddRange(
         truck1,
         truck2,
         truck3,
-        truck4
+        truck4,
+        truck5
       );
 
       context.Locations.Add(
@@ -66,10 +68,10 @@ namespace Application.UnitTests
       );
 
       context.Coupons.AddRange(
-        new Coupon { Id = 1, CouponNumber = 1001, Status = Domain.Enums.CouponStatus.AVAILABLE, Truck = truck1},
-        new Coupon { Id = 2, CouponNumber = 1002, Status = Domain.Enums.CouponStatus.AVAILABLE, Truck = truck2},
-        new Coupon { Id = 3, CouponNumber = 1003, Status = Domain.Enums.CouponStatus.AVAILABLE, Truck = truck2},
-        new Coupon { Id = 4, CouponNumber = 1004, Status = Domain.Enums.CouponStatus.AVAILABLE, Truck = truck3}
+        new Domain.Entities.Coupon { Id = 1, CouponNumber = 1001, Status = Domain.Enums.CouponStatus.AVAILABLE, Truck = truck1},
+        new Domain.Entities.Coupon { Id = 2, CouponNumber = 1002, Status = Domain.Enums.CouponStatus.AVAILABLE, Truck = truck2},
+        new Domain.Entities.Coupon { Id = 3, CouponNumber = 1003, Status = Domain.Enums.CouponStatus.AVAILABLE, Truck = truck2},
+        new Domain.Entities.Coupon { Id = 4, CouponNumber = 1004, Status = Domain.Enums.CouponStatus.AVAILABLE, Truck = truck3}
       );
       context.SaveChanges();
     }
