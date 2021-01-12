@@ -33,6 +33,65 @@ export class ClientBase {
   }
 }
 
+export interface ICouponClient {
+    createProjectFile(fileName?: string | null | undefined, file?: FileParameter | null | undefined): Promise<string>;
+}
+
+export class CouponClient extends ClientBase implements ICouponClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(configuration: AuthClient, baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super(configuration);
+        this.http = http ? http : <any>window;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    createProjectFile(fileName?: string | null | undefined, file?: FileParameter | null | undefined): Promise<string> {
+        let url_ = this.baseUrl + "/api/Coupon?";
+        if (fileName !== undefined && fileName !== null)
+            url_ += "fileName=" + encodeURIComponent("" + fileName) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (file !== null && file !== undefined)
+            content_.append("file", file.data, file.fileName ? file.fileName : "file");
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processCreateProjectFile(_response);
+        });
+    }
+
+    protected processCreateProjectFile(response: Response): Promise<string> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<string>(<any>null);
+    }
+}
+
 export interface IExampleEntityClient {
     create(command: CreateExampleEntityCommand): Promise<number>;
     get(needle?: string | null | undefined, size?: number | undefined, sortBy?: string | null | undefined, skip?: number | null | undefined): Promise<PageResultOfExampleEntityDto>;
@@ -700,6 +759,11 @@ export enum TankState {
     EMPTY = 0,
     FULL = 1,
     PARTIALLY_FILLED = 2,
+}
+
+export interface FileParameter {
+    data: any;
+    fileName: string;
 }
 
 export interface FileResponse {
