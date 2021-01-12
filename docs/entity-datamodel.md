@@ -8,6 +8,19 @@ class Truck {
   id
 }
 
+class TruckState {
+  id
+  morningQuantity
+  eveningQuantity
+}
+
+class TruckRefill {
+  id
+  Timestamp
+  fuelcardNumber
+  amount
+}
+
 class Route {
   id
 }
@@ -57,6 +70,9 @@ Refill ..> FuelType
 Location ..> TankType
 Refill ..> TankState
 Truck "1" <-- Coupon
+Truck --> "0..*" TruckState
+TruckState --> "0..*" TruckRefill
+TruckRefill ..> FuelType
 @enduml
 
 ```
