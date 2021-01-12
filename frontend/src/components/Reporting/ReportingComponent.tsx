@@ -32,10 +32,13 @@ const ReportingComp: FC<Props> = ({ carId, locations, couponNumbers, fillType })
 
         <FormControl id="location">
           <FormLabel>Select location:</FormLabel>
-          <Select placeholder="Select location">
+          <Select
+            placeholder="Select location"
+            onChange={e => updateLocalForm(e, "locationId")}
+            isRequired>
             {locations.map(path => (
-              <option key={path} value={path}>
-                {path}
+              <option key={path.id} value={path.id}>
+                {path.name}
               </option>
             ))}
           </Select>
@@ -43,10 +46,10 @@ const ReportingComp: FC<Props> = ({ carId, locations, couponNumbers, fillType })
 
         <FormControl id="coupon-number">
           <FormLabel>Select coupon number:</FormLabel>
-          <Select>
+          <Select onChange={e => updateLocalForm(e, "couponId")}>
             {couponNumbers.map(path => (
-              <option key={path} value={path}>
-                {path}
+              <option key={path.id} value={path.id}>
+                {path.name}
               </option>
             ))}
           </Select>
@@ -54,23 +57,26 @@ const ReportingComp: FC<Props> = ({ carId, locations, couponNumbers, fillType })
 
         <FormControl id="fill-number">
           <FormLabel>Select fill type:</FormLabel>
-          <Select>
-            {fillType.map(path => (
-              <option key={path} value={path}>
-                {path}
+          <Select onChange={e => updateLocalForm(e, "fillTypeId")}>
+            {fillTypes.map(path => (
+              <option key={path.id} value={path.id}>
+                {path.name}
               </option>
             ))}
           </Select>
         </FormControl>
 
-        <FormControl id="first-name" isRequired>
+        <FormControl id="amount-filled" isRequired>
           <FormLabel>Amount filled:</FormLabel>
-          <Input placeholder="Enter amount in liters" />
+          <Input
+            placeholder="Enter amount in liters"
+            onChange={e => updateLocalForm(e, "liters")}
+          />
         </FormControl>
 
         <FormControl id="special-fill">
           <FormLabel>Is special fill:</FormLabel>
-          <Checkbox></Checkbox>
+          <Checkbox onChange={e => updateLocalForm(e, "isSpecialFill")}></Checkbox>
         </FormControl>
 
         <Button mt={4} colorScheme="teal" type="submit">
