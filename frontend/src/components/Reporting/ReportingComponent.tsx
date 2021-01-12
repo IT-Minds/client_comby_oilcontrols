@@ -1,105 +1,228 @@
-import { Button, Checkbox, FormControl, FormLabel, Input, Select, Stack } from "@chakra-ui/react";
-import { FC, useCallback, useState } from "react";
+import {
+  Button,
+  Checkbox,
+  Container,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  HStack,
+  Image,
+  Input,
+  InputGroup,
+  InputRightAddon,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Select,
+  useDisclosure,
+  VStack
+} from "@chakra-ui/react";
+import CameraComp from "components/Camera/CameraComponent";
+import React, { FC, FormEvent, useCallback, useState } from "react";
+import { IoMdCamera, IoMdEye, IoMdRepeat } from "react-icons/io";
+import { MdCheck } from "react-icons/md";
 import DropdownType from "types/DropdownType";
+import { logger } from "utils/logger";
 
 import { ReportForm } from "./ReportForm";
-import styles from "./styles.module.css";
 
 type Props = {
   submitCallback: (reportForm: ReportForm) => void;
   carId: string;
-  locations: DropdownType[];
-  couponNumbers: DropdownType[];
-  fillTypes: DropdownType[];
+  locations?: DropdownType[];
+  couponNumbers?: DropdownType[];
+  fillTypes?: DropdownType[];
 };
 
 const ReportingComp: FC<Props> = ({
   submitCallback,
   carId,
-  locations,
-  couponNumbers,
-  fillTypes
+  locations = [],
+  couponNumbers = [],
+  fillTypes = []
 }) => {
   const [localReportForm, setLocalReportForm] = useState<ReportForm>({
     carId,
-    liters: "",
+    liters: 0,
     fillTypeId: "",
-    couponId: "",
+    couponId: couponNumbers[0]?.id ?? "",
     locationId: "",
-    isSpecialFill: false
+    isSpecialFill: false,
+    image: ""
   });
 
-  const updateLocalForm = (event: any, key: keyof ReportForm) => {
-    setLocalReportForm((x: Record<keyof ReportForm, any>) => {
-      x[key] = key == "isSpecialFill" ? event.target.checked : event.target.value;
-      return x;
-    });
-  };
+  const [isTakingPic, setIsTakingPic] = useState(false);
+  const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const handleSubmit = useCallback((event: any) => {
+  const updateLocalForm = useCallback((value: unknown, key: keyof ReportForm) => {
+    setLocalReportForm(form => {
+      (form[key] as unknown) = value;
+      return form;
+    });
+  }, []);
+
+  const handleSubmit = useCallback((event: FormEvent<HTMLFormElement>) => {
+    logger.debug("Submitting form ReportingComp");
     submitCallback(localReportForm);
+    setFormSubmitAttempts(0);
     event.preventDefault();
   }, []);
 
   return (
-    <Stack>
-      <form onSubmit={handleSubmit}>
-        <FormControl id="car-id">
-          <FormLabel>Car id:</FormLabel>
-          <Input type="text" isReadOnly isDisabled value={carId} />
-        </FormControl>
+    <Container>
+      {isTakingPic && (
+        <CameraComp
+          imgSource={screenshot => {
+            updateLocalForm(screenshot, "image");
+            setIsTakingPic(false);
+          }}
+        />
+      )}
+      <form onSubmit={handleSubmit} hidden={isTakingPic}>
+        <VStack align="center" justify="center">
+          <FormControl id="car-id" isReadOnly>
+            <FormLabel>Car id:</FormLabel>
+            <Input type="text" value={carId} />
+          </FormControl>
 
-        <FormControl id="location" isRequired>
-          <FormLabel>Select location:</FormLabel>
-          <Select placeholder="Select location" onChange={e => updateLocalForm(e, "locationId")}>
-            {locations.map(path => (
-              <option key={path.id} value={path.id}>
-                {path.name}
-              </option>
-            ))}
-          </Select>
-        </FormControl>
+          <FormControl
+            isInvalid={
+              formSubmitAttempts > 0 && locations.every(l => localReportForm.locationId !== l.id)
+            }
+            isRequired>
+            <FormLabel>Select location:</FormLabel>
+            <Select
+              placeholder="Select location"
+              onChange={e => updateLocalForm(e.target.value, "locationId")}>
+              {locations.map(path => (
+                <option key={path.id} value={path.id}>
+                  {path.name}
+                </option>
+              ))}
+            </Select>
+            <FormErrorMessage>Please select one of the allowed locations</FormErrorMessage>
+          </FormControl>
 
-        <FormControl id="coupon-number">
-          <FormLabel>Select coupon number:</FormLabel>
-          <Select onChange={e => updateLocalForm(e, "couponId")}>
-            {couponNumbers.map(path => (
-              <option key={path.id} value={path.id}>
-                {path.name}
-              </option>
-            ))}
-          </Select>
-        </FormControl>
+          <FormControl
+            isInvalid={
+              formSubmitAttempts > 0 &&
+              couponNumbers.every(cn => localReportForm.couponId !== cn.id)
+            }
+            isRequired>
+            <FormLabel>Select coupon number:</FormLabel>
+            <Select onChange={e => updateLocalForm(e.target.value, "couponId")}>
+              {couponNumbers.map(path => (
+                <option key={path.id} value={path.id}>
+                  {path.name}
+                </option>
+              ))}
+            </Select>
+            <FormErrorMessage>Please select one of the allowed coupons</FormErrorMessage>
+          </FormControl>
 
-        <FormControl id="fill-number">
-          <FormLabel>Select fill type:</FormLabel>
-          <Select onChange={e => updateLocalForm(e, "fillTypeId")}>
-            {fillTypes.map(path => (
-              <option key={path.id} value={path.id}>
-                {path.name}
-              </option>
-            ))}
-          </Select>
-        </FormControl>
+          <FormControl
+            isInvalid={
+              formSubmitAttempts > 0 && fillTypes.every(ft => localReportForm.fillTypeId !== ft.id)
+            }
+            isRequired>
+            <FormLabel>Select fill type:</FormLabel>
+            <Select
+              onChange={e => updateLocalForm(e.target.value, "fillTypeId")}
+              placeholder="Select option">
+              {fillTypes.map(path => (
+                <option key={path.id} value={path.id}>
+                  {path.name}
+                </option>
+              ))}
+            </Select>
+            <FormErrorMessage>Please select one of the allowed tank types</FormErrorMessage>
+          </FormControl>
 
-        <FormControl id="amount-filled" isRequired>
-          <FormLabel>Amount filled:</FormLabel>
-          <Input
-            placeholder="Enter amount in liters"
-            onChange={e => updateLocalForm(e, "liters")}
-          />
-        </FormControl>
+          <FormControl isInvalid={formSubmitAttempts > 0 && localReportForm.liters <= 0} isRequired>
+            <FormLabel>Amount filled:</FormLabel>
 
-        <FormControl id="special-fill">
-          <FormLabel>Is special fill:</FormLabel>
-          <Checkbox onChange={e => updateLocalForm(e, "isSpecialFill")}></Checkbox>
-        </FormControl>
+            <InputGroup>
+              <Input
+                placeholder="Enter amount filled into tank"
+                onChange={e => updateLocalForm(e.target.valueAsNumber, "liters")}
+                type="number"
+              />
+              <InputRightAddon>liters</InputRightAddon>
+            </InputGroup>
+            <FormErrorMessage>
+              Please enter the amount of liters filled into the tank
+            </FormErrorMessage>
+          </FormControl>
 
-        <Button mt={4} colorScheme="teal" type="submit">
-          Submit
-        </Button>
+          <FormControl>
+            <HStack>
+              <FormLabel mb={4}>Is special fill:</FormLabel>
+              <Checkbox
+                mb={4}
+                onChange={e => updateLocalForm(e.target.checked, "isSpecialFill")}></Checkbox>
+            </HStack>
+          </FormControl>
+
+          <FormControl
+            isInvalid={formSubmitAttempts > 0 && localReportForm.image.length <= 0}
+            isRequired>
+            <HStack>
+              {localReportForm.image.length > 0 ? (
+                <Button onClick={onOpen} rightIcon={<IoMdEye />}>
+                  View Image
+                </Button>
+              ) : (
+                <Button
+                  colorScheme="blue"
+                  rightIcon={<IoMdCamera />}
+                  onClick={() => setIsTakingPic(true)}>
+                  Take Image
+                </Button>
+              )}
+              <Input hidden value={localReportForm.image} onChange={() => null} />
+              <FormErrorMessage>An image is needed</FormErrorMessage>
+            </HStack>
+          </FormControl>
+
+          <Button
+            colorScheme="green"
+            type="submit"
+            rightIcon={<MdCheck />}
+            onClick={() => setFormSubmitAttempts(x => x + 1)}>
+            Submit
+          </Button>
+        </VStack>
       </form>
-    </Stack>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Image</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Image src={localReportForm.image} />
+          </ModalBody>
+
+          <ModalFooter>
+            <Button
+              colorScheme="yellow"
+              rightIcon={<IoMdRepeat />}
+              onClick={() => {
+                updateLocalForm("", "image");
+                setIsTakingPic(true);
+                onClose();
+              }}>
+              Retake Image
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </Container>
   );
 };
 

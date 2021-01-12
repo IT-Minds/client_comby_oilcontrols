@@ -3,6 +3,7 @@ export interface ReportForm {
   locationId: string;
   couponId: string;
   fillTypeId: string;
-  liters: string;
+  liters: number;
   isSpecialFill: boolean;
+  image: string; //base64 encoded
 }
