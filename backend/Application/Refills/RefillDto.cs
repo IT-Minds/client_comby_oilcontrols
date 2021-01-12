@@ -18,18 +18,8 @@ namespace Application.Refills.Queries.GetRefills
     public void Mapping(Profile profile)
     {
       profile.CreateMap<Domain.Entities.Refill, RefillDto>()
-        .ForMember(dest => dest.Id,
-          map => map.MapFrom(from => from.Id))
-        .ForMember(dest => dest.Date,
-          map => map.MapFrom(from => from.Date))
-        .ForMember(dest => dest.CouponId,
-          map => map.MapFrom(from => from.CouponId))
         .ForMember(dest => dest.TruckId,
-          map => map.MapFrom(from => from.Coupon.TruckId))
-        .ForMember(dest => dest.StartAmount, 
-          map => map.MapFrom(from => from.StartAmount))
-        .ForMember(dest => dest.EndAmount, 
-          map => map.MapFrom(from => from.EndAmount));;
+          map => map.MapFrom(from => from.Coupon.TruckId));
     }
   }
 }
