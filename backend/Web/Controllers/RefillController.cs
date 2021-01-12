@@ -13,17 +13,6 @@ namespace Web.Controllers
   {
     [HttpGet]
     public async Task<ActionResult<PageResult<RefillDto>>> Get(
-      [FromQuery] int needle, [FromQuery] int size, [FromQuery] int? skip = 0
-    ){
-      return await Mediator.Send(new GetRefillsLocationQuery{
-        Size = size,
-        Needle = needle,
-        Skip = skip
-      });
-    }
-
-    [HttpGet]
-    public async Task<ActionResult<PageResult<RefillDto>>> Get(
       [FromQuery] TankType tankType, [FromQuery] int tankNumber, [FromQuery] string needle, [FromQuery] int size, [FromQuery] int? skip = 0
     )
     {
