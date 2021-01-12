@@ -22,9 +22,9 @@ const webcamConstraints = {
 const CameraComp: FC<Props> = ({ imgSource }) => {
   const webcamRef = useRef<Camera>(null);
 
-  const capture = useCallback(() => {
+  const capture = () => {
     imgSource(webcamRef.current.getScreenshot());
-  }, [webcamRef]);
+  };
 
   return (
     <main>
