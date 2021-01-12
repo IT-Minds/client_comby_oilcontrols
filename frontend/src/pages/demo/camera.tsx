@@ -1,4 +1,4 @@
-import { Box, Container } from "@chakra-ui/react";
+import { Container, VStack } from "@chakra-ui/react";
 import CameraComp from "components/Camera/CameraComponent";
 import { NextPage } from "next";
 import { useState } from "react";
@@ -8,11 +8,10 @@ const DemoPage: NextPage = () => {
 
   return (
     <Container maxW="xl" centerContent>
-      <Box padding="4" bg="gray.100" maxW="6xl" maxH="4xl" resize="both" overflow="auto">
+      <VStack>
         <CameraComp imgSource={setImgSource} />
-      </Box>
-
-      {imgSource && <img src={imgSource} alt=""></img>}
+        {imgSource && <img src={imgSource} alt=""></img>}
+      </VStack>
     </Container>
   );
 };

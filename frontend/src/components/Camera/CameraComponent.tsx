@@ -1,4 +1,4 @@
-import { Box, Button } from "@chakra-ui/react";
+import { Button, VStack } from "@chakra-ui/react";
 import { FC } from "react";
 import { useCallback, useRef } from "react";
 import { isBrowser, isMobile } from "react-device-detect";
@@ -28,7 +28,7 @@ const CameraComp: FC<Props> = ({ imgSource }) => {
 
   return (
     <main>
-      <Box className={styles.marginTop}>
+      <VStack>
         {isMobile && (
           <Camera
             audio={false}
@@ -50,7 +50,7 @@ const CameraComp: FC<Props> = ({ imgSource }) => {
         <Button colorScheme="blue" className={styles.marginTop} onClick={capture}>
           Take picture
         </Button>
-      </Box>
+      </VStack>
     </main>
   );
 };
