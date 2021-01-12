@@ -16,9 +16,7 @@ namespace Application.Refills.Queries.GetRefills.Location
   {
     public int Size { get ; set ; }
     public DateTimeOffset Needle { get; set; }
-
     public int? Skip { get; set; }
-
     public TankType TankType { get; set; }
     public int TankNumber { get; set; }
 
