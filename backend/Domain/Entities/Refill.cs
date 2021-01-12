@@ -10,7 +10,12 @@ namespace Domain.Entities
     public Coupon Coupon { get; set; }
     public int CouponId { get; set; }
     public FuelType Type { get; set; }
-    public int Amount { get; set; }
+    public double StartAmount { get; set; }
+    public double EndAmount { get; set; }
+
+    public double AmountDelivered { 
+      get => EndAmount-StartAmount;
+    }
     public TankState TankState { get; set; }
     public DateTime Date { get; set; }
     public Location Location { get; set; }

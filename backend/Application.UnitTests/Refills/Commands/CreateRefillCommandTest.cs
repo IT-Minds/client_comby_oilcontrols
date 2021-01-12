@@ -1,12 +1,12 @@
-using Application.Refill.Commands.CreateRefill;
 using Domain.Enums;
 using FluentAssertions;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using System;
+using Application.Refills.Commands.CreateRefill;
 
-namespace Application.UnitTests.Refill.Commands.CreateRefill
+namespace Application.UnitTests.Refills.Commands.CreateRefill
 {
   public class CreateRefillCommandTest : CommandTestBase
   {
@@ -15,14 +15,15 @@ namespace Application.UnitTests.Refill.Commands.CreateRefill
     {
       var command = new CreateRefillCommand
       {
-        TruckId = 1,
-        Amount = 100,
-        CouponNumber = 1001,
+        TruckId = 43,
+        StartAmount = 100,
+        EndAmount = 150,
+        CouponNumber = 19991,
         Date = new DateTime(),
         FuelType = Domain.Enums.FuelType.PETROLEUM,
         TankState = Domain.Enums.TankState.FULL,
         TankType = Domain.Enums.TankType.BUILDING,
-        TankNumber = 80
+        TankNumber = 443
       };
 
       var handler = new CreateRefillCommand.CreateRefillCommandHandler(Context);
@@ -32,7 +33,8 @@ namespace Application.UnitTests.Refill.Commands.CreateRefill
       var entity = Context.Refills.Find(result);
 
       entity.Should().NotBeNull();
-      entity.Amount.Should().Be(command.Amount);
+      entity.StartAmount.Should().Be(command.StartAmount);
+      entity.EndAmount.Should().Be(command.EndAmount);
       entity.Coupon.CouponNumber.Should().Be(command.CouponNumber);
       entity.Date.Should().Be(command.Date);
       entity.Type.Should().Be(command.FuelType);
@@ -46,14 +48,15 @@ namespace Application.UnitTests.Refill.Commands.CreateRefill
     {
       var command = new CreateRefillCommand
       {
-        TruckId = 2,
-        Amount = 100,
-        CouponNumber = 1003,
+        TruckId = 43,
+        StartAmount = 100,
+        EndAmount = 150,
+        CouponNumber = 19997,
         Date = new DateTime(),
         FuelType = Domain.Enums.FuelType.PETROLEUM,
         TankState = Domain.Enums.TankState.FULL,
         TankType = Domain.Enums.TankType.BUILDING,
-        TankNumber = 80
+        TankNumber = 443
       };
 
       var handler = new CreateRefillCommand.CreateRefillCommandHandler(Context);
@@ -68,14 +71,15 @@ namespace Application.UnitTests.Refill.Commands.CreateRefill
     {
       var command = new CreateRefillCommand
       {
-        TruckId = 2,
-        Amount = 100,
+        TruckId = 43,
+        StartAmount = 100,
+        EndAmount = 150,
         CouponNumber = 0,
         Date = new DateTime(),
         FuelType = Domain.Enums.FuelType.PETROLEUM,
         TankState = Domain.Enums.TankState.FULL,
         TankType = Domain.Enums.TankType.BUILDING,
-        TankNumber = 80
+        TankNumber = 443
       };
 
       var handler = new CreateRefillCommand.CreateRefillCommandHandler(Context);
