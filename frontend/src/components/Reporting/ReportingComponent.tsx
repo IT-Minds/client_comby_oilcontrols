@@ -49,12 +49,9 @@ const ReportingComp: FC<Props> = ({
           <Input type="text" isReadOnly isDisabled value={carId} />
         </FormControl>
 
-        <FormControl id="location">
+        <FormControl id="location" isRequired>
           <FormLabel>Select location:</FormLabel>
-          <Select
-            placeholder="Select location"
-            onChange={e => updateLocalForm(e, "locationId")}
-            isRequired>
+          <Select placeholder="Select location" onChange={e => updateLocalForm(e, "locationId")}>
             {locations.map(path => (
               <option key={path.id} value={path.id}>
                 {path.name}
