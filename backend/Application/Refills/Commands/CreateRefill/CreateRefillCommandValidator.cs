@@ -25,7 +25,7 @@ namespace Application.Refills.Commands.CreateRefill
       RuleFor(e => e.TankState)
         .IsInEnum()
         .NotNull();
-      RuleFor(e => e.Date)
+      RuleFor(e => e.ExpectedDeliveryDate)
         .NotNull();
     }
   }

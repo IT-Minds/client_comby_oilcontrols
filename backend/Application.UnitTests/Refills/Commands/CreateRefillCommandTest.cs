@@ -19,7 +19,7 @@ namespace Application.UnitTests.Refills.Commands.CreateRefill
         StartAmount = 100,
         EndAmount = 150,
         CouponNumber = 19991,
-        Date = new DateTime(),
+        ExpectedDeliveryDate = new DateTime(),
         FuelType = Domain.Enums.FuelType.PETROLEUM,
         TankState = Domain.Enums.TankState.FULL,
         TankType = Domain.Enums.TankType.BUILDING,
@@ -36,7 +36,7 @@ namespace Application.UnitTests.Refills.Commands.CreateRefill
       entity.StartAmount.Should().Be(command.StartAmount);
       entity.EndAmount.Should().Be(command.EndAmount);
       entity.Coupon.CouponNumber.Should().Be(command.CouponNumber);
-      entity.Date.Should().Be(command.Date);
+      entity.ExpectedDeliveryDate.Should().Be(command.ExpectedDeliveryDate);
       entity.Type.Should().Be(command.FuelType);
       entity.TankState.Should().Be(command.TankState);
       entity.Location.Type.Should().Be(command.TankType);
@@ -52,7 +52,7 @@ namespace Application.UnitTests.Refills.Commands.CreateRefill
         StartAmount = 100,
         EndAmount = 150,
         CouponNumber = 19997,
-        Date = new DateTime(),
+        ExpectedDeliveryDate = new DateTime(),
         FuelType = Domain.Enums.FuelType.PETROLEUM,
         TankState = Domain.Enums.TankState.FULL,
         TankType = Domain.Enums.TankType.BUILDING,
@@ -75,7 +75,7 @@ namespace Application.UnitTests.Refills.Commands.CreateRefill
         StartAmount = 100,
         EndAmount = 150,
         CouponNumber = 0,
-        Date = new DateTime(),
+        ExpectedDeliveryDate = new DateTime(),
         FuelType = Domain.Enums.FuelType.PETROLEUM,
         TankState = Domain.Enums.TankState.FULL,
         TankType = Domain.Enums.TankType.BUILDING,

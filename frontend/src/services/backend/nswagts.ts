@@ -987,7 +987,7 @@ export class CreateRefillCommand implements ICreateRefillCommand {
     startAmount?: number;
     endAmount?: number;
     couponNumber?: number;
-    date?: Date;
+    expectedDeliveryDate?: Date;
     fuelType?: FuelType;
     tankState?: TankState;
 
@@ -1008,7 +1008,7 @@ export class CreateRefillCommand implements ICreateRefillCommand {
             this.startAmount = _data["startAmount"];
             this.endAmount = _data["endAmount"];
             this.couponNumber = _data["couponNumber"];
-            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
+            this.expectedDeliveryDate = _data["expectedDeliveryDate"] ? new Date(_data["expectedDeliveryDate"].toString()) : <any>undefined;
             this.fuelType = _data["fuelType"];
             this.tankState = _data["tankState"];
         }
@@ -1029,7 +1029,7 @@ export class CreateRefillCommand implements ICreateRefillCommand {
         data["startAmount"] = this.startAmount;
         data["endAmount"] = this.endAmount;
         data["couponNumber"] = this.couponNumber;
-        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+        data["expectedDeliveryDate"] = this.expectedDeliveryDate ? this.expectedDeliveryDate.toISOString() : <any>undefined;
         data["fuelType"] = this.fuelType;
         data["tankState"] = this.tankState;
         return data; 
@@ -1043,7 +1043,7 @@ export interface ICreateRefillCommand {
     startAmount?: number;
     endAmount?: number;
     couponNumber?: number;
-    date?: Date;
+    expectedDeliveryDate?: Date;
     fuelType?: FuelType;
     tankState?: TankState;
 }
@@ -1125,7 +1125,8 @@ export interface IPageResultOfRefillDto {
 
 export class RefillDto implements IRefillDto {
     id?: number;
-    date?: Date;
+    expectedDeliveryDate?: Date;
+    actualDeliveryDate?: Date;
     couponId?: number;
     truckId?: number;
     startAmount?: number;
@@ -1143,7 +1144,8 @@ export class RefillDto implements IRefillDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
+            this.expectedDeliveryDate = _data["expectedDeliveryDate"] ? new Date(_data["expectedDeliveryDate"].toString()) : <any>undefined;
+            this.actualDeliveryDate = _data["actualDeliveryDate"] ? new Date(_data["actualDeliveryDate"].toString()) : <any>undefined;
             this.couponId = _data["couponId"];
             this.truckId = _data["truckId"];
             this.startAmount = _data["startAmount"];
@@ -1161,7 +1163,8 @@ export class RefillDto implements IRefillDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+        data["expectedDeliveryDate"] = this.expectedDeliveryDate ? this.expectedDeliveryDate.toISOString() : <any>undefined;
+        data["actualDeliveryDate"] = this.actualDeliveryDate ? this.actualDeliveryDate.toISOString() : <any>undefined;
         data["couponId"] = this.couponId;
         data["truckId"] = this.truckId;
         data["startAmount"] = this.startAmount;
@@ -1172,7 +1175,8 @@ export class RefillDto implements IRefillDto {
 
 export interface IRefillDto {
     id?: number;
-    date?: Date;
+    expectedDeliveryDate?: Date;
+    actualDeliveryDate?: Date;
     couponId?: number;
     truckId?: number;
     startAmount?: number;

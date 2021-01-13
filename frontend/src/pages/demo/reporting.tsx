@@ -19,7 +19,7 @@ const DemoPage: NextPage = () => {
         const newRefillID = await client.create(
           new CreateRefillCommand({
             couponNumber: Number(reportForm.couponId),
-            date: new Date(),
+            expectedDeliveryDate: new Date(),
             fuelType: reportForm.fuelType,
             startAmount: 2,
             endAmount: 0 + reportForm.liters,
