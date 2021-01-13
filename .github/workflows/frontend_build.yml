@@ -55,7 +55,9 @@ jobs:
           node-version: ${{ env.node-version }}
 
       - name: Test Frontend
-        run: npm t
+        run: |
+          npm ci
+          npm t
 
       - name: Run CodeCov
         uses: codecov/codecov-action@v1.2.1
