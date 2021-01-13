@@ -10,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Application.UnitTests.Coupon.Commands.AssignCoupons
+namespace Application.UnitTests.Coupons.Commands.AssignCoupons
 {
   public class UpdateCouponStatusCommandTest : CommandTestBase
   {
@@ -19,15 +19,15 @@ namespace Application.UnitTests.Coupon.Commands.AssignCoupons
     {
       var command = new UpdateCouponStatusCommand
       {
-        CouponNumber = 1004,
-        TruckId = 3
+        CouponNumber = 19991,
+        TruckId = 43
       };
 
       var handler = new UpdateCouponStatusCommand.UpdateCouponstatusCommandHandler(Context);
 
       var result = await handler.Handle(command, CancellationToken.None);
 
-      var coupon = Context.Coupons.FirstOrDefault(x => x.CouponNumber == 1004);
+      var coupon = Context.Coupons.FirstOrDefault(x => x.CouponNumber == 19991);
 
       coupon.Should().NotBeNull();
       coupon.Status.Should().Be(CouponStatus.DESTROYED);
@@ -38,8 +38,8 @@ namespace Application.UnitTests.Coupon.Commands.AssignCoupons
     {
       var command = new UpdateCouponStatusCommand
       {
-        CouponNumber = 1004,
-        TruckId = 1
+        CouponNumber = 19991,
+        TruckId = 44
       };
 
       var handler = new UpdateCouponStatusCommand.UpdateCouponstatusCommandHandler(Context);
