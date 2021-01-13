@@ -22,7 +22,8 @@ class Refill {
   id
   startAmount
   endAmount
-  date
+  expectedDeliveryDate
+  actualDeliveryDate
   fuelType
   tankState
 }
