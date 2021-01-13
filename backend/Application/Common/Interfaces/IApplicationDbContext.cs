@@ -14,6 +14,7 @@ namespace Application.Common.Interfaces
     DbSet<Truck> Trucks { get; set; }
     DbSet<Route> Routes { get; set; }
     DbSet<Region> Regions { get; set; }
+    DbSet<RegionDailyTemp> RegionDailyTemps { get; set; }
     DbSet<ExampleEntity> ExampleEntities { get; set; }
     DbSet<ExampleEntityList> ExampleEntityLists { get; set; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);

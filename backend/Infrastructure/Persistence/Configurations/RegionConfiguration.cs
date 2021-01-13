@@ -11,6 +11,10 @@ namespace Infrastructure.Persistence.Configurations
       builder.HasMany<Location>(e => e.Locations)
         .WithOne(e => e.Region)
         .IsRequired(false);
+
+      builder.HasMany<RegionDailyTemp>(e => e.DailyTemperatures)
+       .WithOne(e => e.Region)
+       .IsRequired(true);
     }
   }
 }
