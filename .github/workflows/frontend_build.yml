@@ -1,4 +1,4 @@
-name: Full Application Build, Format, and Test
+name: Full Frontend Build, Format, and Test
 
 on:
   push:
@@ -28,12 +28,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: Use Node.js ${{ env.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ env.node-version }}
-      - run: |
+
+      - name: Validate Frontend
+        run: |
           npm ci
           npm run validate
 
