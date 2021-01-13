@@ -29,11 +29,6 @@ const DemoPage: NextPage = () => {
             { name: "Car 1", id: "1" },
             { name: "Car 2", id: "2" },
             { name: "Car 3", id: "3" }
-          ]}
-          couponNumbers={[
-            { name: "Coupon 1", id: "1" },
-            { name: "Coupon 2", id: "2" },
-            { name: "Coupon 3", id: "3" }
           ]}></AddCouponComp>
       </Box>
     </Container>
