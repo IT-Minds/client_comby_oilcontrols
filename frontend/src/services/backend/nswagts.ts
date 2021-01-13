@@ -836,7 +836,7 @@ export class CreateRefillCommand implements ICreateRefillCommand {
     startAmount?: number;
     endAmount?: number;
     couponNumber?: number;
-    date?: Date;
+    expectedDeliveryDate?: Date;
     fuelType?: FuelType;
     tankState?: TankState;
 
@@ -857,7 +857,7 @@ export class CreateRefillCommand implements ICreateRefillCommand {
             this.startAmount = _data["startAmount"];
             this.endAmount = _data["endAmount"];
             this.couponNumber = _data["couponNumber"];
-            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
+            this.expectedDeliveryDate = _data["expectedDeliveryDate"] ? new Date(_data["expectedDeliveryDate"].toString()) : <any>undefined;
             this.fuelType = _data["fuelType"];
             this.tankState = _data["tankState"];
         }
@@ -878,7 +878,7 @@ export class CreateRefillCommand implements ICreateRefillCommand {
         data["startAmount"] = this.startAmount;
         data["endAmount"] = this.endAmount;
         data["couponNumber"] = this.couponNumber;
-        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+        data["expectedDeliveryDate"] = this.expectedDeliveryDate ? this.expectedDeliveryDate.toISOString() : <any>undefined;
         data["fuelType"] = this.fuelType;
         data["tankState"] = this.tankState;
         return data; 
@@ -892,7 +892,7 @@ export interface ICreateRefillCommand {
     startAmount?: number;
     endAmount?: number;
     couponNumber?: number;
-    date?: Date;
+    expectedDeliveryDate?: Date;
     fuelType?: FuelType;
     tankState?: TankState;
 }

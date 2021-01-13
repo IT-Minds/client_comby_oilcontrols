@@ -19,7 +19,7 @@ namespace Application.Refills.Commands.CreateRefill
     public double StartAmount { get; set; }
     public double EndAmount { get; set; }
     public int CouponNumber { get; set; }
-    public DateTime Date { get; set; }
+    public DateTime ExpectedDeliveryDate { get; set; }
     public FuelType FuelType { get; set; }
     public TankState TankState { get; set; }
 
@@ -61,7 +61,7 @@ namespace Application.Refills.Commands.CreateRefill
           StartAmount = request.StartAmount,
           EndAmount = request.EndAmount,
           Coupon = Coupon,
-          ExpectedDeliveryDate = request.Date,
+          ExpectedDeliveryDate = request.ExpectedDeliveryDate,
           Type = request.FuelType,
           TankState = request.TankState,
           Location = Location
