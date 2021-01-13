@@ -57,11 +57,19 @@ namespace Application.UnitTests
         new Truck { Id = 44, Route = route2}
       );
 
+      context.FuelTanks.AddRange(
+        new FuelTank { Id = 1, TankNumber = 443, Type = TankType.BUILDING, TankCapacity = 2000.5, MinimumFuelAmount = 150.5},
+        new FuelTank { Id = 2, TankNumber = 444, Type = TankType.BUILDING, TankCapacity = 2000.5, MinimumFuelAmount = 150.5},
+        new FuelTank { Id = 3, TankNumber = 445, Type = TankType.BUILDING, TankCapacity = 2000.5, MinimumFuelAmount = 150.5},
+        new FuelTank { Id = 4, TankNumber = 446, Type = TankType.BUILDING, TankCapacity = 2000.5, MinimumFuelAmount = 150.5},
+        new FuelTank { Id = 5, TankNumber = 447, Type = TankType.BUILDING, TankCapacity = 2000.5, MinimumFuelAmount = 150.5}
+      );
+
       context.Locations.AddRange(
-        new Location { Id = 1, Type = TankType.BUILDING, TankNumber = 443 },
-        new Location { Id = 2, Type = TankType.BUILDING, TankNumber = 444 },
-        new Location { Id = 3, Type = TankType.BUILDING, TankNumber = 445 },
-        new Location { Id = 4, Type = TankType.BUILDING, TankNumber = 446 }
+        new Location { Id = 1, FuelTankId = 1},
+        new Location { Id = 2, FuelTankId = 2},
+        new Location { Id = 3, FuelTankId = 3},
+        new Location { Id = 4, FuelTankId = 4}
       );
 
       context.Coupons.AddRange(

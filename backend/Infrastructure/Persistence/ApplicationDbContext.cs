@@ -34,6 +34,7 @@ namespace Infrastructure.Persistence
     public DbSet<RegionDailyTemp> RegionDailyTemps { get; set; }
     public DbSet<TruckDailyState> TruckDailyStates { get; set; }
     public DbSet<TruckRefill> TruckRefills { get; set; }
+    public DbSet<FuelTank> FuelTanks { get; set; }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {

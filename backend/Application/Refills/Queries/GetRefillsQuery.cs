@@ -68,7 +68,8 @@ namespace Application.Refills.Queries.GetRefills.Location
         {
           baseQuery = baseQuery
           .Include(refill => refill.Location)
-          .Where(refill => refill.Location.Type == request.TankType);
+            .ThenInclude(location => location.FuelTank)
+          .Where(refill => refill.Location.FuelTank.Type == request.TankType);
         }
 
         var query = request.PreparePage(baseQuery);
