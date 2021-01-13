@@ -30,6 +30,9 @@ namespace Infrastructure.Persistence
     public DbSet<Refill> Refills { get; set; }
     public DbSet<Truck> Trucks { get; set; }
     public DbSet<Route> Routes { get; set; }
+    public DbSet<TruckState> DailyTruckStates { get; set; }
+    public DbSet<TruckRefill> TruckRefills { get; set; }
+
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
       foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
