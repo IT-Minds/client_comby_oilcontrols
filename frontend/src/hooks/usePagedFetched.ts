@@ -36,7 +36,7 @@ export const usePagedFetched = <T extends IPageResult<V>, V = unknown>(
   const [needle, setNeedle] = useState(settings.initialNeedle);
 
   const fetchData = useCallback<Return["fetchData"]>(
-    async (initialNeedle?: string, initialSkip?: number) => {
+    async (initialNeedle: string = settings.initialNeedle, initialSkip?: number) => {
       setDone(false);
       setError(false);
       try {
