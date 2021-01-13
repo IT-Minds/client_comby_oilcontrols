@@ -30,7 +30,7 @@ const DemoPage: NextPage = () => {
           })
         );
 
-        const fileName = await client.createProjectFile(newRefillID, {
+        const fileName = await client.saveCouponImage(newRefillID, {
           data: await urlToFile(reportForm.image, "temp.webp", "image/webp"),
           fileName: "temp.webp"
         });
