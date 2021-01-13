@@ -386,6 +386,8 @@ export class HealthClient extends ClientBase implements IHealthClient {
 
 export interface IRefillClient {
     create(command: CreateRefillCommand): Promise<number>;
+    get(tankType?: TankType | undefined, tankNumber?: number | undefined, needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfRefillDto>;
+    createProjectFile(id: number, refillId?: number | undefined, file?: FileParameter | null | undefined): Promise<string>;
 }
 
 export class RefillClient extends ClientBase implements IRefillClient {
@@ -437,6 +439,106 @@ export class RefillClient extends ClientBase implements IRefillClient {
             });
         }
         return Promise.resolve<number>(<any>null);
+    }
+
+    get(tankType?: TankType | undefined, tankNumber?: number | undefined, needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfRefillDto> {
+        let url_ = this.baseUrl + "/api/Refill?";
+        if (tankType === null)
+            throw new Error("The parameter 'tankType' cannot be null.");
+        else if (tankType !== undefined)
+            url_ += "tankType=" + encodeURIComponent("" + tankType) + "&";
+        if (tankNumber === null)
+            throw new Error("The parameter 'tankNumber' cannot be null.");
+        else if (tankNumber !== undefined)
+            url_ += "tankNumber=" + encodeURIComponent("" + tankNumber) + "&";
+        if (needle !== undefined && needle !== null)
+            url_ += "needle=" + encodeURIComponent("" + needle) + "&";
+        if (size === null)
+            throw new Error("The parameter 'size' cannot be null.");
+        else if (size !== undefined)
+            url_ += "size=" + encodeURIComponent("" + size) + "&";
+        if (skip !== undefined && skip !== null)
+            url_ += "skip=" + encodeURIComponent("" + skip) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processGet(_response);
+        });
+    }
+
+    protected processGet(response: Response): Promise<PageResultOfRefillDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PageResultOfRefillDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<PageResultOfRefillDto>(<any>null);
+    }
+
+    createProjectFile(id: number, refillId?: number | undefined, file?: FileParameter | null | undefined): Promise<string> {
+        let url_ = this.baseUrl + "/api/Refill/{id}?";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (refillId === null)
+            throw new Error("The parameter 'refillId' cannot be null.");
+        else if (refillId !== undefined)
+            url_ += "refillId=" + encodeURIComponent("" + refillId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (file !== null && file !== undefined)
+            content_.append("file", file.data, file.fileName ? file.fileName : "file");
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processCreateProjectFile(_response);
+        });
+    }
+
+    protected processCreateProjectFile(response: Response): Promise<string> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<string>(<any>null);
     }
 }
 
@@ -731,7 +833,8 @@ export class CreateRefillCommand implements ICreateRefillCommand {
     truckId?: number;
     tankType?: TankType;
     tankNumber?: number;
-    amount?: number;
+    startAmount?: number;
+    endAmount?: number;
     couponNumber?: number;
     date?: Date;
     fuelType?: FuelType;
@@ -751,7 +854,8 @@ export class CreateRefillCommand implements ICreateRefillCommand {
             this.truckId = _data["truckId"];
             this.tankType = _data["tankType"];
             this.tankNumber = _data["tankNumber"];
-            this.amount = _data["amount"];
+            this.startAmount = _data["startAmount"];
+            this.endAmount = _data["endAmount"];
             this.couponNumber = _data["couponNumber"];
             this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
             this.fuelType = _data["fuelType"];
@@ -771,7 +875,8 @@ export class CreateRefillCommand implements ICreateRefillCommand {
         data["truckId"] = this.truckId;
         data["tankType"] = this.tankType;
         data["tankNumber"] = this.tankNumber;
-        data["amount"] = this.amount;
+        data["startAmount"] = this.startAmount;
+        data["endAmount"] = this.endAmount;
         data["couponNumber"] = this.couponNumber;
         data["date"] = this.date ? this.date.toISOString() : <any>undefined;
         data["fuelType"] = this.fuelType;
@@ -784,7 +889,8 @@ export interface ICreateRefillCommand {
     truckId?: number;
     tankType?: TankType;
     tankNumber?: number;
-    amount?: number;
+    startAmount?: number;
+    endAmount?: number;
     couponNumber?: number;
     date?: Date;
     fuelType?: FuelType;
@@ -808,6 +914,123 @@ export enum TankState {
     EMPTY = 0,
     FULL = 1,
     PARTIALLY_FILLED = 2,
+}
+
+export class PageResultOfRefillDto implements IPageResultOfRefillDto {
+    newNeedle?: string | undefined;
+    pagesRemaining?: number;
+    results?: RefillDto[] | undefined;
+    hasMore?: boolean;
+
+    constructor(data?: IPageResultOfRefillDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.newNeedle = _data["newNeedle"];
+            this.pagesRemaining = _data["pagesRemaining"];
+            if (Array.isArray(_data["results"])) {
+                this.results = [] as any;
+                for (let item of _data["results"])
+                    this.results!.push(RefillDto.fromJS(item));
+            }
+            this.hasMore = _data["hasMore"];
+        }
+    }
+
+    static fromJS(data: any): PageResultOfRefillDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PageResultOfRefillDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["newNeedle"] = this.newNeedle;
+        data["pagesRemaining"] = this.pagesRemaining;
+        if (Array.isArray(this.results)) {
+            data["results"] = [];
+            for (let item of this.results)
+                data["results"].push(item.toJSON());
+        }
+        data["hasMore"] = this.hasMore;
+        return data; 
+    }
+}
+
+export interface IPageResultOfRefillDto {
+    newNeedle?: string | undefined;
+    pagesRemaining?: number;
+    results?: RefillDto[] | undefined;
+    hasMore?: boolean;
+}
+
+export class RefillDto implements IRefillDto {
+    id?: number;
+    date?: Date;
+    couponId?: number;
+    truckId?: number;
+    startAmount?: number;
+    endAmount?: number;
+
+    constructor(data?: IRefillDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
+            this.couponId = _data["couponId"];
+            this.truckId = _data["truckId"];
+            this.startAmount = _data["startAmount"];
+            this.endAmount = _data["endAmount"];
+        }
+    }
+
+    static fromJS(data: any): RefillDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new RefillDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+        data["couponId"] = this.couponId;
+        data["truckId"] = this.truckId;
+        data["startAmount"] = this.startAmount;
+        data["endAmount"] = this.endAmount;
+        return data; 
+    }
+}
+
+export interface IRefillDto {
+    id?: number;
+    date?: Date;
+    couponId?: number;
+    truckId?: number;
+    startAmount?: number;
+    endAmount?: number;
+}
+
+export interface FileParameter {
+    data: any;
+    fileName: string;
 }
 
 export interface FileResponse {

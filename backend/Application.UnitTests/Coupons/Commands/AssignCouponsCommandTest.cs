@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Application.UnitTests.Coupon.Commands.AssignCoupons
+namespace Application.UnitTests.Coupons.Commands.AssignCoupons
 {
   public class AssignCouponsCommandTest : CommandTestBase
   {
@@ -17,18 +17,20 @@ namespace Application.UnitTests.Coupon.Commands.AssignCoupons
     {
       var command = new AssignCouponsCommand
       {
-        TruckId = 1337,
+        TruckId = 43,
         CouponNumbers = new List<int> { 350, 351, 352, 353, 354 }
       };
-
+      var countBefore = Context.Coupons.Where(x => x.Truck.Id == 43).ToList().Count;
+      var total = countBefore + 5;
+      
       var handler = new AssignCouponsCommand.AssignCouponsCommandCommandHandler(Context);
 
       var result = await handler.Handle(command, CancellationToken.None);
 
-      var entities = Context.Coupons.Where(x => x.Truck.Id == 1337);
+      var entities = Context.Coupons.Where(x => x.Truck.Id == 43);
 
       entities.Should().NotBeEmpty();
-      entities.Should().HaveCount(5);
+      entities.Should().HaveCount(total);
     }
 
     [Fact]
@@ -36,17 +38,17 @@ namespace Application.UnitTests.Coupon.Commands.AssignCoupons
     {
       var command = new AssignCouponsCommand
       {
-        TruckId = 1337,
+        TruckId = 43,
         CouponNumbers = new List<int>()
       };
 
-      var countBefore = Context.Coupons.Where(x => x.Truck.Id == 1337).ToList().Count;
+      var countBefore = Context.Coupons.Where(x => x.Truck.Id == 43).ToList().Count;
 
       var handler = new AssignCouponsCommand.AssignCouponsCommandCommandHandler(Context);
 
       var result = await handler.Handle(command, CancellationToken.None);
 
-      var entities = Context.Coupons.Where(x => x.Truck.Id == 1337);
+      var entities = Context.Coupons.Where(x => x.Truck.Id == 43);
       
       entities.Should().HaveCount(countBefore);
     }

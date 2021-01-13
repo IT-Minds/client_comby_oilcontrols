@@ -4,14 +4,16 @@ using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210112132324_CleanupFromMerge")]
+    partial class CleanupFromMerge
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,6 +159,9 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
                     b.Property<int>("CouponId")
                         .HasColumnType("int");
 
@@ -168,9 +173,6 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
-
-                    b.Property<double>("EndAmount")
-                        .HasColumnType("float");
 
                     b.Property<DateTimeOffset>("LastModified")
                         .HasColumnType("datetimeoffset");
@@ -186,9 +188,6 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<int?>("RouteId")
                         .HasColumnType("int");
-
-                    b.Property<double>("StartAmount")
-                        .HasColumnType("float");
 
                     b.Property<int>("TankState")
                         .HasColumnType("int");

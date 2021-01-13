@@ -49,30 +49,39 @@ namespace Application.UnitTests
           new ExampleEntity { Id = 5, ExampleEntityListId = null, Name = "Coffee", ExampleEnum = ExampleEnum.D }
       );
 
-      var truck1 = new Truck { Id = 1 };
-      var truck2 = new Truck { Id = 2 };
-      var truck3 = new Truck { Id = 3 };
-      var truck4 = new Truck { Id = 4 };
-      var truck5 = new Truck { Id = 1337 };
-
       context.Trucks.AddRange(
-        truck1,
-        truck2,
-        truck3,
-        truck4,
-        truck5
+        new Truck { Id = 43 },
+        new Truck { Id = 44 }
       );
 
-      context.Locations.Add(
-        new Location { Id = 1, TankNumber = 80, Type = Domain.Enums.TankType.BUILDING }
+      context.Locations.AddRange(
+        new Location { Id = 1, Type = TankType.BUILDING, TankNumber = 443 },
+        new Location { Id = 2, Type = TankType.BUILDING, TankNumber = 444 },
+        new Location { Id = 3, Type = TankType.BUILDING, TankNumber = 445 },
+        new Location { Id = 4, Type = TankType.BUILDING, TankNumber = 446 }
       );
 
       context.Coupons.AddRange(
-        new Domain.Entities.Coupon { Id = 1, CouponNumber = 1001, Status = Domain.Enums.CouponStatus.AVAILABLE, Truck = truck1, Created = new DateTime(2020, 1, 1) },
-        new Domain.Entities.Coupon { Id = 2, CouponNumber = 1002, Status = Domain.Enums.CouponStatus.AVAILABLE, Truck = truck2, Created = new DateTime(2020, 1, 1) },
-        new Domain.Entities.Coupon { Id = 3, CouponNumber = 1003, Status = Domain.Enums.CouponStatus.AVAILABLE, Truck = truck2, Created = new DateTime(2020, 1, 1) },
-        new Domain.Entities.Coupon { Id = 4, CouponNumber = 1004, Status = Domain.Enums.CouponStatus.AVAILABLE, Truck = truck3, Created = new DateTime(2020, 1, 1) }
+        new Coupon { Id = 1, CouponNumber = 19991, TruckId = 43, Created = DateTimeOffset.Now  },
+        new Coupon { Id = 2, CouponNumber = 19992, TruckId = 43, Created = DateTimeOffset.Now  },
+        new Coupon { Id = 3, CouponNumber = 19993, TruckId = 43, Created = DateTimeOffset.Now  },
+        new Coupon { Id = 4, CouponNumber = 19994, TruckId = 43, Created = DateTimeOffset.Now  },
+        new Coupon { Id = 5, CouponNumber = 19995, TruckId = 43, Created = DateTimeOffset.Now  },
+        new Coupon { Id = 6, CouponNumber = 19996, TruckId = 43, Created = DateTimeOffset.Now  },
+        new Coupon { Id = 7, CouponNumber = 19997, TruckId = 43, Created = DateTimeOffset.Now  },
+        new Coupon { Id = 8, CouponNumber = 19998, TruckId = 44, Created = DateTimeOffset.Now  },
+        new Coupon { Id = 9, CouponNumber = 19999, TruckId = 44, Created = DateTimeOffset.Now }
       );
+
+      context.Refills.AddRange(
+        new Domain.Entities.Refill { Id = 1, CouponId = 1, Type = FuelType.GASOLINE, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, Date = new DateTime(2020, 12, 12), LocationId = 1, Created = new DateTime(2020, 1, 1) },
+        new Domain.Entities.Refill { Id = 2, CouponId = 2, Type = FuelType.GASOLINE, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, Date = new DateTime(2020, 12, 13), LocationId = 2, Created = new DateTime(2020, 1, 2) },
+        new Domain.Entities.Refill { Id = 3, CouponId = 3, Type = FuelType.GASOLINE, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, Date = new DateTime(2020, 12, 14), LocationId = 3, Created = new DateTime(2020, 1, 3) },
+        new Domain.Entities.Refill { Id = 4, CouponId = 4, Type = FuelType.GASOLINE, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, Date = new DateTime(2020, 12, 15), LocationId = 1, Created = new DateTime(2020, 1, 6) },
+        new Domain.Entities.Refill { Id = 5, CouponId = 5, Type = FuelType.GASOLINE, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, Date = new DateTime(2020, 12, 16), LocationId = 1, Created = new DateTime(2020, 1, 8) },
+        new Domain.Entities.Refill { Id = 7, CouponId = 6, Type = FuelType.GASOLINE, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, Date = new DateTime(2020, 12, 17), LocationId = 4, Created = new DateTime(2020, 1, 9) }
+      );
+
       context.SaveChanges();
     }
 
