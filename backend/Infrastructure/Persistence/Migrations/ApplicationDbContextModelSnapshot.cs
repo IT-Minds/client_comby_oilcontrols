@@ -266,6 +266,85 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("Trucks");
                 });
 
+            modelBuilder.Entity("Domain.Entities.TruckRefill", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FuelcardNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("LastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ModifiedCount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("TruckStateId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("amount")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TruckStateId");
+
+                    b.ToTable("TruckRefill");
+                });
+
+            modelBuilder.Entity("Domain.Entities.TruckState", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("EveningQuantity")
+                        .HasColumnType("float");
+
+                    b.Property<DateTimeOffset>("LastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ModifiedCount")
+                        .HasColumnType("int");
+
+                    b.Property<double>("MorningQuantity")
+                        .HasColumnType("float");
+
+                    b.Property<int?>("TruckId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TruckId");
+
+                    b.ToTable("TruckState");
+                });
+
             modelBuilder.Entity("Domain.Entities.Coupon", b =>
                 {
                     b.HasOne("Domain.Entities.Truck", "Truck")
@@ -320,12 +399,36 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Route");
                 });
 
+            modelBuilder.Entity("Domain.Entities.TruckRefill", b =>
+                {
+                    b.HasOne("Domain.Entities.TruckState", null)
+                        .WithMany("Refills")
+                        .HasForeignKey("TruckStateId");
+                });
+
+            modelBuilder.Entity("Domain.Entities.TruckState", b =>
+                {
+                    b.HasOne("Domain.Entities.Truck", null)
+                        .WithMany("DailyStates")
+                        .HasForeignKey("TruckId");
+                });
+
             modelBuilder.Entity("Domain.Entities.ExampleEntityList", b =>
                 {
                     b.Navigation("ExampleEntities");
                 });
 
             modelBuilder.Entity("Domain.Entities.Route", b =>
+                {
+                    b.Navigation("Refills");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Truck", b =>
+                {
+                    b.Navigation("DailyStates");
+                });
+
+            modelBuilder.Entity("Domain.Entities.TruckState", b =>
                 {
                     b.Navigation("Refills");
                 });
