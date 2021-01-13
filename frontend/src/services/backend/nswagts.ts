@@ -35,6 +35,7 @@ export class ClientBase {
 
 export interface ICouponsClient {
     create(command: AssignCouponsCommand): Promise<number[]>;
+    get(truckId?: number | undefined, needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfCouponDto>;
 }
 
 export class CouponsClient extends ClientBase implements ICouponsClient {
@@ -90,6 +91,54 @@ export class CouponsClient extends ClientBase implements ICouponsClient {
             });
         }
         return Promise.resolve<number[]>(<any>null);
+    }
+
+    get(truckId?: number | undefined, needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfCouponDto> {
+        let url_ = this.baseUrl + "/api/Coupons?";
+        if (truckId === null)
+            throw new Error("The parameter 'truckId' cannot be null.");
+        else if (truckId !== undefined)
+            url_ += "truckId=" + encodeURIComponent("" + truckId) + "&";
+        if (needle !== undefined && needle !== null)
+            url_ += "needle=" + encodeURIComponent("" + needle) + "&";
+        if (size === null)
+            throw new Error("The parameter 'size' cannot be null.");
+        else if (size !== undefined)
+            url_ += "size=" + encodeURIComponent("" + size) + "&";
+        if (skip !== undefined && skip !== null)
+            url_ += "skip=" + encodeURIComponent("" + skip) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processGet(_response);
+        });
+    }
+
+    protected processGet(response: Response): Promise<PageResultOfCouponDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PageResultOfCouponDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<PageResultOfCouponDto>(<any>null);
     }
 }
 
@@ -387,7 +436,7 @@ export class HealthClient extends ClientBase implements IHealthClient {
 export interface IRefillClient {
     create(command: CreateRefillCommand): Promise<number>;
     get(tankType?: TankType | undefined, tankNumber?: number | undefined, needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfRefillDto>;
-    createProjectFile(id: number, refillId?: number | undefined, file?: FileParameter | null | undefined): Promise<string>;
+    saveCouponImage(id: number, refillId?: number | undefined, file?: FileParameter | null | undefined): Promise<string>;
 }
 
 export class RefillClient extends ClientBase implements IRefillClient {
@@ -493,7 +542,7 @@ export class RefillClient extends ClientBase implements IRefillClient {
         return Promise.resolve<PageResultOfRefillDto>(<any>null);
     }
 
-    createProjectFile(id: number, refillId?: number | undefined, file?: FileParameter | null | undefined): Promise<string> {
+    saveCouponImage(id: number, refillId?: number | undefined, file?: FileParameter | null | undefined): Promise<string> {
         let url_ = this.baseUrl + "/api/Refill/{id}?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -519,11 +568,11 @@ export class RefillClient extends ClientBase implements IRefillClient {
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.http.fetch(url_, transformedOptions_);
         }).then((_response: Response) => {
-            return this.processCreateProjectFile(_response);
+            return this.processSaveCouponImage(_response);
         });
     }
 
-    protected processCreateProjectFile(response: Response): Promise<string> {
+    protected processSaveCouponImage(response: Response): Promise<string> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -588,6 +637,112 @@ export class AssignCouponsCommand implements IAssignCouponsCommand {
 export interface IAssignCouponsCommand {
     truckId?: number;
     couponNumbers?: number[] | undefined;
+}
+
+export class PageResultOfCouponDto implements IPageResultOfCouponDto {
+    newNeedle?: string | undefined;
+    pagesRemaining?: number;
+    results?: CouponDto[] | undefined;
+    hasMore?: boolean;
+
+    constructor(data?: IPageResultOfCouponDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.newNeedle = _data["newNeedle"];
+            this.pagesRemaining = _data["pagesRemaining"];
+            if (Array.isArray(_data["results"])) {
+                this.results = [] as any;
+                for (let item of _data["results"])
+                    this.results!.push(CouponDto.fromJS(item));
+            }
+            this.hasMore = _data["hasMore"];
+        }
+    }
+
+    static fromJS(data: any): PageResultOfCouponDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PageResultOfCouponDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["newNeedle"] = this.newNeedle;
+        data["pagesRemaining"] = this.pagesRemaining;
+        if (Array.isArray(this.results)) {
+            data["results"] = [];
+            for (let item of this.results)
+                data["results"].push(item.toJSON());
+        }
+        data["hasMore"] = this.hasMore;
+        return data; 
+    }
+}
+
+export interface IPageResultOfCouponDto {
+    newNeedle?: string | undefined;
+    pagesRemaining?: number;
+    results?: CouponDto[] | undefined;
+    hasMore?: boolean;
+}
+
+export class CouponDto implements ICouponDto {
+    couponNumber?: number;
+    truckId?: number;
+    status?: CouponStatus;
+
+    constructor(data?: ICouponDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.couponNumber = _data["couponNumber"];
+            this.truckId = _data["truckId"];
+            this.status = _data["status"];
+        }
+    }
+
+    static fromJS(data: any): CouponDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CouponDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["couponNumber"] = this.couponNumber;
+        data["truckId"] = this.truckId;
+        data["status"] = this.status;
+        return data; 
+    }
+}
+
+export interface ICouponDto {
+    couponNumber?: number;
+    truckId?: number;
+    status?: CouponStatus;
+}
+
+export enum CouponStatus {
+    AVAILABLE = 0,
+    USED = 1,
+    DESTROYED = 2,
 }
 
 export class CreateExampleEntityCommand implements ICreateExampleEntityCommand {
