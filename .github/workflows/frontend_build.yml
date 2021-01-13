@@ -2,16 +2,18 @@ name: Full Application Build, Format, and Test
 
 on:
   push:
+    paths:
+      - "frontend/**"
     branches:
       - main
       - cicd
 
   pull_request:
+    paths:
+      - "frontend/**"
     branches:
       - main
       - cicd
-      - paths:
-          - "frontend/**"
 
 defaults:
   run:
