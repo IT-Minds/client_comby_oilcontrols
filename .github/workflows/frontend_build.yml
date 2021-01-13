@@ -1,0 +1,80 @@
+name: Full Application Build, Format, and Test
+
+on:
+  push:
+    branches:
+      - main
+      - cicd
+
+  pull_request:
+    branches:
+      - main
+      - cicd
+      - paths:
+          - "frontend/**"
+
+defaults:
+  run:
+    working-directory: frontend
+
+env:
+  node-version: 14.x
+
+jobs:
+  build:
+    name: Full build validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ env.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.node-version }}
+      - run: |
+          npm ci
+          npm run validate
+
+  codecov:
+    name: CodeCov
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ env.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.node-version }}
+
+      - name: Test Frontend
+        run: npm t
+
+      - name: Run CodeCov
+        uses: codecov/codecov-action@v1.2.1
+        with:
+          working-directory: frontend
+
+  codeql:
+    name: CodeQL
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          working-directory: frontend
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v1
+        with:
+          working-directory: frontend
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
+        with:
+          working-directory: frontend
