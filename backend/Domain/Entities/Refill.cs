@@ -17,7 +17,8 @@ namespace Domain.Entities
       get => EndAmount-StartAmount;
     }
     public TankState TankState { get; set; }
-    public DateTime Date { get; set; }
+    public DateTime ExpectedDeliveryDate { get; set; }
+    public DateTime ActualDeliveryDate { get; set; }
     public Location Location { get; set; }
     public int LocationId { get; set; }
   }

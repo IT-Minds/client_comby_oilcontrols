@@ -61,7 +61,7 @@ namespace Application.Refills.Commands.CreateRefill
           StartAmount = request.StartAmount,
           EndAmount = request.EndAmount,
           Coupon = Coupon,
-          Date = request.Date,
+          ExpectedDeliveryDate = request.Date,
           Type = request.FuelType,
           TankState = request.TankState,
           Location = Location

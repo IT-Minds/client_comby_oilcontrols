@@ -36,7 +36,7 @@ namespace Application.UnitTests.Refills.Commands.CreateRefill
       entity.StartAmount.Should().Be(command.StartAmount);
       entity.EndAmount.Should().Be(command.EndAmount);
       entity.Coupon.CouponNumber.Should().Be(command.CouponNumber);
-      entity.Date.Should().Be(command.Date);
+      entity.ExpectedDeliveryDate.Should().Be(command.Date);
       entity.Type.Should().Be(command.FuelType);
       entity.TankState.Should().Be(command.TankState);
       entity.Location.Type.Should().Be(command.TankType);
