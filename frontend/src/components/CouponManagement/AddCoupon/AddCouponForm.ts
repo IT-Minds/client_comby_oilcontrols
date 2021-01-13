@@ -1,4 +1,6 @@
+import { CouponInterval } from "types/CouponInterval";
+
 export interface AddCouponForm {
   carId: string;
-  couponIds: string[];
+  couponIntervals: CouponInterval[];
 }
