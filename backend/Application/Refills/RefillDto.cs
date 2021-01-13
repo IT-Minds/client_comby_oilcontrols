@@ -9,7 +9,8 @@ namespace Application.Refills.Queries.GetRefills
   public class RefillDto : IAutoMap<Domain.Entities.Refill>
   {
     public int Id { get; set; }
-    public DateTime Date { get; set; }
+    public DateTime ExpectedDeliveryDate { get; set; }
+    public DateTime ActualDeliveryDate { get; set; }
     public int CouponId { get; set; }
     public int TruckId { get; set; }
     public double StartAmount { get; set; }

@@ -62,27 +62,26 @@ namespace Application.UnitTests
       );
 
       context.Coupons.AddRange(
-        new Coupon { Id = 1, CouponNumber = 19991, TruckId = 43 },
-        new Coupon { Id = 2, CouponNumber = 19992, TruckId = 43 },
-        new Coupon { Id = 3, CouponNumber = 19993, TruckId = 43 },
-        new Coupon { Id = 4, CouponNumber = 19994, TruckId = 43 },
-        new Coupon { Id = 5, CouponNumber = 19995, TruckId = 43 },
-        new Coupon { Id = 6, CouponNumber = 19996, TruckId = 43 },
-        new Coupon { Id = 7, CouponNumber = 19997, TruckId = 43 },
-        new Coupon { Id = 8, CouponNumber = 19998, TruckId = 44 },
-        new Coupon { Id = 9, CouponNumber = 19999, TruckId = 44 }
-
+        new Coupon { Id = 1, CouponNumber = 19991, TruckId = 43, Created = DateTimeOffset.Now  },
+        new Coupon { Id = 2, CouponNumber = 19992, TruckId = 43, Created = DateTimeOffset.Now  },
+        new Coupon { Id = 3, CouponNumber = 19993, TruckId = 43, Created = DateTimeOffset.Now  },
+        new Coupon { Id = 4, CouponNumber = 19994, TruckId = 43, Created = DateTimeOffset.Now  },
+        new Coupon { Id = 5, CouponNumber = 19995, TruckId = 43, Created = DateTimeOffset.Now  },
+        new Coupon { Id = 6, CouponNumber = 19996, TruckId = 43, Created = DateTimeOffset.Now  },
+        new Coupon { Id = 7, CouponNumber = 19997, TruckId = 43, Created = DateTimeOffset.Now  },
+        new Coupon { Id = 8, CouponNumber = 19998, TruckId = 44, Created = DateTimeOffset.Now  },
+        new Coupon { Id = 9, CouponNumber = 19999, TruckId = 44, Created = DateTimeOffset.Now }
       );
 
       context.Refills.AddRange(
-        new Domain.Entities.Refill { Id = 1, CouponId = 1, Type = FuelType.GASOLINE, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, Date = new DateTime(2020, 12, 12), LocationId = 1, Created = new DateTime(2020, 1, 1) },
-        new Domain.Entities.Refill { Id = 2, CouponId = 2, Type = FuelType.GASOLINE, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, Date = new DateTime(2020, 12, 13), LocationId = 2, Created = new DateTime(2020, 1, 2) },
-        new Domain.Entities.Refill { Id = 3, CouponId = 3, Type = FuelType.GASOLINE, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, Date = new DateTime(2020, 12, 14), LocationId = 3, Created = new DateTime(2020, 1, 3) },
-        new Domain.Entities.Refill { Id = 4, CouponId = 4, Type = FuelType.GASOLINE, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, Date = new DateTime(2020, 12, 15), LocationId = 1, Created = new DateTime(2020, 1, 6) },
-        new Domain.Entities.Refill { Id = 5, CouponId = 5, Type = FuelType.GASOLINE, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, Date = new DateTime(2020, 12, 16), LocationId = 1, Created = new DateTime(2020, 1, 8) },
-        new Domain.Entities.Refill { Id = 7, CouponId = 6, Type = FuelType.GASOLINE, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, Date = new DateTime(2020, 12, 17), LocationId = 4, Created = new DateTime(2020, 1, 9) }
+        new Domain.Entities.Refill { Id = 1, CouponId = 1, Type = FuelType.GASOLINE, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, ExpectedDeliveryDate = new DateTime(2020, 12, 12), LocationId = 1, Created = new DateTime(2020, 1, 1) },
+        new Domain.Entities.Refill { Id = 2, CouponId = 2, Type = FuelType.GASOLINE, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, ExpectedDeliveryDate = new DateTime(2020, 12, 13), LocationId = 2, Created = new DateTime(2020, 1, 2) },
+        new Domain.Entities.Refill { Id = 3, CouponId = 3, Type = FuelType.GASOLINE, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, ExpectedDeliveryDate = new DateTime(2020, 12, 14), LocationId = 3, Created = new DateTime(2020, 1, 3) },
+        new Domain.Entities.Refill { Id = 4, CouponId = 4, Type = FuelType.GASOLINE, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, ExpectedDeliveryDate = new DateTime(2020, 12, 15), LocationId = 1, Created = new DateTime(2020, 1, 6) },
+        new Domain.Entities.Refill { Id = 5, CouponId = 5, Type = FuelType.GASOLINE, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, ExpectedDeliveryDate = new DateTime(2020, 12, 16), LocationId = 1, Created = new DateTime(2020, 1, 8) },
+        new Domain.Entities.Refill { Id = 7, CouponId = 6, Type = FuelType.GASOLINE, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, ExpectedDeliveryDate = new DateTime(2020, 12, 17), LocationId = 4, Created = new DateTime(2020, 1, 9) }
       );
-      
+
       context.SaveChanges();
     }
 
