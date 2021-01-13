@@ -25,7 +25,11 @@ import CameraComp from "components/Camera/CameraComponent";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { IoMdCamera, IoMdEye, IoMdRepeat } from "react-icons/io";
 import { MdCheck } from "react-icons/md";
+import { enumConvertor } from "services/backend/ext/enumConvertor";
+import { FuelType } from "services/backend/nswagts";
 import DropdownType from "types/DropdownType";
+import { capitalize } from "utils/capitalizeAnyString";
+import { formatInputNumber, parseInputToNumber } from "utils/formatNumber";
 import { logger } from "utils/logger";
 
 import { ReportForm } from "./ReportForm";
@@ -35,20 +39,18 @@ type Props = {
   carId: string;
   locations?: DropdownType[];
   couponNumbers?: DropdownType[];
-  fillTypes?: DropdownType[];
 };
 
 const ReportingComp: FC<Props> = ({
   submitCallback,
   carId,
   locations = [],
-  couponNumbers = [],
-  fillTypes = []
+  couponNumbers = []
 }) => {
   const [localReportForm, setLocalReportForm] = useState<ReportForm>({
     carId,
     liters: 0,
-    fillTypeId: "",
+    fuelType: null,
     couponId: couponNumbers[0]?.id ?? "",
     locationId: "",
     isSpecialFill: false,
@@ -67,10 +69,10 @@ const ReportingComp: FC<Props> = ({
   }, []);
 
   const handleSubmit = useCallback((event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     logger.debug("Submitting form ReportingComp");
     submitCallback(localReportForm);
     setFormSubmitAttempts(0);
-    event.preventDefault();
   }, []);
 
   return (
@@ -84,13 +86,14 @@ const ReportingComp: FC<Props> = ({
         />
       )}
       <form onSubmit={handleSubmit} hidden={isTakingPic}>
-        <VStack align="center" justify="center">
+        <VStack spacing={2}>
           <FormControl id="car-id" isReadOnly>
             <FormLabel>Car id:</FormLabel>
             <Input type="text" value={carId} />
           </FormControl>
 
           <FormControl
+            id="location-no"
             isInvalid={
               formSubmitAttempts > 0 && locations.every(l => localReportForm.locationId !== l.id)
             }
@@ -99,9 +102,9 @@ const ReportingComp: FC<Props> = ({
             <Select
               placeholder="Select location"
               onChange={e => updateLocalForm(e.target.value, "locationId")}>
-              {locations.map(path => (
-                <option key={path.id} value={path.id}>
-                  {path.name}
+              {locations.map(location => (
+                <option key={location.id} value={location.id}>
+                  {location.name}
                 </option>
               ))}
             </Select>
@@ -109,6 +112,7 @@ const ReportingComp: FC<Props> = ({
           </FormControl>
 
           <FormControl
+            id="coupon-no"
             isInvalid={
               formSubmitAttempts > 0 &&
               couponNumbers.every(cn => localReportForm.couponId !== cn.id)
@@ -127,41 +131,48 @@ const ReportingComp: FC<Props> = ({
 
           <FormControl
             isInvalid={
-              formSubmitAttempts > 0 && fillTypes.every(ft => localReportForm.fillTypeId !== ft.id)
+              formSubmitAttempts > 0 &&
+              Object.values(enumConvertor<number>(FuelType)).every(
+                key => localReportForm.fuelType !== (FuelType[key] as unknown)
+              )
             }
             isRequired>
-            <FormLabel>Select fill type:</FormLabel>
+            <FormLabel id="fuel-type">Select fuel type:</FormLabel>
             <Select
-              onChange={e => updateLocalForm(e.target.value, "fillTypeId")}
+              onChange={e => updateLocalForm(FuelType[Number(e.target.value)], "fuelType")}
               placeholder="Select option">
-              {fillTypes.map(path => (
-                <option key={path.id} value={path.id}>
-                  {path.name}
+              {Object.entries(enumConvertor<number>(FuelType)).map(([a, b]) => (
+                <option key={b} value={b}>
+                  {capitalize(a)}
                 </option>
               ))}
             </Select>
-            <FormErrorMessage>Please select one of the allowed tank types</FormErrorMessage>
+            <FormErrorMessage>Please select one of the allowed fuel types</FormErrorMessage>
           </FormControl>
 
-          <FormControl isInvalid={formSubmitAttempts > 0 && localReportForm.liters <= 0} isRequired>
+          <FormControl
+            id="liters"
+            isInvalid={formSubmitAttempts > 0 && isNaN(localReportForm.liters)}
+            isRequired>
             <FormLabel>Amount filled:</FormLabel>
 
             <InputGroup>
               <Input
                 placeholder="Enter amount filled into tank"
-                onChange={e => updateLocalForm(e.target.valueAsNumber, "liters")}
-                type="number"
-              />
+                onChange={e =>
+                  updateLocalForm(parseInputToNumber(formatInputNumber(e.target.value)), "liters")
+                }
+                minW="50%"></Input>
               <InputRightAddon>liters</InputRightAddon>
             </InputGroup>
             <FormErrorMessage>
-              Please enter the amount of liters filled into the tank
+              Please enter a valid amount of liters filled into the tank
             </FormErrorMessage>
           </FormControl>
 
-          <FormControl>
+          <FormControl id="partial">
             <HStack>
-              <FormLabel mb={4}>Is special fill:</FormLabel>
+              <FormLabel mb={4}>Is partial fill:</FormLabel>
               <Checkbox
                 mb={4}
                 onChange={e => updateLocalForm(e.target.checked, "isSpecialFill")}></Checkbox>
@@ -169,6 +180,7 @@ const ReportingComp: FC<Props> = ({
           </FormControl>
 
           <FormControl
+            id="photo"
             isInvalid={formSubmitAttempts > 0 && localReportForm.image.length <= 0}
             isRequired>
             <HStack>

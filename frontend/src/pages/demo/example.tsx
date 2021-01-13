@@ -2,7 +2,7 @@ import { Box, Container } from "@chakra-ui/react";
 import Demo, { PAGE_SHOW_SIZE } from "components/Demo/Demo";
 import { GetServerSideProps, NextPage } from "next";
 import { genExampleClient } from "services/backend/apiClients";
-import { ExampleEntityDto } from "services/backend/nswagts";
+import { ExampleEntityDto, PageResultOfExampleEntityDto } from "services/backend/nswagts";
 
 // Copy this file and simply replace the `Demo` component with your other component you wish to showcase.
 // Try not to edit the props of the container and box element
@@ -31,7 +31,16 @@ const DemoPage: NextPage<Props> = ({ exampleEntities, needle, hasMore, pageCount
 };
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
-  const data = await genExampleClient().get("0", PAGE_SHOW_SIZE, "createdAt");
+  const data = await genExampleClient()
+    .get("0", PAGE_SHOW_SIZE, "createdAt")
+    .catch(() => {
+      return new PageResultOfExampleEntityDto({
+        hasMore: true,
+        newNeedle: "0",
+        pagesRemaining: 1,
+        results: []
+      });
+    });
 
   return {
     props: {
