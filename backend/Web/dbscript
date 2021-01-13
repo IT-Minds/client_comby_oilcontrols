@@ -1,0 +1,172 @@
+﻿CREATE TABLE [ExampleEntityLists] (
+    [Id] int NOT NULL IDENTITY,
+    [Name] nvarchar(200) NOT NULL,
+    CONSTRAINT [PK_ExampleEntityLists] PRIMARY KEY ([Id])
+);
+GO
+
+
+CREATE TABLE [Locations] (
+    [Id] int NOT NULL IDENTITY,
+    [Type] int NOT NULL,
+    [TankNumber] int NOT NULL,
+    [CreatedBy] nvarchar(max) NULL,
+    [Created] datetimeoffset NOT NULL,
+    [LastModifiedBy] nvarchar(max) NULL,
+    [LastModified] datetimeoffset NOT NULL,
+    [ModifiedCount] int NOT NULL,
+    CONSTRAINT [PK_Locations] PRIMARY KEY ([Id])
+);
+GO
+
+
+CREATE TABLE [Routes] (
+    [Id] int NOT NULL IDENTITY,
+    [CreatedBy] nvarchar(max) NULL,
+    [Created] datetimeoffset NOT NULL,
+    [LastModifiedBy] nvarchar(max) NULL,
+    [LastModified] datetimeoffset NOT NULL,
+    [ModifiedCount] int NOT NULL,
+    CONSTRAINT [PK_Routes] PRIMARY KEY ([Id])
+);
+GO
+
+
+CREATE TABLE [ExampleEntities] (
+    [Id] int NOT NULL IDENTITY,
+    [Name] nvarchar(200) NOT NULL,
+    [ExampleEnum] int NOT NULL,
+    [ExampleEntityListId] int NULL,
+    [CreatedBy] nvarchar(max) NULL,
+    [Created] datetimeoffset NOT NULL,
+    [LastModifiedBy] nvarchar(max) NULL,
+    [LastModified] datetimeoffset NOT NULL,
+    [ModifiedCount] int NOT NULL,
+    CONSTRAINT [PK_ExampleEntities] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_ExampleEntities_ExampleEntityLists_ExampleEntityListId] FOREIGN KEY ([ExampleEntityListId]) REFERENCES [ExampleEntityLists] ([Id]) ON DELETE NO ACTION
+);
+GO
+
+
+CREATE TABLE [Trucks] (
+    [Id] int NOT NULL IDENTITY,
+    [RouteId] int NOT NULL,
+    [CreatedBy] nvarchar(max) NULL,
+    [Created] datetimeoffset NOT NULL,
+    [LastModifiedBy] nvarchar(max) NULL,
+    [LastModified] datetimeoffset NOT NULL,
+    [ModifiedCount] int NOT NULL,
+    CONSTRAINT [PK_Trucks] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Trucks_Routes_RouteId] FOREIGN KEY ([RouteId]) REFERENCES [Routes] ([Id]) ON DELETE CASCADE
+);
+GO
+
+
+CREATE TABLE [Coupons] (
+    [Id] int NOT NULL IDENTITY,
+    [CouponNumber] int NOT NULL,
+    [TruckId] int NOT NULL,
+    [Status] int NOT NULL,
+    [CreatedBy] nvarchar(max) NULL,
+    [Created] datetimeoffset NOT NULL,
+    [LastModifiedBy] nvarchar(max) NULL,
+    [LastModified] datetimeoffset NOT NULL,
+    [ModifiedCount] int NOT NULL,
+    CONSTRAINT [PK_Coupons] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Coupons_Trucks_TruckId] FOREIGN KEY ([TruckId]) REFERENCES [Trucks] ([Id]) ON DELETE CASCADE
+);
+GO
+
+
+CREATE TABLE [DailyTruckStates] (
+    [Id] int NOT NULL IDENTITY,
+    [MorningQuantity] float NOT NULL,
+    [EveningQuantity] float NOT NULL,
+    [TruckId] int NULL,
+    [CreatedBy] nvarchar(max) NULL,
+    [Created] datetimeoffset NOT NULL,
+    [LastModifiedBy] nvarchar(max) NULL,
+    [LastModified] datetimeoffset NOT NULL,
+    [ModifiedCount] int NOT NULL,
+    CONSTRAINT [PK_DailyTruckStates] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_DailyTruckStates_Trucks_TruckId] FOREIGN KEY ([TruckId]) REFERENCES [Trucks] ([Id]) ON DELETE NO ACTION
+);
+GO
+
+
+CREATE TABLE [Refills] (
+    [Id] int NOT NULL IDENTITY,
+    [CouponId] int NOT NULL,
+    [Type] int NOT NULL,
+    [StartAmount] float NOT NULL,
+    [EndAmount] float NOT NULL,
+    [TankState] int NOT NULL,
+    [Date] datetime2 NOT NULL,
+    [LocationId] int NOT NULL,
+    [RouteId] int NULL,
+    [CreatedBy] nvarchar(max) NULL,
+    [Created] datetimeoffset NOT NULL,
+    [LastModifiedBy] nvarchar(max) NULL,
+    [LastModified] datetimeoffset NOT NULL,
+    [ModifiedCount] int NOT NULL,
+    CONSTRAINT [PK_Refills] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Refills_Coupons_CouponId] FOREIGN KEY ([CouponId]) REFERENCES [Coupons] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_Refills_Locations_LocationId] FOREIGN KEY ([LocationId]) REFERENCES [Locations] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_Refills_Routes_RouteId] FOREIGN KEY ([RouteId]) REFERENCES [Routes] ([Id]) ON DELETE NO ACTION
+);
+GO
+
+
+CREATE TABLE [TruckRefills] (
+    [Id] int NOT NULL IDENTITY,
+    [TimeStamp] datetime2 NOT NULL,
+    [FuelcardNumber] nvarchar(max) NULL,
+    [amount] float NOT NULL,
+    [TruckStateId] int NULL,
+    [CreatedBy] nvarchar(max) NULL,
+    [Created] datetimeoffset NOT NULL,
+    [LastModifiedBy] nvarchar(max) NULL,
+    [LastModified] datetimeoffset NOT NULL,
+    [ModifiedCount] int NOT NULL,
+    CONSTRAINT [PK_TruckRefills] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_TruckRefills_DailyTruckStates_TruckStateId] FOREIGN KEY ([TruckStateId]) REFERENCES [DailyTruckStates] ([Id]) ON DELETE NO ACTION
+);
+GO
+
+
+CREATE UNIQUE INDEX [IX_Coupons_CouponNumber] ON [Coupons] ([CouponNumber]);
+GO
+
+
+CREATE INDEX [IX_Coupons_TruckId] ON [Coupons] ([TruckId]);
+GO
+
+
+CREATE INDEX [IX_DailyTruckStates_TruckId] ON [DailyTruckStates] ([TruckId]);
+GO
+
+
+CREATE INDEX [IX_ExampleEntities_ExampleEntityListId] ON [ExampleEntities] ([ExampleEntityListId]);
+GO
+
+
+CREATE INDEX [IX_Refills_CouponId] ON [Refills] ([CouponId]);
+GO
+
+
+CREATE INDEX [IX_Refills_LocationId] ON [Refills] ([LocationId]);
+GO
+
+
+CREATE INDEX [IX_Refills_RouteId] ON [Refills] ([RouteId]);
+GO
+
+
+CREATE INDEX [IX_TruckRefills_TruckStateId] ON [TruckRefills] ([TruckStateId]);
+GO
+
+
+CREATE INDEX [IX_Trucks_RouteId] ON [Trucks] ([RouteId]);
+GO
+
+

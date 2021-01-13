@@ -12,7 +12,7 @@ namespace Application.Common.Interfaces
     DbSet<Coupon> Coupons { get; set; }
     DbSet<Truck> Trucks { get; set; }
     DbSet<Route> Routes { get; set; }
-    DbSet<Domain.Entities.Refill> Refills { get; set; }
+    DbSet<Refill> Refills { get; set; }
     DbSet<ExampleEntity> ExampleEntities { get; set; }
     DbSet<ExampleEntityList> ExampleEntityLists { get; set; }
     DbSet<TruckState> DailyTruckStates { get; set; }

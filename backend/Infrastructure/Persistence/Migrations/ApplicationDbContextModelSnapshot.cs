@@ -304,7 +304,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("TruckStateId");
 
-                    b.ToTable("TruckRefill");
+                    b.ToTable("TruckRefills");
                 });
 
             modelBuilder.Entity("Domain.Entities.TruckState", b =>
@@ -342,7 +342,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("TruckId");
 
-                    b.ToTable("TruckState");
+                    b.ToTable("DailyTruckStates");
                 });
 
             modelBuilder.Entity("Domain.Entities.Coupon", b =>
