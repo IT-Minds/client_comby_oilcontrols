@@ -5,11 +5,15 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm" 
-    directory: "/frontend" 
+  - package-ecosystem: "npm"
+    directory: "/frontend"
     schedule:
-      interval: "daily"
-  - package-ecosystem: "nuget" 
-    directory: "/backend" 
+      interval: "weekly"
+  - package-ecosystem: "nuget"
+    directory: "/backend"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"

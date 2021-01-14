@@ -1,0 +1,66 @@
+name: Full Backend Build, Format, and Test
+
+on:
+  push:
+    paths:
+      - "backend/**"
+    branches:
+      - main
+      - cicd
+
+  pull_request:
+    paths:
+      - "backend/**"
+      - ".github/workflows/**"
+    branches:
+      - main
+      - cicd
+
+defaults:
+  run:
+    working-directory: backend
+
+env:
+  dotnet-version: 5.0.x
+
+jobs:
+  build:
+    name: Full build validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.node-version }}
+
+      - name: Restore dependencies
+        run: |
+          dotnet restore
+          dotnet build --no-restore
+          dotnet test --no-build --verbosity normal
+
+  codeql:
+    name: CodeQL
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          working-directory: backend
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v1
+        with:
+          working-directory: backend
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
+        with:
+          working-directory: backend

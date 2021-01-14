@@ -22,9 +22,20 @@ class Refill {
   id
   startAmount
   endAmount
-  date
+  expectedDeliveryDate
+  actualDeliveryDate
   fuelType
   tankState
+}
+
+class Region {
+  id
+}
+
+class RegionDailyTemp {
+  id
+  date
+  temperature
 }
 
 enum FuelType {
@@ -58,6 +69,8 @@ Refill ..> FuelType
 Location ..> TankType
 Refill ..> TankState
 Truck "1" <-- Coupon
+Region --> "0..*" Location
+Region --> "0..*" RegionDailyTemp
 @enduml
 
 ```
