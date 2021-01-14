@@ -1,8 +1,8 @@
 namespace Domain.Enums
 {
   public enum RefillSchedule {
-    AUTOMAIC,
-    INTERVAL,
-    MANUAL
+    AUTOMAIC = 0,
+    INTERVAL = 1,
+    MANUAL = 2
   }
 }
