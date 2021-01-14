@@ -29,7 +29,9 @@ namespace Application.Refills.Commands.OrderRefill
 
       public async Task<int> Handle(OrderRefillCommand request, CancellationToken cancellationToken)
       {
-        var route = _context.Routes.FirstOrDefault(route => route.Id == request.RouteId);
+        var route = _context.Routes
+          .Include("Refills")
+          .FirstOrDefault(route => route.Id == request.RouteId);
         if(route == null)
         {
           throw new ArgumentException("Nonexistent route: "+request.RouteId);

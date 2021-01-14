@@ -7,10 +7,5 @@ namespace Domain.Entities
   {
     public int Id { get; set; }
     public ICollection<Refill> Refills { get; set; }
-
-    public Route()
-    {
-      Refills = new List<Refill>();
-    }
   }
 }
