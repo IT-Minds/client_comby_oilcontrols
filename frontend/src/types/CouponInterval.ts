@@ -1,4 +1,5 @@
 export interface CouponInterval {
-  from: string;
-  to: string;
+  start: number;
+  end: number;
+  id: string;
 }
