@@ -36,7 +36,7 @@ export class ClientBase {
 export interface ICouponsClient {
     create(command: AssignCouponsCommand): Promise<number[]>;
     get(truckId?: number | undefined, needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfCouponDto>;
-    update(command: UpdateCouponStatusCommand, id: string, couponNumber?: number | undefined): Promise<number>;
+    invalidateCoupon(command: UpdateCouponStatusCommand, id: string, couponNumber?: number | undefined): Promise<number>;
 }
 
 export class CouponsClient extends ClientBase implements ICouponsClient {
@@ -142,7 +142,7 @@ export class CouponsClient extends ClientBase implements ICouponsClient {
         return Promise.resolve<PageResultOfCouponDto>(<any>null);
     }
 
-    update(command: UpdateCouponStatusCommand, id: string, couponNumber?: number | undefined): Promise<number> {
+    invalidateCoupon(command: UpdateCouponStatusCommand, id: string, couponNumber?: number | undefined): Promise<number> {
         let url_ = this.baseUrl + "/coupon/{id}/invalidate?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -167,11 +167,11 @@ export class CouponsClient extends ClientBase implements ICouponsClient {
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.http.fetch(url_, transformedOptions_);
         }).then((_response: Response) => {
-            return this.processUpdate(_response);
+            return this.processInvalidateCoupon(_response);
         });
     }
 
-    protected processUpdate(response: Response): Promise<number> {
+    protected processInvalidateCoupon(response: Response): Promise<number> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {

@@ -35,7 +35,7 @@ namespace Web.Controllers
     }
 
     [HttpPut("/coupon/{id}/invalidate")]
-    public async Task<ActionResult<int>> Update(int couponNumber, UpdateCouponStatusCommand command)
+    public async Task<ActionResult<int>> InvalidateCoupon(int couponNumber, UpdateCouponStatusCommand command)
     {
       if (couponNumber != command.CouponNumber)
       {
