@@ -63,15 +63,14 @@ namespace Application.Refills.Queries.GetRefills.Location
 
         var page = new PageResult<RefillDto>();
 
-        var baseQuery = _context.Refills.AsQueryable();
+        IQueryable<Refill> baseQuery = _context.Refills.AsQueryable()
+         .Include(refill => refill.Location)
+            .ThenInclude(location => location.FuelTank);
+
         if (request.TankType.HasValue)
         {
-          baseQuery = baseQuery
-          .Include(refill => refill.Location)
-            .ThenInclude(location => location.FuelTank)
-          .Where(refill => refill.Location.FuelTank.Type == request.TankType);
+          baseQuery = baseQuery.Where(refill => refill.Location.FuelTank.Type == request.TankType);
         }
-
         var query = request.PreparePage(baseQuery);
         var pagesRemaining = await request.PagesRemaining(query);
         var needle = request.GetNewNeedle(query);

@@ -36,7 +36,7 @@ namespace Application.Refills.Commands.CreateRefill
       {
 
         var Location = await _context.Locations
-          .Include("FuelTank")
+          .Include(x => x.FuelTank)
           .FirstOrDefaultAsync(x => x.FuelTank.Type == request.TankType && x.FuelTank.TankNumber == request.TankNumber);
         if (Location == null)
         {
