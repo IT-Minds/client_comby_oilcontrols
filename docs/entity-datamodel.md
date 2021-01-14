@@ -38,6 +38,20 @@ class RegionDailyTemp {
   temperature
 }
 
+class TruckDailyState {
+  id
+  date
+  morningQuantity
+  eveningQuantity
+}
+
+class TruckRefill {
+  id
+  Timestamp
+  fuelcardNumber
+  amount
+}
+
 enum FuelType {
   OIL
   PETROLEUM
@@ -71,6 +85,9 @@ Refill ..> TankState
 Truck "1" <-- Coupon
 Region --> "0..*" Location
 Region --> "0..*" RegionDailyTemp
+Truck --> "0..*" TruckDailyState
+TruckDailyState --> "0..*" TruckRefill
+TruckRefill ..> FuelType
 @enduml
 
 ```
