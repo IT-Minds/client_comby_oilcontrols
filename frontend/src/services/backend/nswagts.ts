@@ -437,6 +437,7 @@ export interface IRefillClient {
     create(command: CreateRefillCommand): Promise<number>;
     get(tankType?: TankType | undefined, tankNumber?: number | undefined, needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfRefillDto>;
     saveCouponImage(id: number, file?: FileParameter | null | undefined): Promise<string>;
+    create2(command: OrderRefillCommand): Promise<number>;
 }
 
 export class RefillClient extends ClientBase implements IRefillClient {
@@ -584,6 +585,46 @@ export class RefillClient extends ClientBase implements IRefillClient {
             });
         }
         return Promise.resolve<string>(<any>null);
+    }
+
+    create2(command: OrderRefillCommand): Promise<number> {
+        let url_ = this.baseUrl + "/OrderRefill";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processCreate2(_response);
+        });
+    }
+
+    protected processCreate2(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(<any>null);
     }
 }
 
@@ -1181,6 +1222,50 @@ export interface IRefillDto {
     truckId?: number;
     startAmount?: number;
     endAmount?: number;
+}
+
+export class OrderRefillCommand implements IOrderRefillCommand {
+    expectedDeliveryDate?: Date;
+    locationId?: number;
+    routeId?: number;
+
+    constructor(data?: IOrderRefillCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.expectedDeliveryDate = _data["expectedDeliveryDate"] ? new Date(_data["expectedDeliveryDate"].toString()) : <any>undefined;
+            this.locationId = _data["locationId"];
+            this.routeId = _data["routeId"];
+        }
+    }
+
+    static fromJS(data: any): OrderRefillCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new OrderRefillCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["expectedDeliveryDate"] = this.expectedDeliveryDate ? this.expectedDeliveryDate.toISOString() : <any>undefined;
+        data["locationId"] = this.locationId;
+        data["routeId"] = this.routeId;
+        return data; 
+    }
+}
+
+export interface IOrderRefillCommand {
+    expectedDeliveryDate?: Date;
+    locationId?: number;
+    routeId?: number;
 }
 
 export interface FileParameter {

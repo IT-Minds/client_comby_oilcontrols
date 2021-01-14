@@ -35,6 +35,12 @@ namespace Application.Refills.Commands.OrderRefill
           throw new ArgumentException("Nonexistent route: "+request.RouteId);
         }
 
+        var location = _context.Locations.FirstOrDefault(location => location.Id == request.LocationId);
+        if(location == null)
+        {
+          throw new ArgumentException("Nonexistent location: "+request.LocationId);
+        }
+
         var refill = route.Refills.FirstOrDefault(refill => refill.LocationId == request.LocationId);
         if(refill != null)
         {

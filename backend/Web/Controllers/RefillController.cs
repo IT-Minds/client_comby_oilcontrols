@@ -8,6 +8,7 @@ using System;
 using System.Threading.Tasks;
 using Application.Coupons.Commands.SaveCouponImage;
 using Microsoft.AspNetCore.Http;
+using Application.Refills.Commands.OrderRefill;
 
 namespace Web.Controllers
 {
@@ -36,13 +37,19 @@ namespace Web.Controllers
 
     [HttpPost("{id}")]
     [Consumes("multipart/form-data")]
-    public async Task<ActionResult<string>> SaveCouponImage([FromRoute]int id, IFormFile file)
+    public async Task<ActionResult<string>> SaveCouponImage([FromRoute] int id, IFormFile file)
     {
-        return await Mediator.Send(new SaveCouponImageCommand
-        {
-            File = file,
-            RefillId = id
-        });
+      return await Mediator.Send(new SaveCouponImageCommand
+      {
+        File = file,
+        RefillId = id
+      });
+    }
+
+    [HttpPost("/OrderRefill")]
+    public async Task<ActionResult<int>> Create(OrderRefillCommand command)
+    {
+      return await Mediator.Send(command);
     }
   }
 }

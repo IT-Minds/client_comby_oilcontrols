@@ -63,24 +63,38 @@ namespace Application.UnitTests.Refills.Commands.OrderRefill
       entity.ExpectedDeliveryDate.Should().Be(command2.ExpectedDeliveryDate);
     }
 
+    [Fact]
     public async Task Handle_InvalidRoute()
     {
-      throw new NotImplementedException();
+      var command1 = new OrderRefillCommand
+      {
+        LocationId = 1,
+        RouteId = -100,
+        ExpectedDeliveryDate = new DateTime(2020, 12, 17)
+      };
+
+      var handler = new OrderRefillCommand.OrderRefillCommandHandler(Context);
+
+      await Assert.ThrowsAsync<ArgumentException>(
+        async () => { await handler.Handle(command1, CancellationToken.None); }
+      );
     }
 
+    [Fact]
     public async Task Handle_InvalidLocation()
     {
-      throw new NotImplementedException();
-    }
+      var command1 = new OrderRefillCommand
+      {
+        LocationId = -100,
+        RouteId = 1,
+        ExpectedDeliveryDate = new DateTime(2020, 12, 17)
+      };
 
-    public async Task Handle_NoRouteId()
-    {
-      throw new NotImplementedException();
-    }
+      var handler = new OrderRefillCommand.OrderRefillCommandHandler(Context);
 
-    public async Task Handle_NoLocationId()
-    {
-      throw new NotImplementedException();
+      await Assert.ThrowsAsync<ArgumentException>(
+        async () => { await handler.Handle(command1, CancellationToken.None); }
+      );
     }
   }
 }

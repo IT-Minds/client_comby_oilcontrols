@@ -1,7 +1,7 @@
 using Application.Refills.Commands.OrderRefill;
 using FluentValidation;
 
-namespace Application.Refills.Commands.CreateRefill
+namespace Application.Refills.Commands.OrderRefill
 {
   public class OrderRefillCommandValidator : AbstractValidator<OrderRefillCommand>
   {
