@@ -6,14 +6,20 @@ import { PageResultOfRefillDto, RefillDto } from "services/backend/nswagts";
 
 type Props = {
   refillEntities: RefillDto[];
+  needle: string;
+  hasMore: boolean;
+  pageCount: number;
 };
 
-const DemoPage: NextPage<Props> = ({ refillEntities }) => {
+const DemoPage: NextPage<Props> = ({ refillEntities, needle, hasMore, pageCount }) => {
   return (
     <Container maxW="100%" maxH="100%" centerContent>
       <Box padding="4" bg="gray.100" maxW="6xl" maxH="4xl" resize="both" overflow="auto">
         <FillingOverviewComp
-          preLoadedData={refillEntities}></FillingOverviewComp>
+          preLoadedData={refillEntities}
+          preloadDataNeedle={needle}
+          preloadLoadedAll={!hasMore}
+          preLoadedPageCount={pageCount}></FillingOverviewComp>
       </Box>
     </Container>
   );
@@ -30,7 +36,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async () => {
         results: []
       });
     });
-  console.log(data);
 
   return {
     props: {
