@@ -1,5 +1,5 @@
 import { Box, Container, useToast } from "@chakra-ui/react";
-import AddCouponComp from "components/CouponManagement/AddCoupon/AddCouponComponent";
+import AddCouponComp from "components/CouponManagement/AddCoupon/AddCouponComp";
 import { AddCouponForm } from "components/CouponManagement/AddCoupon/AddCouponForm";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
