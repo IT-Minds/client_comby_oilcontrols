@@ -28,16 +28,16 @@ const DemoPage: NextPage<Props> = ({ refillEntities, needle, hasMore, pageCount 
 };
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
-  const data = await genRefillClient()
-    .get(0, 55, "0", 10, 0)
-    .catch(() => {
+  const data = await genRefillClient().then(client =>
+    client.get("0").catch(() => {
       return new PageResultOfRefillDto({
         hasMore: true,
         newNeedle: "0",
         pagesRemaining: 1,
         results: []
       });
-    });
+    })
+  );
 
   return {
     props: {

@@ -5,7 +5,8 @@ import { usePagedFetched } from "hooks/usePagedFetched";
 import React, { FC, useMemo, useReducer, useState } from "react";
 import ListReducer from "react-list-reducer";
 import { genRefillClient } from "services/backend/apiClients";
-import { RefillDto } from "services/backend/nswagts";
+import { RefillDto, TankType } from "services/backend/nswagts";
+import { capitalize } from "utils/capitalizeAnyString";
 
 type Props = {
   preLoadedData?: RefillDto[];
@@ -27,7 +28,7 @@ const FillingOverviewComp: FC<Props> = ({
 
   const { done, error, fetchData, needle } = usePagedFetched(
     "createdAt",
-    (needle, size, sortBy, skip) => genRefillClient().get(), //TODO: missing params
+    (needle, size, sortBy, skip) => genRefillClient().then(client => client.get(needle)), //TODO: missing params
     dataDispatch,
     {
       autoStart: !preloadLoadedAll,
