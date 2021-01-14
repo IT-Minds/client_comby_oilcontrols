@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.DailyTemperatures.Commands.CreateDailyTemperature
 {
@@ -26,7 +27,9 @@ namespace Application.DailyTemperatures.Commands.CreateDailyTemperature
 
       public async Task<int> Handle(CreateDailyTemperatureCommand request, CancellationToken cancellationToken)
       {
-        var region = _context.Regions.FirstOrDefault(x => x.Id == request.RegionId);
+        var region = _context.Regions
+          .Include("DailyTemperatures").
+          FirstOrDefault(x => x.Id == request.RegionId);
         if (region == null)
         {
           throw new ArgumentException("Invalid Region ID: " + request.RegionId);
