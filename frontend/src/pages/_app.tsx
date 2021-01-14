@@ -1,7 +1,8 @@
 import "../styles.global.css";
 import "isomorphic-unfetch";
 
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
+import ColorModeToggle from "components/ColorModeToggle/ColorModeToggle";
 import { usePWA } from "hooks/usePWA";
 import { AppContextType, AppPropsType } from "next/dist/next-server/lib/utils";
 import Head from "next/head";
@@ -10,25 +11,17 @@ import EnvSettings from "types/EnvSettings";
 import isomorphicEnvSettings, { setEnvSettings } from "utils/envSettings";
 import { logger } from "utils/logger";
 
+import theme from "../theme/theme";
+
 type Props = {
   envSettings: EnvSettings;
 };
-
-const colors = {
-  brand: {
-    900: "#1a365d",
-    800: "#153e75",
-    700: "#2a69ac"
-  }
-};
-const theme = extendTheme({ colors });
 
 const MyApp = ({
   Component,
   pageProps,
   envSettings,
-  __N_SSG,
-  router
+  __N_SSG
 }: AppPropsType & Props): ReactElement => {
   usePWA();
 
@@ -60,6 +53,9 @@ const MyApp = ({
         <h1>JavaScript must be enabled!</h1>
       </noscript>
       <ChakraProvider theme={theme}>
+        <header>
+          <ColorModeToggle />
+        </header>
         <Component {...pageProps} />
       </ChakraProvider>
     </main>

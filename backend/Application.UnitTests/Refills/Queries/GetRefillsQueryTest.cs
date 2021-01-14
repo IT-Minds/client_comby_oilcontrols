@@ -30,13 +30,12 @@ namespace Application.UnitTests.Refills.Queries.GetRefills
       {
         Size = 500,
         Needle = new System.DateTimeOffset(new System.DateTime(2019, 12, 31)),
-        TankNumber = 443,
         TankType = TankType.BUILDING
       };
       var handler = new GetRefillsLocationQuery.GetRefillsQueryHandler(_context, _mapper);
       var result = await handler.Handle(query, CancellationToken.None);
       result.Should().BeOfType<PageResult<RefillDto>>();
-      result.Results.Count.Should().Be(3);
+      result.Results.Count.Should().Be(6);
     }
 
     [Fact]
@@ -46,7 +45,6 @@ namespace Application.UnitTests.Refills.Queries.GetRefills
       {
         Size = 500,
         Needle = new System.DateTimeOffset(new System.DateTime(2069, 1, 1)),
-        TankNumber = 443,
         TankType = TankType.BUILDING
       };
       var handler = new GetRefillsLocationQuery.GetRefillsQueryHandler(_context, _mapper);

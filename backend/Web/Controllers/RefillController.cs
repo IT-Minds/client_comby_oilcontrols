@@ -21,7 +21,7 @@ namespace Web.Controllers
 
     [HttpGet]
     public async Task<ActionResult<PageResult<RefillDto>>> Get(
-      [FromQuery] TankType tankType, [FromQuery] int tankNumber, [FromQuery] string needle, [FromQuery] int size, [FromQuery] int? skip = 0
+      [FromQuery] string needle, [FromQuery] int size = 100, [FromQuery] int? skip = 0, [FromQuery] TankType? tankType = null
     )
     {
       return await Mediator.Send(new GetRefillsLocationQuery
@@ -29,8 +29,7 @@ namespace Web.Controllers
         Size = size,
         Needle = new System.DateTimeOffset(Int64.Parse(needle), new TimeSpan()),
         Skip = skip,
-        TankType = tankType,
-        TankNumber = tankNumber
+        TankType = tankType
       });
     }
 

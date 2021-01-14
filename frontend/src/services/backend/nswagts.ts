@@ -435,7 +435,7 @@ export class HealthClient extends ClientBase implements IHealthClient {
 
 export interface IRefillClient {
     create(command: CreateRefillCommand): Promise<number>;
-    get(tankType?: TankType | undefined, tankNumber?: number | undefined, needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfRefillDto>;
+    get(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined, tankType?: TankType | null | undefined): Promise<PageResultOfRefillDto>;
     saveCouponImage(id: number, file?: FileParameter | null | undefined): Promise<string>;
 }
 
@@ -490,16 +490,8 @@ export class RefillClient extends ClientBase implements IRefillClient {
         return Promise.resolve<number>(<any>null);
     }
 
-    get(tankType?: TankType | undefined, tankNumber?: number | undefined, needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfRefillDto> {
+    get(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined, tankType?: TankType | null | undefined): Promise<PageResultOfRefillDto> {
         let url_ = this.baseUrl + "/api/Refill?";
-        if (tankType === null)
-            throw new Error("The parameter 'tankType' cannot be null.");
-        else if (tankType !== undefined)
-            url_ += "tankType=" + encodeURIComponent("" + tankType) + "&";
-        if (tankNumber === null)
-            throw new Error("The parameter 'tankNumber' cannot be null.");
-        else if (tankNumber !== undefined)
-            url_ += "tankNumber=" + encodeURIComponent("" + tankNumber) + "&";
         if (needle !== undefined && needle !== null)
             url_ += "needle=" + encodeURIComponent("" + needle) + "&";
         if (size === null)
@@ -508,6 +500,8 @@ export class RefillClient extends ClientBase implements IRefillClient {
             url_ += "size=" + encodeURIComponent("" + size) + "&";
         if (skip !== undefined && skip !== null)
             url_ += "skip=" + encodeURIComponent("" + skip) + "&";
+        if (tankType !== undefined && tankType !== null)
+            url_ += "tankType=" + encodeURIComponent("" + tankType) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -1127,6 +1121,7 @@ export class RefillDto implements IRefillDto {
     id?: number;
     expectedDeliveryDate?: Date;
     actualDeliveryDate?: Date;
+    locationType?: TankType;
     couponId?: number;
     truckId?: number;
     startAmount?: number;
@@ -1146,6 +1141,7 @@ export class RefillDto implements IRefillDto {
             this.id = _data["id"];
             this.expectedDeliveryDate = _data["expectedDeliveryDate"] ? new Date(_data["expectedDeliveryDate"].toString()) : <any>undefined;
             this.actualDeliveryDate = _data["actualDeliveryDate"] ? new Date(_data["actualDeliveryDate"].toString()) : <any>undefined;
+            this.locationType = _data["locationType"];
             this.couponId = _data["couponId"];
             this.truckId = _data["truckId"];
             this.startAmount = _data["startAmount"];
@@ -1165,6 +1161,7 @@ export class RefillDto implements IRefillDto {
         data["id"] = this.id;
         data["expectedDeliveryDate"] = this.expectedDeliveryDate ? this.expectedDeliveryDate.toISOString() : <any>undefined;
         data["actualDeliveryDate"] = this.actualDeliveryDate ? this.actualDeliveryDate.toISOString() : <any>undefined;
+        data["locationType"] = this.locationType;
         data["couponId"] = this.couponId;
         data["truckId"] = this.truckId;
         data["startAmount"] = this.startAmount;
@@ -1177,6 +1174,7 @@ export interface IRefillDto {
     id?: number;
     expectedDeliveryDate?: Date;
     actualDeliveryDate?: Date;
+    locationType?: TankType;
     couponId?: number;
     truckId?: number;
     startAmount?: number;
