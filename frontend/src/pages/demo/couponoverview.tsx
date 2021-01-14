@@ -9,9 +9,9 @@ const DemoPage: NextPage = () => {
         <CouponOverviewComp
           car="123"
           coupons={[
-            { from: "1", to: "7" },
-            { from: "13", to: "25" },
-            { from: "2173", to: "2340" }
+            { start: "1", end: "7", id: "1" },
+            { start: "13", end: "25", id: "2" },
+            { start: "2173", end: "2340", id: "3" }
           ]}></CouponOverviewComp>
       </Box>
     </Container>

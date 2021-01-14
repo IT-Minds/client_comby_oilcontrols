@@ -22,7 +22,7 @@ const CouponOverviewComp: FC<Props> = ({ car, coupons }) => {
         {coupons.map((c, index) => (
           <tr key={index}>
             <td>
-              {c.from} - {c.to}
+              {c.start} - {c.end}
             </td>
           </tr>
         ))}
