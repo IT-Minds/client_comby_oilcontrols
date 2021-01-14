@@ -35,7 +35,9 @@ namespace Application.Refills.Commands.CreateRefill
       public async Task<int> Handle(CreateRefillCommand request, CancellationToken cancellationToken)
       {
 
-        var Location = await _context.Locations.FirstOrDefaultAsync(x => x.FuelTank.Type == request.TankType && x.FuelTank.TankNumber == request.TankNumber);
+        var Location = await _context.Locations
+          .Include("FuelTank")
+          .FirstOrDefaultAsync(x => x.FuelTank.Type == request.TankType && x.FuelTank.TankNumber == request.TankNumber);
         if (Location == null)
         {
           throw new NotFoundException(nameof(Location), request.TankType + " " + request.TankNumber);
