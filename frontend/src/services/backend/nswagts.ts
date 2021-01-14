@@ -36,6 +36,7 @@ export class ClientBase {
 export interface ICouponsClient {
     create(command: AssignCouponsCommand): Promise<number[]>;
     get(truckId?: number | undefined, needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfCouponDto>;
+    invalidateCoupon(couponNumber: number): Promise<number>;
 }
 
 export class CouponsClient extends ClientBase implements ICouponsClient {
@@ -139,6 +140,45 @@ export class CouponsClient extends ClientBase implements ICouponsClient {
             });
         }
         return Promise.resolve<PageResultOfCouponDto>(<any>null);
+    }
+
+    invalidateCoupon(couponNumber: number): Promise<number> {
+        let url_ = this.baseUrl + "/api/Coupons/{couponNumber}/invalidate";
+        if (couponNumber === undefined || couponNumber === null)
+            throw new Error("The parameter 'couponNumber' must be defined.");
+        url_ = url_.replace("{couponNumber}", encodeURIComponent("" + couponNumber));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "PUT",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processInvalidateCoupon(_response);
+        });
+    }
+
+    protected processInvalidateCoupon(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(<any>null);
     }
 }
 
