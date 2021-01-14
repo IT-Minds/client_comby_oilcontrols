@@ -16,7 +16,7 @@ namespace Application.UnitTests.Refills.Commands.OrderRefill
       var command = new OrderRefillCommand
       {
         LocationId = 1,
-        RouteId =  1,
+        RouteId = 1,
         ExpectedDeliveryDate = new DateTime(2020, 12, 17)
       };
 
@@ -31,9 +31,36 @@ namespace Application.UnitTests.Refills.Commands.OrderRefill
       route.Id.Should().Be(command.RouteId);
     }
 
+    [Fact]
     public async Task Handle_ShouldRemoveExistingRefillFromRoute()
     {
-      throw new NotImplementedException();
+      var command1 = new OrderRefillCommand
+      {
+        LocationId = 1,
+        RouteId = 1,
+        ExpectedDeliveryDate = new DateTime(2020, 12, 17)
+      };
+
+      var handler = new OrderRefillCommand.OrderRefillCommandHandler(Context);
+      await handler.Handle(command1, CancellationToken.None);
+      var route = Context.Routes.FirstOrDefault(x => x.Id == command1.RouteId);
+      var locationCount = route.Refills.Where(x => x.LocationId == command1.LocationId).Count();
+
+      var command2 = new OrderRefillCommand
+      {
+        LocationId = 1,
+        RouteId = 1,
+        ExpectedDeliveryDate = new DateTime(2020, 12, 31)
+      };
+      var result = await handler.Handle(command2, CancellationToken.None);
+      var entity = Context.Refills.Find(result);
+      route = Context.Routes.FirstOrDefault(x => x.Id == command2.RouteId);
+      var locationCountPost = route.Refills.Where(x => x.LocationId == command2.LocationId).Count();
+
+      locationCount.Should().Be(locationCountPost);
+      entity.Should().NotBeNull();
+      entity.LocationId.Should().Be(command2.LocationId);
+      entity.ExpectedDeliveryDate.Should().Be(command2.ExpectedDeliveryDate);
     }
 
     public async Task Handle_InvalidRoute()
