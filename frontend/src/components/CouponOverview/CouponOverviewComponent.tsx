@@ -1,4 +1,4 @@
-import { Heading, ListItem, Text, UnorderedList, VStack } from "@chakra-ui/react";
+import { Table, TableCaption, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
 import { FC } from "react";
 import { CouponInterval } from "types/CouponInterval";
 
@@ -11,18 +11,23 @@ type Props = {
 
 const CouponOverviewComp: FC<Props> = ({ car, coupons }) => {
   return (
-    <VStack>
-      <Heading>Overview of car: {car}</Heading>
-      <Text>Coupons:</Text>
-      <UnorderedList>
-        <ListItem>AA</ListItem>
+    <Table variant="striped" colorScheme="teal">
+      <TableCaption placement="top">Coupon overview of car {car}</TableCaption>
+      <Thead>
+        <Tr>
+          <Th>Coupons</Th>
+        </Tr>
+      </Thead>
+      <Tbody>
         {coupons.map((c, index) => (
-          <ListItem key={index}>
-            {c.from} - {c.to}
-          </ListItem>
+          <tr key={index}>
+            <td>
+              {c.from} - {c.to}
+            </td>
+          </tr>
         ))}
-      </UnorderedList>
-    </VStack>
+      </Tbody>
+    </Table>
   );
 };
 
