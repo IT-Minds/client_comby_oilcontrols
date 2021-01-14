@@ -28,8 +28,8 @@ namespace Application.DailyTemperatures.Commands.CreateDailyTemperature
       public async Task<int> Handle(CreateDailyTemperatureCommand request, CancellationToken cancellationToken)
       {
         var region = _context.Regions
-          .Include("DailyTemperatures").
-          FirstOrDefault(x => x.Id == request.RegionId);
+          .Include(x => x.DailyTemperatures)
+          .FirstOrDefault(x => x.Id == request.RegionId);
         if (region == null)
         {
           throw new ArgumentException("Invalid Region ID: " + request.RegionId);
