@@ -47,7 +47,7 @@ namespace Web.Controllers
     }
 
     [HttpPost("/OrderRefill")]
-    public async Task<ActionResult<int>> Create(OrderRefillCommand command)
+    public async Task<ActionResult<int>> OrderRefill(OrderRefillCommand command)
     {
       return await Mediator.Send(command);
     }

@@ -437,7 +437,7 @@ export interface IRefillClient {
     create(command: CreateRefillCommand): Promise<number>;
     get(tankType?: TankType | undefined, tankNumber?: number | undefined, needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfRefillDto>;
     saveCouponImage(id: number, file?: FileParameter | null | undefined): Promise<string>;
-    create2(command: OrderRefillCommand): Promise<number>;
+    orderRefill(command: OrderRefillCommand): Promise<number>;
 }
 
 export class RefillClient extends ClientBase implements IRefillClient {
@@ -587,7 +587,7 @@ export class RefillClient extends ClientBase implements IRefillClient {
         return Promise.resolve<string>(<any>null);
     }
 
-    create2(command: OrderRefillCommand): Promise<number> {
+    orderRefill(command: OrderRefillCommand): Promise<number> {
         let url_ = this.baseUrl + "/OrderRefill";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -605,11 +605,11 @@ export class RefillClient extends ClientBase implements IRefillClient {
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.http.fetch(url_, transformedOptions_);
         }).then((_response: Response) => {
-            return this.processCreate2(_response);
+            return this.processOrderRefill(_response);
         });
     }
 
-    protected processCreate2(response: Response): Promise<number> {
+    protected processOrderRefill(response: Response): Promise<number> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
