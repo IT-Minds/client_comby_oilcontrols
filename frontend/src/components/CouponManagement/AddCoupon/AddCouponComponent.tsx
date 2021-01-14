@@ -20,6 +20,7 @@ import { MdAdd, MdCheck } from "react-icons/md";
 import { CouponInterval } from "types/CouponInterval";
 import DropdownType from "types/DropdownType";
 import { logger } from "utils/logger";
+import { mergeArrayRanges } from "utils/mergeArrayRanges";
 
 import { AddCouponForm } from "./AddCouponForm";
 
@@ -29,8 +30,8 @@ type Props = {
 };
 
 const AddCouponComp: FC<Props> = ({ submitCallback, cars = [] }) => {
-  const [from, setFrom] = useState("");
-  const [to, setTo] = useState("");
+  const [from, setFrom] = useState(null);
+  const [to, setTo] = useState(null);
   const [interval, setInterval] = useState<CouponInterval[]>([]);
 
   const [localAddCouponForm, setLocalAddCouponForm] = useState<AddCouponForm>({
@@ -47,17 +48,27 @@ const AddCouponComp: FC<Props> = ({ submitCallback, cars = [] }) => {
     });
   }, []);
 
-  const addInterval = (from: string, to: string) => {
-    if (from != "" && to != "") {
-      setInterval(oldArray => [...oldArray, { from, to }]);
-      setFrom("");
-      setTo("");
-    }
-  };
+  const addInterval = useCallback(() => {
+    if (from > 0 && to > 0) {
+      const mergedArr = mergeArrayRanges(interval, {
+        start: from,
+        end: to,
+        id: Date.now().toString(16)
+      });
 
-  const removeInterval = (index: number) => {
-    setInterval(oldArray => [...oldArray.filter((oa, i) => i !== index)]);
-  };
+      setInterval(mergedArr);
+
+      setFrom(null);
+      setTo(null);
+    }
+  }, [from, to, interval]);
+
+  const removeInterval = useCallback(
+    (id: string) => {
+      setInterval(oldArray => oldArray.filter(oa => oa.id !== id));
+    },
+    [interval]
+  );
 
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
@@ -68,7 +79,7 @@ const AddCouponComp: FC<Props> = ({ submitCallback, cars = [] }) => {
       setFormSubmitAttempts(0);
       event.preventDefault();
     },
-    [interval]
+    [interval, localAddCouponForm]
   );
 
   return (
