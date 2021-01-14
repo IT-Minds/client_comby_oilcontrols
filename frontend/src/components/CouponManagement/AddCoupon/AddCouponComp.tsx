@@ -63,12 +63,9 @@ const AddCouponComp: FC<Props> = ({ submitCallback, cars = [] }) => {
     }
   }, [from, to, interval]);
 
-  const removeInterval = useCallback(
-    (id: string) => {
-      setInterval(oldArray => oldArray.filter(oa => oa.id !== id));
-    },
-    [interval]
-  );
+  const removeInterval = useCallback((id: string) => {
+    setInterval(oldArray => oldArray.filter(oa => oa.id !== id));
+  }, []);
 
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
@@ -95,9 +92,9 @@ const AddCouponComp: FC<Props> = ({ submitCallback, cars = [] }) => {
             <Select
               placeholder="Select car"
               onChange={e => updateLocalForm(e.target.value, "carId")}>
-              {cars.map(path => (
-                <option key={path.id} value={path.id}>
-                  {path.name}
+              {cars.map(car => (
+                <option key={car.id} value={car.id}>
+                  {car.name}
                 </option>
               ))}
             </Select>
