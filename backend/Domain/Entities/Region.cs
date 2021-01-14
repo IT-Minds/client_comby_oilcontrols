@@ -8,5 +8,9 @@ namespace Domain.Entities
     public int Id { get; set; }
     public ICollection<Location> Locations { get; set; }
     public ICollection<RegionDailyTemp> DailyTemperatures { get; set; }
+
+    public Region(){
+      DailyTemperatures = new List<RegionDailyTemp>();
+    }
   }
 }

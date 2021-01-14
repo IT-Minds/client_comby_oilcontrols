@@ -45,5 +45,28 @@ namespace Application.UnitTests.DailyTemperatures.Commands.CreateDailyTemperatur
         async () => { await handler.Handle(command, CancellationToken.None); }
       );
     }
+
+    [Fact]
+    public async Task Handle_MultipleTemperaturesForSameDay()
+    {
+      var command1 = new CreateDailyTemperatureCommand
+      {
+        RegionId = 1,
+        Date = new DateTime(2020, 12, 15),
+        Temperature = 5
+      };
+      var command2 = new CreateDailyTemperatureCommand
+      {
+        RegionId = 1,
+        Date = new DateTime(2020, 12, 15),
+        Temperature = 10
+      };
+
+      var handler = new CreateDailyTemperatureCommand.CreateDailyTemperatureCommandHandler(Context);
+      await handler.Handle(command1, CancellationToken.None);
+      await Assert.ThrowsAsync<ArgumentException>(
+        async () => { await handler.Handle(command2, CancellationToken.None); }
+      );
+    }
   }
 }

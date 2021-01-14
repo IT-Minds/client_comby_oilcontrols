@@ -31,6 +31,13 @@ namespace Application.DailyTemperatures.Commands.CreateDailyTemperature
         {
           throw new ArgumentException("Invalid Region ID: " + request.RegionId);
         }
+
+        var temp = region.DailyTemperatures.FirstOrDefault(x => x.Date == request.Date);
+        if(temp != null)
+        {
+          throw new ArgumentException("Temperature allready registered for the: " + request.Date );
+        }
+
         var dailyTemp = new RegionDailyTemp
         {
           RegionId = request.RegionId,
