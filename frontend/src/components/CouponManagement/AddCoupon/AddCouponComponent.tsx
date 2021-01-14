@@ -5,7 +5,8 @@ import {
   FormErrorMessage,
   FormLabel,
   HStack,
-  Input,
+  NumberInput,
+  NumberInputField,
   Select,
   Tag,
   TagCloseButton,
@@ -92,46 +93,59 @@ const AddCouponComp: FC<Props> = ({ submitCallback, cars = [] }) => {
             <FormErrorMessage>Please select a car</FormErrorMessage>
           </FormControl>
 
-          <FormControl isInvalid={formSubmitAttempts > 0} isRequired={interval?.length < 1}>
+          <FormControl
+            isInvalid={
+              (formSubmitAttempts > 0 && (!interval || interval.length < 1)) ||
+              from > to ||
+              to < from
+            }>
             <FormLabel>Enter coupon interval:</FormLabel>
             <HStack>
-              <Input
-                type="number"
-                placeholder="From"
-                value={from}
-                onChange={event => {
-                  setFrom(event.target.value);
-                }}
-              />
-              <Input
-                type="number"
-                placeholder="To"
-                value={to}
-                onChange={event => {
-                  setTo(event.target.value);
-                }}
-              />
+              <FormControl
+                isInvalid={
+                  (formSubmitAttempts > 0 && (!interval || interval.length < 1)) || from > to
+                }
+                isRequired={!interval || interval.length < 1}>
+                <NumberInput
+                  placeholder="From"
+                  onChange={value => {
+                    setFrom(parseFloat(value));
+                  }}
+                  value={from ?? ""}>
+                  <NumberInputField />
+                </NumberInput>
+              </FormControl>
+              <FormControl
+                isInvalid={
+                  (formSubmitAttempts > 0 && (!interval || interval.length < 1)) || to < from
+                }
+                isRequired={!interval || interval.length < 1}>
+                <NumberInput
+                  placeholder="To"
+                  onChange={value => {
+                    setTo(parseFloat(value));
+                  }}
+                  value={to ?? ""}>
+                  <NumberInputField />
+                </NumberInput>
+              </FormControl>
             </HStack>
-            <Button
-              mt={4}
-              colorScheme="blue"
-              rightIcon={<MdAdd />}
-              onClick={() => addInterval(from, to)}>
+            <FormErrorMessage>Please enter a valid interval</FormErrorMessage>
+            <Button mt={4} colorScheme="blue" rightIcon={<MdAdd />} onClick={() => addInterval()}>
               Add interval
             </Button>
-            <FormErrorMessage>Please enter interval</FormErrorMessage>
           </FormControl>
 
           <FormControl>
             <FormLabel>Selected intervals:</FormLabel>
             <Wrap>
-              {interval?.map((cn, index) => (
-                <WrapItem key={index}>
+              {interval?.map(cn => (
+                <WrapItem key={cn.id}>
                   <Tag size="md" borderRadius="full" variant="solid" colorScheme="blue">
                     <TagLabel>
-                      {cn.from} - {cn.to}
+                      {cn.start} - {cn.end}
                     </TagLabel>
-                    <TagCloseButton onClick={() => removeInterval(index)} />
+                    <TagCloseButton onClick={() => removeInterval(cn.id)} />
                   </Tag>
                 </WrapItem>
               ))}
