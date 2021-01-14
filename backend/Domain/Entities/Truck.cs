@@ -7,7 +7,7 @@ namespace Domain.Entities
   {
     public int Id { get; set; }
     public Route Route { get; set; }
-    public ICollection<TruckState> DailyStates { get; set; }
+    public virtual ICollection<TruckState> DailyStates { get; set; }
     public int RouteId { get; set; }
   }
 }
