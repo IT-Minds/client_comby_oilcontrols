@@ -1,4 +1,4 @@
-import { Box, Container } from "@chakra-ui/react";
+import { Box, Container, useColorModeValue } from "@chakra-ui/react";
 import FillingOverviewComp from "components/FillingOverview/FillingOverviewComp";
 import { GetServerSideProps, NextPage } from "next";
 import { genRefillClient } from "services/backend/apiClients";
@@ -12,9 +12,11 @@ type Props = {
 };
 
 const DemoPage: NextPage<Props> = ({ refillEntities, needle, hasMore, pageCount }) => {
+  const bg = useColorModeValue("gray.100", "gray.700");
+
   return (
     <Container maxW="100%" maxH="100%" centerContent>
-      <Box padding="4" bg="gray.100" maxW="6xl" maxH="4xl" resize="both" overflow="auto">
+      <Box padding="4" bg={bg} maxW="6xl" maxH="4xl" resize="both" overflow="auto">
         <FillingOverviewComp
           preLoadedData={refillEntities}
           preloadDataNeedle={needle}
