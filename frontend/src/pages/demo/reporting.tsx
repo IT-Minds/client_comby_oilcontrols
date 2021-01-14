@@ -1,7 +1,7 @@
-import { Box, Container, useToast } from "@chakra-ui/react";
+import { Box, Container, useColorModeValue, useToast } from "@chakra-ui/react";
 import ReportingComp from "components/Reporting/ReportingComponent";
 import { useOffline } from "hooks/useOffline";
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import { useCallback } from "react";
 import { genRefillClient } from "services/backend/apiClients";
 import { CreateRefillCommand, TankState, TankType } from "services/backend/nswagts";
@@ -12,10 +12,12 @@ const DemoPage: NextPage = () => {
 
   const { awaitCallback } = useOffline();
 
+  const bg = useColorModeValue("gray.100", "gray.700");
+
   const saveForm = useCallback(
     async reportForm => {
       awaitCallback(async () => {
-        const client = genRefillClient();
+        const client = await genRefillClient();
         const newRefillID = await client.create(
           new CreateRefillCommand({
             couponNumber: Number(reportForm.couponId),
@@ -49,7 +51,7 @@ const DemoPage: NextPage = () => {
 
   return (
     <Container maxW="100%" maxH="100%" centerContent>
-      <Box padding="4" bg="gray.100" maxW="6xl" maxH="4xl" resize="both" overflow="auto">
+      <Box padding="4" bg={bg} maxW="6xl" maxH="4xl" resize="both" overflow="auto">
         <ReportingComp
           submitCallback={x => saveForm(x)}
           carId="2"
@@ -67,5 +69,11 @@ const DemoPage: NextPage = () => {
     </Container>
   );
 };
+
+// export const getServerSideProps: GetServerSideProps<unknown> = async () => {
+//   return {
+//     props: {}
+//   };
+// };
 
 export default DemoPage;

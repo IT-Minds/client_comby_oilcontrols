@@ -4,6 +4,7 @@ import FetchMock from "fetch-mock";
 import _fetchMock from "isomorphic-unfetch";
 import { ExampleEntityDto, PageResultOfExampleEntityDto } from "services/backend/nswagts";
 import { exampleClientOfflineData } from "services/backend/offline.data";
+import EnvironmentSettings from "types/EnvSettings";
 
 import Demo from "./Demo";
 
@@ -52,6 +53,15 @@ describe("AppName render", () => {
     document.createEvent = jest.fn((event: string) => {
       return new Event(event);
     }) as any;
+
+    fetchMock.mock(/.*api\/getEnv\/.*/, {
+      status: 200,
+      body: {
+        backendToken: "",
+        backendUrl: "",
+        buildId: ""
+      } as EnvironmentSettings
+    });
 
     fetchMock.mock(/.*/, {
       status: 200,

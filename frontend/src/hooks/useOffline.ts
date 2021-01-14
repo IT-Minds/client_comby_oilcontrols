@@ -32,7 +32,7 @@ export const useOffline = (): Return => {
     }
 
     (async () => {
-      const client = genHealthClient();
+      const client = await genHealthClient();
       const online = await client.get().catch(() => false);
       setIsOnline(online);
     })();
@@ -61,8 +61,8 @@ export const useOffline = (): Return => {
     isOnlineRef.current = isOnline;
   }, [isOnline, savedCallbacks]);
 
-  const awaitCallback = useCallback((cb: Callback, id: string) => {
-    if (isOnlineRef.current) cb();
+  const awaitCallback = useCallback(async (cb: Callback, id: string) => {
+    if (isOnlineRef.current) await cb();
     dispatchCallbacks({
       type: ListReducerActionType.AddOrUpdate,
       data: {

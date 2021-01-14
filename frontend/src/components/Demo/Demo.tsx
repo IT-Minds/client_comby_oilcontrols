@@ -56,8 +56,8 @@ const Demo: FC<Props> = ({
 
   const { done, error, fetchData, needle } = usePagedFetched(
     "createdAt",
-    (needle, size, sortBy, skip) => genExampleClient().get(needle, size, sortBy, skip),
-    // genExampleClient().get,
+    (needle, size, sortBy, skip) =>
+      genExampleClient().then(client => client.get(needle, size, sortBy, skip)),
     dataDispatch,
     {
       autoStart: !preloadLoadedAll,
@@ -134,31 +134,30 @@ const Demo: FC<Props> = ({
         id: name
       }
     });
-    awaitCallback(
-      () =>
-        genExampleClient()
-          .create(
-            new CreateExampleEntityCommand({
-              exampleEnum: ExampleEnum.A,
-              name
-            })
-          )
-          .then(
-            x => {
-              ghostDataDispatch({
-                type: ListReducerActionType.Remove,
-                data: name
-              });
-            },
-            x => {
-              ghostDataDispatch({
-                type: ListReducerActionType.Remove,
-                data: name
-              });
-            }
-          ),
-      name
-    );
+    awaitCallback(async () => {
+      const client = await genExampleClient();
+      await client
+        .create(
+          new CreateExampleEntityCommand({
+            exampleEnum: ExampleEnum.A,
+            name
+          })
+        )
+        .then(
+          () => {
+            ghostDataDispatch({
+              type: ListReducerActionType.Remove,
+              data: name
+            });
+          },
+          () => {
+            ghostDataDispatch({
+              type: ListReducerActionType.Remove,
+              data: name
+            });
+          }
+        );
+    }, name);
   }, [data, needle]);
 
   useEffect(() => {

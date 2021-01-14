@@ -17,8 +17,8 @@ namespace Application.Refills.Queries.GetRefills.Location
     public int Size { get ; set ; }
     public DateTimeOffset Needle { get; set; }
     public int? Skip { get; set; }
-    public TankType TankType { get; set; }
-    public int TankNumber { get; set; }
+
+    public TankType? TankType { get; set; }
 
     public DateTimeOffset GetNewNeedle(IQueryable<Refill> query)
     {
@@ -42,7 +42,7 @@ namespace Application.Refills.Queries.GetRefills.Location
     public async Task<int> PagesRemaining(IQueryable<Refill> query)
     {
       var count = await query.CountAsync();
-      var pagesLeft = (int)(Math.Floor((float)count / (float)Size)) - 1;
+      var pagesLeft = (int)(Math.Ceiling((float)count / (float)Size)) - 1;
 
       return pagesLeft;
     }
@@ -63,7 +63,14 @@ namespace Application.Refills.Queries.GetRefills.Location
 
         var page = new PageResult<RefillDto>();
 
-        var baseQuery = _context.Refills;
+        var baseQuery = _context.Refills.AsQueryable();
+        if (request.TankType.HasValue)
+        {
+          baseQuery = baseQuery
+          .Include(refill => refill.Location)
+          .Where(refill => refill.Location.Type == request.TankType);
+        }
+
         var query = request.PreparePage(baseQuery);
         var pagesRemaining = await request.PagesRemaining(query);
         var needle = request.GetNewNeedle(query);
@@ -71,7 +78,6 @@ namespace Application.Refills.Queries.GetRefills.Location
         page.HasMore = pagesRemaining > 0;
         page.PagesRemaining = pagesRemaining;
         page.Results = await query
-                .Where(x => x.Location.Type == request.TankType && x.Location.TankNumber == request.TankNumber)
                 .Take(request.Size)
                 .ProjectTo<RefillDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);

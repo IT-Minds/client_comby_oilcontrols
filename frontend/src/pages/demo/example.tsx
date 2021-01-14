@@ -31,16 +31,16 @@ const DemoPage: NextPage<Props> = ({ exampleEntities, needle, hasMore, pageCount
 };
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
-  const data = await genExampleClient()
-    .get("0", PAGE_SHOW_SIZE, "createdAt")
-    .catch(() => {
+  const data = await genExampleClient().then(client =>
+    client.get("0", PAGE_SHOW_SIZE, "createdAt").catch(() => {
       return new PageResultOfExampleEntityDto({
         hasMore: true,
         newNeedle: "0",
         pagesRemaining: 1,
         results: []
       });
-    });
+    })
+  );
 
   return {
     props: {
