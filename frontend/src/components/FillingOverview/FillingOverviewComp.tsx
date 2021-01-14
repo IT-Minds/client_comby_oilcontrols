@@ -108,7 +108,7 @@ const FillingOverviewComp: FC<Props> = ({
           {dataSplitter.data.map(data => {
             return (
               <Tr key={data.id}>
-                <Td>TODO show type</Td>
+                <Td>{capitalize(TankType[data.locationType])}</Td>
                 <Td>{new Date(data.actualDeliveryDate).toLocaleDateString()}</Td>
                 <Td>{data.truckId}</Td>
                 <Td>{data.startAmount}</Td>
