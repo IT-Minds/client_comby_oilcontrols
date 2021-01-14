@@ -19,8 +19,7 @@ namespace Application.UnitTests.Coupons.Commands.AssignCoupons
     {
       var command = new UpdateCouponStatusCommand
       {
-        CouponNumber = 19991,
-        TruckId = 43
+        CouponNumber = 19991
       };
 
       var handler = new UpdateCouponStatusCommand.UpdateCouponstatusCommandHandler(Context);
@@ -31,22 +30,6 @@ namespace Application.UnitTests.Coupons.Commands.AssignCoupons
 
       coupon.Should().NotBeNull();
       coupon.Status.Should().Be(CouponStatus.DESTROYED);
-    }
-
-    [Fact]
-    public async Task Handle_DontChangeStautsWrongTruckId()
-    {
-      var command = new UpdateCouponStatusCommand
-      {
-        CouponNumber = 19991,
-        TruckId = 44
-      };
-
-      var handler = new UpdateCouponStatusCommand.UpdateCouponstatusCommandHandler(Context);
-
-      await Assert.ThrowsAsync<NotFoundException>(
-        async () => { await handler.Handle(command, CancellationToken.None); }
-      );
     }
   }
 }

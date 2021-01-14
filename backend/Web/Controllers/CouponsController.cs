@@ -34,14 +34,12 @@ namespace Web.Controllers
       });
     }
 
-    [HttpPut("/coupon/{id}/invalidate")]
-    public async Task<ActionResult<int>> InvalidateCoupon(int couponNumber, UpdateCouponStatusCommand command)
+    [HttpPut("{couponNumber}/invalidate")]
+    public async Task<ActionResult<int>> InvalidateCoupon([FromRoute] int couponNumber)
     {
-      if (couponNumber != command.CouponNumber)
-      {
-        return BadRequest();
-      }
-      return await Mediator.Send(command);
+      return await Mediator.Send(new UpdateCouponStatusCommand{
+        CouponNumber = couponNumber
+      });
     }
   }
 }

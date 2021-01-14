@@ -36,7 +36,7 @@ export class ClientBase {
 export interface ICouponsClient {
     create(command: AssignCouponsCommand): Promise<number[]>;
     get(truckId?: number | undefined, needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfCouponDto>;
-    invalidateCoupon(command: UpdateCouponStatusCommand, id: string, couponNumber?: number | undefined): Promise<number>;
+    invalidateCoupon(couponNumber: number): Promise<number>;
 }
 
 export class CouponsClient extends ClientBase implements ICouponsClient {
@@ -142,24 +142,16 @@ export class CouponsClient extends ClientBase implements ICouponsClient {
         return Promise.resolve<PageResultOfCouponDto>(<any>null);
     }
 
-    invalidateCoupon(command: UpdateCouponStatusCommand, id: string, couponNumber?: number | undefined): Promise<number> {
-        let url_ = this.baseUrl + "/coupon/{id}/invalidate?";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        if (couponNumber === null)
-            throw new Error("The parameter 'couponNumber' cannot be null.");
-        else if (couponNumber !== undefined)
-            url_ += "couponNumber=" + encodeURIComponent("" + couponNumber) + "&";
+    invalidateCoupon(couponNumber: number): Promise<number> {
+        let url_ = this.baseUrl + "/api/Coupons/{couponNumber}/invalidate";
+        if (couponNumber === undefined || couponNumber === null)
+            throw new Error("The parameter 'couponNumber' must be defined.");
+        url_ = url_.replace("{couponNumber}", encodeURIComponent("" + couponNumber));
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(command);
-
         let options_ = <RequestInit>{
-            body: content_,
             method: "PUT",
             headers: {
-                "Content-Type": "application/json",
                 "Accept": "application/json"
             }
         };
@@ -787,46 +779,6 @@ export enum CouponStatus {
     AVAILABLE = 0,
     USED = 1,
     DESTROYED = 2,
-}
-
-export class UpdateCouponStatusCommand implements IUpdateCouponStatusCommand {
-    truckId?: number;
-    couponNumber?: number;
-
-    constructor(data?: IUpdateCouponStatusCommand) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.truckId = _data["truckId"];
-            this.couponNumber = _data["couponNumber"];
-        }
-    }
-
-    static fromJS(data: any): UpdateCouponStatusCommand {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateCouponStatusCommand();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["truckId"] = this.truckId;
-        data["couponNumber"] = this.couponNumber;
-        return data; 
-    }
-}
-
-export interface IUpdateCouponStatusCommand {
-    truckId?: number;
-    couponNumber?: number;
 }
 
 export class CreateExampleEntityCommand implements ICreateExampleEntityCommand {
