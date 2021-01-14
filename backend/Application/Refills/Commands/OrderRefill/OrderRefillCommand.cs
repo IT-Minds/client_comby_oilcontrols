@@ -30,7 +30,7 @@ namespace Application.Refills.Commands.OrderRefill
       public async Task<int> Handle(OrderRefillCommand request, CancellationToken cancellationToken)
       {
         var route = _context.Routes
-          .Include("Refills")
+          .Include(x => x.Refills)
           .FirstOrDefault(route => route.Id == request.RouteId);
         if(route == null)
         {
