@@ -30,7 +30,7 @@ export const api = async <T, U extends BaseConstructor<T>>(
     throw new Error("Environment settings null on server");
   }
 
-  if (!process.browser && envSettings.backendUrl?.match(/^http:\/\//).length > 1) {
+  if (!process.browser && envSettings.backendUrl?.match(/^http:\/\//) !== null) {
     // we have to  allow unauthorized access to http
     process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
   }
