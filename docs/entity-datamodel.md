@@ -52,6 +52,11 @@ class TruckRefill {
   amount
 }
 
+class Street {
+  id
+  name
+}
+
 enum FuelType {
   OIL
   PETROLEUM
@@ -88,6 +93,8 @@ Region --> "0..*" RegionDailyTemp
 Truck --> "0..*" TruckDailyState
 TruckDailyState --> "0..*" TruckRefill
 TruckRefill ..> FuelType
+Region --> "0..*" Street
+
 @enduml
 
 ```
