@@ -1,8 +1,14 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const withPWA = require("next-pwa");
-const withBundleAnalyzer = require("@next/bundle-analyzer")({
-  enabled: process.env.ANALYZE === "true"
-});
+
+let withBundleAnalyzer = x => x;
+try {
+  withBundleAnalyzer = require("@next/bundle-analyzer")({
+    enabled: process.env.ANALYZE === "true"
+  });
+} catch {
+  //
+}
 
 module.exports = withBundleAnalyzer(
   withPWA({
