@@ -23,6 +23,10 @@ jobs:
     steps:
       # - name: Set env
       #   run: echo APPNAME=${{ secrets.AzureAppService_AppName }}-backend >> $GITHUB_ENV
+      - name: Read env
+        run: |
+          echo ${{ env.appName }}
+          echo ${{ env.DOTNET_ROOT }}
 
       - uses: actions/checkout@master
 
@@ -34,7 +38,7 @@ jobs:
       - name: Build with dotnet
         run: |
           dotnet build
-          dotnet publish -c Release -o ${{env.DOTNET_ROOT}}
+          dotnet publish -c Release -o ${{ env.DOTNET_ROOT }}/asd
         working-directory: backend/Web
 
       - name: Deploy Backend to Azure Web App
@@ -43,4 +47,4 @@ jobs:
           app-name: ${{ env.appName }}
           slot-name: "production"
           publish-profile: ${{ secrets.AzureAppService_PublishProfile_Backend }}
-          package: ${{env.DOTNET_ROOT}}
+          package: ${{ env.DOTNET_ROOT }}/asd
