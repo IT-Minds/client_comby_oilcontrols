@@ -14,6 +14,7 @@ defaults:
 
 env:
   dotnet-version: 5.0.x
+  appName: ${{ secrets.AzureAppService_AppName }}-backend
 
 jobs:
   backend-deploy:
@@ -33,13 +34,13 @@ jobs:
       - name: Build with dotnet
         run: |
           dotnet build
-          dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/appdeploy
+          dotnet publish -c Release -o ${{env.DOTNET_ROOT}}
         working-directory: backend/Web
 
       - name: Deploy Backend to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ secrets.AzureAppService_AppName }}-backend
+          app-name: ${{ env.appName }}
           slot-name: "production"
           publish-profile: ${{ secrets.AzureAppService_PublishProfile_Backend }}
-          package: ${{env.DOTNET_ROOT}}/appdeploy
+          package: ${{env.DOTNET_ROOT}}
