@@ -23,7 +23,9 @@ namespace Application.Refills.Queries.GetRefills
     {
       profile.CreateMap<Domain.Entities.Refill, RefillDto>()
         .ForMember(dest => dest.TruckId,
-          map => map.MapFrom(from => from.Coupon.TruckId));
+          map => map.MapFrom(from => from.Coupon.TruckId))
+        .ForMember(dest => dest.LocationType,
+          map => map.MapFrom(from => from.Location.FuelTank.Type));
     }
   }
 }

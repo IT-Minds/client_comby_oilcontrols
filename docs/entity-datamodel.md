@@ -14,8 +14,16 @@ class Route {
 
 class Location {
   id
+  address
+  comment
+  refillSchedule
+}
+
+class FuelTank {
   type
   tankNumber
+  tankSize
+  minimumFuelAmount
 }
 
 class Refill {
@@ -76,6 +84,12 @@ enum TankState {
   PARTIALLY_FILLED
 }
 
+enum RefillSchedule {
+  AUTOMATIC
+  INTERVAL
+  MANUAL
+}
+
 class Coupon {
   couponNumber
 }
@@ -85,7 +99,7 @@ Route --> "0..*" Refill
 Refill --> "1" Location
 Refill --> Coupon
 Refill ..> FuelType
-Location ..> TankType
+FuelTank ..> TankType
 Refill ..> TankState
 Truck "1" <-- Coupon
 Region --> "0..*" Location
@@ -95,6 +109,8 @@ TruckDailyState --> "0..*" TruckRefill
 TruckRefill ..> FuelType
 Region --> "0..*" Street
 
+Location --> "1" FuelTank
+Location ..> RefillSchedule
 @enduml
 
 ```
