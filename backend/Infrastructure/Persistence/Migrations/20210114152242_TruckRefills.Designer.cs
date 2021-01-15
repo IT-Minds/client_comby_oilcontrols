@@ -4,14 +4,16 @@ using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210114152242_TruckRefills")]
+    partial class TruckRefills
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -307,44 +309,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("Routes");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Street", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("LastModified")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ModifiedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RegionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RegiondId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RegionId");
-
-                    b.ToTable("Street");
-                });
-
             modelBuilder.Entity("Domain.Entities.Truck", b =>
                 {
                     b.Property<int>("Id")
@@ -525,17 +489,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Region");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Street", b =>
-                {
-                    b.HasOne("Domain.Entities.Region", "Region")
-                        .WithMany("Streets")
-                        .HasForeignKey("RegionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Region");
-                });
-
             modelBuilder.Entity("Domain.Entities.Truck", b =>
                 {
                     b.HasOne("Domain.Entities.Route", "Route")
@@ -577,8 +530,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("DailyTemperatures");
 
                     b.Navigation("Locations");
-
-                    b.Navigation("Streets");
                 });
 
             modelBuilder.Entity("Domain.Entities.Route", b =>
