@@ -12,14 +12,12 @@ import {
   VStack
 } from "@chakra-ui/react";
 import React, { FC, FormEvent, useCallback, useState } from "react";
-import { MdCheck, MdLocationCity } from "react-icons/md";
+import { MdCheck } from "react-icons/md";
 import { logger } from "utils/logger";
 
-type Props = {
-  id: string;
-};
+type Props = Record<string, never>;
 
-const LocaleMetaDataForm: FC<Props> = ({ id }) => {
+const LocaleMetaDataForm: FC<Props> = () => {
   const [locationId, setLocationId] = useState(null);
   const [address, setAddress] = useState(null);
   const [city, setCity] = useState(null);
@@ -38,9 +36,6 @@ const LocaleMetaDataForm: FC<Props> = ({ id }) => {
       <form onSubmit={handleSubmit}>
         <VStack divider={<StackDivider borderColor="black" />}>
           <FormControl>
-            {
-              //TODO: Find a way to align a little better.
-            }
             <HStack>
               {
                 //TODO: Find correct values to insert here and where to read the actual type enum from.

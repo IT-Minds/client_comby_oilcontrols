@@ -7,7 +7,7 @@ const DemoPage: NextPage = () => {
   return (
     <Container maxW="xl" centerContent>
       <Box padding="4" bg="gray.100" maxW="6xl" maxH="4xl" resize="both" overflow="auto">
-        <LocaleMetaDataForm id={"someId"}></LocaleMetaDataForm>
+        <LocaleMetaDataForm />
       </Box>
     </Container>
   );
