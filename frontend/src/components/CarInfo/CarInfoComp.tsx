@@ -6,7 +6,6 @@ import {
   FormLabel,
   Heading,
   HStack,
-  Input,
   NumberInput,
   NumberInputField,
   Select,
@@ -26,13 +25,13 @@ type Props = {
 const CarInfoComp: FC<Props> = ({ submitCallback, car }) => {
   const [localCarInfoForm, setLocalCarInfoForm] = useState<CarInfoForm>({
     carId: "",
-    amountFilled: "",
+    amountFilled: null,
     cardNumber: "",
-    date: "",
-    evening: "",
-    headCount: "",
-    morning: "",
-    fuelType: 0
+    date: 0,
+    evening: null,
+    headCount: null,
+    morning: null,
+    fuelType: null
   });
 
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
@@ -48,6 +47,7 @@ const CarInfoComp: FC<Props> = ({ submitCallback, car }) => {
     (event: FormEvent<HTMLFormElement>) => {
       logger.debug("Submitting form CarInfoComp");
 
+      localCarInfoForm.date = Date.now();
       submitCallback(localCarInfoForm);
       setFormSubmitAttempts(0);
       event.preventDefault();
@@ -62,17 +62,25 @@ const CarInfoComp: FC<Props> = ({ submitCallback, car }) => {
           <Heading as="h4" size="md">
             Information of car {car}
           </Heading>
-          <FormControl isInvalid={formSubmitAttempts > 0} isRequired>
+          <FormControl
+            isInvalid={
+              formSubmitAttempts > 0 && (!localCarInfoForm.morning || !localCarInfoForm.evening)
+            }
+            isRequired>
             <FormLabel>Morning and evening:</FormLabel>
             <HStack>
-              <FormControl isInvalid={formSubmitAttempts > 0} isRequired>
+              <FormControl
+                isInvalid={formSubmitAttempts > 0 && !localCarInfoForm.morning}
+                isRequired>
                 <NumberInput
                   placeholder="Morning"
                   onChange={value => updateLocalForm(value, "morning")}>
                   <NumberInputField />
                 </NumberInput>
               </FormControl>
-              <FormControl isInvalid={formSubmitAttempts > 0} isRequired>
+              <FormControl
+                isInvalid={formSubmitAttempts > 0 && !localCarInfoForm.evening}
+                isRequired>
                 <NumberInput
                   placeholder="Evening"
                   onChange={value => updateLocalForm(value, "evening")}>
@@ -82,7 +90,9 @@ const CarInfoComp: FC<Props> = ({ submitCallback, car }) => {
             </HStack>
             <FormErrorMessage>Please enter values</FormErrorMessage>
           </FormControl>
-          <FormControl isInvalid={formSubmitAttempts > 0} isRequired>
+          <FormControl
+            isInvalid={formSubmitAttempts > 0 && !localCarInfoForm.amountFilled}
+            isRequired>
             <FormLabel>Filling amount (in liters):</FormLabel>
             <NumberInput
               placeholder="Fill amount"
@@ -91,7 +101,9 @@ const CarInfoComp: FC<Props> = ({ submitCallback, car }) => {
             </NumberInput>
             <FormErrorMessage>Please enter amount filled</FormErrorMessage>
           </FormControl>
-          <FormControl isInvalid={formSubmitAttempts > 0} isRequired>
+          <FormControl
+            isInvalid={formSubmitAttempts > 0 && !localCarInfoForm.cardNumber}
+            isRequired>
             <FormLabel>Card number:</FormLabel>
             <NumberInput
               placeholder="Card number"
@@ -100,7 +112,7 @@ const CarInfoComp: FC<Props> = ({ submitCallback, car }) => {
             </NumberInput>
             <FormErrorMessage>Please enter card number</FormErrorMessage>
           </FormControl>
-          <FormControl isInvalid={formSubmitAttempts > 0} isRequired>
+          <FormControl isInvalid={formSubmitAttempts > 0 && !localCarInfoForm.fuelType} isRequired>
             <FormLabel>Fuel type:</FormLabel>
             <Select
               placeholder="Select fuel type"
