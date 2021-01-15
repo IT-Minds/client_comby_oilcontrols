@@ -1,10 +1,10 @@
 export interface CarInfoForm {
   carId: string;
-  morning: string;
-  evening: string;
-  amountFilled: string;
-  date: string;
+  morning: number;
+  evening: number;
+  amountFilled: number;
+  date: number;
   cardNumber: string;
   fuelType: number;
-  headCount: string;
+  headCount: number;
 }
