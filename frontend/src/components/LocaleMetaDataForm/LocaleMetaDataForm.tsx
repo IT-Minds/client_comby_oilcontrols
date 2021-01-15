@@ -12,7 +12,7 @@ import {
   VStack
 } from "@chakra-ui/react";
 import React, { FC, FormEvent, useCallback, useState } from "react";
-import { MdCheck } from "react-icons/md";
+import { MdCheck, MdLocationCity } from "react-icons/md";
 import { logger } from "utils/logger";
 
 type Props = {
@@ -21,6 +21,13 @@ type Props = {
 
 const LocaleMetaDataForm: FC<Props> = ({ id }) => {
   const [locationId, setLocationId] = useState(null);
+  const [address, setAddress] = useState(null);
+  const [city, setCity] = useState(null);
+  const [tankcapacity, setTankcapacity] = useState(null);
+  const [minFuelAmount, setMinFuelAmount] = useState(null);
+  const [dailyEstFuelConsumption, setDailyEstFuelConsumption] = useState(null);
+  const [comment, setComment] = useState(null);
+
   const handleSubmit = useCallback((event: FormEvent<HTMLFormElement>) => {
     logger.debug("Submitting form LocaleMetaDataForm");
     logger.debug(JSON.stringify(event));
@@ -39,15 +46,15 @@ const LocaleMetaDataForm: FC<Props> = ({ id }) => {
                 //TODO: Find correct values to insert here and where to read the actual type enum from.
               }
               <Select placeholder="Location Type">
-                <option value="option1">Building</option>
-                <option value="option2">Ship</option>
-                <option value="option3">Tank</option>
+                <option value="Building">Building</option>
+                <option value="Ship">Ship</option>
+                <option value="Tank">Tank</option>
               </Select>
               {
                 //TODO:FIX THIS SO THE CORRECT PLACEHOLDER IS SHOWN.
               }
               <NumberInput
-                placholder="Location Id"
+                placeholder="Location Id"
                 onChange={value => {
                   setLocationId(parseInt(value));
                 }}
@@ -55,45 +62,85 @@ const LocaleMetaDataForm: FC<Props> = ({ id }) => {
                 <NumberInputField />
               </NumberInput>
             </HStack>
-          </FormControl>
-
-          <FormControl>
             <HStack>
               <FormLabel>Address: </FormLabel>
-              <Input></Input>
+              <Input
+                placeholder="Address"
+                onChange={e => {
+                  setAddress(e.target.value);
+                }}
+                value={address ?? ""}
+              />
             </HStack>
             <HStack>
               <FormLabel>City/Zip code: </FormLabel>
-              <Input></Input>
+              <Input
+                placeholder="city/zip code"
+                onChange={e => {
+                  setCity(e.target.value);
+                }}
+                value={city ?? ""}
+              />
             </HStack>
           </FormControl>
 
           <FormControl>
-            <HStack>
-              <FormLabel>Refill Type: </FormLabel>
-              <Input></Input>
-            </HStack>
+            {
+              //TODO: Find correct values to insert here and where to read the actual type enum from.
+            }
+            <Select placeholder="Refill Type">
+              <option value="Automatic">Automatic</option>
+              <option value="Interval">Interval</option>
+              <option value="Manual">Manual</option>
+            </Select>
 
             <HStack>
               <FormLabel>Tank Capacity: </FormLabel>
-              <Input></Input>
+              <NumberInput
+                placeholder="Tank capacity."
+                onChange={value => {
+                  setTankcapacity(parseInt(value));
+                }}
+                value={tankcapacity ?? ""}>
+                <NumberInputField />
+              </NumberInput>
             </HStack>
 
             <HStack>
-              <FormLabel>Tank Minimum Amount: </FormLabel>
-              <Input></Input>
+              <FormLabel>Minimum Fuel Amount: </FormLabel>
+              <NumberInput
+                placeholder="Min. fuel amount"
+                onChange={value => {
+                  setMinFuelAmount(parseInt(value));
+                }}
+                value={minFuelAmount ?? ""}>
+                <NumberInputField />
+              </NumberInput>
             </HStack>
 
             <HStack>
               <FormLabel>Daily Fuel Consumption Estimate: </FormLabel>
-              <Input></Input>
+              <NumberInput
+                placeholder="Est. fuel consumption"
+                onChange={value => {
+                  setDailyEstFuelConsumption(parseInt(value));
+                }}
+                value={dailyEstFuelConsumption ?? ""}>
+                <NumberInputField />
+              </NumberInput>
             </HStack>
           </FormControl>
 
           <FormControl>
             <VStack>
               <FormLabel>Comments</FormLabel>
-              <Input></Input>
+              <Input
+                placeholder="Comment"
+                onChange={e => {
+                  setComment(e.target.value);
+                }}
+                value={comment ?? ""}
+              />
             </VStack>
           </FormControl>
 
