@@ -49,9 +49,12 @@ namespace Application.UnitTests
           new ExampleEntity { Id = 5, ExampleEntityListId = null, Name = "Coffee", ExampleEnum = ExampleEnum.D }
       );
 
+      var route1 = new Route{Id = 1};
+      var route2 = new Route{Id = 2};
+
       context.Trucks.AddRange(
-        new Truck { Id = 43 },
-        new Truck { Id = 44 }
+        new Truck { Id = 43, Route = route1},
+        new Truck { Id = 44, Route = route2}
       );
 
       context.Locations.AddRange(
