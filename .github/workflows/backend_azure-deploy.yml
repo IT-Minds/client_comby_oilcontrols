@@ -13,6 +13,7 @@ defaults:
     working-directory: backend
 
 env:
+  DOTNET_ROOT: "/opt/dotnet"
   dotnet-version: 5.0.x
   appName: ${{ secrets.AzureAppService_AppName }}-backend
 
