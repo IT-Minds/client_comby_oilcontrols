@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "backend/**"
+      - ".github/**"
     branches:
       - main
       - cicd
@@ -22,13 +23,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # - name: Set env
-      #   run: echo APPNAME=${{ secrets.AzureAppService_AppName }}-backend >> $GITHUB_ENV
-      - name: Read env
-        run: |
-          echo ${{ env.appName }}
-          echo ${{ env.DOTNET_ROOT }}
-
       - uses: actions/checkout@master
 
       - name: Setup .NET
