@@ -13,16 +13,15 @@ defaults:
     working-directory: backend
 
 env:
+  DOTNET_ROOT: "/opt/dotnet"
   dotnet-version: 5.0.x
+  appName: ${{ secrets.AzureAppService_AppName }}-backend
 
 jobs:
   backend-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set env
-        run: echo APPNAME=${{ secrets.AzureAppService_AppName }}-backend >> $GITHUB_ENV
-
       - uses: actions/checkout@master
 
       - name: Setup .NET
@@ -33,13 +32,13 @@ jobs:
       - name: Build with dotnet
         run: |
           dotnet build
-          dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/appdeploy
+          dotnet publish -c Release -o ${{ env.DOTNET_ROOT }}/${{ env.appName }}
         working-directory: backend/Web
 
       - name: Deploy Backend to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ env.APPNAME }}
+          app-name: ${{ env.appName }}
           slot-name: "production"
           publish-profile: ${{ secrets.AzureAppService_PublishProfile_Backend }}
-          package: ${{env.DOTNET_ROOT}}/appdeploy
+          package: ${{ env.DOTNET_ROOT }}/${{ env.appName }}
