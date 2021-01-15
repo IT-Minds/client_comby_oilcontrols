@@ -10,4 +10,4 @@ npm i
 npm run dev
 ```
 
-After this you can run the VSCode recipe to debug
+After running this command you can run the VSCode recipe to debug

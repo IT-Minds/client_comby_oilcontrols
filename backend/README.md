@@ -41,4 +41,3 @@ This layer contains classes for accessing external resources such as file system
 ### Web
 
 This layer is ASP.NET Core 3 api. This layer depends on both the Application and Infrastructure layers, however, the dependency on Infrastructure is only to support dependency injection. Therefore only _Startup.cs_ should reference Infrastructure.
-.

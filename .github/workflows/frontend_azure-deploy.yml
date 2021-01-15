@@ -14,6 +14,7 @@ defaults:
 
 env:
   node-version: 14.x
+  appName: ${{ secrets.AzureAppService_AppName }}-frontend
 
 jobs:
   frontend-deploy:
@@ -21,9 +22,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set env
-        run: echo APPNAME=${{ secrets.AzureAppService_AppName }}-frontend >> $GITHUB_ENV
-
       - uses: actions/checkout@master
 
       - name: Set up Node.js ${{ env.node-version }}
@@ -40,7 +38,7 @@ jobs:
       - name: "Deploy Frontend to Azure Web App"
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ env.APPNAME  }}
+          app-name: ${{ env.appName }}
           slot-name: "production"
           publish-profile: ${{ secrets.AzureAppService_PublishProfile_Frontend }}
           package: frontend
