@@ -64,6 +64,7 @@ namespace Application.Refills.Queries.GetRefills.Location
         var page = new PageResult<RefillDto>();
 
         IQueryable<Refill> baseQuery = _context.Refills.AsQueryable()
+         .Include(refill => refill.Coupon)
          .Include(refill => refill.Location)
             .ThenInclude(location => location.FuelTank);
 
