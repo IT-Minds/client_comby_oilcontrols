@@ -20,8 +20,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set env
-        run: echo APPNAME=${{ secrets.AzureAppService_AppName }}-backend >> $GITHUB_ENV
+      # - name: Set env
+      #   run: echo APPNAME=${{ secrets.AzureAppService_AppName }}-backend >> $GITHUB_ENV
 
       - uses: actions/checkout@master
 
@@ -39,7 +39,7 @@ jobs:
       - name: Deploy Backend to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ env.APPNAME }}
+          app-name: ${{ secrets.AzureAppService_AppName }}-backend
           slot-name: "production"
           publish-profile: ${{ secrets.AzureAppService_PublishProfile_Backend }}
           package: ${{env.DOTNET_ROOT}}/appdeploy
