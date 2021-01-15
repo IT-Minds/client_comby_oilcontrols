@@ -1,4 +1,4 @@
-import { Box, Container, Text } from "@chakra-ui/react";
+import { Box, Container, Text, useColorModeValue } from "@chakra-ui/react";
 import { readdirSync } from "fs";
 import { GetStaticProps, NextPage } from "next";
 import Link from "next/link";
@@ -9,9 +9,11 @@ type Props = {
 };
 
 const IndexPage: NextPage<Props> = ({ paths }) => {
+  const bg = useColorModeValue("gray.100", "gray.700");
+
   return (
     <Container maxW="xl" centerContent>
-      <Box padding="4" bg="gray.100" maxW="3xl" maxH="xl" resize="both" overflow="auto">
+      <Box padding="4" bg={bg} maxW="3xl" maxH="xl" resize="both" overflow="auto">
         Here is a list of all demo-able components. You are able to resize this box as you see fit
         to test the responsiveness of the design. You need to manually go back to this page from
         each demo component.
