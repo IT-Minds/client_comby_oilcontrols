@@ -93,6 +93,13 @@ namespace Application.UnitTests
         new Refill { Id = 7, CouponId = 6, Type = FuelType.GASOLINE, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, ExpectedDeliveryDate = new DateTime(2020, 12, 17), LocationId = 4, Created = new DateTime(2020, 1, 9) }
       );
 
+      context.Regions.AddRange(
+        new Region{Id = 1},
+        new Region{Id = 2},
+        new Region{Id = 3},
+        new Region{Id = 4},
+        new Region{Id = 5}
+      );
       context.SaveChanges();
     }
 
