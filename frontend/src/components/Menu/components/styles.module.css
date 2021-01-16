@@ -1,0 +1,5 @@
+.nav {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  height: 100%;
+}

@@ -2,7 +2,7 @@ import "../styles.global.css";
 import "isomorphic-unfetch";
 
 import { ChakraProvider } from "@chakra-ui/react";
-import ColorModeToggle from "components/ColorModeToggle/ColorModeToggle";
+import LayoutDesktop from "components/Layout/LayoutDesktop";
 import { usePWA } from "hooks/usePWA";
 import { AppContextType, AppPropsType } from "next/dist/next-server/lib/utils";
 import Head from "next/head";
@@ -53,10 +53,9 @@ const MyApp = ({
         <h1>JavaScript must be enabled!</h1>
       </noscript>
       <ChakraProvider theme={theme}>
-        <header>
-          <ColorModeToggle />
-        </header>
-        <Component {...pageProps} />
+        <LayoutDesktop>
+          <Component {...pageProps} />
+        </LayoutDesktop>
       </ChakraProvider>
     </main>
   );

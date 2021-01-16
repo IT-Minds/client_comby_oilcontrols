@@ -1,0 +1,8 @@
+.desktop {
+  position: sticky;
+  width: 280px;
+  height: 100vh;
+  overflow-y: hidden;
+  display: block;
+  overscroll-behavior: contain;
+}

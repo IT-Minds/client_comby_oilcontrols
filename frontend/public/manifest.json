@@ -1,9 +1,9 @@
 {
-  "name": "IT Minds Web Application",
-  "short_name": "itm app",
-  "theme_color": "#2196f3",
-  "background_color": "#638199",
-  "display": "standalone",
+  "name": "Comby Oil Controls",
+  "short_name": "Oil Controls",
+  "theme_color": "#2d3748",
+  "background_color": "#1a202c",
+  "display": "fullscreen",
   "orientation": "portrait",
   "scope": "/",
   "start_url": "/",
@@ -49,5 +49,11 @@
       "type": "image/png",
       "purpose": "maskable"
     }
-  ]
+  ],
+
+  "screenshots" : [
+
+  ],
+  "lang": "en-US",
+  "dir": "ltr"
 }
