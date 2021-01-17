@@ -6,6 +6,7 @@ import LayoutDesktop from "components/Layout/LayoutDesktop";
 import { usePWA } from "hooks/usePWA";
 import { AppContextType, AppPropsType } from "next/dist/next-server/lib/utils";
 import Head from "next/head";
+import { I18nProvider } from "next-rosetta";
 import { ReactElement, useEffect } from "react";
 import EnvSettings from "types/EnvSettings";
 import isomorphicEnvSettings, { setEnvSettings } from "utils/envSettings";
@@ -52,11 +53,13 @@ const MyApp = ({
       <noscript>
         <h1>JavaScript must be enabled!</h1>
       </noscript>
-      <ChakraProvider theme={theme}>
-        <LayoutDesktop>
-          <Component {...pageProps} />
-        </LayoutDesktop>
-      </ChakraProvider>
+      <I18nProvider table={pageProps.table}>
+        <ChakraProvider theme={theme}>
+          <LayoutDesktop>
+            <Component {...pageProps} />
+          </LayoutDesktop>
+        </ChakraProvider>
+      </I18nProvider>
     </main>
   );
 };

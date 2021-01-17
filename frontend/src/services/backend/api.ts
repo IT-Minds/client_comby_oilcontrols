@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 // !NOTE: If you are having build errors with this file missing, the backend is required to be built first
 import fetch from "isomorphic-unfetch";
-import isomorphicEnvSettings from "utils/envSettings";
+import isomorphicEnvSettings, { setEnvSettings } from "utils/envSettings";
 
 import { AuthClient } from "./nswagts";
 
@@ -25,14 +25,10 @@ export const api = async <T, U extends BaseConstructor<T>>(
 
   if (envSettings === null && process.browser) {
     envSettings = await fetch("/api/getEnv").then(res => res.json());
+    setEnvSettings(envSettings);
   }
   if (envSettings === null && !process.browser) {
     throw new Error("Environment settings null on server");
-  }
-
-  if (!process.browser && envSettings.backendUrl?.match(/^http:\/\//) !== null) {
-    // we have to  allow unauthorized access to http
-    process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
   }
 
   const initilizedClient = new Client(

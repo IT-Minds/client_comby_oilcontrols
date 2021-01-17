@@ -21,16 +21,16 @@ export interface MenuLink {
 export const testLinks: MenuLink[] = [
   {
     id: "trucks",
-    title: "Trucks",
+    title: "menu.trucks.trucks",
     children: [
       {
         id: "trucks-list",
-        title: "View Trucks",
+        title: "menu.trucks.overview",
         href: "/demo"
       },
       {
         id: "trucks-create",
-        title: "Create New Truck",
+        title: "menu.trucks.create",
         href: "/demo"
       }
     ],
@@ -39,21 +39,26 @@ export const testLinks: MenuLink[] = [
   },
   {
     id: "locations",
-    title: "Locations",
+    title: "menu.locations.locations",
     children: [
       {
         id: "buildings",
-        title: "Building Overview",
+        title: "menu.locations.buildings",
         href: "/demo"
       },
       {
         id: "ships",
-        title: "Ships Overview",
+        title: "menu.locations.ships",
         href: "/demo"
       },
       {
         id: "tanks",
-        title: "Free-standing Tank Overview",
+        title: "menu.locations.freestands",
+        href: "/demo"
+      },
+      {
+        id: "location-create",
+        title: "menu.locations.create",
         href: "/demo"
       }
     ],
@@ -62,16 +67,16 @@ export const testLinks: MenuLink[] = [
   },
   {
     id: "debtor",
-    title: "Debtor",
+    title: "menu.debtors.debtors",
     children: [
       {
         id: "debtor-list",
-        title: "View Debtors",
+        title: "menu.debtors.overview",
         href: "/demo"
       },
       {
         id: "debtor-create",
-        title: "Create New Debtor",
+        title: "menu.debtors.create",
         href: "/demo"
       }
     ],
@@ -80,8 +85,8 @@ export const testLinks: MenuLink[] = [
   },
   {
     id: "stats",
-    title: "Statistics",
-    href: "/demo",
+    title: "menu.statistics",
+    href: "/locale",
 
     logo: MdArchive
   }

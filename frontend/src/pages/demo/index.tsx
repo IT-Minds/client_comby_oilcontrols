@@ -1,7 +1,9 @@
 import { Box, Container, Text, useColorModeValue } from "@chakra-ui/react";
 import { readdirSync } from "fs";
+import { Locale } from "i18n/Locale";
 import { GetStaticProps, NextPage } from "next";
 import Link from "next/link";
+import { I18nProps } from "next-rosetta";
 import { join } from "path";
 
 type Props = {
@@ -29,16 +31,21 @@ const IndexPage: NextPage<Props> = ({ paths }) => {
   );
 };
 
-export const getStaticProps: GetStaticProps<Props> = async () => {
+export const getStaticProps: GetStaticProps<Props & I18nProps<Locale>> = async context => {
   const startPath = join(process.cwd(), "src", "pages", "demo");
 
-  const files = readdirSync(startPath)
+  const paths = readdirSync(startPath)
     .filter(x => !/^index\.tsx$/.test(x))
     .map(x => /^(\w+)\.tsx$/.exec(x)[1]);
 
+  const locale = context.locale || context.defaultLocale;
+
+  const { table = {} } = await import(`../../i18n/${locale}`);
+
   return {
     props: {
-      paths: files
+      paths,
+      table
     }
   };
 };

@@ -17,6 +17,10 @@ module.exports = withBundleAnalyzer(
       register: false,
       skipWaiting: false,
       dest: "public"
+    },
+    i18n: {
+      locales: ["en-US", "kl-GL", "da-DK"],
+      defaultLocale: "en-US"
     }
   })
 );

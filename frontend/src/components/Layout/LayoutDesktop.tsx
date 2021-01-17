@@ -41,22 +41,42 @@ const LayoutDesktop: FC = ({ children }) => {
           <Menu links={testLinks} />
         </Box>
       ) : (
-        <Box className={styles.mobile} padding={2} position="absolute" left={2}>
-          <IconButton size="sm" onClick={onOpen} aria-label="Change color mode" icon={<MdSort />} />
+        <Box className={styles.mobile} padding={2} position="absolute" left={1}>
+          <IconButton
+            size="sm"
+            onClick={onOpen}
+            aria-label="Change color mode"
+            icon={<MdSort />}
+            _focus={{
+              border: 0
+            }}
+          />
         </Box>
       )}
 
-      <Container maxW="xl" centerContent>
+      <Container
+        maxW="xl"
+        centerContent
+        padding={displaymenu ? 1 : 2}
+        paddingTop={displaymenu ? 1 : 8}>
         {children}
       </Container>
 
-      <Drawer isOpen={isOpen} size="full" onClose={onClose} placement="top">
+      <Drawer isOpen={isOpen && !displaymenu} size="full" onClose={onClose} placement="top">
         <DrawerOverlay>
           <DrawerContent>
-            <DrawerCloseButton position="fixed" left={2} />
+            <DrawerCloseButton
+              position="fixed"
+              left={2}
+              _focus={{
+                border: 0
+              }}
+            />
 
             <DrawerBody padding={0}>
-              <Menu links={testLinks} />
+              <Box paddingTop={6} h={"100%"}>
+                <Menu links={testLinks} />
+              </Box>
             </DrawerBody>
           </DrawerContent>
         </DrawerOverlay>

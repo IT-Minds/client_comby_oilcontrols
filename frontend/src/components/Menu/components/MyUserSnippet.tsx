@@ -1,4 +1,5 @@
 import {
+  Box,
   Collapse,
   Flex,
   HStack,
@@ -7,17 +8,24 @@ import {
   StackDivider,
   Text,
   Tooltip,
+  useBreakpointValue,
   useColorModeValue,
   VStack
 } from "@chakra-ui/react";
 import ColorModeToggle from "components/ColorModeToggle/ColorModeToggle";
+import { Locale } from "i18n/Locale";
 import Link from "next/link";
+import { useI18n } from "next-rosetta";
 import React, { FC, useState } from "react";
+
+import LanguageSelector from "./LanguageSelector";
 
 const MyUserSnippet: FC = () => {
   const bg = useColorModeValue("gray.200", "gray.900");
   const hoverbg = useColorModeValue("blue.100", "blue.700");
   const borderColor = useColorModeValue("gray.400", "gray.700");
+  const nameLength = useBreakpointValue({ base: 150, lg: 200 });
+  const { t } = useI18n<Locale>();
 
   const [isActive, setIsActive] = useState(false);
 
@@ -41,7 +49,7 @@ const MyUserSnippet: FC = () => {
           objectFit="contain"
           borderRadius="full"
         />
-        <VStack spacing={0} alignItems="left" maxW={"200px"}>
+        <VStack spacing={0} alignItems="left" maxW={nameLength + "px"}>
           <Text isTruncated>My Full Name Is very long so it should cut it off</Text>
           <Text size="xs" isTruncated as="i">
             My title
@@ -60,7 +68,7 @@ const MyUserSnippet: FC = () => {
               }}
               padding={1}
               paddingLeft={8}>
-              <Text>Edit Info</Text>
+              <Text>{t("user.editInfo")}</Text>
             </HStack>
           </Link>
           <Link href="/" passHref>
@@ -71,12 +79,21 @@ const MyUserSnippet: FC = () => {
               }}
               padding={1}
               paddingLeft={8}>
-              <Text>Logout</Text>
+              <Text>{t("user.logout")}</Text>
             </HStack>
           </Link>
-          <Flex padding={2}>
+
+          <Flex padding={2} align="center">
             <Spacer />
-            <Tooltip label="Change Theme" fontSize="md" hasArrow placement="top" shouldWrapChildren>
+            <Box marginRight={2}>
+              <LanguageSelector />
+            </Box>
+            <Tooltip
+              label={t("user.theme")}
+              fontSize="md"
+              hasArrow
+              placement="top"
+              shouldWrapChildren>
               <ColorModeToggle />
             </Tooltip>
           </Flex>
