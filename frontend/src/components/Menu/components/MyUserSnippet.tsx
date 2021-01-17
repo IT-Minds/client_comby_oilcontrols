@@ -19,6 +19,7 @@ import { useI18n } from "next-rosetta";
 import React, { FC, useState } from "react";
 
 import LanguageSelector from "./LanguageSelector";
+import UserTypeSwitcher from "./UserTypeSwitcher";
 
 const MyUserSnippet: FC = () => {
   const bg = useColorModeValue("gray.200", "gray.900");
@@ -82,6 +83,15 @@ const MyUserSnippet: FC = () => {
               <Text>{t("user.logout")}</Text>
             </HStack>
           </Link>
+          <Box
+            cursor="pointer"
+            _hover={{
+              background: hoverbg
+            }}
+            padding={1}
+            paddingLeft={8}>
+            <UserTypeSwitcher />
+          </Box>
 
           <Flex padding={2} align="center">
             <Spacer />

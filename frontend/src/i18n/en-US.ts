@@ -25,5 +25,15 @@ export const table: Locale = {
     },
     statistics: "Statistics"
   },
-  user: { editInfo: "Edit info", logout: "Logout", theme: "Change theme" }
+  user: {
+    editInfo: "Edit info",
+    logout: "Logout",
+    theme: "Change theme",
+    type: {
+      switch: "Switch user type",
+      switchConfirm: "Choose your new user type",
+      DRIVER: "Chauffeur",
+      OFFICE_WORKER: "Office Worker"
+    }
+  }
 };

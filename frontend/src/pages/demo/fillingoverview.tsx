@@ -1,6 +1,8 @@
 import { Box, Container, useColorModeValue } from "@chakra-ui/react";
 import FillingOverviewComp from "components/FillingOverview/FillingOverviewComp";
-import { GetServerSideProps, NextPage } from "next";
+import { Locale } from "i18n/Locale";
+import { GetStaticProps, NextPage } from "next";
+import { I18nProps } from "next-rosetta";
 import { genRefillClient } from "services/backend/apiClients";
 import { PageResultOfRefillDto, RefillDto } from "services/backend/nswagts";
 
@@ -27,7 +29,11 @@ const DemoPage: NextPage<Props> = ({ refillEntities, needle, hasMore, pageCount 
   );
 };
 
-export const getServerSideProps: GetServerSideProps<Props> = async () => {
+export const getStaticProps: GetStaticProps<Props & I18nProps<Locale>> = async context => {
+  const locale = context.locale || context.defaultLocale;
+
+  const { table = {} } = await import(`../../i18n/${locale}`);
+
   const data = await genRefillClient().then(client =>
     client.get("0").catch(() => {
       return new PageResultOfRefillDto({
@@ -41,12 +47,14 @@ export const getServerSideProps: GetServerSideProps<Props> = async () => {
 
   return {
     props: {
+      table,
       // !This is a hack to get around undefined values in dataset
       refillEntities: JSON.parse(JSON.stringify(data.results)),
       needle: data.newNeedle,
       hasMore: data.hasMore,
       pageCount: data.pagesRemaining + 1
-    }
+    },
+    revalidate: 60
   };
 };
 

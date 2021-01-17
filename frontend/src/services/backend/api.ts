@@ -17,10 +17,7 @@ type BaseConstructor<T> = {
   ): T & BaseClient;
 };
 
-export const api = async <T, U extends BaseConstructor<T>>(
-  Client: U,
-  offlineData?: unknown
-): Promise<T> => {
+export const api = async <T, U extends BaseConstructor<T>>(Client: U): Promise<T> => {
   let envSettings = isomorphicEnvSettings();
 
   if (envSettings === null && process.browser) {
@@ -38,14 +35,6 @@ export const api = async <T, U extends BaseConstructor<T>>(
       fetch
     }
   );
-
-  /**
-   * This is mainly used for developing without a running backend. See [here](./offline.md)
-   */
-  const offline = process.env.NEXT_PUBLIC_OFFLINE === "true";
-  if (initilizedClient.get && offline === true) {
-    initilizedClient.get = () => Promise.resolve(offlineData);
-  }
 
   return initilizedClient;
 };

@@ -1,10 +1,13 @@
 import "../styles.global.css";
 import "isomorphic-unfetch";
 
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, Progress } from "@chakra-ui/react";
 import LayoutDesktop from "components/Layout/LayoutDesktop";
+import RouteProtector from "components/RouteProtector/RouteProtector";
+import UserTypeContextProvider from "contexts/providers/UserTypeContextProvider";
+import { useLoadProgress } from "hooks/useLoadProgress";
 import { usePWA } from "hooks/usePWA";
-import { AppContextType, AppPropsType } from "next/dist/next-server/lib/utils";
+import { AppPropsType } from "next/dist/next-server/lib/utils";
 import Head from "next/head";
 import { I18nProvider } from "next-rosetta";
 import { ReactElement, useEffect } from "react";
@@ -18,23 +21,22 @@ type Props = {
   envSettings: EnvSettings;
 };
 
-const MyApp = ({
-  Component,
-  pageProps,
-  envSettings,
-  __N_SSG
-}: AppPropsType & Props): ReactElement => {
+const MyApp = ({ Component, pageProps, __N_SSG, router }: AppPropsType & Props): ReactElement => {
   usePWA();
 
-  useEffect(() => {
-    if (!__N_SSG || __N_SSG === undefined) {
-      logger.info("Environment should be readable");
-      setEnvSettings(envSettings);
-    }
+  const progressVal = useLoadProgress(router);
 
-    // router.events.on("routeChangeStart", () => NProgress.start());
-    // router.events.on("routeChangeComplete", () => NProgress.done());
-    // router.events.on("routeChangeError", () => NProgress.done());
+  useEffect(() => {
+    if (!__N_SSG) {
+      logger.info("Environment should be readable");
+
+      const envSettings = isomorphicEnvSettings();
+      if (envSettings === null && process.browser) {
+        fetch("/api/getEnv")
+          .then(res => res.json())
+          .then(envSettings => setEnvSettings(envSettings));
+      }
+    }
   }, []);
 
   return (
@@ -55,24 +57,36 @@ const MyApp = ({
       </noscript>
       <I18nProvider table={pageProps.table}>
         <ChakraProvider theme={theme}>
-          <LayoutDesktop>
-            <Component {...pageProps} />
-          </LayoutDesktop>
+          <Progress
+            hasStripe
+            isAnimated
+            size="xs"
+            value={progressVal}
+            marginBottom={-1}
+            zIndex={99}
+            hidden={progressVal < 10}
+          />
+          <UserTypeContextProvider>
+            <RouteProtector />
+            <LayoutDesktop>
+              <Component {...pageProps} />
+            </LayoutDesktop>
+          </UserTypeContextProvider>
         </ChakraProvider>
       </I18nProvider>
     </main>
   );
 };
 
-MyApp.getInitialProps = async ({ Component, ctx }: AppContextType) => {
-  let pageProps: Record<string, unknown> = {};
-  if (Component.getInitialProps) {
-    pageProps = await Component.getInitialProps(ctx);
-  }
+// MyApp.getInitialProps = async ({ Component, ctx }: AppContextType) => {
+//   let pageProps: Record<string, unknown> = {};
+//   if (Component.getInitialProps) {
+//     pageProps = await Component.getInitialProps(ctx);
+//   }
 
-  const envSettings = isomorphicEnvSettings();
+//   const envSettings = isomorphicEnvSettings();
 
-  return { pageProps, envSettings };
-};
+//   return { pageProps, envSettings };
+// };
 
 export default MyApp;

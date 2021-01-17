@@ -1,7 +1,9 @@
 import { Box, Container, useColorModeValue, useToast } from "@chakra-ui/react";
 import ReportingComp from "components/Reporting/ReportingComponent";
 import { useOffline } from "hooks/useOffline";
-import { GetServerSideProps, NextPage } from "next";
+import { Locale } from "i18n/Locale";
+import { GetStaticProps, NextPage } from "next";
+import { I18nProps } from "next-rosetta";
 import { useCallback } from "react";
 import { genRefillClient } from "services/backend/apiClients";
 import { CreateRefillCommand, TankState, TankType } from "services/backend/nswagts";
@@ -70,10 +72,11 @@ const DemoPage: NextPage = () => {
   );
 };
 
-// export const getServerSideProps: GetServerSideProps<unknown> = async () => {
-//   return {
-//     props: {}
-//   };
-// };
+export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context => {
+  const locale = context.locale || context.defaultLocale;
+
+  const { table = {} } = await import(`../../i18n/${locale}`);
+  return { props: { table } };
+};
 
 export default DemoPage;

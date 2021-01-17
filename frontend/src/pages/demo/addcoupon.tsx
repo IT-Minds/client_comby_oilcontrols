@@ -1,7 +1,9 @@
 import { Box, Container, useColorModeValue, useToast } from "@chakra-ui/react";
 import AddCouponComp from "components/CouponManagement/AddCoupon/AddCouponComp";
 import { AddCouponForm } from "components/CouponManagement/AddCoupon/AddCouponForm";
-import { NextPage } from "next";
+import { Locale } from "i18n/Locale";
+import { GetStaticProps, NextPage } from "next";
+import { I18nProps } from "next-rosetta";
 import { useEffect, useState } from "react";
 
 const DemoPage: NextPage = () => {
@@ -34,6 +36,13 @@ const DemoPage: NextPage = () => {
       </Box>
     </Container>
   );
+};
+
+export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context => {
+  const locale = context.locale || context.defaultLocale;
+
+  const { table = {} } = await import(`../../i18n/${locale}`);
+  return { props: { table } };
 };
 
 export default DemoPage;

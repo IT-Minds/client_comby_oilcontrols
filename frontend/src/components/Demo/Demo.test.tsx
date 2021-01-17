@@ -3,7 +3,6 @@ import userEvent from "@testing-library/user-event";
 import FetchMock from "fetch-mock";
 import _fetchMock from "isomorphic-unfetch";
 import { ExampleEntityDto, PageResultOfExampleEntityDto } from "services/backend/nswagts";
-import { exampleClientOfflineData } from "services/backend/offline.data";
 import EnvironmentSettings from "types/EnvSettings";
 
 import Demo from "./Demo";
@@ -38,7 +37,7 @@ describe("AppName render", () => {
     await waitFor(() => expect(fetchMock.called()).toEqual(false));
 
     expect(screen.getByTestId("buildTime")).toHaveAttribute("data-value", "1001");
-    expect(screen.getByTestId("data")).toHaveAttribute("data-value", "1");
+    expect(screen.getByTestId("data")).toHaveAttribute("data-value", "0");
   });
 
   it("renders on browser with offline data", async () => {
@@ -65,7 +64,9 @@ describe("AppName render", () => {
 
     fetchMock.mock(/.*/, {
       status: 200,
-      body: exampleClientOfflineData
+      body: new PageResultOfExampleEntityDto({
+        results: [new ExampleEntityDto({})]
+      })
     });
 
     render(<Demo buildTime={1001} />);
@@ -81,12 +82,21 @@ describe("AppName render", () => {
 
     fetchMock.mock(/.*/, {
       status: 200,
-      body: exampleClientOfflineData
+      body: new PageResultOfExampleEntityDto({
+        results: [
+          new ExampleEntityDto({
+            id: 1
+          }),
+          new ExampleEntityDto({
+            id: 2
+          })
+        ]
+      })
     });
 
     await waitFor(() => expect(fetchMock.calls().length).toEqual(3));
 
-    expect(screen.getByTestId("data")).toHaveAttribute("data-value", "1");
+    expect(screen.getByTestId("data")).toHaveAttribute("data-value", "2");
   });
 
   it("renders even with no data", async () => {
@@ -157,7 +167,9 @@ describe("AppName render", () => {
     process.env.TEST_NAME = "Clicks button successfully";
 
     fetchMock.mock(/.*/, {
-      body: exampleClientOfflineData
+      body: new PageResultOfExampleEntityDto({
+        results: []
+      })
     });
 
     render(<Demo buildTime={1001} />);

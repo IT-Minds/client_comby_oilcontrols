@@ -32,5 +32,11 @@ export interface Locale {
     editInfo: string;
     logout: string;
     theme: string;
+    type: {
+      switch: string;
+      switchConfirm: string;
+      DRIVER: string;
+      OFFICE_WORKER: string;
+    };
   };
 }

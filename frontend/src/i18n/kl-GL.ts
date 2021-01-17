@@ -25,5 +25,15 @@ export const table: Locale = {
     },
     statistics: "Statestikker"
   },
-  user: { editInfo: "Redigér info", logout: "Log ud", theme: "Skift tema" }
+  user: {
+    editInfo: "Redigér info",
+    logout: "Log ud",
+    theme: "Skift tema",
+    type: {
+      switch: "Skift Brugertype",
+      switchConfirm: "Vælg din nye brugertype",
+      DRIVER: "Chauffør",
+      OFFICE_WORKER: "Kontorpersonale"
+    }
+  }
 };

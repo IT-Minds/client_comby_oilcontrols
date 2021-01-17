@@ -1,6 +1,8 @@
 import { Box, Container, useColorModeValue } from "@chakra-ui/react";
 import Demo, { PAGE_SHOW_SIZE } from "components/Demo/Demo";
-import { GetServerSideProps, NextPage } from "next";
+import { Locale } from "i18n/Locale";
+import { GetStaticProps, NextPage } from "next";
+import { I18nProps } from "next-rosetta";
 import { genExampleClient } from "services/backend/apiClients";
 import { ExampleEntityDto, PageResultOfExampleEntityDto } from "services/backend/nswagts";
 
@@ -31,7 +33,11 @@ const DemoPage: NextPage<Props> = ({ exampleEntities, needle, hasMore, pageCount
   );
 };
 
-export const getServerSideProps: GetServerSideProps<Props> = async () => {
+export const getStaticProps: GetStaticProps<Props & I18nProps<Locale>> = async context => {
+  const locale = context.locale || context.defaultLocale;
+
+  const { table = {} } = await import(`../../i18n/${locale}`);
+
   const data = await genExampleClient().then(client =>
     client.get("0", PAGE_SHOW_SIZE, "createdAt").catch(() => {
       return new PageResultOfExampleEntityDto({
@@ -45,12 +51,14 @@ export const getServerSideProps: GetServerSideProps<Props> = async () => {
 
   return {
     props: {
+      table,
       // !This is a hack to get around undefined values in dataset
       exampleEntities: JSON.parse(JSON.stringify(data.results)),
       needle: data.newNeedle,
       hasMore: data.hasMore,
       pageCount: data.pagesRemaining + 1
-    }
+    },
+    revalidate: 60
   };
 };
 

@@ -15,7 +15,7 @@ const LocalePage: NextPage<Props> = () => {
   return (
     <main>
       <Head>
-        <title>Oil Control - landing page</title>
+        <title>Oil Control - Trucker Page</title>
       </Head>
       <Flex>
         <Container maxW="xl" centerContent>
@@ -31,7 +31,7 @@ export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context =
   const locale = context.locale || context.defaultLocale;
 
   const { table = {} } = await import(`../i18n/${locale}`);
-  return { props: { table } };
+  return { props: { table }, revalidate: 5 * 60 };
 };
 
 export default LocalePage;

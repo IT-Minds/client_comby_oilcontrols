@@ -1,5 +1,3 @@
-import "ts-array-ext/reduceAsync";
-
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import ListReduce, { ListReducerActionType } from "react-list-reducer";
 import { genHealthClient } from "services/backend/apiClients";
