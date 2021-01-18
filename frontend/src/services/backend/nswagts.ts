@@ -531,6 +531,7 @@ export class HealthClient extends ClientBase implements IHealthClient {
 
 export interface ILocationClient {
     updateMetaData(command: UpdateLocationMetaDataCommand): Promise<number>;
+    saveLocationImage(id: number, file?: FileParameter | null | undefined): Promise<string>;
 }
 
 export class LocationClient extends ClientBase implements ILocationClient {
@@ -582,6 +583,50 @@ export class LocationClient extends ClientBase implements ILocationClient {
             });
         }
         return Promise.resolve<number>(<any>null);
+    }
+
+    saveLocationImage(id: number, file?: FileParameter | null | undefined): Promise<string> {
+        let url_ = this.baseUrl + "/api/Location/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (file !== null && file !== undefined)
+            content_.append("file", file.data, file.fileName ? file.fileName : "file");
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processSaveLocationImage(_response);
+        });
+    }
+
+    protected processSaveLocationImage(response: Response): Promise<string> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<string>(<any>null);
     }
 }
 
@@ -1221,7 +1266,6 @@ export class UpdateLocationMetaDataCommand implements IUpdateLocationMetaDataCom
     tankCapacity?: number;
     minimumFuelAmount?: number;
     estimateConsumption?: number;
-    picture?: string | undefined;
 
     constructor(data?: IUpdateLocationMetaDataCommand) {
         if (data) {
@@ -1243,7 +1287,6 @@ export class UpdateLocationMetaDataCommand implements IUpdateLocationMetaDataCom
             this.tankCapacity = _data["tankCapacity"];
             this.minimumFuelAmount = _data["minimumFuelAmount"];
             this.estimateConsumption = _data["estimateConsumption"];
-            this.picture = _data["picture"];
         }
     }
 
@@ -1265,7 +1308,6 @@ export class UpdateLocationMetaDataCommand implements IUpdateLocationMetaDataCom
         data["tankCapacity"] = this.tankCapacity;
         data["minimumFuelAmount"] = this.minimumFuelAmount;
         data["estimateConsumption"] = this.estimateConsumption;
-        data["picture"] = this.picture;
         return data; 
     }
 }
@@ -1280,7 +1322,6 @@ export interface IUpdateLocationMetaDataCommand {
     tankCapacity?: number;
     minimumFuelAmount?: number;
     estimateConsumption?: number;
-    picture?: string | undefined;
 }
 
 export enum RefillSchedule {
