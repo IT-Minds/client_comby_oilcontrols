@@ -35,5 +35,19 @@ export const table: Locale = {
       DRIVER: "Chauffeur",
       OFFICE_WORKER: "Office Worker"
     }
+  },
+
+  actions: {
+    cancel: "Cancel",
+    delete: "Delete",
+    invalidate: "Invalidate"
+  },
+
+  coupons: {
+    invalidate: {
+      invalidate: "Invalidate Coupon",
+      confirm:
+        "Are you sure you want to invalidate coupon '{{coupon}}', this action can't be undone?"
+    }
   }
 };

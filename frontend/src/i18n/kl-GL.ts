@@ -35,5 +35,18 @@ export const table: Locale = {
       DRIVER: "Chauffør",
       OFFICE_WORKER: "Kontorpersonale"
     }
+  },
+  actions: {
+    cancel: "Annuller",
+    delete: "Slet",
+    invalidate: "Ugyldiggøre"
+  },
+
+  coupons: {
+    invalidate: {
+      invalidate: "Marker kupon ugyldig",
+      confirm:
+        "Er du sikker på, at du vil ugyldiggøre kuponen '{{coupon}}', denne handling kan ikke fortrydes?"
+    }
   }
 };

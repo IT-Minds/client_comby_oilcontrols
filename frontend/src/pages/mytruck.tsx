@@ -1,7 +1,9 @@
 import { Container, Flex, Heading, Text } from "@chakra-ui/react";
+import InvalidateCouponBtn from "components/InvalidateCouponBtn/InvalidateCouponBtn";
 import { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { I18nProps, useI18n } from "next-rosetta";
+import { CouponDto, CouponStatus } from "services/backend/nswagts";
 
 import { Locale } from "../i18n/Locale";
 
@@ -21,6 +23,16 @@ const LocalePage: NextPage<Props> = () => {
         <Container maxW="xl" centerContent>
           <Heading>{t("title")}</Heading>
           <Text fontSize="xl">Just some info text</Text>
+
+          <InvalidateCouponBtn
+            coupon={
+              new CouponDto({
+                couponNumber: 2,
+                status: CouponStatus.USED,
+                truckId: 5
+              })
+            }
+          />
         </Container>
       </Flex>
     </main>

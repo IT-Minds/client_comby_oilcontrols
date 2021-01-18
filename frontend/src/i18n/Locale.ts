@@ -39,4 +39,18 @@ export interface Locale {
       OFFICE_WORKER: string;
     };
   };
+
+  // meant for single actions like buttons where it just says "Delete"
+  actions: {
+    delete: string;
+    cancel: string;
+    invalidate: string;
+  };
+
+  coupons: {
+    invalidate: {
+      invalidate: string;
+      confirm: string;
+    };
+  };
 }
