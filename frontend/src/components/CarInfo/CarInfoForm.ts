@@ -1,3 +1,4 @@
+import { FillingForm } from "./Filling/FillingForm";
 export interface CarInfoForm {
   carId: string;
   morning: number;
@@ -7,4 +8,5 @@ export interface CarInfoForm {
   cardNumber: string;
   fuelType: number;
   headCount: number;
+  fillings: FillingForm[];
 }
