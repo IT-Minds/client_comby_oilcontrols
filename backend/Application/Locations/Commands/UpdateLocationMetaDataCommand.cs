@@ -24,7 +24,7 @@ namespace Application.Locations.Commands.UpdateLocationMetaData
     public int TankNumber { get; set; }
     public double TankCapacity { get; set; }
     public double MinimumFuelAmount { get; set; }
-    //TODO This is calculated right?
+    //TODO Estiamte consumption isn't currently in the data model, but this is also a calculated property right?
     public double EstimateConsumption { get; set; }
     public IFormFile Picture { get; set; }
 
@@ -36,7 +36,7 @@ namespace Application.Locations.Commands.UpdateLocationMetaData
       public UpdateLocationMetaDataCommandHandler(IApplicationDbContext context, IOptions<FileDriveOptions> options)
       {
         _context = context;
-        _options = options.Value;
+        _options = options?.Value;
       }
 
       public async Task<int> Handle(UpdateLocationMetaDataCommand request, CancellationToken cancellationToken)
@@ -58,34 +58,38 @@ namespace Application.Locations.Commands.UpdateLocationMetaData
         tank.TankCapacity = request.TankCapacity;
         tank.MinimumFuelAmount = request.MinimumFuelAmount;
 
-        String imgType;
-        Regex png = new Regex(@"^image\/png$");
-        Regex webp = new Regex(@"^image\/webp$");
+        if (request.Picture != null)
+        {
+          String imgType;
+          Regex png = new Regex(@"^image\/png$");
+          Regex webp = new Regex(@"^image\/webp$");
 
-        if (png.IsMatch(request.Picture.ContentType))
-        {
-          imgType = "png";
-        }
-        else if (webp.IsMatch(request.Picture.ContentType))
-        {
-          imgType = "webp";
-        }
-        else
-        {
-          throw new ArgumentException("Invalid content type.");
-        }
-        var filename = request.LocationId + "." + imgType;
-        string filePath = Path.Combine(_options.Path, filename);
+          if (png.IsMatch(request.Picture.ContentType))
+          {
+            imgType = "png";
+          }
+          else if (webp.IsMatch(request.Picture.ContentType))
+          {
+            imgType = "webp";
+          }
+          else
+          {
+            throw new ArgumentException("Invalid content type.");
+          }
+          var filename = request.LocationId + "." + imgType;
+          string filePath = Path.Combine(_options.Path, filename);
 
-        if (System.IO.File.Exists(filePath))
-        {
-          throw new ArgumentException("Image with " + request.LocationId + " already exists.");
+          if (System.IO.File.Exists(filePath))
+          {
+            throw new ArgumentException("Image with " + request.LocationId + " already exists.");
+          }
+
+          using (Stream fileStream = new FileStream(filePath, FileMode.Create))
+          {
+            await request.Picture.CopyToAsync(fileStream);
+          }
         }
 
-        using (Stream fileStream = new FileStream(filePath, FileMode.Create))
-        {
-          await request.Picture.CopyToAsync(fileStream);
-        }
 
         await _context.SaveChangesAsync(cancellationToken);
         return request.LocationId;
