@@ -96,20 +96,23 @@ const CarInfoComp: FC<Props> = ({ submitCallback, car }) => {
               formSubmitAttempts > 0 && (!localCarInfoForm.morning || !localCarInfoForm.evening)
             }
             isRequired>
+            <FormLabel>Morning and evening:</FormLabel>
             <HStack>
               <FormControl
                 isInvalid={formSubmitAttempts > 0 && !localCarInfoForm.morning}
                 isRequired>
-                <FormLabel>Morning:</FormLabel>
-                <NumberInput onChange={value => updateLocalForm(value, "morning")}>
+                <NumberInput
+                  placeholder="Morning"
+                  onChange={value => updateLocalForm(value, "morning")}>
                   <NumberInputField />
                 </NumberInput>
               </FormControl>
               <FormControl
                 isInvalid={formSubmitAttempts > 0 && !localCarInfoForm.evening}
                 isRequired>
-                <FormLabel>Evening:</FormLabel>
-                <NumberInput onChange={value => updateLocalForm(value, "evening")}>
+                <NumberInput
+                  placeholder="Evening"
+                  onChange={value => updateLocalForm(value, "evening")}>
                   <NumberInputField />
                 </NumberInput>
               </FormControl>
@@ -122,13 +125,10 @@ const CarInfoComp: FC<Props> = ({ submitCallback, car }) => {
           <FormControl hidden={fillings.length < 1}>
             <FormLabel>Filling data:</FormLabel>
             {fillings.map(fill => (
-              <HStack key={fill.date}>
-                <Text key={fill.date}>
-                  Filled: {fill.fillAmount}, Card number: {fill.cardNumber}, Date:{" "}
-                  {new Date(fill.date).toDateString()}
-                </Text>
+              <Text key={fill.date}>
+                Filled: {fill.fillAmount}, Card number: {fill.cardNumber}, Date: {fill.date}{" "}
                 <MdDelete onClick={() => removeFilling(fill.date)} />
-              </HStack>
+              </Text>
             ))}
           </FormControl>
           <FormControl isInvalid={formSubmitAttempts > 0 && !localCarInfoForm.fuelType} isRequired>
