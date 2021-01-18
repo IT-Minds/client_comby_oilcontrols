@@ -28,7 +28,7 @@ namespace Application.Locations.Commands.AddLocationImageCommand
       public AddLocationImageCommandHandler(IApplicationDbContext context, IOptions<FileDriveOptions> options)
       {
         _context = context;
-        _options = options?.Value;
+        _options = options.Value;
       }
 
       public async Task<string> Handle(AddLocationImageCommand request, CancellationToken cancellationToken)
@@ -56,7 +56,7 @@ namespace Application.Locations.Commands.AddLocationImageCommand
           throw new ArgumentException("Invalid content type.");
         }
         var filename = request.LocationId + "." + imgType;
-        string filePath = Path.Combine(_options.Path, filename);
+        string filePath = Path.Combine(_options.LocationPath, filename);
 
         if (System.IO.File.Exists(filePath))
         {

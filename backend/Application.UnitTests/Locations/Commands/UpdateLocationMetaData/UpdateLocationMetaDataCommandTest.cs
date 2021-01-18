@@ -27,7 +27,7 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
         EstimateConsumption = 10
       };
 
-      var handler = new UpdateLocationMetaDataCommand.UpdateLocationMetaDataCommandHandler(Context, null);
+      var handler = new UpdateLocationMetaDataCommand.UpdateLocationMetaDataCommandHandler(Context);
 
       var result = await handler.Handle(command, CancellationToken.None);
 

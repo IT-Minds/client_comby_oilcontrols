@@ -30,12 +30,10 @@ namespace Application.Locations.Commands.UpdateLocationMetaData
     public class UpdateLocationMetaDataCommandHandler : IRequestHandler<UpdateLocationMetaDataCommand, int>
     {
       private readonly IApplicationDbContext _context;
-      private readonly FileDriveOptions _options;
 
-      public UpdateLocationMetaDataCommandHandler(IApplicationDbContext context, IOptions<FileDriveOptions> options)
+      public UpdateLocationMetaDataCommandHandler(IApplicationDbContext context)
       {
         _context = context;
-        _options = options?.Value;
       }
 
       public async Task<int> Handle(UpdateLocationMetaDataCommand request, CancellationToken cancellationToken)
