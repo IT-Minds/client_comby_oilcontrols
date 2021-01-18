@@ -5,8 +5,8 @@ on:
 name: Upload Release Asset
 
 env:
-  DOTNET_ROOT: "/opt/dotnet/deploy"
   frontend-artifact: "/opt/artifacts/frontend.zip"
+  artifact-dir: "/opt/artifacts"
   backend-artifact: "/opt/artifacts/backend.zip"
   dotnet-version: 5.0.x
   node-version: 14.x
@@ -38,8 +38,10 @@ jobs:
       - name: Build with dotnet
         run: |
           dotnet build
-          dotnet publish -c Release -o ${{ env.DOTNET_ROOT }}
-          zip -R ${{ env.backend-artifact }} ${{ env.DOTNET_ROOT }}
+          dotnet publish -c Release -o ${{ env.DOTNET_ROOT }}/app
+          mkdir -p ${{ env.artifact-dir }}
+          cd ${{ env.DOTNET_ROOT }}/app
+          zip -r ${{ env.backend-artifact }} .
         working-directory: backend/Web
 
       - name: Upload Release Asset
@@ -81,6 +83,7 @@ jobs:
           npm ci
           npm run build --if-present
           rm -rf .next/cache
+          mkdir -p ${{ env.artifact-dir }}
           zip -r ${{ env.frontend-artifact }} .next next.config.js package.json package-lock.json server.js web.config public
 
       - name: Upload Release Asset
