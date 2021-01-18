@@ -32,7 +32,9 @@ const FillingComp: FC<Props> = ({ fillData }) => {
   }, []);
 
   const addFilling = useCallback(() => {
-    fillData(localFillingForm);
+    if (localFillingForm.fillAmount && localFillingForm.cardNumber) {
+      fillData(localFillingForm);
+    }
   }, [localFillingForm]);
 
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
