@@ -116,27 +116,17 @@ const CarInfoComp: FC<Props> = ({ submitCallback, car }) => {
             </HStack>
             <FormErrorMessage>Please enter values</FormErrorMessage>
           </FormControl>
-          <FormControl
-            isInvalid={formSubmitAttempts > 0 && !localCarInfoForm.amountFilled}
-            isRequired>
-            <FormLabel>Filling amount (in liters):</FormLabel>
-            <NumberInput
-              placeholder="Fill amount"
-              onChange={value => updateLocalForm(value, "amountFilled")}>
-              <NumberInputField />
-            </NumberInput>
-            <FormErrorMessage>Please enter amount filled</FormErrorMessage>
-          </FormControl>
-          <FormControl
-            isInvalid={formSubmitAttempts > 0 && !localCarInfoForm.cardNumber}
-            isRequired>
-            <FormLabel>Card number:</FormLabel>
-            <NumberInput
-              placeholder="Card number"
-              onChange={value => updateLocalForm(value, "cardNumber")}>
-              <NumberInputField />
-            </NumberInput>
-            <FormErrorMessage>Please enter card number</FormErrorMessage>
+          <Button colorScheme="blue" rightIcon={<MdAdd />} onClick={() => setIsAddFilling(true)}>
+            Add filling
+          </Button>
+          <FormControl hidden={fillings.length < 1}>
+            <FormLabel>Filling data:</FormLabel>
+            {fillings.map(fill => (
+              <Text key={fill.date}>
+                Filled: {fill.fillAmount}, Card number: {fill.cardNumber}, Date: {fill.date}{" "}
+                <MdDelete onClick={() => removeFilling(fill.date)} />
+              </Text>
+            ))}
           </FormControl>
           <FormControl isInvalid={formSubmitAttempts > 0 && !localCarInfoForm.fuelType} isRequired>
             <FormLabel>Fuel type:</FormLabel>
