@@ -1,10 +1,7 @@
-using Domain.Enums;
 using FluentAssertions;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
-using System;
-using Application.Refills.Commands.CreateRefill;
 using Infrastructure.Persistence;
 using AutoMapper;
 using Application.Streets.Queries.GetStreets;
