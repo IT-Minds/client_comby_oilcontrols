@@ -125,10 +125,13 @@ const CarInfoComp: FC<Props> = ({ submitCallback, car }) => {
           <FormControl hidden={fillings.length < 1}>
             <FormLabel>Filling data:</FormLabel>
             {fillings.map(fill => (
-              <Text key={fill.date}>
-                Filled: {fill.fillAmount}, Card number: {fill.cardNumber}, Date: {fill.date}{" "}
+              <HStack key={fill.date}>
+                <Text key={fill.date}>
+                  Filled: {fill.fillAmount}, Card number: {fill.cardNumber}, Date:{" "}
+                  {new Date(fill.date).toDateString()}{" "}
+                </Text>
                 <MdDelete onClick={() => removeFilling(fill.date)} />
-              </Text>
+              </HStack>
             ))}
           </FormControl>
           <FormControl isInvalid={formSubmitAttempts > 0 && !localCarInfoForm.fuelType} isRequired>

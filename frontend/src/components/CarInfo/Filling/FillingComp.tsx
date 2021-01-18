@@ -59,7 +59,7 @@ const FillingComp: FC<Props> = ({ fillData }) => {
       </FormControl>
       <FormControl isReadOnly>
         <FormLabel>Date:</FormLabel>
-        <Input value={localFillingForm.date.toString()} />
+        <Input value={new Date(localFillingForm.date).toDateString()} />
         <FormErrorMessage>Please enter card number</FormErrorMessage>
       </FormControl>
 
