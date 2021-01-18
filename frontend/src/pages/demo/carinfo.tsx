@@ -1,7 +1,9 @@
 import { Box, Container } from "@chakra-ui/react";
 import CarInfoComp from "components/CarInfo/CarInfoComp";
 import { CarInfoForm } from "components/CarInfo/CarInfoForm";
-import { NextPage } from "next";
+import { Locale } from "i18n/Locale";
+import { GetStaticProps, NextPage } from "next";
+import { I18nProps } from "next-rosetta";
 import { useState } from "react";
 
 const DemoPage: NextPage = () => {
@@ -14,6 +16,13 @@ const DemoPage: NextPage = () => {
       </Box>
     </Container>
   );
+};
+
+export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context => {
+  const locale = context.locale || context.defaultLocale;
+
+  const { table = {} } = await import(`../../i18n/${locale}`);
+  return { props: { table } };
 };
 
 export default DemoPage;
