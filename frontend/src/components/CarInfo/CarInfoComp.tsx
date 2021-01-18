@@ -142,10 +142,6 @@ const CarInfoComp: FC<Props> = ({ submitCallback, car }) => {
               <option>{capitalize(FuelType[FuelType.PETROLEUM])}</option>
               <option>{capitalize(FuelType[FuelType.GASOLINE])}</option>
               <option>{capitalize(FuelType[FuelType.OTHER])}</option>
-              {/* {cars.map(car => (
-                <option key={car.id} value={car.id}>
-                  {car.name}
-                </option> */}
             </Select>
             <FormErrorMessage>Please select a fuel type</FormErrorMessage>
           </FormControl>
