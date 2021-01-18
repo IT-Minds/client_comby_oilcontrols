@@ -1,31 +1,32 @@
 using System;
 using System.Linq;
 using Domain.Entities;
-
 namespace Domain.EntityExtensions
 {
   public static class LocationExtensions
   {
-    public static DateTime PredictDayReachingMinimumFuelLevel(this Location location)
+    public static double FuelConsumptionPerDegreeOfHeating(this Location location)
     {
-      double limit = location.FuelTank.MinimumFuelAmount;
-      var sortedRefills = location.Refills.OrderBy(x => x.ActualDeliveryDate);
-      var newestRefill = sortedRefills.Last();
-      var refillDate = newestRefill.ActualDeliveryDate;
-      var fuelAmount = newestRefill.EndAmount;
-      var fuelConsumption = location.FuelConsumptionPerDegreeOfHeating();
+      const int HEAT_BASE = 21;
 
-      var currentDate = refillDate;
-      do
+      var pastRefills = location.Refills.Where(x => x.ActualDeliveryDate != null).OrderByDescending(x => x.ActualDeliveryDate);
+      if (pastRefills == null)
       {
-        currentDate = currentDate.AddDays(1);
-        var heatdegree = location.Region.DailyTemperatureEstimate(currentDate);
-        var fuelConsumed = heatdegree * fuelConsumption;
-        fuelAmount = fuelAmount - fuelConsumed;
+        throw new ArgumentException("No past refills for location: " + location.Id);
       }
-      while (fuelAmount > location.FuelTank.MinimumFuelAmount);
+      var endDate = pastRefills.First().ActualDeliveryDate;
+      var startDate = pastRefills.Last().ActualDeliveryDate;
 
-      return currentDate.AddDays(-1);
+      var dailyTemps = location.Region.DailyTemperatures.Where(x => x.Date >= startDate && x.Date <= endDate);
+      if (pastRefills == null)
+      {
+        throw new ArgumentException("No temperatures found for location " + location.Id + " in the period " + startDate + " " + endDate);
+      }
+
+      var heatingDegree = dailyTemps.Sum(x => HEAT_BASE - x.Temperature);
+      var fuelConsumed = pastRefills.Where(x => x.ActualDeliveryDate > startDate).Sum(x => x.AmountDelivered);
+
+      return fuelConsumed / heatingDegree;
     }
   }
 }

@@ -125,6 +125,28 @@ namespace Application.UnitTests
         new Street { Id = 8, Name = "re_Street", RegionId = 3 },
         new Street { Id = 9, Name = "st_Street", RegionId = 5 }
       );
+
+      context.FuelTanks.Add(new FuelTank { Id = 6, Type = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 50 });
+
+      context.Locations.Add(new Location { Id = 6, FuelTankId = 6, RegionId = 5 });
+
+      context.RegionDailyTemps.AddRange(
+        new RegionDailyTemp { Id = 10, RegionId = 5, Date = new DateTime(1990, 5, 1), Temperature = -10 },
+        new RegionDailyTemp { Id = 11, RegionId = 5, Date = new DateTime(1990, 5, 2), Temperature = -11 },
+        new RegionDailyTemp { Id = 12, RegionId = 5, Date = new DateTime(1990, 5, 3), Temperature = -12 },
+        new RegionDailyTemp { Id = 13, RegionId = 5, Date = new DateTime(1990, 5, 4), Temperature = -13 },
+        new RegionDailyTemp { Id = 14, RegionId = 5, Date = new DateTime(1990, 5, 5), Temperature = -14 },
+        new RegionDailyTemp { Id = 15, RegionId = 5, Date = new DateTime(1990, 5, 6), Temperature = -15 },
+        new RegionDailyTemp { Id = 16, RegionId = 5, Date = new DateTime(1990, 5, 7), Temperature = -16 },
+        new RegionDailyTemp { Id = 17, RegionId = 5, Date = new DateTime(1990, 5, 8), Temperature = -17 },
+        new RegionDailyTemp { Id = 18, RegionId = 5, Date = new DateTime(1990, 5, 9), Temperature = -18 }
+      );
+
+      context.Refills.AddRange(
+        new Refill { Id = 8, CouponId = 8, Type = FuelType.GASOLINE, StartAmount = 100, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1990, 5, 1), ActualDeliveryDate = new DateTime(1990, 5, 1), LocationId = 5 },
+        new Refill { Id = 9, CouponId = 9, Type = FuelType.GASOLINE, StartAmount = 200, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1990, 5, 1), ActualDeliveryDate = new DateTime(1990, 5, 9), LocationId = 5 }
+      );
+
       context.SaveChanges();
     }
 
