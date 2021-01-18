@@ -14,6 +14,8 @@ import {
 } from "@chakra-ui/react";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdAdd, MdCheck, MdDelete } from "react-icons/md";
+import { FuelType } from "services/backend/nswagts";
+import { capitalize } from "utils/capitalizeAnyString";
 import { logger } from "utils/logger";
 
 import { CarInfoForm } from "./CarInfoForm";
@@ -136,10 +138,10 @@ const CarInfoComp: FC<Props> = ({ submitCallback, car }) => {
             <Select
               placeholder="Select fuel type"
               onChange={e => updateLocalForm(e.target.value, "fuelType")}>
-              <option>Oil</option>
-              <option>Petroleum</option>
-              <option>Gasoline</option>
-              <option>Other</option>
+              <option>{capitalize(FuelType[FuelType.OIL])}</option>
+              <option>{capitalize(FuelType[FuelType.PETROLEUM])}</option>
+              <option>{capitalize(FuelType[FuelType.GASOLINE])}</option>
+              <option>{capitalize(FuelType[FuelType.OTHER])}</option>
               {/* {cars.map(car => (
                 <option key={car.id} value={car.id}>
                   {car.name}
