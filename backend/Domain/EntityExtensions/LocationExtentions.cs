@@ -37,6 +37,12 @@ namespace Domain.EntityExtensions
       var endDate = (DateTime)pastRefills.First().ActualDeliveryDate;
       var startDate = (DateTime)pastRefills.Last().ActualDeliveryDate;
 
+      var dailyTemps = location.Region.DailyTemperatures.Where(x => x.Date >= startDate && x.Date <= endDate);
+      if (pastRefills == null)
+      {
+        throw new ArgumentException("No temperatures found for location " + location.Id + " in the period " + startDate + " " + endDate);
+      }
+
       var heatIndex = location.HeatingIndex(startDate, endDate);
       var fuelConsumed = pastRefills.Where(x => x.ActualDeliveryDate > startDate).Sum(x => x.AmountDelivered() ?? 0 );
 
