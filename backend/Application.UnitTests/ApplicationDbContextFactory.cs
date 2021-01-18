@@ -113,6 +113,7 @@ namespace Application.UnitTests
         new RegionDailyTemp { Id = 8, RegionId = 1, Date = new DateTime(1997, 1, 1), Temperature = 20 },
         new RegionDailyTemp { Id = 9, RegionId = 1, Date = new DateTime(1998, 1, 1), Temperature = -15 }
       );
+
       context.Streets.AddRange(
         new Street { Id = 1, Name = "A_Street", RegionId = 1 },
         new Street { Id = 2, Name = "Aa_Street", RegionId = 1 },
