@@ -44,7 +44,7 @@ namespace Domain.EntityExtensions
       }
 
       var heatIndex = location.HeatingIndex(startDate, endDate);
-      var fuelConsumed = pastRefills.Where(x => x.ActualDeliveryDate > startDate).Sum(x => x.AmountDelivered() ?? 0 );
+      var fuelConsumed = pastRefills.Where(x => x.ActualDeliveryDate > startDate).Sum(x => x.AmountDelivered() ?? 0);
 
       return fuelConsumed / heatIndex;
     }
@@ -94,7 +94,7 @@ namespace Domain.EntityExtensions
         double heatdegree;
         try
         {
-          heatdegree= location.Region.DailyTemperatureEstimate(currentDate);
+          heatdegree = location.Region.DailyTemperatureEstimate(currentDate);
         }
         catch
         {
