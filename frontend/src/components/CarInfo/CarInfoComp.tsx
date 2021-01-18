@@ -31,10 +31,25 @@ const CarInfoComp: FC<Props> = ({ submitCallback, car }) => {
     evening: null,
     headCount: null,
     morning: null,
-    fuelType: null
+    fuelType: null,
+    fillings: []
   });
 
+  const [isAddFilling, setIsAddFilling] = useState(false);
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
+
+  const [fillings, setFillings] = useState<FillingForm[]>([]);
+
+  const addFilling = useCallback(
+    (data: FillingForm) => {
+      fillings.push(data);
+    },
+    [fillings]
+  );
+
+  const removeFilling = useCallback((date: number) => {
+    setFillings(oldArray => oldArray.filter(oa => oa.date !== date));
+  }, []);
 
   const updateLocalForm = useCallback((value: unknown, key: keyof CarInfoForm) => {
     setLocalCarInfoForm(form => {
