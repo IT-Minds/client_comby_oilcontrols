@@ -72,7 +72,15 @@ const CarInfoComp: FC<Props> = ({ submitCallback, car }) => {
 
   return (
     <Container>
-      <form onSubmit={handleSubmit}>
+      {isAddFilling && (
+        <FillingComp
+          fillData={data => {
+            addFilling(data);
+            setIsAddFilling(false);
+          }}
+        />
+      )}
+      <form onSubmit={handleSubmit} hidden={isAddFilling}>
         <VStack align="center" justify="center">
           <Heading as="h4" size="md">
             Information of car {car}
