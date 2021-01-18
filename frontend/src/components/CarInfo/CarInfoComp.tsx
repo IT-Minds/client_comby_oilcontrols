@@ -96,23 +96,20 @@ const CarInfoComp: FC<Props> = ({ submitCallback, car }) => {
               formSubmitAttempts > 0 && (!localCarInfoForm.morning || !localCarInfoForm.evening)
             }
             isRequired>
-            <FormLabel>Morning and evening:</FormLabel>
             <HStack>
               <FormControl
                 isInvalid={formSubmitAttempts > 0 && !localCarInfoForm.morning}
                 isRequired>
-                <NumberInput
-                  placeholder="Morning"
-                  onChange={value => updateLocalForm(value, "morning")}>
+                <FormLabel>Morning:</FormLabel>
+                <NumberInput onChange={value => updateLocalForm(value, "morning")}>
                   <NumberInputField />
                 </NumberInput>
               </FormControl>
               <FormControl
                 isInvalid={formSubmitAttempts > 0 && !localCarInfoForm.evening}
                 isRequired>
-                <NumberInput
-                  placeholder="Evening"
-                  onChange={value => updateLocalForm(value, "evening")}>
+                <FormLabel>Evening:</FormLabel>
+                <NumberInput onChange={value => updateLocalForm(value, "evening")}>
                   <NumberInputField />
                 </NumberInput>
               </FormControl>
