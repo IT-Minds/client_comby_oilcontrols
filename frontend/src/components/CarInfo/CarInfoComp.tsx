@@ -62,12 +62,15 @@ const CarInfoComp: FC<Props> = ({ submitCallback, car }) => {
     (event: FormEvent<HTMLFormElement>) => {
       logger.debug("Submitting form CarInfoComp");
 
+      localCarInfoForm.fillings = fillings;
       localCarInfoForm.date = Date.now();
       submitCallback(localCarInfoForm);
       setFormSubmitAttempts(0);
+      console.log(localCarInfoForm);
+
       event.preventDefault();
     },
-    [localCarInfoForm]
+    [localCarInfoForm, fillings]
   );
 
   return (
