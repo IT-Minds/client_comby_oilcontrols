@@ -36,7 +36,7 @@ namespace Application.Locations.Commands.AddLocationImageCommand
         var refill = await _context.Locations.FindAsync(request.LocationId);
         if (refill == null)
         {
-          throw new ArgumentException("No location with ID: " + request.LocationId);
+          throw new NotFoundException("No location with ID: " + request.LocationId);
         }
 
         String imgType;

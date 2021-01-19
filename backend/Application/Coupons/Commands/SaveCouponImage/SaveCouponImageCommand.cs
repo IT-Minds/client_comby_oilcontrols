@@ -8,6 +8,8 @@ using Application.Common.Options;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Common.Exceptions;
+
 namespace Application.Coupons.Commands.SaveCouponImage
 {
   public class SaveCouponImageCommand : IRequest<string>
@@ -32,7 +34,7 @@ namespace Application.Coupons.Commands.SaveCouponImage
         var refill = await _context.Refills.FindAsync(request.RefillId);
         if (refill == null)
         {
-          throw new ArgumentException("No refill with ID: " + request.RefillId);
+          throw new NotFoundException("No refill with ID: " + request.RefillId);
         }
 
         String imgType;
