@@ -16,7 +16,7 @@ namespace Application.UnitTests.EntityExtensions.RegionExtensions
       var region = await Context.Regions.Include(x => x.DailyTemperatures).FirstOrDefaultAsync(x => x.Id == 1);
       var avgTemp = region.DailyTemperatureEstimate(new DateTime(2000, 1, 1));
 
-      avgTemp.Should().Be(-14.0 / 9.0);
+      avgTemp.Should().Be(-34.0 / 5);
     }
 
     [Fact]
