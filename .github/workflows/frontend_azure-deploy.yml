@@ -15,7 +15,7 @@ defaults:
 env:
   node-version: 14.x
   appName: ${{ secrets.AzureAppService_AppName }}-frontend
-  NEXT_PUBLIC_APP_VERSION: $GITHUB_RUN_ID/$GITHUB_ACTION
+  NEXT_PUBLIC_APP_VERSION: ${{ env.GITHUB_RUN_ID }}/${{ env.GITHUB_ACTION }}
 
 jobs:
   frontend-deploy:
