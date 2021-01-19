@@ -127,7 +127,6 @@ namespace Application.UnitTests
         new RegionDailyTemp { Id = 8, RegionId = 5, Date = new DateTime(1990, 5, 8), Temperature = -17 },
         new RegionDailyTemp { Id = 9, RegionId = 5, Date = new DateTime(1990, 5, 9), Temperature = -18 }
       );
-
       context.Refills.AddRange(
         new Refill { Id = 8, CouponId = 8, StartAmount = 100, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1990, 5, 1), ActualDeliveryDate = new DateTime(1990, 5, 1), LocationId = 5 },
         new Refill { Id = 9, CouponId = 9, StartAmount = 200, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1990, 5, 1), ActualDeliveryDate = new DateTime(1990, 5, 9), LocationId = 5 }
@@ -241,6 +240,14 @@ namespace Application.UnitTests
       );
       //END
 
+      context.FuelTanks.Add(new FuelTank { Id = 7, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 50 });
+      context.Locations.Add(new Location { Id = 6, FuelTankId = 7, RegionId = 5 });
+
+      context.FuelTanks.Add(new FuelTank { Id = 8, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 50 });
+      context.Locations.Add(new Location { Id = 7, FuelTankId = 8, RegionId = 5 });
+      context.Refills.Add(
+        new Refill { Id = 10, CouponId = 9, StartAmount = 200, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2000, 5, 1), ActualDeliveryDate = new DateTime(2000, 5, 9), LocationId = 7 }
+      );
       context.SaveChanges();
     }
 

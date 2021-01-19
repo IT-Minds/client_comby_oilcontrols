@@ -10,6 +10,10 @@ namespace Domain.EntityExtensions
     public static double HeatingIndex(this Location location, DateTime startDate, DateTime endDate)
     {
       const int HEAT_BASE = 21;
+      if (location.Refills == null)
+      {
+        throw new ArgumentException("No past refills for location: " + location.Id);
+      }
 
       var dailyTemps = location.Region.DailyTemperatures.Where(x => x.Date >= startDate && x.Date <= endDate);
       if (dailyTemps == null || dailyTemps.Count() == 0)
@@ -38,7 +42,7 @@ namespace Domain.EntityExtensions
       var startDate = (DateTime)pastRefills.Last().ActualDeliveryDate;
 
       var dailyTemps = location.Region.DailyTemperatures.Where(x => x.Date >= startDate && x.Date <= endDate);
-      if (pastRefills == null)
+      if (dailyTemps == null || dailyTemps.Count() == 0)
       {
         throw new ArgumentException("No temperatures found for location " + location.Id + " in the period " + startDate + " " + endDate);
       }
