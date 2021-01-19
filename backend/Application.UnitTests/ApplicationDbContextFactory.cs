@@ -123,7 +123,7 @@ namespace Application.UnitTests
         new Region { Id = 5 }
       );
 
-      context.FuelTanks.Add(new FuelTank { Id = 6, Type = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 50 });
+      context.FuelTanks.Add(new FuelTank { Id = 6, TankType = TankType.BUILDING, FuelType = FuelType.GASOLINE, TankCapacity = 1000, MinimumFuelAmount = 50 });
       context.Locations.Add(new Location { Id = 5, FuelTankId = 6, RegionId = 5 });
       context.RegionDailyTemps.AddRange(
         new RegionDailyTemp { Id = 1, RegionId = 5, Date = new DateTime(1990, 5, 1), Temperature = -10 },
@@ -135,11 +135,6 @@ namespace Application.UnitTests
         new RegionDailyTemp { Id = 7, RegionId = 5, Date = new DateTime(1990, 5, 7), Temperature = -16 },
         new RegionDailyTemp { Id = 8, RegionId = 5, Date = new DateTime(1990, 5, 8), Temperature = -17 },
         new RegionDailyTemp { Id = 9, RegionId = 5, Date = new DateTime(1990, 5, 9), Temperature = -18 }
-      );
-
-      context.Refills.AddRange(
-        new Refill { Id = 8, CouponId = 8, Type = FuelType.GASOLINE, StartAmount = 100, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1990, 5, 1), ActualDeliveryDate = new DateTime(1990, 5, 1), LocationId = 5 },
-        new Refill { Id = 9, CouponId = 9, Type = FuelType.GASOLINE, StartAmount = 200, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1990, 5, 1), ActualDeliveryDate = new DateTime(1990, 5, 9), LocationId = 5 }
       );
 
       context.RegionDailyTemps.AddRange(
@@ -189,6 +184,15 @@ namespace Application.UnitTests
         new TruckRefill { Id = 3, TimeStamp = new DateTime(2020, 1, 1, 18, 0, 0), FuelType = FuelType.GASOLINE, TruckDailyStateId = 1, Amount = 200, FuelCardNumber = 1 }
       );
 
+      context.FuelTanks.Add(new FuelTank { Id = 7, TankType = TankType.BUILDING, FuelType = FuelType.GASOLINE, TankCapacity = 1000, MinimumFuelAmount = 50 });
+      context.Locations.Add(new Location { Id = 6, FuelTankId = 7, RegionId = 5 });
+
+      context.FuelTanks.Add(new FuelTank { Id = 8, TankType = TankType.BUILDING, FuelType = FuelType.GASOLINE, TankCapacity = 1000, MinimumFuelAmount = 50 });
+      context.Locations.Add(new Location { Id = 7, FuelTankId = 8, RegionId = 5 });
+      context.Refills.Add(
+        new Refill { Id = 10, CouponId = 9, StartAmount = 200, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2000, 5, 1), ActualDeliveryDate = new DateTime(2000, 5, 9), LocationId = 7 }
+      );
+
       //START: Test data for the truck evening fuel amount entity extension.
       var refill100 = new Refill { Id = 100, CouponId = 100, StartAmount = 100, EndAmount = 300, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 1, 1), ActualDeliveryDate = new DateTime(2020, 1, 1, 9, 0, 0), LocationId = 100 };
       var refill101 = new Refill { Id = 101, CouponId = 101, StartAmount = 200, EndAmount = 300, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 1, 1), ActualDeliveryDate = new DateTime(2020, 1, 1, 10, 0, 0), LocationId = 100 };
@@ -227,6 +231,7 @@ namespace Application.UnitTests
         new TruckRefill { Id = 105, TimeStamp = new DateTime(2020, 1, 3, 17, 0, 0), Amount = 500, FuelCardNumber = 1234567890, TruckDailyStateId = 102, FuelType = FuelType.GASOLINE }
       );
       //END
+
       context.SaveChanges();
     }
 
