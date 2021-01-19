@@ -69,7 +69,8 @@ namespace Application.UnitTests
         new Location { Id = 1, FuelTankId = 1 },
         new Location { Id = 2, FuelTankId = 2 },
         new Location { Id = 3, FuelTankId = 3 },
-        new Location { Id = 4, FuelTankId = 4 }
+        new Location { Id = 4, FuelTankId = 4 },
+        new Location { Id = 5, FuelTankId = 5 }
       );
 
       context.Coupons.AddRange(
@@ -111,6 +112,7 @@ namespace Application.UnitTests
         new RegionDailyTemp { Id = 7, RegionId = 1, Date = new DateTime(1996, 1, 1), Temperature = -30 },
         new RegionDailyTemp { Id = 8, RegionId = 1, Date = new DateTime(1997, 1, 1), Temperature = 20 },
         new RegionDailyTemp { Id = 9, RegionId = 1, Date = new DateTime(1998, 1, 1), Temperature = -15 }
+
       );
       context.SaveChanges();
     }
