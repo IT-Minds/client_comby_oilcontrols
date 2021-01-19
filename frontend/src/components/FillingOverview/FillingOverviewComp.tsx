@@ -12,6 +12,7 @@ import {
   Tr
 } from "@chakra-ui/react";
 import PageIndicator from "components/Demo/components/PageIndicator";
+import QuerySingleSelectBtn from "components/SortFilter/QuerySingleSelectBtn";
 import { usePagedFetched } from "hooks/usePagedFetched";
 import React, { FC, useCallback, useMemo, useReducer, useState } from "react";
 import ListReducer from "react-list-reducer";
@@ -19,8 +20,9 @@ import { genRefillClient } from "services/backend/apiClients";
 import { RefillDto, TankType } from "services/backend/nswagts";
 import { capitalize } from "utils/capitalizeAnyString";
 
-import FilterTh from "./components/FilterTh";
-import SortTh, { Direction } from "./components/SortTh";
+import QueryMultiSelectBtn from "../SortFilter/QueryMultiSelectBtn";
+import QuerySortBtn, { Direction } from "../SortFilter/QuerySortBtn";
+import styles from "./styles.module.css";
 
 type Props = {
   preLoadedData?: RefillDto[];
@@ -94,25 +96,19 @@ const FillingOverviewComp: FC<Props> = ({
   }, []);
 
   return (
-    <Container minW="4xl">
-      <Table variant="striped" colorScheme="black" size="md" w="100%">
+    <Container maxW="4xl">
+      <Table variant="simple" colorScheme="white" size="sm" w="100%">
         <Thead>
-          <Tr>
+          <Tr className={styles.slimCol}>
             <Th>
-              <HStack spacing={0}>
+              <HStack spacing={1}>
                 <Text>Type</Text>
-                <Spacer w={2} />
-                <SortTh queryKey="locationType" sortCb={sortCb} />
-                <FilterTh
+                <Spacer />
+                <QuerySortBtn queryKey="locationType" sortCb={sortCb} />
+                <QueryMultiSelectBtn
                   queryKey="locationType"
                   options={[
                     { id: "1", name: "test1" },
-                    { id: "2", name: "test2" },
-                    { id: "2", name: "test2" },
-                    { id: "2", name: "test2" },
-                    { id: "2", name: "test2" },
-                    { id: "2", name: "test2" },
-                    { id: "2", name: "test2" },
                     { id: "2", name: "test2" },
                     { id: "2", name: "test2" },
                     { id: "2", name: "test2" },
@@ -141,27 +137,39 @@ const FillingOverviewComp: FC<Props> = ({
               </HStack>
             </Th>
             <Th>
-              <HStack>
+              <HStack spacing={1}>
                 <Text>Date</Text>
-                <SortTh queryKey="actualDeliveryDate" sortCb={sortCb} />
+                <Spacer />
+                <QuerySortBtn queryKey="actualDeliveryDate" sortCb={sortCb} />
+                <QuerySingleSelectBtn
+                  queryKey="actualDeliveryDate"
+                  options={[
+                    { id: "1", name: "test1" },
+                    { id: "2", name: "test2" },
+                    { id: "3", name: "test3" }
+                  ]}
+                />
               </HStack>
             </Th>
             <Th>
               <HStack>
                 <Text>Truck ID</Text>
-                <SortTh queryKey="truckId" sortCb={sortCb} />
+                <Spacer />
+                <QuerySortBtn queryKey="truckId" sortCb={sortCb} />
               </HStack>
             </Th>
             <Th>
               <HStack>
                 <Text>Start</Text>
-                <SortTh queryKey="startAmount" sortCb={sortCb} />
+                <Spacer />
+                <QuerySortBtn queryKey="startAmount" sortCb={sortCb} />
               </HStack>
             </Th>
             <Th>
               <HStack>
                 <Text>End</Text>
-                <SortTh queryKey="endAmount" sortCb={sortCb} />
+                <Spacer />
+                <QuerySortBtn queryKey="endAmount" sortCb={sortCb} />
               </HStack>
             </Th>
             <Th>Coupon</Th>
@@ -183,11 +191,13 @@ const FillingOverviewComp: FC<Props> = ({
         </Tbody>
       </Table>
 
-      <PageIndicator activePage={pageShowing} onClickPage={setPageShowing} pages={pages}>
-        {!done && elementsOnLastPage >= PAGE_SHOW_SIZE && (
-          <Button colorScheme="blue" size="sm" variant="outline"></Button>
-        )}
-      </PageIndicator>
+      {pages.length > 1 && (
+        <PageIndicator activePage={pageShowing} onClickPage={setPageShowing} pages={pages}>
+          {!done && elementsOnLastPage >= PAGE_SHOW_SIZE && (
+            <Button colorScheme="blue" size="sm" variant="outline"></Button>
+          )}
+        </PageIndicator>
+      )}
     </Container>
   );
 };
