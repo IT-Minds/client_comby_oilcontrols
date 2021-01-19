@@ -5,6 +5,7 @@ namespace Application.Common.Options
   {
     public const string FileDrive = "FileDrive";
 
-    public string Path { get; set; }
+    public string CouponPath { get; set; }
+    public string LocationPath { get; set; }
   }
 }

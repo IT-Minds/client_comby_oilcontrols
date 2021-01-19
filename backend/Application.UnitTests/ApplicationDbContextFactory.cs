@@ -49,38 +49,39 @@ namespace Application.UnitTests
           new ExampleEntity { Id = 5, ExampleEntityListId = null, Name = "Coffee", ExampleEnum = ExampleEnum.D }
       );
 
-      var route1 = new Route{Id = 1};
-      var route2 = new Route{Id = 2};
+      var route1 = new Route { Id = 1 };
+      var route2 = new Route { Id = 2 };
 
       context.Trucks.AddRange(
-        new Truck { Id = 43, Route = route1},
-        new Truck { Id = 44, Route = route2}
+        new Truck { Id = 43, Route = route1 },
+        new Truck { Id = 44, Route = route2 }
       );
 
       context.FuelTanks.AddRange(
-        new FuelTank { Id = 1, TankNumber = 443, Type = TankType.BUILDING, TankCapacity = 2000.5, MinimumFuelAmount = 150.5},
-        new FuelTank { Id = 2, TankNumber = 444, Type = TankType.BUILDING, TankCapacity = 2000.5, MinimumFuelAmount = 150.5},
-        new FuelTank { Id = 3, TankNumber = 445, Type = TankType.BUILDING, TankCapacity = 2000.5, MinimumFuelAmount = 150.5},
-        new FuelTank { Id = 4, TankNumber = 446, Type = TankType.BUILDING, TankCapacity = 2000.5, MinimumFuelAmount = 150.5},
-        new FuelTank { Id = 5, TankNumber = 447, Type = TankType.BUILDING, TankCapacity = 2000.5, MinimumFuelAmount = 150.5}
+        new FuelTank { Id = 1, TankNumber = 443, Type = TankType.BUILDING, TankCapacity = 2000.5, MinimumFuelAmount = 150.5 },
+        new FuelTank { Id = 2, TankNumber = 444, Type = TankType.BUILDING, TankCapacity = 2000.5, MinimumFuelAmount = 150.5 },
+        new FuelTank { Id = 3, TankNumber = 445, Type = TankType.BUILDING, TankCapacity = 2000.5, MinimumFuelAmount = 150.5 },
+        new FuelTank { Id = 4, TankNumber = 446, Type = TankType.BUILDING, TankCapacity = 2000.5, MinimumFuelAmount = 150.5 },
+        new FuelTank { Id = 5, TankNumber = 447, Type = TankType.BUILDING, TankCapacity = 2000.5, MinimumFuelAmount = 150.5 }
       );
 
       context.Locations.AddRange(
-        new Location { Id = 1, FuelTankId = 1},
-        new Location { Id = 2, FuelTankId = 2},
-        new Location { Id = 3, FuelTankId = 3},
-        new Location { Id = 4, FuelTankId = 4}
+        new Location { Id = 1, FuelTankId = 1 },
+        new Location { Id = 2, FuelTankId = 2 },
+        new Location { Id = 3, FuelTankId = 3 },
+        new Location { Id = 4, FuelTankId = 4 },
+        new Location { Id = 5 }
       );
 
       context.Coupons.AddRange(
-        new Coupon { Id = 1, CouponNumber = 19991, TruckId = 43, Created = DateTimeOffset.Now  },
-        new Coupon { Id = 2, CouponNumber = 19992, TruckId = 43, Created = DateTimeOffset.Now  },
-        new Coupon { Id = 3, CouponNumber = 19993, TruckId = 43, Created = DateTimeOffset.Now  },
-        new Coupon { Id = 4, CouponNumber = 19994, TruckId = 43, Created = DateTimeOffset.Now  },
-        new Coupon { Id = 5, CouponNumber = 19995, TruckId = 43, Created = DateTimeOffset.Now  },
-        new Coupon { Id = 6, CouponNumber = 19996, TruckId = 43, Created = DateTimeOffset.Now  },
-        new Coupon { Id = 7, CouponNumber = 19997, TruckId = 43, Created = DateTimeOffset.Now  },
-        new Coupon { Id = 8, CouponNumber = 19998, TruckId = 44, Created = DateTimeOffset.Now  },
+        new Coupon { Id = 1, CouponNumber = 19991, TruckId = 43, Created = DateTimeOffset.Now },
+        new Coupon { Id = 2, CouponNumber = 19992, TruckId = 43, Created = DateTimeOffset.Now },
+        new Coupon { Id = 3, CouponNumber = 19993, TruckId = 43, Created = DateTimeOffset.Now },
+        new Coupon { Id = 4, CouponNumber = 19994, TruckId = 43, Created = DateTimeOffset.Now },
+        new Coupon { Id = 5, CouponNumber = 19995, TruckId = 43, Created = DateTimeOffset.Now },
+        new Coupon { Id = 6, CouponNumber = 19996, TruckId = 43, Created = DateTimeOffset.Now },
+        new Coupon { Id = 7, CouponNumber = 19997, TruckId = 43, Created = DateTimeOffset.Now },
+        new Coupon { Id = 8, CouponNumber = 19998, TruckId = 44, Created = DateTimeOffset.Now },
         new Coupon { Id = 9, CouponNumber = 19999, TruckId = 44, Created = DateTimeOffset.Now }
       );
 
@@ -94,11 +95,11 @@ namespace Application.UnitTests
       );
 
       context.Regions.AddRange(
-        new Region{Id = 1},
-        new Region{Id = 2},
-        new Region{Id = 3},
-        new Region{Id = 4},
-        new Region{Id = 5}
+        new Region { Id = 1 },
+        new Region { Id = 2 },
+        new Region { Id = 3 },
+        new Region { Id = 4 },
+        new Region { Id = 5 }
       );
       context.SaveChanges();
     }
