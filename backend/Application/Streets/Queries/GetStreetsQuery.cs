@@ -26,7 +26,7 @@ namespace Application.Streets.Queries.GetStreets
     public async Task<int> PagesRemaining(IQueryable<Street> query)
     {
       var count = await query.CountAsync();
-      var pagesLeft = (int)(Math.Floor((float)count / (float)Size)) - 1;
+      var pagesLeft = Math.Max((int)(Math.Floor((float)count / (float)Size)) - 1, 0);
 
       return pagesLeft;
     }
