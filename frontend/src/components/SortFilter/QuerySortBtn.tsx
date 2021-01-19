@@ -1,4 +1,4 @@
-import { IconButton, useColorModeValue } from "@chakra-ui/react";
+import { IconButton, IconButtonProps } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { FC, useCallback, useEffect, useState } from "react";
 import { MdArrowDownward, MdArrowUpward, MdSort } from "react-icons/md";
@@ -11,7 +11,12 @@ type Props = {
   sortCb?: (key: string, direction: Direction) => void;
 };
 
-const SortTh: FC<Props> = ({ sortCb = () => null, queryKey, queryGroup = "table" }) => {
+const QuerySortBtn: FC<Props & Partial<IconButtonProps>> = ({
+  sortCb = () => null,
+  queryKey,
+  queryGroup = "t",
+  ...rest
+}) => {
   const [direction, setDirection] = useState<Direction>(null);
   const [active, setActive] = useState(false);
 
@@ -82,6 +87,7 @@ const SortTh: FC<Props> = ({ sortCb = () => null, queryKey, queryGroup = "table"
       size="xs"
       aria-label="Sort column"
       onClick={onClick}
+      colorScheme={active ? "purple" : "gray"}
       icon={
         active ? (
           direction === "ASC" ? (
@@ -93,8 +99,9 @@ const SortTh: FC<Props> = ({ sortCb = () => null, queryKey, queryGroup = "table"
           <MdSort onClick={onClick} />
         )
       }
+      {...rest}
     />
   );
 };
 
-export default SortTh;
+export default QuerySortBtn;

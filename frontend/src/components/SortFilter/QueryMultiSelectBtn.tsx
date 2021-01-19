@@ -10,7 +10,6 @@ import {
   PopoverFooter,
   PopoverHeader,
   PopoverTrigger,
-  useColorModeValue,
   VStack
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
@@ -27,10 +26,10 @@ type Props = {
   options: DropdownType[];
 };
 
-const FilterTh: FC<Props> = ({
+const QueryMultiSelectBtn: FC<Props> = ({
   filterCb = () => null,
   queryKey,
-  queryGroup = "table",
+  queryGroup = "t",
   options
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -63,12 +62,17 @@ const FilterTh: FC<Props> = ({
 
   const onClick = useCallback(() => {
     const copy = { ...router.query };
+    const filters = queryToArr(copy.thfilter ?? []).filter(filter => {
+      const [checkQueryGroup, checkKey] = filter.split("_");
+      return !(queryGroup === checkQueryGroup && queryKey === checkKey);
+    });
     if (allChecked) {
-      delete copy.thfilter;
       filterCb(queryKey, checkedItems);
     } else {
-      copy["thfilter"] = `${queryGroup}_${queryKey}_${checkedItems.join("_")}`;
+      filters.push(`${queryGroup}_${queryKey}_${checkedItems.join("_")}`);
     }
+    console.log(filters, copy);
+    copy["thfilter"] = filters;
     router.replace(
       {
         query: copy
@@ -85,6 +89,7 @@ const FilterTh: FC<Props> = ({
         <IconButton
           size="xs"
           aria-label="Filter column"
+          colorScheme={isIndeterminate ? "orange" : "gray"}
           onClick={() => setIsOpen(true)}
           icon={<MdFilterList />}
         />
@@ -94,7 +99,7 @@ const FilterTh: FC<Props> = ({
         <PopoverCloseButton />
         <PopoverHeader>Filter</PopoverHeader>
         <PopoverBody>
-          <VStack align="left" h={[20, 40, 60]} overflowY="auto">
+          <VStack align="left" minH={30} maxH={60} overflowY="auto">
             <Checkbox
               isChecked={allChecked}
               isIndeterminate={isIndeterminate}
@@ -126,4 +131,4 @@ const FilterTh: FC<Props> = ({
   );
 };
 
-export default FilterTh;
+export default QueryMultiSelectBtn;
