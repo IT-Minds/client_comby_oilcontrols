@@ -13,7 +13,6 @@ export const useLoadProgress = (router: NextRouter): number => {
         const toAdd = randomNumberBetweenXandY(2, curVal < 66 ? 16 : curVal < 80 ? 8 : 4);
         loadValRef.current = curVal + toAdd;
         setLoadVal(curVal + toAdd);
-        console.log("process", curVal + toAdd);
         setTimeout(() => recursiveIncrement(curVal + toAdd), 5);
       }
     };
@@ -32,9 +31,9 @@ export const useLoadProgress = (router: NextRouter): number => {
   }, []);
 
   useEffect(() => {
-    router.events.on("routeChangeStart", incrementLoadVal);
-    router.events.on("routeChangeComplete", finishLoading);
-    router.events.on("routeChangeError", finishLoading);
+    router.events.on("routeChangeStart", (_url, { shallow }) => !shallow && incrementLoadVal());
+    router.events.on("routeChangeComplete", (_url, { shallow }) => !shallow && finishLoading());
+    router.events.on("routeChangeError", (_url, { shallow }) => !shallow && finishLoading());
   }, []);
 
   return loadVal;

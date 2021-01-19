@@ -23,6 +23,7 @@ import UserTypeSwitcher from "./UserTypeSwitcher";
 
 const MyUserSnippet: FC = () => {
   const bg = useColorModeValue("gray.200", "gray.900");
+  const fadeout = useColorModeValue("gray.400", "gray.600");
   const hoverbg = useColorModeValue("blue.100", "blue.700");
   const borderColor = useColorModeValue("gray.400", "gray.700");
   const nameLength = useBreakpointValue({ base: 150, lg: 200 });
@@ -93,7 +94,7 @@ const MyUserSnippet: FC = () => {
             <UserTypeSwitcher />
           </Box>
 
-          <Flex padding={2} align="center">
+          <Flex padding={1} paddingLeft={8} align="center">
             <Spacer />
             <Box marginRight={2}>
               <LanguageSelector />
@@ -107,6 +108,9 @@ const MyUserSnippet: FC = () => {
               <ColorModeToggle />
             </Tooltip>
           </Flex>
+          <Text as="i" color={fadeout}>
+            App Version: {process.env.NEXT_PUBLIC_APP_VERSION}
+          </Text>
         </VStack>
       </Collapse>
     </VStack>

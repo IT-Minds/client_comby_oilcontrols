@@ -52,12 +52,12 @@ const LanguageSelector: FC = () => {
           cursor="pointer"
         />
       </PopoverTrigger>
-      <PopoverContent w={"75%"} marginLeft={9}>
+      <PopoverContent w={"66%"} marginLeft={12}>
         {/* <PopoverHeader fontWeight="semibold">Locale</PopoverHeader> */}
         <PopoverArrow />
         <PopoverCloseButton />
         <PopoverBody marginTop={4}>
-          <VStack align="end">
+          <VStack align="flex-end ">
             {locales?.map(loc => (
               <Link href={route} locale={loc} key={loc} passHref>
                 <HStack

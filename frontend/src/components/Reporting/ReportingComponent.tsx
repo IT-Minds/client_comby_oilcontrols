@@ -23,8 +23,7 @@ import {
 } from "@chakra-ui/react";
 import CameraComp from "components/Camera/CameraComponent";
 import React, { FC, FormEvent, useCallback, useState } from "react";
-import { IoMdCamera, IoMdEye, IoMdRepeat } from "react-icons/io";
-import { MdCheck } from "react-icons/md";
+import { MdCheck, MdPhotoCamera, MdRemoveRedEye, MdRepeat } from "react-icons/md";
 import { enumConvertor } from "services/backend/ext/enumConvertor";
 import { FuelType } from "services/backend/nswagts";
 import DropdownType from "types/DropdownType";
@@ -185,13 +184,13 @@ const ReportingComp: FC<Props> = ({
             isRequired>
             <HStack>
               {localReportForm.image.length > 0 ? (
-                <Button onClick={onOpen} rightIcon={<IoMdEye />}>
+                <Button onClick={onOpen} rightIcon={<MdRemoveRedEye />}>
                   View Image
                 </Button>
               ) : (
                 <Button
                   colorScheme="blue"
-                  rightIcon={<IoMdCamera />}
+                  rightIcon={<MdPhotoCamera />}
                   onClick={() => setIsTakingPic(true)}>
                   Take Image
                 </Button>
@@ -223,7 +222,7 @@ const ReportingComp: FC<Props> = ({
           <ModalFooter>
             <Button
               colorScheme="yellow"
-              rightIcon={<IoMdRepeat />}
+              rightIcon={<MdRepeat />}
               onClick={() => {
                 updateLocalForm("", "image");
                 setIsTakingPic(true);
