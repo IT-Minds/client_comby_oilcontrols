@@ -175,6 +175,16 @@ namespace Application.UnitTests
         new Refill { Id = 10, CouponId = 9, Type = FuelType.GASOLINE, StartAmount = 200, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2000, 5, 1), ActualDeliveryDate = new DateTime(2000, 5, 9), LocationId = 7 }
       );
 
+      context.FuelTanks.Add(new FuelTank { Id = 7, Type = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 50 });
+      context.Locations.Add(new Location { Id = 6, FuelTankId = 7, RegionId = 5 });
+
+      context.FuelTanks.Add(new FuelTank { Id = 8, Type = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 50 });
+      context.Locations.Add(new Location { Id = 7, FuelTankId = 8, RegionId = 5 });
+
+      context.Refills.Add(
+        new Refill { Id = 10, CouponId = 9, Type = FuelType.GASOLINE, StartAmount = 200, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2000, 5, 1), ActualDeliveryDate = new DateTime(2000, 5, 9), LocationId = 7 }
+      );
+
       context.SaveChanges();
     }
 
