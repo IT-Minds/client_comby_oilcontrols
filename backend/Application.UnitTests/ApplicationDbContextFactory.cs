@@ -70,7 +70,7 @@ namespace Application.UnitTests
         new Location { Id = 2, FuelTankId = 2 },
         new Location { Id = 3, FuelTankId = 3 },
         new Location { Id = 4, FuelTankId = 4 },
-        new Location { Id = 5 }
+        new Location { Id = 5, FuelTankId = 5 }
       );
 
       context.Coupons.AddRange(
@@ -100,6 +100,19 @@ namespace Application.UnitTests
         new Region { Id = 3 },
         new Region { Id = 4 },
         new Region { Id = 5 }
+      );
+
+      context.RegionDailyTemps.AddRange(
+        new RegionDailyTemp { Id = 1, RegionId = 1, Date = new DateTime(1990, 1, 1), Temperature = 5 },
+        new RegionDailyTemp { Id = 2, RegionId = 1, Date = new DateTime(1991, 1, 1), Temperature = 10 },
+        new RegionDailyTemp { Id = 3, RegionId = 1, Date = new DateTime(1992, 1, 1), Temperature = 2 },
+        new RegionDailyTemp { Id = 4, RegionId = 1, Date = new DateTime(1993, 1, 1), Temperature = 3 },
+        new RegionDailyTemp { Id = 5, RegionId = 1, Date = new DateTime(1994, 1, 1), Temperature = -10 },
+        new RegionDailyTemp { Id = 6, RegionId = 1, Date = new DateTime(1995, 1, 1), Temperature = 1 },
+        new RegionDailyTemp { Id = 7, RegionId = 1, Date = new DateTime(1996, 1, 1), Temperature = -30 },
+        new RegionDailyTemp { Id = 8, RegionId = 1, Date = new DateTime(1997, 1, 1), Temperature = 20 },
+        new RegionDailyTemp { Id = 9, RegionId = 1, Date = new DateTime(1998, 1, 1), Temperature = -15 }
+
       );
       context.SaveChanges();
     }

@@ -1,7 +1,8 @@
 using System;
 using Domain.Common;
 
-namespace Domain.Entities{
+namespace Domain.Entities
+{
   public class RegionDailyTemp : AuditableEntity
   {
     public int Id { get; set; }
