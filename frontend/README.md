@@ -11,4 +11,3 @@ npm run dev
 ```
 
 After running this command you can run the VSCode recipe to debug
-.

@@ -35,7 +35,7 @@ jobs:
           npm run build --if-present
           rm -rf node_modules
         env:
-          NEXT_PUBLIC_APP_VERSION: ${{ env.GITHUB_RUN_ID }}/${{ env.GITHUB_ACTION }}
+          NEXT_PUBLIC_APP_VERSION: ${{ github.run_id }}-${{ github.run_number }}
 
       - name: "Deploy Frontend to Azure Web App"
         uses: azure/webapps-deploy@v2
