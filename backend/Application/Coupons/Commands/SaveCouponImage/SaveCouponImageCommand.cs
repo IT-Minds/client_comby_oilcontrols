@@ -36,22 +36,13 @@ namespace Application.Coupons.Commands.SaveCouponImage
         }
 
         String imgType;
-        Regex png = new Regex(@"^image\/png$");
-        Regex webp = new Regex(@"^image\/webp$");
-
-        if (png.IsMatch(request.File.ContentType))
-        {
-          imgType = "png";
-        }
-        else if (webp.IsMatch(request.File.ContentType))
-        {
-          imgType = "webp";
-        }
-        else
+        Regex type = new Regex(@"(^image\/png$)|(^image\/webp$)");
+        if (!type.IsMatch(request.File.ContentType))
         {
           throw new ArgumentException("Invalid content type.");
         }
 
+        imgType = request.File.ContentType.Substring(6);
         var filename = request.RefillId + "." + imgType;
         string filePath = Path.Combine(_options.CouponPath, filename);
 

@@ -40,21 +40,14 @@ namespace Application.Locations.Commands.AddLocationImageCommand
         }
 
         String imgType;
-        Regex png = new Regex(@"^image\/png$");
-        Regex webp = new Regex(@"^image\/webp$");
+        Regex type = new Regex(@"(^image\/png$)|(^image\/webp$)");
 
-        if (png.IsMatch(request.Picture.ContentType))
-        {
-          imgType = "png";
-        }
-        else if (webp.IsMatch(request.Picture.ContentType))
-        {
-          imgType = "webp";
-        }
-        else
+        if (!type.IsMatch(request.Picture.ContentType))
         {
           throw new ArgumentException("Invalid content type.");
         }
+        imgType = request.Picture.ContentType.Substring(6);
+
         var filename = request.LocationId + "." + imgType;
         string filePath = Path.Combine(_options.LocationPath, filename);
 
