@@ -15,7 +15,6 @@ defaults:
 env:
   node-version: 14.x
   appName: ${{ secrets.AzureAppService_AppName }}-frontend
-  NEXT_PUBLIC_APP_VERSION: ${{ env.GITHUB_RUN_ID }}/${{ env.GITHUB_ACTION }}
 
 jobs:
   frontend-deploy:
@@ -35,6 +34,8 @@ jobs:
           npm ci
           npm run build --if-present
           rm -rf node_modules
+        env:
+          NEXT_PUBLIC_APP_VERSION: ${{ env.GITHUB_RUN_ID }}/${{ env.GITHUB_ACTION }}
 
       - name: "Deploy Frontend to Azure Web App"
         uses: azure/webapps-deploy@v2
