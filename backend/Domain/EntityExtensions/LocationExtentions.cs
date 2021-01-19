@@ -14,9 +14,7 @@ namespace Domain.EntityExtensions
         throw new ArgumentException("No past refills for location: " + location.Id);
       }
 
-      var pastRefills = location.Refills
-        .OrderByDescending(x => x.ActualDeliveryDate);
-
+      var pastRefills = location.Refills.Where(x => x.ActualDeliveryDate != null).OrderByDescending(x => x.ActualDeliveryDate);
       if (pastRefills == null || pastRefills.Count() == 0)
       {
         throw new ArgumentException("No past refills for location: " + location.Id);
