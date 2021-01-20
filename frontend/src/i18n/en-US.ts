@@ -55,6 +55,7 @@ export const table: Locale = {
   dailyTemperature: {
     selectRegion: "Select region",
     temperature: "Temperature",
+    selectDate: "Select a date",
     formErrors: {
       selectRegion: "Please select a region",
       inputTemperature: "Please enter a temperature"

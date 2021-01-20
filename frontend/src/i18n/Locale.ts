@@ -58,6 +58,7 @@ export interface Locale {
   dailyTemperature: {
     selectRegion: string;
     temperature: string;
+    selectDate: string;
     formErrors: {
       selectRegion: string;
       inputTemperature: string;
