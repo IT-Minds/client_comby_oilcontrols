@@ -10,6 +10,8 @@ import {
   Textarea,
   VStack
 } from "@chakra-ui/react";
+import { Locale } from "i18n/Locale";
+import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
 import { logger } from "utils/logger";
@@ -28,6 +30,8 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback }) => {
     name: null,
     tankSize: null
   });
+
+  const { t } = useI18n<Locale>();
 
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
 
@@ -56,7 +60,7 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback }) => {
           <FormControl
             isRequired
             isInvalid={formSubmitAttempts > 0 && !localAddTruckMetaDataForm.carNumber}>
-            <FormLabel>Car number:</FormLabel>
+            <FormLabel> {t("truckMetaData.carNumber")}:</FormLabel>
             <NumberInput
               min={0}
               max={999}
@@ -65,37 +69,35 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback }) => {
               }}>
               <NumberInputField />
             </NumberInput>
-            <FormErrorMessage>Please enter a car number</FormErrorMessage>
+            <FormErrorMessage>{t("truckMetaData.formError.carNumber")}</FormErrorMessage>
           </FormControl>
 
           <FormControl
             isRequired
             isInvalid={formSubmitAttempts > 0 && !localAddTruckMetaDataForm.name}>
-            <FormLabel>Car name:</FormLabel>
+            <FormLabel>{t("truckMetaData.carName")}:</FormLabel>
             <Input
-              placeholder="Car name"
               onChange={e => {
                 updateLocalForm(e.target.value, "name");
               }}></Input>
-            <FormErrorMessage>Please specify a car name</FormErrorMessage>
+            <FormErrorMessage>{t("truckMetaData.formError.carName")}</FormErrorMessage>
           </FormControl>
 
           <FormControl
             isRequired
             isInvalid={formSubmitAttempts > 0 && !localAddTruckMetaDataForm.description}>
-            <FormLabel>Description:</FormLabel>
+            <FormLabel>{t("truckMetaData.formError.carNumber")}:</FormLabel>
             <Textarea
-              placeholder="Description of car"
               onChange={e => {
                 updateLocalForm(e.target.value, "description");
               }}></Textarea>
-            <FormErrorMessage>Please specify a description of the car</FormErrorMessage>
+            <FormErrorMessage>{t("truckMetaData.formError.description")}</FormErrorMessage>
           </FormControl>
 
           <FormControl
             isRequired
             isInvalid={formSubmitAttempts > 0 && !localAddTruckMetaDataForm.tankSize}>
-            <FormLabel>Tank size:</FormLabel>
+            <FormLabel>{t("truckMetaData.tankSize")}:</FormLabel>
             <NumberInput
               min={0}
               onChange={value => {
@@ -103,7 +105,7 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback }) => {
               }}>
               <NumberInputField />
             </NumberInput>
-            <FormErrorMessage>Please specify a tank size</FormErrorMessage>
+            <FormErrorMessage>{t("truckMetaData.formError.tankSize")}</FormErrorMessage>
           </FormControl>
 
           <Button

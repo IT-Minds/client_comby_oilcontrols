@@ -53,4 +53,17 @@ export interface Locale {
       confirm: string;
     };
   };
+
+  truckMetaData: {
+    carNumber: string;
+    carName: string;
+    description: string;
+    tankSize: string;
+    formError: {
+      carNumber: string;
+      carName: string;
+      description: string;
+      tankSize: string;
+    };
+  };
 }

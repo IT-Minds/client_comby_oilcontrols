@@ -48,5 +48,18 @@ export const table: Locale = {
       confirm:
         "Er du sikker på, at du vil ugyldiggøre kuponen '{{coupon}}', denne handling kan ikke fortrydes?"
     }
+  },
+
+  truckMetaData: {
+    carNumber: "Bilnummer",
+    carName: "Bilnavn",
+    description: "Beskrivelse",
+    tankSize: "Tankstørrelse",
+    formError: {
+      carNumber: "Indtast bilnummer",
+      carName: "Indtast bilnavn",
+      description: "Indtast en beskrivelse",
+      tankSize: "Indtast tankstørrelse"
+    }
   }
 };

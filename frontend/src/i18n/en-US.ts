@@ -49,5 +49,17 @@ export const table: Locale = {
       confirm:
         "Are you sure you want to invalidate coupon '{{coupon}}', this action can't be undone?"
     }
+  },
+  truckMetaData: {
+    carNumber: "Car number",
+    carName: "Car name",
+    description: "Description",
+    tankSize: "Tank size",
+    formError: {
+      carNumber: "Please enter a car number",
+      carName: "Please specify a car name",
+      description: "Please specify a description",
+      tankSize: "Please specify a tank size"
+    }
   }
 };
