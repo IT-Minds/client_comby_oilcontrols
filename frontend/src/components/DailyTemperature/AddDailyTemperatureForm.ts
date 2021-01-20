@@ -1,5 +1,5 @@
 export interface AddDailyTemperatureForm {
   regionId: string;
-  date: number;
+  date: Date;
   temperature: number;
 }

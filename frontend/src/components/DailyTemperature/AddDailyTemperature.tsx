@@ -4,7 +4,6 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Input,
   NumberInput,
   NumberInputField,
   Select,
@@ -19,6 +18,7 @@ import { formatInputNumber, parseInputToNumber } from "utils/formatNumber";
 import { logger } from "utils/logger";
 
 import { AddDailyTemperatureForm } from "./AddDailyTemperatureForm";
+import DatePicker from "./date-picker";
 
 type Props = {
   submitCallback: (addCouponForm: AddDailyTemperatureForm) => void;
@@ -79,8 +79,15 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions =
             <FormErrorMessage>{t("dailyTemperature.formErrors.selectRegion")}</FormErrorMessage>
           </FormControl>
 
-          <FormControl>Insert date-picker here</FormControl>
-
+          <FormControl isRequired>
+            <FormLabel>{t("dailyTemperature.selectDate")}:</FormLabel>
+            <DatePicker
+              selectedDate={localAddDailyTemperatureForm.date}
+              onChange={date => updateLocalForm(date, "date")}
+              showPopperArrow={false}
+            />
+            {localAddDailyTemperatureForm.date?.toDateString() ?? ""}
+          </FormControl>
           <FormControl
             isRequired
             isInvalid={formSubmitAttempts > 0 && !localAddDailyTemperatureForm.temperature}>
