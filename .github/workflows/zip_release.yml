@@ -85,6 +85,8 @@ jobs:
           rm -rf .next/cache
           mkdir -p ${{ env.artifact-dir }}
           zip -r ${{ env.frontend-artifact }} .next next.config.js package.json package-lock.json server.js web.config public
+        env:
+          NEXT_PUBLIC_APP_VERSION: ${{ github.ref##*/ }}.${{ github.run_id }}
 
       - name: Upload Release Asset
         id: upload-release-asset
