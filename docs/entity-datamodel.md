@@ -7,6 +7,7 @@
 class Truck {
   id
   truckIdentifier
+  truckNumber
   name
   description
   tankCapacity
