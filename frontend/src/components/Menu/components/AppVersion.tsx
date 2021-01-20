@@ -40,7 +40,7 @@ const AppVersion: FC = () => {
         App Version: {process.env.NEXT_PUBLIC_APP_VERSION}
       </Code>
       <VisuallyHidden>
-        <input ref={copyInput} value={value} />
+        <input ref={copyInput} value={value} readOnly />
       </VisuallyHidden>
     </>
   );
