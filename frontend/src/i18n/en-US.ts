@@ -51,6 +51,7 @@ export const table: Locale = {
     }
   },
   truckMetaData: {
+    startNumber: "Start number",
     carNumber: "Car number",
     carName: "Car name",
     description: "Description",

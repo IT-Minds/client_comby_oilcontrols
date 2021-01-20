@@ -1,4 +1,5 @@
 export interface AddTruckMetaDataForm {
+  startNumber: number;
   carNumber: number;
   name: string;
   description: string;

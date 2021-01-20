@@ -25,6 +25,7 @@ type Props = {
 
 const AddTruckMetaData: FC<Props> = ({ submitCallback }) => {
   const [localAddTruckMetaDataForm, setlocalAddTruckMetaDataForm] = useState<AddTruckMetaDataForm>({
+    startNumber: 123, //dummy
     carNumber: null,
     description: null,
     name: null,
@@ -57,6 +58,11 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback }) => {
     <Container>
       <form onSubmit={handleSubmit}>
         <VStack align="center" justify="center">
+          <FormControl>
+            <FormLabel>{t("truckMetaData.startNumber")}:</FormLabel>
+            <Input isReadOnly value={localAddTruckMetaDataForm.startNumber}></Input>
+          </FormControl>
+
           <FormControl
             isRequired
             isInvalid={formSubmitAttempts > 0 && !localAddTruckMetaDataForm.carNumber}>

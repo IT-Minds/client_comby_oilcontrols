@@ -55,6 +55,7 @@ export interface Locale {
   };
 
   truckMetaData: {
+    startNumber: string;
     carNumber: string;
     carName: string;
     description: string;
