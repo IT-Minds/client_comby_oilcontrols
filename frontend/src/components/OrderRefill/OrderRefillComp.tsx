@@ -98,7 +98,7 @@ const OrderRefillComp: FC<Props> = ({ submitCallback, locations = [] }) => {
 
   return (
     <Container>
-      <form>
+      <form onSubmit={handleSubmit}>
         <Table variant="striped" colorScheme="teal">
           <TableCaption placement="top">Filling overview</TableCaption>
           <Thead>
