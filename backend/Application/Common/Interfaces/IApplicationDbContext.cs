@@ -18,6 +18,7 @@ namespace Application.Common.Interfaces
     DbSet<TruckDailyState> TruckDailyStates { get; set; }
     DbSet<TruckRefill> TruckRefills { get; set; }
     DbSet<FuelTank> FuelTanks { get; set; }
+    DbSet<Street> Streets { get; set; }
     DbSet<ExampleEntity> ExampleEntities { get; set; }
     DbSet<ExampleEntityList> ExampleEntityLists { get; set; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);

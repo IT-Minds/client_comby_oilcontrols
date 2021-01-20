@@ -819,6 +819,66 @@ export class RefillClient extends ClientBase implements IRefillClient {
     }
 }
 
+export interface IStreetClient {
+    get(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfStreetDto>;
+}
+
+export class StreetClient extends ClientBase implements IStreetClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(configuration: AuthClient, baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super(configuration);
+        this.http = http ? http : <any>window;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    get(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfStreetDto> {
+        let url_ = this.baseUrl + "/api/Street?";
+        if (needle !== undefined && needle !== null)
+            url_ += "needle=" + encodeURIComponent("" + needle) + "&";
+        if (size === null)
+            throw new Error("The parameter 'size' cannot be null.");
+        else if (size !== undefined)
+            url_ += "size=" + encodeURIComponent("" + size) + "&";
+        if (skip !== undefined && skip !== null)
+            url_ += "skip=" + encodeURIComponent("" + skip) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processGet(_response);
+        });
+    }
+
+    protected processGet(response: Response): Promise<PageResultOfStreetDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PageResultOfStreetDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<PageResultOfStreetDto>(<any>null);
+    }
+}
+
 export interface ITruckClient {
     getTruck(id?: number | undefined): Promise<TruckInfoDto>;
 }
@@ -1635,6 +1695,106 @@ export interface IOrderRefillCommand {
     expectedDeliveryDate?: Date;
     locationId?: number;
     routeId?: number;
+}
+
+export class PageResultOfStreetDto implements IPageResultOfStreetDto {
+    newNeedle?: string | undefined;
+    pagesRemaining?: number;
+    results?: StreetDto[] | undefined;
+    hasMore?: boolean;
+
+    constructor(data?: IPageResultOfStreetDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.newNeedle = _data["newNeedle"];
+            this.pagesRemaining = _data["pagesRemaining"];
+            if (Array.isArray(_data["results"])) {
+                this.results = [] as any;
+                for (let item of _data["results"])
+                    this.results!.push(StreetDto.fromJS(item));
+            }
+            this.hasMore = _data["hasMore"];
+        }
+    }
+
+    static fromJS(data: any): PageResultOfStreetDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PageResultOfStreetDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["newNeedle"] = this.newNeedle;
+        data["pagesRemaining"] = this.pagesRemaining;
+        if (Array.isArray(this.results)) {
+            data["results"] = [];
+            for (let item of this.results)
+                data["results"].push(item.toJSON());
+        }
+        data["hasMore"] = this.hasMore;
+        return data; 
+    }
+}
+
+export interface IPageResultOfStreetDto {
+    newNeedle?: string | undefined;
+    pagesRemaining?: number;
+    results?: StreetDto[] | undefined;
+    hasMore?: boolean;
+}
+
+export class StreetDto implements IStreetDto {
+    id?: number;
+    name?: string | undefined;
+    regionId?: number;
+
+    constructor(data?: IStreetDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.regionId = _data["regionId"];
+        }
+    }
+
+    static fromJS(data: any): StreetDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new StreetDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["regionId"] = this.regionId;
+        return data; 
+    }
+}
+
+export interface IStreetDto {
+    id?: number;
+    name?: string | undefined;
+    regionId?: number;
 }
 
 export class TruckInfoDto implements ITruckInfoDto {
