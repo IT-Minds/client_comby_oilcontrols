@@ -52,6 +52,20 @@ export const table: Locale = {
     }
   },
 
+  truckMetaData: {
+    startNumber: "Start number",
+    carNumber: "Car number",
+    carName: "Car name",
+    description: "Description",
+    tankSize: "Tank size",
+    formError: {
+      carNumber: "Please enter a car number",
+      carName: "Please specify a car name",
+      description: "Please specify a description",
+      tankSize: "Please specify a tank size"
+    }
+  },
+
   dailyTemperature: {
     selectRegion: "Select region",
     temperature: "Temperature",

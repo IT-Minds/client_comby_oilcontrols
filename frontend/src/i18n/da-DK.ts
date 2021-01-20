@@ -52,6 +52,20 @@ export const table: Locale = {
     }
   },
 
+  truckMetaData: {
+    startNumber: "Startudleveringsnummer",
+    carNumber: "Bilnummer",
+    carName: "Bilnavn",
+    description: "Beskrivelse",
+    tankSize: "Tankstørrelse",
+    formError: {
+      carNumber: "Indtast bilnummer",
+      carName: "Indtast bilnavn",
+      description: "Indtast en beskrivelse",
+      tankSize: "Indtast tankstørrelse"
+    }
+  },
+
   dailyTemperature: {
     selectRegion: "Vælg region",
     temperature: "Temperatur",
