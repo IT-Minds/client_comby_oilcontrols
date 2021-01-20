@@ -820,7 +820,7 @@ export class RefillClient extends ClientBase implements IRefillClient {
 }
 
 export interface IStreetClient {
-    get(needle?: string | null | undefined, size?: number | undefined, sortBy?: string | null | undefined, skip?: number | null | undefined): Promise<PageResultOfStreetDto>;
+    get(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfStreetDto>;
 }
 
 export class StreetClient extends ClientBase implements IStreetClient {
@@ -834,7 +834,7 @@ export class StreetClient extends ClientBase implements IStreetClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    get(needle?: string | null | undefined, size?: number | undefined, sortBy?: string | null | undefined, skip?: number | null | undefined): Promise<PageResultOfStreetDto> {
+    get(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfStreetDto> {
         let url_ = this.baseUrl + "/api/Street?";
         if (needle !== undefined && needle !== null)
             url_ += "needle=" + encodeURIComponent("" + needle) + "&";
@@ -842,8 +842,6 @@ export class StreetClient extends ClientBase implements IStreetClient {
             throw new Error("The parameter 'size' cannot be null.");
         else if (size !== undefined)
             url_ += "size=" + encodeURIComponent("" + size) + "&";
-        if (sortBy !== undefined && sortBy !== null)
-            url_ += "sortBy=" + encodeURIComponent("" + sortBy) + "&";
         if (skip !== undefined && skip !== null)
             url_ += "skip=" + encodeURIComponent("" + skip) + "&";
         url_ = url_.replace(/[?&]$/, "");

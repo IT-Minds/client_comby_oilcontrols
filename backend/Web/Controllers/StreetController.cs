@@ -15,29 +15,15 @@ namespace Web.Controllers
   {
     [HttpGet]
     public async Task<ActionResult<PageResult<StreetDto>>> Get(
-     [FromQuery] string needle, [FromQuery] int size, [FromQuery] string sortBy, [FromQuery] int? skip = 0
-   )
+     [FromQuery] string needle, [FromQuery] int size, [FromQuery] int? skip = 0
+    )
     {
-      try
+      return await Mediator.Send(new GetStreetsQuery
       {
-        switch (sortBy)
-        {
-          case "name":
-            return await Mediator.Send(new GetStreetsQuery
-            {
-              Needle = needle,
-              Size = size,
-              Skip = skip
-            });
-
-          default:
-            return BadRequest("Pagination SortBy now know.");
-        }
-      }
-      catch (ValidationException e)
-      {
-        return BadRequest(e.Errors);
-      }
+        Needle = needle,
+        Size = size,
+        Skip = skip
+      });
     }
   }
 }
