@@ -18,7 +18,6 @@ namespace Application.Locations.Commands.UpdateLocationMetaData
     public int TankNumber { get; set; }
     public double TankCapacity { get; set; }
     public double MinimumFuelAmount { get; set; }
-    //TODO Estiamte consumption isn't currently in the data model, but this is also a calculated property right?
     public double EstimateConsumption { get; set; }
 
     public class UpdateLocationMetaDataCommandHandler : IRequestHandler<UpdateLocationMetaDataCommand, int>
@@ -49,6 +48,7 @@ namespace Application.Locations.Commands.UpdateLocationMetaData
         location.Address = request.Address;
         location.Comments = request.Comment;
         location.Schedule = request.Refillschedule;
+        location.EstimateFuelConsumption = request.EstimateConsumption;
 
         var tank = location.FuelTank;
         tank.Type = request.TankType;

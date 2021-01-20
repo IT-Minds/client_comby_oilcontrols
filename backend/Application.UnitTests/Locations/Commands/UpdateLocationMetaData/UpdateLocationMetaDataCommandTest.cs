@@ -42,6 +42,7 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
       entity.FuelTank.TankNumber.Should().Be(command.TankNumber);
       entity.FuelTank.TankCapacity.Should().Be(command.TankCapacity);
       entity.FuelTank.MinimumFuelAmount.Should().Be(command.MinimumFuelAmount);
+      entity.EstimateFuelConsumption.Should().Be(command.EstimateConsumption);
     }
 
     [Fact]
