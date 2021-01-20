@@ -29,7 +29,7 @@ const InvalidateCouponBtn: FC<Props> = ({ coupon }) => {
     setLoading(true);
     onClose();
     const client = await genCouponsClient();
-    const status = await client.invalidateCoupon(coupon.couponNumber);
+    await client.invalidateCoupon(coupon.couponNumber);
 
     setLoading(false);
   }, []);

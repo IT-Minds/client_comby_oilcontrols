@@ -1,4 +1,3 @@
-using Application.Common;
 using Application.Common.Interfaces.Pagination;
 using Application.Coupons.Commands.AssignCoupons;
 using Application.Coupons.Commands.UpdateCouponStatus;
@@ -37,7 +36,8 @@ namespace Web.Controllers
     [HttpPut("{couponNumber}/invalidate")]
     public async Task<ActionResult<int>> InvalidateCoupon([FromRoute] int couponNumber)
     {
-      return await Mediator.Send(new UpdateCouponStatusCommand{
+      return await Mediator.Send(new UpdateCouponStatusCommand
+      {
         CouponNumber = couponNumber
       });
     }

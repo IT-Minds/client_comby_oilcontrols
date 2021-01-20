@@ -1,0 +1,10 @@
+.comboBox {
+  position: relative;
+}
+
+.comboBox > :nth-child(2) {
+  position: absolute;
+  transform: none;
+  inset: unset;
+  max-width: unset;
+}
