@@ -1,11 +1,6 @@
 using Application.Common.Interfaces.Pagination;
-using Application.ExampleEntities.Queries.GetExampleEntities.PageCreatedAt;
-using Application.ExampleEntities.Queries.GetExampleEntities.PageName;
-using Application.ExampleEntities.Queries.GetExampleEntities.PageUpdatedAt;
 using Application.Streets.Queries.GetStreets;
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 
@@ -14,8 +9,9 @@ namespace Web.Controllers
   public class StreetController : ApiControllerBase
   {
     [HttpGet]
+    [ResponseCache(Duration = 604800)]
     public async Task<ActionResult<PageResult<StreetDto>>> Get(
-     [FromQuery] string needle, [FromQuery] int size, [FromQuery] int? skip = 0
+     [FromQuery] string needle, [FromQuery] int size = 1000, [FromQuery] int? skip = 0
     )
     {
       return await Mediator.Send(new GetStreetsQuery

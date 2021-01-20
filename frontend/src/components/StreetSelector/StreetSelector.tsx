@@ -16,7 +16,10 @@ const StreetSelector: FC<Props> = ({ cb }) => {
     "NOT_USED",
     (needle, size, _sortBy, skip) =>
       genStreetClient().then(client => client.get(needle, size, skip)),
-    dispatchStreets
+    dispatchStreets,
+    {
+      pageSize: 1000
+    }
   );
 
   return (
