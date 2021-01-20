@@ -12,7 +12,7 @@ namespace Application.UnitTests.EntityExtentions.LocationExtensions
     [Fact]
     public async Task Handle_CalculateFuelConsumption()
     {
-      var location = await Context.Locations.Include(x => x.Refills).FirstOrDefaultAsync(x => x.Id == 5);
+      var location = await Context.Locations.Include(x => x.Refills).FirstOrDefaultAsync(x => x.Id == 6);
       var fuelConsumption = location.FuelConsumptionPerDegreeOfHeating();
 
       fuelConsumption.Should().Be(800.0 / 315.0);
@@ -21,7 +21,7 @@ namespace Application.UnitTests.EntityExtentions.LocationExtensions
     [Fact]
     public async Task Handle_NoRefillsForLocation()
     {
-      var location = await Context.Locations.Include(x => x.Refills).FirstOrDefaultAsync(x => x.Id == 6);
+      var location = await Context.Locations.Include(x => x.Refills).FirstOrDefaultAsync(x => x.Id == 7);
 
       Assert.Throws<ArgumentException>(
         () => { var fuelConsumption = location.FuelConsumptionPerDegreeOfHeating(); }
@@ -31,7 +31,7 @@ namespace Application.UnitTests.EntityExtentions.LocationExtensions
     [Fact]
     public async Task Handle_NoTemperatureForLocation()
     {
-      var location = await Context.Locations.Include(x => x.Refills).FirstOrDefaultAsync(x => x.Id == 7);
+      var location = await Context.Locations.Include(x => x.Refills).FirstOrDefaultAsync(x => x.Id == 8);
 
       Assert.Throws<ArgumentException>(
         () => { var fuelConsumption = location.FuelConsumptionPerDegreeOfHeating(); }
