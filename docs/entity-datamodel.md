@@ -17,6 +17,7 @@ class Location {
   address
   comment
   refillSchedule
+  estimateFuelConsumption
 }
 
 class FuelTank {
