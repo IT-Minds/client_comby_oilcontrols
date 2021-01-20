@@ -112,7 +112,18 @@ namespace Application.UnitTests
         new RegionDailyTemp { Id = 7, RegionId = 1, Date = new DateTime(1996, 1, 1), Temperature = -30 },
         new RegionDailyTemp { Id = 8, RegionId = 1, Date = new DateTime(1997, 1, 1), Temperature = 20 },
         new RegionDailyTemp { Id = 9, RegionId = 1, Date = new DateTime(1998, 1, 1), Temperature = -15 }
+      );
 
+      context.Streets.AddRange(
+        new Street { Id = 1, Name = "A_Street", RegionId = 1 },
+        new Street { Id = 2, Name = "Aa_Street", RegionId = 1 },
+        new Street { Id = 3, Name = "Aaa_Street", RegionId = 1 },
+        new Street { Id = 4, Name = "b_Street", RegionId = 1 },
+        new Street { Id = 5, Name = "ba_Street", RegionId = 2 },
+        new Street { Id = 6, Name = "ca_Street", RegionId = 2 },
+        new Street { Id = 7, Name = "cb_Street", RegionId = 3 },
+        new Street { Id = 8, Name = "re_Street", RegionId = 3 },
+        new Street { Id = 9, Name = "st_Street", RegionId = 5 }
       );
       context.SaveChanges();
     }
