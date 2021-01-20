@@ -38,6 +38,7 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions =
   const { t } = useI18n<Locale>();
 
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
+  const [date, setDate] = useState<Date>(null);
 
   const updateLocalForm = useCallback((value: unknown, key: keyof AddDailyTemperatureForm) => {
     setLocalAddDailyTemperatureForm(form => {
@@ -49,6 +50,7 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions =
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
       logger.debug("Submitting form AddDailyTemperatureComp");
+      localAddDailyTemperatureForm.date = date;
       submitCallback(localAddDailyTemperatureForm);
       setFormSubmitAttempts(0);
       event.preventDefault();
@@ -82,11 +84,10 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions =
           <FormControl isRequired>
             <FormLabel>{t("dailyTemperature.selectDate")}:</FormLabel>
             <DatePicker
-              selectedDate={localAddDailyTemperatureForm.date}
-              onChange={date => updateLocalForm(date, "date")}
+              selectedDate={date}
+              onChange={date => setDate(date)}
               showPopperArrow={false}
             />
-            {localAddDailyTemperatureForm.date?.toDateString() ?? ""}
           </FormControl>
           <FormControl
             isRequired
