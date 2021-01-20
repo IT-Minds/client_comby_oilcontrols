@@ -4,12 +4,16 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
+  Input,
+  NumberInput,
+  NumberInputField,
   Select,
   VStack
 } from "@chakra-ui/react";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
 import DropdownType from "types/DropdownType";
+import { formatInputNumber, parseInputToNumber } from "utils/formatNumber";
 import { logger } from "utils/logger";
 
 import { AddDailyTemperatureForm } from "./AddDailyTemperatureForm";
@@ -69,6 +73,29 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions =
               ))}
             </Select>
             <FormErrorMessage>Please select a region</FormErrorMessage>
+          </FormControl>
+
+          <FormControl>Insert date-picker here</FormControl>
+
+          <FormControl isRequired>
+            <NumberInput
+              defaultValue={0}
+              placeholder="From"
+              onChange={value => {
+                updateLocalForm(parseInputToNumber(formatInputNumber(value)), "temperature");
+              }}>
+              <NumberInputField />
+            </NumberInput>
+
+            {/* <Input
+              placeholder="Degrees"
+              type="number"
+              onChange={e =>
+                updateLocalForm(
+                  parseInputToNumber(formatInputNumber(e.target.value)),
+                  "temperature"
+                )
+              }></Input> */}
           </FormControl>
 
           <Button
