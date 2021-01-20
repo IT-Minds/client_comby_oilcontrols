@@ -19,26 +19,43 @@ namespace Application.Trucks.Queries
     {
       profile.CreateMap<Truck, TruckInfoDto>()
         .ForMember(dest => dest.MorningQuantity,
-          map => map.MapFrom(from => from.DailyStates
+          map =>
+          {
+            map.MapFrom(from => from.DailyStates
             .Where(x => x.TruckId == from.Id)
             .OrderByDescending(x => x.Date)
             .FirstOrDefault()
-            .MorningQuantity
-            ))
+            .MorningQuantity);
+          })
         .ForMember(dest => dest.EveningQuantity,
-          map => map.MapFrom(from => from.DailyStates
+          map =>
+          {
+            map.MapFrom(from => from.DailyStates
             .Where(x => x.TruckId == from.Id)
             .OrderByDescending(x => x.Date)
             .FirstOrDefault()
-            .EveningQuantity
-            ))
-        .ForMember(dest => dest.TruckRefills,
-          map => map.MapFrom(from => from.DailyStates
+            .EveningQuantity);
+          })
+        .ForMember(dest => dest.Date,
+          map =>
+          {
+            map.MapFrom(from => from.DailyStates
             .Where(x => x.TruckId == from.Id)
             .OrderByDescending(x => x.Date)
             .FirstOrDefault()
-            .TruckRefills
-            ));
+            .Date);
+          })
+       .ForMember(dest => dest.TruckRefills,
+         map =>
+         {
+           map.MapFrom(from =>
+           from.DailyStates
+           .Where(x => x.TruckId == from.Id)
+           .OrderByDescending(x => x.Date)
+           .FirstOrDefault()
+           .TruckRefills
+           );
+         });
     }
   }
 }
