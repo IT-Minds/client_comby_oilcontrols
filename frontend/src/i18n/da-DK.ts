@@ -40,7 +40,8 @@ export const table: Locale = {
   actions: {
     cancel: "Annuller",
     delete: "Slet",
-    invalidate: "Ugyldiggøre"
+    invalidate: "Ugyldiggøre",
+    submit: "Send"
   },
 
   coupons: {
@@ -48,6 +49,15 @@ export const table: Locale = {
       invalidate: "Marker kupon ugyldig",
       confirm:
         "Er du sikker på, at du vil ugyldiggøre kuponen '{{coupon}}', denne handling kan ikke fortrydes?"
+    }
+  },
+
+  dailyTemperature: {
+    selectRegion: "Vælg region",
+    temperature: "Temperatur",
+    formErrors: {
+      selectRegion: "Vælg en temperatur",
+      inputTemperature: "Indtast en temperatur"
     }
   }
 };

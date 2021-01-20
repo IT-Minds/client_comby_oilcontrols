@@ -45,12 +45,22 @@ export interface Locale {
     delete: string;
     cancel: string;
     invalidate: string;
+    submit: string;
   };
 
   coupons: {
     invalidate: {
       invalidate: string;
       confirm: string;
+    };
+  };
+
+  dailyTemperature: {
+    selectRegion: string;
+    temperature: string;
+    formErrors: {
+      selectRegion: string;
+      inputTemperature: string;
     };
   };
 }

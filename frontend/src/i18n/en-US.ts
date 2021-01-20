@@ -40,7 +40,8 @@ export const table: Locale = {
   actions: {
     cancel: "Cancel",
     delete: "Delete",
-    invalidate: "Invalidate"
+    invalidate: "Invalidate",
+    submit: "Submit"
   },
 
   coupons: {
@@ -48,6 +49,15 @@ export const table: Locale = {
       invalidate: "Invalidate Coupon",
       confirm:
         "Are you sure you want to invalidate coupon '{{coupon}}', this action can't be undone?"
+    }
+  },
+
+  dailyTemperature: {
+    selectRegion: "Select region",
+    temperature: "Temperature",
+    formErrors: {
+      selectRegion: "Please select a region",
+      inputTemperature: "Please enter a temperature"
     }
   }
 };

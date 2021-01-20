@@ -10,6 +10,8 @@ import {
   Select,
   VStack
 } from "@chakra-ui/react";
+import { Locale } from "i18n/Locale";
+import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
 import DropdownType from "types/DropdownType";
@@ -32,6 +34,8 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions =
     regionId: "",
     temperature: null
   });
+
+  const { t } = useI18n<Locale>();
 
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
 
@@ -62,9 +66,9 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions =
               regions.every(r => localAddDailyTemperatureForm.regionId !== r.id)
             }
             isRequired>
-            <FormLabel>Select region:</FormLabel>
+            <FormLabel>{t("dailyTemperature.selectRegion")}:</FormLabel>
             <Select
-              placeholder="Select region"
+              placeholder={t("dailyTemperature.selectRegion")}
               onChange={e => updateLocalForm(e.target.value, "regionId")}>
               {regions.map(car => (
                 <option key={car.id} value={car.id}>
@@ -72,15 +76,16 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions =
                 </option>
               ))}
             </Select>
-            <FormErrorMessage>Please select a region</FormErrorMessage>
+            <FormErrorMessage>{t("dailyTemperature.formErrors.selectRegion")}</FormErrorMessage>
           </FormControl>
 
           <FormControl>Insert date-picker here</FormControl>
 
-          <FormControl isRequired>
+          <FormControl
+            isRequired
+            isInvalid={formSubmitAttempts > 0 && !localAddDailyTemperatureForm.temperature}>
+            <FormLabel>{t("dailyTemperature.temperature")}:</FormLabel>
             <NumberInput
-              defaultValue={0}
-              placeholder="From"
               onChange={value => {
                 updateLocalForm(parseInputToNumber(formatInputNumber(value)), "temperature");
               }}>
@@ -96,6 +101,7 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions =
                   "temperature"
                 )
               }></Input> */}
+            <FormErrorMessage>{t("dailyTemperature.formErrors.inputTemperature")}</FormErrorMessage>
           </FormControl>
 
           <Button
@@ -103,7 +109,7 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions =
             type="submit"
             rightIcon={<MdCheck />}
             onClick={() => setFormSubmitAttempts(x => x + 1)}>
-            Submit
+            {t("actions.submit")}
           </Button>
         </VStack>
       </form>
