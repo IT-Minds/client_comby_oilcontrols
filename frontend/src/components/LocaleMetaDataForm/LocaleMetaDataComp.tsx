@@ -21,6 +21,18 @@ type Props = {
 };
 
 const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
+  const [localForm, setLocalForm] = useState<IUpdateLocationMetaDataCommand>({
+    address: "",
+    comment: "",
+    estimateConsumption: null,
+    locationId: null,
+    minimumFuelAmount: null,
+    refillschedule: null,
+    tankCapacity: null,
+    tankNumber: null,
+    tankType: null
+  });
+
   const [address, setAddress] = useState(null);
   const [city, setCity] = useState(null);
   const [comment, setComment] = useState(null);
@@ -36,10 +48,10 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
 
   const updateLocalForm = useCallback(
     (value: unknown, key: keyof IUpdateLocationMetaDataCommand) => {
-      // setLocalReportForm(form => {
-      //   (form[key] as unknown) = value;
-      //   return form;
-      // });
+      setLocalForm(form => {
+        (form[key] as unknown) = value;
+        return form;
+      });
     },
     []
   );
@@ -47,7 +59,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
   const handleSubmit = useCallback((event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     logger.debug("Submitting form ReportingComp");
-    submitCallback(null); // TODO
+    submitCallback(localForm);
     setFormSubmitAttempts(0);
   }, []);
 
@@ -60,15 +72,17 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
             <NumberInput
               placeholder="Location Id"
               onChange={value => {
-                setLocationId(parseInt(value));
+                updateLocalForm(parseInt(value), "locationId");
               }}
-              value={locationId ?? ""}>
+              value={localForm.locationId ?? ""}>
               <NumberInputField />
             </NumberInput>
           </FormControl>
 
           <FormControl>
-            <Select placeholder="Location Type" onChange={e => setTankType(e.target.value)}>
+            <Select
+              placeholder="Location Type"
+              onChange={e => updateLocalForm(e.target.value, "tankType")}>
               <option value={TankType.BUILDING}>Building</option>
               <option value={TankType.SHIP}>Ship</option>
               <option value={TankType.TANK}>Tank</option>
@@ -76,9 +90,8 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
             <Input
               placeholder="Tank Number"
               onChange={e => {
-                setTankNumber(parseInt(e.target.value));
+                updateLocalForm(parseInt(e.target.value), "tankNumber");
               }}
-              value={locationId ?? ""}
             />
           </FormControl>
 
@@ -87,9 +100,8 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
             <Input
               placeholder="Address"
               onChange={e => {
-                setAddress(e.target.value);
+                updateLocalForm(e.target.value, "address");
               }}
-              value={address ?? ""}
             />
 
             <FormLabel>City/Zip code: </FormLabel>
@@ -103,7 +115,9 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
           </FormControl>
 
           <FormControl>
-            <Select placeholder="Refill Schedule" onChange={e => setRefillSchedule(e.target.value)}>
+            <Select
+              placeholder="Refill Schedule"
+              onChange={e => updateLocalForm(e.target.value, "refillschedule")}>
               <option value={RefillSchedule.AUTOMAIC}>Automatic</option>
               <option value={RefillSchedule.INTERVAL}>Interval</option>
               <option value={RefillSchedule.MANUAL}>Manual</option>
@@ -115,9 +129,8 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
             <NumberInput
               placeholder="Tank capacity."
               onChange={value => {
-                setTankcapacity(parseInt(value));
-              }}
-              value={tankcapacity ?? ""}>
+                updateLocalForm(parseInt(value), "tankCapacity");
+              }}>
               <NumberInputField />
             </NumberInput>
           </FormControl>
@@ -127,9 +140,8 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
             <NumberInput
               placeholder="Min. fuel amount"
               onChange={value => {
-                setMinFuelAmount(parseInt(value));
-              }}
-              value={minFuelAmount ?? ""}>
+                updateLocalForm(parseInt(value), "minimumFuelAmount");
+              }}>
               <NumberInputField />
             </NumberInput>
           </FormControl>
@@ -139,9 +151,8 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
             <NumberInput
               placeholder="Est. fuel consumption"
               onChange={value => {
-                setDailyEstFuelConsumption(parseInt(value));
-              }}
-              value={dailyEstFuelConsumption ?? ""}>
+                updateLocalForm(parseInt(value), "estimateConsumption");
+              }}>
               <NumberInputField />
             </NumberInput>
           </FormControl>
@@ -152,9 +163,8 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
               <Input
                 placeholder="Comment"
                 onChange={e => {
-                  setComment(e.target.value);
+                  updateLocalForm(e.target.value, "comment");
                 }}
-                value={comment ?? ""}
               />
             </VStack>
           </FormControl>
