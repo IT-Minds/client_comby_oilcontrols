@@ -12,10 +12,6 @@ namespace Domain.Entities
     public FuelType Type { get; set; }
     public double StartAmount { get; set; }
     public double EndAmount { get; set; }
-
-    public double AmountDelivered { 
-      get => EndAmount-StartAmount;
-    }
     public TankState TankState { get; set; }
     public DateTime ExpectedDeliveryDate { get; set; }
     public DateTime ActualDeliveryDate { get; set; }
