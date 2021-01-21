@@ -28,11 +28,7 @@ const DemoPage: NextPage = () => {
       <Box padding="4" bg={bg} maxW="6xl" maxH="4xl" resize="both" overflow="auto">
         <OrederRefillComp
           submitCallback={x => setOrderRefillForm(x)}
-          locations={[
-            { name: "Location 1", id: "1" },
-            { name: "Location 2", id: "2" },
-            { name: "Location 3", id: "3" }
-          ]}></OrederRefillComp>
+          location={"1"}></OrederRefillComp>
       </Box>
     </Container>
   );
