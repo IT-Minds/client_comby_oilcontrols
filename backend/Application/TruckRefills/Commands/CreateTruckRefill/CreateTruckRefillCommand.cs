@@ -38,7 +38,7 @@ namespace Application.TruckRefills.Commands.CreateTruckRefill
         }
 
         var dailyState = truck.DailyStates.FirstOrDefault(x => x.Date.DayOfYear == request.TimeStamp.DayOfYear && x.Date.Year == request.TimeStamp.Year);
-        if (truck == null)
+        if (dailyState == null)
         {
           throw new NotFoundException(nameof(dailyState), "For truck with id: " + request.TruckId + " on date: " + request.TimeStamp);
         }
@@ -50,6 +50,7 @@ namespace Application.TruckRefills.Commands.CreateTruckRefill
           FuelType = request.FuelType,
           TruckDailyStateId = dailyState.Id
         };
+        _context.TruckRefills.Add(truckRefill);
         await _context.SaveChangesAsync(cancellationToken);
         return truckRefill.Id;
       }
