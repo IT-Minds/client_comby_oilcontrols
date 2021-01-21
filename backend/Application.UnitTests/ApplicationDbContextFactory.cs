@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Moq;
 using System;
+using System.Collections.Generic;
 
 namespace Application.UnitTests
 {
@@ -114,6 +115,45 @@ namespace Application.UnitTests
         new RegionDailyTemp { Id = 9, RegionId = 1, Date = new DateTime(1998, 1, 1), Temperature = -15 }
 
       );
+
+      //START: Test data for the truck evening fuel amount entity extension.
+      var refill100 = new Refill { Id = 100, CouponId = 100, Type = FuelType.GASOLINE, StartAmount = 100, EndAmount = 300, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 1, 1), ActualDeliveryDate = new DateTime(2020, 1, 1, 9, 0, 0), LocationId = 100 };
+      var refill101 = new Refill { Id = 101, CouponId = 101, Type = FuelType.GASOLINE, StartAmount = 200, EndAmount = 300, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 1, 1), ActualDeliveryDate = new DateTime(2020, 1, 1, 10, 0, 0), LocationId = 100 };
+      var refill102 = new Refill { Id = 102, CouponId = 102, Type = FuelType.GASOLINE, StartAmount = 200, EndAmount = 300, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 1, 1), ActualDeliveryDate = new DateTime(2020, 1, 2, 10, 0, 0), LocationId = 100 };
+
+      context.FuelTanks.Add(
+        new FuelTank { Id = 100, Type = TankType.BUILDING, TankNumber = 1001, TankCapacity = 300, MinimumFuelAmount = 0 }
+      );
+      context.Locations.Add(
+        new Location { Id = 100, RegionId = 1, FuelTankId = 100, Address = "Very Nice 23.", Comments = "Very Nice 24." }
+      );
+      context.Routes.Add(
+       new Route { Id = 100, Refills = new List<Refill> { refill100, refill101 } }
+      );
+      context.Trucks.Add(
+        new Truck { Id = 100, RouteId = 100 }
+      );
+      context.Coupons.AddRange(
+        new Coupon { Id = 100, CouponNumber = 100, TruckId = 100 },
+        new Coupon { Id = 101, CouponNumber = 101, TruckId = 100 },
+        new Coupon { Id = 102, CouponNumber = 102, TruckId = 100 },
+        new Coupon { Id = 103, CouponNumber = 103, TruckId = 100 }
+      );
+      context.TruckDailyStates.AddRange(
+        new TruckDailyState { Id = 100, Date = new DateTime(2020, 1, 1), MorningQuantity = 0, TruckId = 100 },
+        new TruckDailyState { Id = 101, Date = new DateTime(2020, 1, 2), MorningQuantity = 0, TruckId = 100 },
+        new TruckDailyState { Id = 102, Date = new DateTime(2020, 1, 3), MorningQuantity = 0, TruckId = 100 },
+        new TruckDailyState { Id = 103, Date = new DateTime(2020, 1, 5), MorningQuantity = 1000, TruckId = 100 }
+      );
+      context.TruckRefills.AddRange(
+        new TruckRefill { Id = 100, TimeStamp = new DateTime(2020, 1, 1, 8, 0, 0), Amount = 1000, FuelCardNumber = 1234567890, TruckDailyStateId = 100, FuelType = FuelType.GASOLINE },
+        new TruckRefill { Id = 101, TimeStamp = new DateTime(2020, 1, 2, 8, 0, 0), Amount = 1000, FuelCardNumber = 1234567890, TruckDailyStateId = 101, FuelType = FuelType.GASOLINE },
+        new TruckRefill { Id = 102, TimeStamp = new DateTime(2020, 1, 2, 15, 0, 0), Amount = 1000, FuelCardNumber = 1234567890, TruckDailyStateId = 101, FuelType = FuelType.OIL },
+        new TruckRefill { Id = 103, TimeStamp = new DateTime(2020, 1, 3, 8, 0, 0), Amount = 1000, FuelCardNumber = 1234567890, TruckDailyStateId = 102, FuelType = FuelType.GASOLINE },
+        new TruckRefill { Id = 104, TimeStamp = new DateTime(2020, 1, 3, 15, 0, 0), Amount = 1000, FuelCardNumber = 1234567890, TruckDailyStateId = 102, FuelType = FuelType.OIL },
+        new TruckRefill { Id = 105, TimeStamp = new DateTime(2020, 1, 3, 17, 0, 0), Amount = 500, FuelCardNumber = 1234567890, TruckDailyStateId = 102, FuelType = FuelType.GASOLINE }
+      );
+      //END
       context.SaveChanges();
     }
 
