@@ -13,15 +13,15 @@ import { Locale } from "i18n/Locale";
 import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
+import { ICreateDailyTemperatureCommand } from "services/backend/nswagts";
 import DropdownType from "types/DropdownType";
 import { formatInputNumber, parseInputToNumber } from "utils/formatNumber";
 import { logger } from "utils/logger";
 
-import { AddDailyTemperatureForm } from "./AddDailyTemperatureForm";
 import DatePicker from "./date-picker";
 
 type Props = {
-  submitCallback: (addCouponForm: AddDailyTemperatureForm) => void;
+  submitCallback: (addCouponForm: ICreateDailyTemperatureCommand) => void;
   regions: DropdownType[];
 };
 
@@ -29,23 +29,26 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions =
   const [
     localAddDailyTemperatureForm,
     setLocalAddDailyTemperatureForm
-  ] = useState<AddDailyTemperatureForm>({
+  ] = useState<ICreateDailyTemperatureCommand>({
     date: null,
-    regionId: "",
+    regionId: null,
     temperature: null
   });
 
   const { t } = useI18n<Locale>();
 
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
-  const [date, setDate] = useState<Date>(null);
+  const [date, setDate] = useState<Date>(new Date());
 
-  const updateLocalForm = useCallback((value: unknown, key: keyof AddDailyTemperatureForm) => {
-    setLocalAddDailyTemperatureForm(form => {
-      (form[key] as unknown) = value;
-      return form;
-    });
-  }, []);
+  const updateLocalForm = useCallback(
+    (value: unknown, key: keyof ICreateDailyTemperatureCommand) => {
+      setLocalAddDailyTemperatureForm(form => {
+        (form[key] as unknown) = value;
+        return form;
+      });
+    },
+    []
+  );
 
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
@@ -65,7 +68,7 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions =
           <FormControl
             isInvalid={
               formSubmitAttempts > 0 &&
-              regions.every(r => localAddDailyTemperatureForm.regionId !== r.id)
+              regions.every(r => localAddDailyTemperatureForm.regionId !== parseFloat(r.id))
             }
             isRequired>
             <FormLabel>{t("dailyTemperature.selectRegion")}:</FormLabel>
