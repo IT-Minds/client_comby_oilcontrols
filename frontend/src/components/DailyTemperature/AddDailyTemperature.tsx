@@ -4,8 +4,7 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  NumberInput,
-  NumberInputField,
+  Input,
   Select,
   VStack
 } from "@chakra-ui/react";
@@ -96,22 +95,16 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions =
             isRequired
             isInvalid={formSubmitAttempts > 0 && !localAddDailyTemperatureForm.temperature}>
             <FormLabel>{t("dailyTemperature.temperature")}:</FormLabel>
-            <NumberInput
-              onChange={value => {
-                updateLocalForm(parseInputToNumber(formatInputNumber(value)), "temperature");
-              }}>
-              <NumberInputField />
-            </NumberInput>
-
-            {/* <Input
+            <Input
               placeholder="Degrees"
               type="number"
+              step={0.01}
               onChange={e =>
                 updateLocalForm(
                   parseInputToNumber(formatInputNumber(e.target.value)),
                   "temperature"
                 )
-              }></Input> */}
+              }></Input>
             <FormErrorMessage>{t("dailyTemperature.formErrors.inputTemperature")}</FormErrorMessage>
           </FormControl>
 
