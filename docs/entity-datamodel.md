@@ -14,6 +14,10 @@ class Route {
 
 class Location {
   id
+}
+
+class LocationMetaData {
+  id
   address
   comment
   refillSchedule
@@ -109,8 +113,9 @@ TruckDailyState --> "0..*" TruckRefill
 TruckRefill ..> FuelType
 Region --> "0..*" Street
 
-Location --> "1" FuelTank
-Location ..> RefillSchedule
+LocationMetaData "1..*" -- "1" FuelTank
+LocationMetaData ..> RefillSchedule
+Location "1" -- "1..*" LocationMetaData
 @enduml
 
 ```
