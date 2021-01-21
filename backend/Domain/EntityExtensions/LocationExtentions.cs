@@ -34,13 +34,13 @@ namespace Domain.EntityExtensions
         throw new ArgumentException("No past refills for location: " + location.Id);
       }
 
-      var endDate = pastRefills.First().ActualDeliveryDate;
-      var startDate = pastRefills.Last().ActualDeliveryDate;
+      var endDate = (DateTime)pastRefills.First().ActualDeliveryDate;
+      var startDate = (DateTime)pastRefills.Last().ActualDeliveryDate;
 
       var heatIndex = location.HeatingIndex(startDate, endDate);
-      var fuelConsumed = pastRefills.Where(x => x.ActualDeliveryDate > startDate).Sum(x => x.AmountDelivered);
+      var fuelConsumed = pastRefills.Where(x => x.ActualDeliveryDate > startDate).Sum(x => x.AmountDelivered() ?? 0 );
 
-      return (fuelConsumed ??  0) / heatIndex;
+      return fuelConsumed / heatIndex;
     }
 
 
@@ -77,27 +77,6 @@ namespace Domain.EntityExtensions
         count++;
       }
       while (fuelAmount > location.FuelTank.MinimumFuelAmount && count < maxDays);
-
-      return currentDate.AddDays(-1);
-    }
-    public static DateTime PredictDayReachingMinimumFuelLevel(this Location location)
-    {
-      double limit = location.FuelTank.MinimumFuelAmount;
-      var sortedRefills = location.Refills.OrderBy(x => x.ActualDeliveryDate);
-      var newestRefill = sortedRefills.Last();
-      var refillDate = newestRefill.ActualDeliveryDate;
-      var fuelAmount = newestRefill.EndAmount;
-      var fuelConsumption = location.FuelConsumptionPerDegreeOfHeating();
-
-      var currentDate = refillDate;
-      do
-      {
-        currentDate = currentDate.AddDays(1);
-        var heatdegree = location.Region.DailyTemperatureEstimate(currentDate);
-        var fuelConsumed = heatdegree * fuelConsumption;
-        fuelAmount = fuelAmount - fuelConsumed;
-      }
-      while (fuelAmount > location.FuelTank.MinimumFuelAmount);
 
       return currentDate.AddDays(-1);
     }
