@@ -35,15 +35,6 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
 
   const [address, setAddress] = useState(null);
   const [city, setCity] = useState(null);
-  const [comment, setComment] = useState(null);
-  //TODO: Not actually used yet.
-  const [dailyEstFuelConsumption, setDailyEstFuelConsumption] = useState(null);
-  const [locationId, setLocationId] = useState(null);
-  const [tankType, setTankType] = useState(null);
-  const [tankNumber, setTankNumber] = useState(null);
-  const [minFuelAmount, setMinFuelAmount] = useState(null);
-  const [refillSchedule, setRefillSchedule] = useState(null);
-  const [tankcapacity, setTankcapacity] = useState(null);
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
 
   const updateLocalForm = useCallback(
@@ -59,6 +50,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
   const handleSubmit = useCallback((event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     logger.debug("Submitting form ReportingComp");
+    localForm.address = address + city;
     submitCallback(localForm);
     setFormSubmitAttempts(0);
   }, []);
@@ -67,19 +59,19 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
     <Container>
       <form onSubmit={handleSubmit}>
         <VStack spacing={2}>
-          <FormControl>
-            <FormLabel>Location ID: </FormLabel>
+          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.locationId}>
+            <FormLabel>Location ID:</FormLabel>
             <NumberInput
               placeholder="Location Id"
               onChange={value => {
                 updateLocalForm(parseInt(value), "locationId");
-              }}
-              value={localForm.locationId ?? ""}>
+              }}>
               <NumberInputField />
             </NumberInput>
           </FormControl>
 
-          <FormControl>
+          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.tankType}>
+            <FormLabel>Location Type:</FormLabel>
             <Select
               placeholder="Location Type"
               onChange={e => updateLocalForm(e.target.value, "tankType")}>
@@ -87,6 +79,10 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
               <option value={TankType.SHIP}>Ship</option>
               <option value={TankType.TANK}>Tank</option>
             </Select>
+          </FormControl>
+
+          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.tankNumber}>
+            <FormLabel>Tank Number:</FormLabel>
             <Input
               placeholder="Tank Number"
               onChange={e => {
@@ -95,18 +91,20 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
             />
           </FormControl>
 
-          <FormControl>
-            <FormLabel>Address: </FormLabel>
+          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !address}>
+            <FormLabel>Address:</FormLabel>
             <Input
               placeholder="Address"
               onChange={e => {
-                updateLocalForm(e.target.value, "address");
+                setAddress(e.target.value);
               }}
             />
+          </FormControl>
 
-            <FormLabel>City/Zip code: </FormLabel>
+          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !city}>
+            <FormLabel>City/Zip code:</FormLabel>
             <Input
-              placeholder="city/zip code"
+              placeholder="City/zip code"
               onChange={e => {
                 setCity(e.target.value);
               }}
@@ -114,7 +112,8 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
             />
           </FormControl>
 
-          <FormControl>
+          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.refillschedule}>
+            <FormLabel>Refill Schedule:</FormLabel>
             <Select
               placeholder="Refill Schedule"
               onChange={e => updateLocalForm(e.target.value, "refillschedule")}>
@@ -124,8 +123,8 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
             </Select>
           </FormControl>
 
-          <FormControl>
-            <FormLabel>Tank Capacity: </FormLabel>
+          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.tankCapacity}>
+            <FormLabel>Tank Capacity:</FormLabel>
             <NumberInput
               placeholder="Tank capacity."
               onChange={value => {
@@ -135,7 +134,9 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
             </NumberInput>
           </FormControl>
 
-          <FormControl>
+          <FormControl
+            isRequired
+            isInvalid={formSubmitAttempts > 0 && !localForm.minimumFuelAmount}>
             <FormLabel>Minimum Fuel Amount: </FormLabel>
             <NumberInput
               placeholder="Min. fuel amount"
@@ -146,7 +147,9 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
             </NumberInput>
           </FormControl>
 
-          <FormControl>
+          <FormControl
+            isRequired
+            isInvalid={formSubmitAttempts > 0 && !localForm.estimateConsumption}>
             <FormLabel>Daily Fuel Consumption Estimate: </FormLabel>
             <NumberInput
               placeholder="Est. fuel consumption"
@@ -157,7 +160,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
             </NumberInput>
           </FormControl>
 
-          <FormControl>
+          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.comment}>
             <VStack>
               <FormLabel>Comments</FormLabel>
               <Input
@@ -183,7 +186,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
             colorScheme="green"
             type="submit"
             rightIcon={<MdCheck />}
-            onClick={() => logger.debug("LocaleMetaDataFrom submit button.")}>
+            onClick={() => setFormSubmitAttempts(x => x + 1)}>
             Submit
           </Button>
         </VStack>
