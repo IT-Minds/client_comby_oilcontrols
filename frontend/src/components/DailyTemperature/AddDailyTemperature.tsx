@@ -17,7 +17,7 @@ import DropdownType from "types/DropdownType";
 import { formatInputNumber, parseInputToNumber } from "utils/formatNumber";
 import { logger } from "utils/logger";
 
-import DatePicker from "./date-picker";
+import DatePicker from "../DatePicker/DatePicker";
 
 type Props = {
   submitCallback: (addCouponForm: ICreateDailyTemperatureCommand) => void;
