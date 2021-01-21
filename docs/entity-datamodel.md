@@ -23,6 +23,7 @@ class Location {
   comment
   refillSchedule
   daysBetweenRefills
+  estimateFuelConsumption
 }
 
 class FuelTank {
