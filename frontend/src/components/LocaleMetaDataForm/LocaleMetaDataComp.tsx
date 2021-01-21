@@ -13,13 +13,14 @@ import {
 } from "@chakra-ui/react";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
-import { genLocationClient } from "services/backend/apiClients";
-import { RefillSchedule, TankType, UpdateLocationMetaDataCommand } from "services/backend/nswagts";
+import { IUpdateLocationMetaDataCommand, RefillSchedule, TankType } from "services/backend/nswagts";
 import { logger } from "utils/logger";
 
-type Props = Record<string, never>;
+type Props = {
+  submitCallback: (reportForm: IUpdateLocationMetaDataCommand) => void;
+};
 
-const LocaleMetaDataForm: FC<Props> = () => {
+const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
   const [address, setAddress] = useState(null);
   const [city, setCity] = useState(null);
   const [comment, setComment] = useState(null);
@@ -31,22 +32,23 @@ const LocaleMetaDataForm: FC<Props> = () => {
   const [minFuelAmount, setMinFuelAmount] = useState(null);
   const [refillSchedule, setRefillSchedule] = useState(null);
   const [tankcapacity, setTankcapacity] = useState(null);
+  const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
 
-  const handleSubmit = useCallback(async (event: FormEvent<HTMLFormElement>) => {
-    const client = await genLocationClient();
-    const returnId = await client.updateMetaData(
-      new UpdateLocationMetaDataCommand({
-        address: address + city,
-        comment: comment,
-        estimateConsumption: dailyEstFuelConsumption,
-        locationId: locationId,
-        refillschedule: refillSchedule,
-        tankType: tankType,
-        tankNumber: tankNumber,
-        tankCapacity: tankcapacity,
-        minimumFuelAmount: minFuelAmount
-      })
-    );
+  const updateLocalForm = useCallback(
+    (value: unknown, key: keyof IUpdateLocationMetaDataCommand) => {
+      // setLocalReportForm(form => {
+      //   (form[key] as unknown) = value;
+      //   return form;
+      // });
+    },
+    []
+  );
+
+  const handleSubmit = useCallback((event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    logger.debug("Submitting form ReportingComp");
+    submitCallback(null); // TODO
+    setFormSubmitAttempts(0);
   }, []);
 
   return (
@@ -180,4 +182,4 @@ const LocaleMetaDataForm: FC<Props> = () => {
   );
 };
 
-export default LocaleMetaDataForm;
+export default LocaleMetaDataComp;
