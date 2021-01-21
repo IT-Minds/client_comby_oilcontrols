@@ -14,17 +14,17 @@ import {
 import { Locale } from "i18n/Locale";
 import { useI18n } from "next-rosetta";
 import React, { FC, useCallback, useRef, useState } from "react";
+import { IOrderRefillCommand } from "services/backend/nswagts";
 import { logger } from "utils/logger";
 
 import DatePicker from "./date-picker";
-import { OrderRefill } from "./OrderRefillForm";
 
 type Props = {
-  submitCallback: (orderRefillForm: OrderRefill) => void;
-  location: string;
+  submitCallback: (orderRefillForm: IOrderRefillCommand) => void;
+  locationId: number;
 };
 
-const OrderRefillComp: FC<Props> = ({ submitCallback, location }) => {
+const OrderRefillComp: FC<Props> = ({ submitCallback, locationId }) => {
   const cancelRef = useRef();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -35,9 +35,9 @@ const OrderRefillComp: FC<Props> = ({ submitCallback, location }) => {
   const postOrderRefill = useCallback(() => {
     logger.debug("Submitting form OrderRefillComp");
     submitCallback({
-      locationId: location,
+      locationId,
       expectedDeliveryDate: refillDate,
-      routeId: "0"
+      routeId: 0
     });
     onClose();
   }, [refillDate]);
