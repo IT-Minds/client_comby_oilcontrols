@@ -6,6 +6,11 @@
 @startuml
 class Truck {
   id
+  truckIdentifier
+  truckNumber
+  name
+  description
+  tankCapacity
 }
 
 class Route {
@@ -23,7 +28,7 @@ class Location {
 class FuelTank {
   type
   tankNumber
-  tankSize
+  tankCapacity
   minimumFuelAmount
 }
 
@@ -35,6 +40,7 @@ class Refill {
   actualDeliveryDate
   fuelType
   tankState
+  refillNumber
 }
 
 class Region {
@@ -52,6 +58,7 @@ class TruckDailyState {
   date
   morningQuantity
   eveningQuantity
+  startRefillNumber
 }
 
 class TruckRefill {

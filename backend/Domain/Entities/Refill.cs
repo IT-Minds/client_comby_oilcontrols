@@ -17,5 +17,6 @@ namespace Domain.Entities
     public DateTime ActualDeliveryDate { get; set; }
     public Location Location { get; set; }
     public int LocationId { get; set; }
+    public int RefillNumber { get; set; }
   }
 }
