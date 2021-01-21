@@ -1,11 +1,19 @@
 import { Box, Container, useColorModeValue, useToast } from "@chakra-ui/react";
 import { PAGE_SHOW_SIZE } from "components/Demo/Demo";
+import { LocationHistory } from "components/LocationHistory/LocationHistory";
 import LocationHistoryComp from "components/LocationHistory/LocationHistoryComp";
 import { Locale } from "i18n/Locale";
 import { GetStaticProps, NextPage } from "next";
 import { I18nProps } from "next-rosetta";
 
-const DemoPage: NextPage = () => {
+type Props = {
+  exampleEntities: LocationHistory[]; //LocationHistoryDto[];
+  needle: string;
+  hasMore: boolean;
+  pageCount: number;
+};
+
+const DemoPage: NextPage<Props> = ({ exampleEntities, needle, hasMore, pageCount }) => {
   const toast = useToast();
   const bg = useColorModeValue("gray.100", "gray.700");
 
@@ -13,11 +21,10 @@ const DemoPage: NextPage = () => {
     <Container maxW="xl" centerContent>
       <Box padding="4" bg={bg} maxW="6xl" maxH="4xl" resize="both" overflow="auto">
         <LocationHistoryComp
-          locationHistories={[
-            { name: "Location 1", locationId: 1 },
-            { name: "Location 2", locationId: 2 },
-            { name: "Location 3", locationId: 3 }
-          ]}></LocationHistoryComp>
+          preLoadedData={exampleEntities}
+          preloadDataNeedle={needle}
+          preloadLoadedAll={!hasMore}
+          preLoadedPageCount={pageCount}></LocationHistoryComp>
       </Box>
     </Container>
   );
