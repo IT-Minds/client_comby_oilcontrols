@@ -21,6 +21,7 @@ namespace Web.Filters
                 {typeof(NotFoundException), HandleNotFoundException},
                 {typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException},
                 {typeof(ForbiddenAccessException), HandleForbiddenAccessException},
+                {typeof(ArgumentException), HandleArgumentException}
             };
     }
 
@@ -137,6 +138,23 @@ namespace Web.Filters
       context.Result = new ObjectResult(details)
       {
         StatusCode = StatusCodes.Status500InternalServerError
+      };
+
+      context.ExceptionHandled = true;
+    }
+
+    private void HandleArgumentException(ExceptionContext context)
+    {
+      var details = new ProblemDetails
+      {
+        Status = StatusCodes.Status400BadRequest,
+        Title = "The server cannot or will not process the request due to an apparent client error.",
+        Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
+      };
+
+      context.Result = new ObjectResult(details)
+      {
+        StatusCode = StatusCodes.Status400BadRequest
       };
 
       context.ExceptionHandled = true;

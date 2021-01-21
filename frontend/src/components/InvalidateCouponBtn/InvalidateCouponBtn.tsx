@@ -29,7 +29,7 @@ const InvalidateCouponBtn: FC<Props> = ({ coupon }) => {
     setLoading(true);
     onClose();
     const client = await genCouponsClient();
-    const status = await client.invalidateCoupon(coupon.couponNumber);
+    await client.invalidateCoupon(coupon.couponNumber);
 
     setLoading(false);
   }, []);
@@ -52,7 +52,7 @@ const InvalidateCouponBtn: FC<Props> = ({ coupon }) => {
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose}>
+              <Button variant="outline" ref={cancelRef} onClick={onClose}>
                 {t("actions.cancel")}
               </Button>
               <Button colorScheme="red" onClick={invalidateActions} ml={3}>

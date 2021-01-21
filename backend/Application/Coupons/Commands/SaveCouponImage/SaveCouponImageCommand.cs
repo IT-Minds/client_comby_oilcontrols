@@ -8,6 +8,8 @@ using Application.Common.Options;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Common.Exceptions;
+
 namespace Application.Coupons.Commands.SaveCouponImage
 {
   public class SaveCouponImageCommand : IRequest<string>
@@ -30,28 +32,25 @@ namespace Application.Coupons.Commands.SaveCouponImage
       public async Task<string> Handle(SaveCouponImageCommand request, CancellationToken cancellationToken)
       {
         var refill = await _context.Refills.FindAsync(request.RefillId);
-        if(refill == null){
-          throw new ArgumentException("No refill with ID: "+request.RefillId);
+        if (refill == null)
+        {
+          throw new NotFoundException("No refill with ID: " + request.RefillId);
         }
 
         String imgType;
-        Regex png = new Regex(@"^image\/png$");
-        Regex webp = new Regex(@"^image\/webp$");
-
-        if(png.IsMatch(request.File.ContentType)){
-          imgType = "png";
-        }
-        else if (webp.IsMatch(request.File.ContentType)){
-          imgType = "webp";
-        } else {
+        Regex type = new Regex(@"(^image\/png$)|(^image\/webp$)");
+        if (!type.IsMatch(request.File.ContentType))
+        {
           throw new ArgumentException("Invalid content type.");
         }
 
-        var filename = request.RefillId+"."+imgType;
-        string filePath = Path.Combine(_options.Path, filename);
+        imgType = request.File.ContentType.Substring(6);
+        var filename = request.RefillId + "." + imgType;
+        string filePath = Path.Combine(_options.CouponPath, filename);
 
-        if(System.IO.File.Exists(filePath)){
-          throw new ArgumentException("Image with "+request.RefillId+" already exists.");
+        if (System.IO.File.Exists(filePath))
+        {
+          throw new ArgumentException("Image with " + request.RefillId + " already exists.");
         }
 
         using (Stream fileStream = new FileStream(filePath, FileMode.Create))

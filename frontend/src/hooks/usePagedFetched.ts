@@ -40,7 +40,7 @@ export const usePagedFetched = <T extends IPageResult<V>, V = unknown>(
       setDone(false);
       setError(false);
       try {
-        let resultSize = 100;
+        let resultSize: number;
         let pages = 0;
         let needle = initialNeedle;
         let skip = initialSkip;
