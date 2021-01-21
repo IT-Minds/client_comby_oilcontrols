@@ -80,13 +80,6 @@ namespace Application.UnitTests
         new Location { Id = 8, FuelTankId = 8, RegionId = 5 }
       );
 
-      context.Locations.AddRange(
-        new Location { Id = 1, FuelTankId = 1 },
-        new Location { Id = 2, FuelTankId = 2 },
-        new Location { Id = 3, FuelTankId = 3 },
-        new Location { Id = 4, FuelTankId = 4 }
-      );
-
       context.Coupons.AddRange(
         new Coupon { Id = 1, CouponNumber = 19991, TruckId = 43, Created = DateTimeOffset.Now },
         new Coupon { Id = 2, CouponNumber = 19992, TruckId = 43, Created = DateTimeOffset.Now },
@@ -111,8 +104,6 @@ namespace Application.UnitTests
         new Refill { Id = 9, CouponId = 9, StartAmount = 200, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1990, 5, 1), ActualDeliveryDate = new DateTime(1990, 5, 9), LocationId = 5 },
         new Refill { Id = 12, CouponId = 9, StartAmount = 200, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2000, 5, 1), ActualDeliveryDate = new DateTime(2000, 5, 9), LocationId = 7 },
          new Refill { Id = 13, CouponId = 9, StartAmount = 200, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2000, 5, 1), ActualDeliveryDate = new DateTime(2000, 5, 9), LocationId = 7 }
-
-
       );
 
       context.Regions.AddRange(
@@ -173,7 +164,6 @@ namespace Application.UnitTests
         new RegionDailyTemp { Id = 17, RegionId = 5, Date = new DateTime(1990, 5, 8), Temperature = -17 },
         new RegionDailyTemp { Id = 18, RegionId = 5, Date = new DateTime(1990, 5, 9), Temperature = -18 }
       );
-
 
       context.TruckDailyStates.AddRange(
         new TruckDailyState { Id = 1, TruckId = 43, Date = new DateTime(2020, 1, 1), MorningQuantity = 500, EveningQuantity = 1000 }
