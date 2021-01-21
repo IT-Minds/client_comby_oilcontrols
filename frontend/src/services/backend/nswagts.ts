@@ -532,6 +532,7 @@ export class HealthClient extends ClientBase implements IHealthClient {
 export interface ILocationClient {
     updateMetaData(command: UpdateLocationMetaDataCommand): Promise<number>;
     saveLocationImage(id: number, file?: FileParameter | null | undefined): Promise<string>;
+    addNewLocation(command: CreateLocationCommand): Promise<number>;
 }
 
 export class LocationClient extends ClientBase implements ILocationClient {
@@ -627,6 +628,46 @@ export class LocationClient extends ClientBase implements ILocationClient {
             });
         }
         return Promise.resolve<string>(<any>null);
+    }
+
+    addNewLocation(command: CreateLocationCommand): Promise<number> {
+        let url_ = this.baseUrl + "/api/Location";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processAddNewLocation(_response);
+        });
+    }
+
+    protected processAddNewLocation(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(<any>null);
     }
 }
 
@@ -1450,6 +1491,74 @@ export enum TankType {
     BUILDING = 0,
     SHIP = 1,
     TANK = 2,
+}
+
+export class CreateLocationCommand implements ICreateLocationCommand {
+    address?: string | undefined;
+    comment?: string | undefined;
+    regionId?: number;
+    refillschedule?: RefillSchedule;
+    tankType?: TankType;
+    tankNumber?: number;
+    tankCapacity?: number;
+    minimumFuelAmount?: number;
+    estimateConsumption?: number;
+
+    constructor(data?: ICreateLocationCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.address = _data["address"];
+            this.comment = _data["comment"];
+            this.regionId = _data["regionId"];
+            this.refillschedule = _data["refillschedule"];
+            this.tankType = _data["tankType"];
+            this.tankNumber = _data["tankNumber"];
+            this.tankCapacity = _data["tankCapacity"];
+            this.minimumFuelAmount = _data["minimumFuelAmount"];
+            this.estimateConsumption = _data["estimateConsumption"];
+        }
+    }
+
+    static fromJS(data: any): CreateLocationCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateLocationCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["address"] = this.address;
+        data["comment"] = this.comment;
+        data["regionId"] = this.regionId;
+        data["refillschedule"] = this.refillschedule;
+        data["tankType"] = this.tankType;
+        data["tankNumber"] = this.tankNumber;
+        data["tankCapacity"] = this.tankCapacity;
+        data["minimumFuelAmount"] = this.minimumFuelAmount;
+        data["estimateConsumption"] = this.estimateConsumption;
+        return data; 
+    }
+}
+
+export interface ICreateLocationCommand {
+    address?: string | undefined;
+    comment?: string | undefined;
+    regionId?: number;
+    refillschedule?: RefillSchedule;
+    tankType?: TankType;
+    tankNumber?: number;
+    tankCapacity?: number;
+    minimumFuelAmount?: number;
+    estimateConsumption?: number;
 }
 
 export class CreateRefillCommand implements ICreateRefillCommand {

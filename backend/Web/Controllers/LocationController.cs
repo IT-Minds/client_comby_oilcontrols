@@ -1,4 +1,5 @@
-using Application.Locations.Commands.AddLocationImageCommand;
+using Application.Locations.Commands.AddLocationImage;
+using Application.Locations.Commands.CreateLocation;
 using Application.Locations.Commands.UpdateLocationMetaData;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,11 @@ namespace Web.Controllers
         Picture = file,
         LocationId = id
       });
+    }
+    [HttpPost]
+    public async Task<ActionResult<int>> AddNewLocation(CreateLocationCommand command)
+    {
+      return await Mediator.Send(command);
     }
   }
 }
