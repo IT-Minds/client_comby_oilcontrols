@@ -6,7 +6,7 @@
 @startuml
 class Truck {
   id
-  truckNumber
+  truckIdentifier
   name
   description
   tankCapacity
