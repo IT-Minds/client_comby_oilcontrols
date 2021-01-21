@@ -75,9 +75,9 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions =
             <Select
               placeholder={t("dailyTemperature.selectRegion")}
               onChange={e => updateLocalForm(e.target.value, "regionId")}>
-              {regions.map(car => (
-                <option key={car.id} value={car.id}>
-                  {car.name}
+              {regions.map(region => (
+                <option key={region.id} value={region.id}>
+                  {region.name}
                 </option>
               ))}
             </Select>
