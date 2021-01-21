@@ -7,6 +7,20 @@ namespace Domain.EntityExtensions
   {
     const int HEAT_BASE = 21;
 
+    public static double HeatingIndex(this Location location, DateTime startDate, DateTime endDate)
+    {
+      const int HEAT_BASE = 21;
+
+      var dailyTemps = location.Region.DailyTemperatures.Where(x => x.Date >= startDate && x.Date <= endDate);
+      if (dailyTemps == null || dailyTemps.Count() == 0)
+      {
+        throw new ArgumentException("No temperatures found for location " + location.Id + " in the period " + startDate + " " + endDate);
+      }
+
+      var heatIndex = dailyTemps.Sum(x => HEAT_BASE - x.Temperature);
+      return heatIndex;
+    }
+
     public static double FuelConsumptionPerDegreeOfHeating(this Location location)
     {
       if (location.Refills == null)
@@ -23,16 +37,10 @@ namespace Domain.EntityExtensions
       var endDate = pastRefills.First().ActualDeliveryDate;
       var startDate = pastRefills.Last().ActualDeliveryDate;
 
-      var dailyTemps = location.Region.DailyTemperatures.Where(x => x.Date >= startDate && x.Date <= endDate);
-      if (dailyTemps == null || dailyTemps.Count() == 0)
-      {
-        throw new ArgumentException("No temperatures found for location " + location.Id + " in the period " + startDate + " " + endDate);
-      }
+      var heatIndex = location.HeatingIndex(startDate, endDate);
+      var fuelConsumed = pastRefills.Where(x => x.ActualDeliveryDate > startDate).Sum(x => x.AmountDelivered);
 
-      var heatingDegree = dailyTemps.Sum(x => HEAT_BASE - x.Temperature);
-      var fuelConsumed = pastRefills.Where(x => x.ActualDeliveryDate > startDate).Sum(x => x.AmountDelivered());
-
-      return (fuelConsumed ??  0) / heatingDegree;
+      return (fuelConsumed ??  0) / heatIndex;
     }
 
 
