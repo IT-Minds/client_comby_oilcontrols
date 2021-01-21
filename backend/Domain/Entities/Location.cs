@@ -17,5 +17,6 @@ namespace Domain.Entities
     public ICollection<Refill> Refills { get; set; }
     //Used with the interval schedule type.
     public int DaysBetweenRefills { get; set; }
+    public double EstimateFuelConsumption { get; set; }
   }
 }
