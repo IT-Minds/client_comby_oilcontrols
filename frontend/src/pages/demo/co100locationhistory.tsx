@@ -1,4 +1,5 @@
 import { Box, Container, useColorModeValue, useToast } from "@chakra-ui/react";
+import { PAGE_SHOW_SIZE } from "components/Demo/Demo";
 import LocationHistoryComp from "components/LocationHistory/LocationHistoryComp";
 import { Locale } from "i18n/Locale";
 import { GetStaticProps, NextPage } from "next";
@@ -26,6 +27,19 @@ export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context =
   const locale = context.locale || context.defaultLocale;
 
   const { table = {} } = await import(`../../i18n/${locale}`);
+
+  //TODO - WAITING FOR BACKEND
+  // const data = await getHistoryLocationClient().then(client =>
+  //   client.get("0", PAGE_SHOW_SIZE, "createdAt").catch(() => {
+  //     return new PageResultOfLocationHistoryDto({
+  //       hasMore: true,
+  //       newNeedle: "0",
+  //       pagesRemaining: 1,
+  //       results: []
+  //     });
+  //   })
+  // );
+
   return { props: { table } };
 };
 
