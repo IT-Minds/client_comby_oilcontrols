@@ -31,7 +31,7 @@ namespace Domain.EntityExtensions
       }
 
       var heatingDegree = dailyTemps.Sum(x => HEAT_BASE - x.Temperature);
-      var fuelConsumed = pastRefills.Where(x => x.ActualDeliveryDate > startDate).Sum(x => x.AmountDelivered);
+      var fuelConsumed = pastRefills.Where(x => x.ActualDeliveryDate > startDate).Sum(x => x.AmountDelivered());
 
       return fuelConsumed / heatingDegree;
     }
