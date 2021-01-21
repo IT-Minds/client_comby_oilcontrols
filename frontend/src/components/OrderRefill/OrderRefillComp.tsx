@@ -44,7 +44,9 @@ const OrderRefillComp: FC<Props> = ({ submitCallback, locationId }) => {
 
   return (
     <Container>
-      <Button onClick={onOpen}>Order refill</Button>
+      <Button colorScheme="green" onClick={onOpen}>
+        Order refill
+      </Button>
 
       <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose} isCentered>
         <AlertDialogOverlay>
