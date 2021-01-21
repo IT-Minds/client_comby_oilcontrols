@@ -11,13 +11,12 @@ import {
   Container,
   useDisclosure
 } from "@chakra-ui/react";
+import DatePicker from "components/DatePicker/DatePicker";
 import { Locale } from "i18n/Locale";
 import { useI18n } from "next-rosetta";
 import React, { FC, useCallback, useRef, useState } from "react";
 import { IOrderRefillCommand } from "services/backend/nswagts";
 import { logger } from "utils/logger";
-
-import DatePicker from "./date-picker";
 
 type Props = {
   submitCallback: (orderRefillForm: IOrderRefillCommand) => void;
