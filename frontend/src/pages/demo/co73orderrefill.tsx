@@ -1,34 +1,47 @@
 import { Box, Container, useColorModeValue, useToast } from "@chakra-ui/react";
 import OrederRefillComp from "components/OrderRefill/OrderRefillComp";
-import { OrderRefillForm } from "components/OrderRefill/OrderRefillForm";
+import { useOffline } from "hooks/useOffline";
 import { Locale } from "i18n/Locale";
 import { GetStaticProps, NextPage } from "next";
 import { I18nProps } from "next-rosetta";
-import { useEffect, useState } from "react";
+import { useCallback } from "react";
+import { genRefillClient } from "services/backend/apiClients";
+import { IOrderRefillCommand, OrderRefillCommand } from "services/backend/nswagts";
 
 const DemoPage: NextPage = () => {
-  const [orderRefillForm, setOrderRefillForm] = useState<OrderRefillForm>(null);
   const toast = useToast();
+  const { awaitCallback } = useOffline();
   const bg = useColorModeValue("gray.100", "gray.700");
 
-  useEffect(() => {
-    if (orderRefillForm) {
-      toast({
-        title: "Refill ordered",
-        description: JSON.stringify(orderRefillForm),
-        status: "success",
-        duration: 9000,
-        isClosable: true
-      });
-    }
-  }, [orderRefillForm]);
+  const postOrderRefill = useCallback(
+    async (orderRefill: IOrderRefillCommand) => {
+      awaitCallback(async () => {
+        const client = await genRefillClient();
+        await client.orderRefill(
+          new OrderRefillCommand({
+            expectedDeliveryDate: orderRefill.expectedDeliveryDate,
+            locationId: orderRefill.locationId
+          })
+        );
+
+        toast({
+          title: "Refill Ordered",
+          description: "Successful",
+          status: "success",
+          duration: 9000,
+          isClosable: true
+        });
+      }, Date.now().toString());
+    },
+    [awaitCallback]
+  );
 
   return (
     <Container maxW="xl" centerContent>
       <Box padding="4" bg={bg} maxW="6xl" maxH="4xl" resize="both" overflow="auto">
         <OrederRefillComp
-          submitCallback={x => setOrderRefillForm(x)}
-          location={"1"}></OrederRefillComp>
+          submitCallback={x => postOrderRefill(x)}
+          locationId={0}></OrederRefillComp>
       </Box>
     </Container>
   );
