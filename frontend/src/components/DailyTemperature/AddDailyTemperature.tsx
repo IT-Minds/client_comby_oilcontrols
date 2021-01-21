@@ -67,13 +67,13 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions =
           <FormControl
             isInvalid={
               formSubmitAttempts > 0 &&
-              regions.every(r => localAddDailyTemperatureForm.regionId !== parseFloat(r.id))
+              regions.every(r => localAddDailyTemperatureForm.regionId !== parseInputToNumber(r.id))
             }
             isRequired>
             <FormLabel>{t("dailyTemperature.selectRegion")}:</FormLabel>
             <Select
               placeholder={t("dailyTemperature.selectRegion")}
-              onChange={e => updateLocalForm(e.target.value, "regionId")}>
+              onChange={e => updateLocalForm(parseInputToNumber(e.target.value), "regionId")}>
               {regions.map(region => (
                 <option key={region.id} value={region.id}>
                   {region.name}
