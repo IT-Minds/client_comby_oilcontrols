@@ -1,5 +1,5 @@
-export interface OrderRefillForm {
+export interface OrderRefill {
   locationId: string;
-  expectedDeliveryDate: number;
+  expectedDeliveryDate: Date;
   routeId: string;
 }
