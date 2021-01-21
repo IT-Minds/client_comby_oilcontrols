@@ -4,7 +4,7 @@ import { Locale } from "i18n/Locale";
 import { GetStaticProps, NextPage } from "next";
 import { I18nProps } from "next-rosetta";
 import { genRefillClient } from "services/backend/apiClients";
-import { PageResultOfRefillDto, RefillDto } from "services/backend/nswagts";
+import { PageResultOfRefillDto, RefillDto, TankType } from "services/backend/nswagts";
 
 type Props = {
   refillEntities: RefillDto[];
@@ -18,12 +18,13 @@ const DemoPage: NextPage<Props> = ({ refillEntities, needle, hasMore, pageCount 
 
   return (
     <Container maxW="100%" maxH="100%" centerContent>
-      <Box padding="4" bg={bg} maxW="6xl" maxH="4xl" resize="both" overflow="auto">
+      <Box padding="4" bg={bg} maxW="6xl" maxH="4xl" w="3xl" resize="both" overflow="auto">
         <FillingOverviewComp
           preLoadedData={refillEntities}
           preloadDataNeedle={needle}
           preloadLoadedAll={!hasMore}
-          preLoadedPageCount={pageCount}></FillingOverviewComp>
+          preLoadedPageCount={pageCount}
+        />
       </Box>
     </Container>
   );
@@ -40,7 +41,26 @@ export const getStaticProps: GetStaticProps<Props & I18nProps<Locale>> = async c
         hasMore: true,
         newNeedle: "0",
         pagesRemaining: 1,
-        results: []
+        results: [
+          new RefillDto({
+            couponId: 3,
+            actualDeliveryDate: new Date("2021-02-05"),
+            id: 1,
+            locationType: TankType.BUILDING,
+            truckId: 5,
+            startAmount: 2,
+            endAmount: 100
+          }),
+          new RefillDto({
+            couponId: 4,
+            actualDeliveryDate: new Date("2021-02-06"),
+            id: 2,
+            locationType: TankType.SHIP,
+            truckId: 5,
+            startAmount: 20,
+            endAmount: 150
+          })
+        ]
       });
     })
   );

@@ -1,6 +1,6 @@
 import { IconButton, IconButtonProps, useColorMode } from "@chakra-ui/react";
 import { FC } from "react";
-import { IoMdMoon, IoMdSunny } from "react-icons/io";
+import { MdBrightnessHigh, MdBrightnessLow } from "react-icons/md";
 
 const ColorModeToggle: FC<Partial<IconButtonProps>> = ({ ...rest }) => {
   const { toggleColorMode, colorMode } = useColorMode();
@@ -11,7 +11,7 @@ const ColorModeToggle: FC<Partial<IconButtonProps>> = ({ ...rest }) => {
       onClick={toggleColorMode}
       aria-label="Change color mode"
       {...rest}
-      icon={colorMode === "light" ? <IoMdMoon /> : <IoMdSunny />}
+      icon={colorMode === "light" ? <MdBrightnessLow /> : <MdBrightnessHigh />}
     />
   );
 };

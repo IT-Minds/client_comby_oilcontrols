@@ -2,8 +2,6 @@ import { Table, TableCaption, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
 import { FC } from "react";
 import { CouponInterval } from "types/CouponInterval";
 
-import styles from "./styles.module.css";
-
 type Props = {
   car: string;
   coupons: CouponInterval[];

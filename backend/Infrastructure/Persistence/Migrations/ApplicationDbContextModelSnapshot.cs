@@ -187,12 +187,17 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("ModifiedCount")
                         .HasColumnType("int");
 
+                    b.Property<int>("RegionId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Schedule")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("FuelTankId");
+
+                    b.HasIndex("RegionId");
 
                     b.ToTable("Locations");
                 });
@@ -377,14 +382,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("RegionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RegiondId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("RegionId");
 
-                    b.ToTable("Street");
+                    b.ToTable("Streets");
                 });
 
             modelBuilder.Entity("Domain.Entities.Truck", b =>
@@ -526,18 +528,19 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Location", b =>
                 {
-                    b.HasOne("Domain.Entities.Region", "Region")
-                        .WithMany("Locations")
-                        .HasForeignKey("RegionId");
-
-                    b.Navigation("Region");
                     b.HasOne("Domain.Entities.FuelTank", "FuelTank")
                         .WithMany()
                         .HasForeignKey("FuelTankId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.Region", "Region")
+                        .WithMany("Locations")
+                        .HasForeignKey("RegionId");
+
                     b.Navigation("FuelTank");
+
+                    b.Navigation("Region");
                 });
 
             modelBuilder.Entity("Domain.Entities.Refill", b =>
@@ -549,7 +552,7 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Location", "Location")
-                        .WithMany()
+                        .WithMany("Refills")
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -619,6 +622,11 @@ namespace Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Domain.Entities.ExampleEntityList", b =>
                 {
                     b.Navigation("ExampleEntities");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Location", b =>
+                {
+                    b.Navigation("Refills");
                 });
 
             modelBuilder.Entity("Domain.Entities.Region", b =>
