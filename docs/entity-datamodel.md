@@ -17,6 +17,7 @@ class Location {
   address
   comment
   refillSchedule
+  daysBetweenRefills
 }
 
 class LocationHistory {

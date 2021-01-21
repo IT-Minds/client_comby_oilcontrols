@@ -16,5 +16,7 @@ namespace Domain.Entities
     public string Comments { get; set; }
     public ICollection<Refill> Refills { get; set; }
     public ICollection<LocationHistory> LocationHistories { get; set; }
+    //Used with the interval schedule type.
+    public int DaysBetweenRefills { get; set; }
   }
 }
