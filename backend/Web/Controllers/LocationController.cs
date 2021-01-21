@@ -1,4 +1,4 @@
-using Application.Locations.Commands.AddLocationImageCommand;
+using Application.Locations.Commands.AddLocationImage;
 using Application.Locations.Commands.UpdateLocationMetaData;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
