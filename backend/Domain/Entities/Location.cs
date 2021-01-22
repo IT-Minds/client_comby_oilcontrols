@@ -15,5 +15,8 @@ namespace Domain.Entities
     public string Address { get; set; }
     public string Comments { get; set; }
     public ICollection<Refill> Refills { get; set; }
+    //Used with the interval schedule type.
+    public int DaysBetweenRefills { get; set; }
+    public double EstimateFuelConsumption { get; set; }
   }
 }

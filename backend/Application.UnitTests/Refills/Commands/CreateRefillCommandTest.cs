@@ -1,4 +1,3 @@
-using Domain.Enums;
 using FluentAssertions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,7 +19,7 @@ namespace Application.UnitTests.Refills.Commands.CreateRefill
         EndAmount = 150,
         CouponNumber = 19991,
         ExpectedDeliveryDate = new DateTime(),
-        FuelType = Domain.Enums.FuelType.PETROLEUM,
+        FuelType = Domain.Enums.FuelType.GASOLINE,
         TankState = Domain.Enums.TankState.FULL,
         TankType = Domain.Enums.TankType.BUILDING,
         TankNumber = 443
@@ -37,9 +36,9 @@ namespace Application.UnitTests.Refills.Commands.CreateRefill
       entity.EndAmount.Should().Be(command.EndAmount);
       entity.Coupon.CouponNumber.Should().Be(command.CouponNumber);
       entity.ExpectedDeliveryDate.Should().Be(command.ExpectedDeliveryDate);
-      entity.Type.Should().Be(command.FuelType);
+      // entity.Type.Should().Be(command.FuelType);
       entity.TankState.Should().Be(command.TankState);
-      entity.Location.FuelTank.Type.Should().Be(command.TankType);
+      entity.Location.FuelTank.TankType.Should().Be(command.TankType);
       entity.Location.FuelTank.TankNumber.Should().Be(command.TankNumber);
     }
 
@@ -53,7 +52,7 @@ namespace Application.UnitTests.Refills.Commands.CreateRefill
         EndAmount = 150,
         CouponNumber = 19997,
         ExpectedDeliveryDate = new DateTime(),
-        FuelType = Domain.Enums.FuelType.PETROLEUM,
+        FuelType = Domain.Enums.FuelType.GASOLINE,
         TankState = Domain.Enums.TankState.FULL,
         TankType = Domain.Enums.TankType.BUILDING,
         TankNumber = 443
@@ -76,7 +75,7 @@ namespace Application.UnitTests.Refills.Commands.CreateRefill
         EndAmount = 150,
         CouponNumber = 0,
         ExpectedDeliveryDate = new DateTime(),
-        FuelType = Domain.Enums.FuelType.PETROLEUM,
+        FuelType = Domain.Enums.FuelType.GASOLINE,
         TankState = Domain.Enums.TankState.FULL,
         TankType = Domain.Enums.TankType.BUILDING,
         TankNumber = 443

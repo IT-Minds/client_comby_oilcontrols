@@ -130,6 +130,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("FuelType")
+                        .HasColumnType("int");
+
                     b.Property<DateTimeOffset>("LastModified")
                         .HasColumnType("datetimeoffset");
 
@@ -148,7 +151,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("TankNumber")
                         .HasColumnType("int");
 
-                    b.Property<int>("Type")
+                    b.Property<int>("TankType")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -174,6 +177,12 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DaysBetweenRefills")
+                        .HasColumnType("int");
+
+                    b.Property<double>("EstimateFuelConsumption")
+                        .HasColumnType("float");
 
                     b.Property<int>("FuelTankId")
                         .HasColumnType("int");
@@ -209,7 +218,7 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<DateTime>("ActualDeliveryDate")
+                    b.Property<DateTime?>("ActualDeliveryDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("CouponId")
@@ -221,7 +230,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("EndAmount")
+                    b.Property<double?>("EndAmount")
                         .HasColumnType("float");
 
                     b.Property<DateTime>("ExpectedDeliveryDate")
@@ -239,16 +248,16 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("ModifiedCount")
                         .HasColumnType("int");
 
+                    b.Property<int>("RefillNumber")
+                        .HasColumnType("int");
+
                     b.Property<int?>("RouteId")
                         .HasColumnType("int");
 
-                    b.Property<double>("StartAmount")
+                    b.Property<double?>("StartAmount")
                         .HasColumnType("float");
 
                     b.Property<int>("TankState")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Type")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -402,6 +411,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTimeOffset>("LastModified")
                         .HasColumnType("datetimeoffset");
 
@@ -411,7 +423,19 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("ModifiedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("RouteId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("TankCapacity")
+                        .HasColumnType("float");
+
+                    b.Property<string>("TruckIdentifier")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TruckNumber")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -451,6 +475,9 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<double>("MorningQuantity")
                         .HasColumnType("float");
+
+                    b.Property<int>("StartRefillNumber")
+                        .HasColumnType("int");
 
                     b.Property<int>("TruckId")
                         .HasColumnType("int");

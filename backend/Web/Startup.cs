@@ -19,6 +19,7 @@ using Web.Filters;
 using Web.Hubs;
 using Application.Common.Options;
 using Web.Services;
+using Infrastructure.Options;
 
 namespace Web
 {
@@ -50,6 +51,7 @@ namespace Web
       });
 
       services.Configure<FileDriveOptions>(Configuration.GetSection(FileDriveOptions.FileDrive));
+      services.Configure<UniContaOptions>(Configuration.GetSection(UniContaOptions.UniConta));
 
       services.AddApplication();
       services.AddInfrastructure(Configuration, Environment);
