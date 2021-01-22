@@ -1,6 +1,5 @@
 import { Box, Container, useColorModeValue, useToast } from "@chakra-ui/react";
 import OrederRefillComp from "components/OrderRefill/OrderRefillComp";
-import { useOffline } from "hooks/useOffline";
 import { Locale } from "i18n/Locale";
 import { GetStaticProps, NextPage } from "next";
 import { I18nProps } from "next-rosetta";
@@ -10,31 +9,27 @@ import { IOrderRefillCommand, OrderRefillCommand } from "services/backend/nswagt
 
 const DemoPage: NextPage = () => {
   const toast = useToast();
-  const { awaitCallback } = useOffline();
   const bg = useColorModeValue("gray.100", "gray.700");
 
-  const postOrderRefill = useCallback(
-    async (orderRefill: IOrderRefillCommand) => {
-      awaitCallback(async () => {
-        const client = await genRefillClient();
-        await client.orderRefill(
-          new OrderRefillCommand({
-            expectedDeliveryDate: orderRefill.expectedDeliveryDate,
-            locationId: orderRefill.locationId
-          })
-        );
+  const postOrderRefill = useCallback(async (orderRefill: IOrderRefillCommand) => {
+    const client = await genRefillClient();
+    await client.orderRefill(
+      new OrderRefillCommand({
+        expectedDeliveryDate: orderRefill.expectedDeliveryDate,
+        locationId: orderRefill.locationId
+      })
+    );
 
-        toast({
-          title: "Refill Ordered",
-          description: "Successful",
-          status: "success",
-          duration: 9000,
-          isClosable: true
-        });
-      }, Date.now().toString());
-    },
-    [awaitCallback]
-  );
+    toast({
+      title: "Refill Ordered",
+      description: "Successful",
+      status: "success",
+      duration: 9000,
+      isClosable: true
+    });
+
+    Date.now().toString();
+  }, []);
 
   return (
     <Container maxW="xl" centerContent>
