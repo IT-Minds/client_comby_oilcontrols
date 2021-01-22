@@ -2,6 +2,7 @@ import {
   Button,
   Container,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   HStack,
   Input,
@@ -60,6 +61,9 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
       <form onSubmit={handleSubmit}>
         <VStack spacing={2}>
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.locationId}>
+            {
+              //TODO: translation
+            }
             <FormLabel>Location ID:</FormLabel>
             <NumberInput
               placeholder="Location Id"
@@ -68,20 +72,37 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
               }}>
               <NumberInputField />
             </NumberInput>
+            {
+              //TODO: translation
+            }
+            <FormErrorMessage>Please specify a location ID</FormErrorMessage>
           </FormControl>
 
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.tankType}>
+            {
+              //TODO: translation
+            }
             <FormLabel>Location Type:</FormLabel>
             <Select
               placeholder="Location Type"
               onChange={e => updateLocalForm(e.target.value, "tankType")}>
+              {
+                //TODO: translation
+              }
               <option value={TankType.BUILDING}>Building</option>
               <option value={TankType.SHIP}>Ship</option>
               <option value={TankType.TANK}>Tank</option>
             </Select>
+            {
+              //TODO: translation
+            }
+            <FormErrorMessage>Please select a location type</FormErrorMessage>
           </FormControl>
 
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.tankNumber}>
+            {
+              //TODO: translation
+            }
             <FormLabel>Tank Number:</FormLabel>
             <Input
               placeholder="Tank Number"
@@ -89,9 +110,16 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
                 updateLocalForm(parseInt(e.target.value), "tankNumber");
               }}
             />
+            {
+              //TODO: translation
+            }
+            <FormErrorMessage>Please enter a tank number</FormErrorMessage>
           </FormControl>
 
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !address}>
+            {
+              //TODO: translation
+            }
             <FormLabel>Address:</FormLabel>
             <Input
               placeholder="Address"
@@ -99,9 +127,16 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
                 setAddress(e.target.value);
               }}
             />
+            {
+              //TODO: translation
+            }
+            <FormErrorMessage>Please enter an address</FormErrorMessage>
           </FormControl>
 
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !city}>
+            {
+              //TODO: translation
+            }
             <FormLabel>City/Zip code:</FormLabel>
             <Input
               placeholder="City/zip code"
@@ -110,33 +145,57 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
               }}
               value={city ?? ""}
             />
+            {
+              //TODO: translation
+            }
+            <FormErrorMessage>Please enter City/Zip code</FormErrorMessage>
           </FormControl>
 
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.refillschedule}>
+            {
+              //TODO: translation
+            }
             <FormLabel>Refill Schedule:</FormLabel>
             <Select
               placeholder="Refill Schedule"
               onChange={e => updateLocalForm(e.target.value, "refillschedule")}>
+              {
+                //TODO: translation
+              }
               <option value={RefillSchedule.AUTOMAIC}>Automatic</option>
               <option value={RefillSchedule.INTERVAL}>Interval</option>
               <option value={RefillSchedule.MANUAL}>Manual</option>
             </Select>
+            {
+              //TODO: translation
+            }
+            <FormErrorMessage>Please select a refill schedule</FormErrorMessage>
           </FormControl>
 
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.tankCapacity}>
+            {
+              //TODO: translation
+            }
             <FormLabel>Tank Capacity:</FormLabel>
             <NumberInput
-              placeholder="Tank capacity."
+              placeholder="Tank capacity"
               onChange={value => {
                 updateLocalForm(parseInt(value), "tankCapacity");
               }}>
               <NumberInputField />
             </NumberInput>
+            {
+              //TODO: translation
+            }
+            <FormErrorMessage>Please enter the capacity of the tank</FormErrorMessage>
           </FormControl>
 
           <FormControl
             isRequired
             isInvalid={formSubmitAttempts > 0 && !localForm.minimumFuelAmount}>
+            {
+              //TODO: translation
+            }
             <FormLabel>Minimum Fuel Amount: </FormLabel>
             <NumberInput
               placeholder="Min. fuel amount"
@@ -145,11 +204,18 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
               }}>
               <NumberInputField />
             </NumberInput>
+            {
+              //TODO: translation
+            }
+            <FormErrorMessage>Please enter the minimum fuel amount</FormErrorMessage>
           </FormControl>
 
           <FormControl
             isRequired
             isInvalid={formSubmitAttempts > 0 && !localForm.estimateConsumption}>
+            {
+              //TODO: translation
+            }
             <FormLabel>Daily Fuel Consumption Estimate: </FormLabel>
             <NumberInput
               placeholder="Est. fuel consumption"
@@ -158,10 +224,17 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
               }}>
               <NumberInputField />
             </NumberInput>
+            {
+              //TODO: translation
+            }
+            <FormErrorMessage>Please enter the estimated fuel consumption</FormErrorMessage>
           </FormControl>
 
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.comment}>
             <VStack>
+              {
+                //TODO: translation
+              }
               <FormLabel>Comments</FormLabel>
               <Input
                 placeholder="Comment"
@@ -170,10 +243,17 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
                 }}
               />
             </VStack>
+            {
+              //TODO: translation
+            }
+            <FormErrorMessage>Please enter a comment</FormErrorMessage>
           </FormControl>
 
           <FormControl>
             <VStack>
+              {
+                //TODO: translation
+              }
               <FormLabel>Images</FormLabel>
               {
                 //TODO: Should be an upload input type.
@@ -182,6 +262,9 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
             </VStack>
           </FormControl>
 
+          {
+            //TODO: translation
+          }
           <Button
             colorScheme="green"
             type="submit"
