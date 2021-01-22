@@ -5,13 +5,17 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  InputGroup,
+  InputRightAddon,
+  InputRightElement,
   Select,
+  Stack,
   VStack
 } from "@chakra-ui/react";
 import { Locale } from "i18n/Locale";
 import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useState } from "react";
-import { MdCheck } from "react-icons/md";
+import { MdCheck, MdRotate90DegreesCcw } from "react-icons/md";
 import { ICreateDailyTemperatureCommand } from "services/backend/nswagts";
 import DropdownType from "types/DropdownType";
 import { formatInputNumber, parseInputToNumber } from "utils/formatNumber";
@@ -91,16 +95,22 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions =
             isRequired
             isInvalid={formSubmitAttempts > 0 && !localAddDailyTemperatureForm.temperature}>
             <FormLabel>{t("dailyTemperature.temperature")}:</FormLabel>
-            <Input
-              placeholder="Degrees"
-              type="number"
-              step={0.01}
-              onChange={e =>
-                updateLocalForm(
-                  parseInputToNumber(formatInputNumber(e.target.value)),
-                  "temperature"
-                )
-              }></Input>
+            <Stack spacing={4}>
+              <InputGroup size="sm">
+                <Input
+                  placeholder="Degrees"
+                  type="number"
+                  step={0.01}
+                  onChange={e =>
+                    updateLocalForm(
+                      parseInputToNumber(formatInputNumber(e.target.value)),
+                      "temperature"
+                    )
+                  }
+                />
+                <InputRightElement>°</InputRightElement>
+              </InputGroup>
+            </Stack>
             <FormErrorMessage>{t("dailyTemperature.formErrors.inputTemperature")}</FormErrorMessage>
           </FormControl>
 
