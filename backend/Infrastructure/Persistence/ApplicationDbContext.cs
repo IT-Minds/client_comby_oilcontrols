@@ -37,7 +37,6 @@ namespace Infrastructure.Persistence
     public DbSet<FuelTank> FuelTanks { get; set; }
     public DbSet<Street> Streets { get; set; }
     public DbSet<LocationHistory> LocationHistories { get; set; }
-    public DbSet<FuelTankHistory> FuelTankHistories { get; set; }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {

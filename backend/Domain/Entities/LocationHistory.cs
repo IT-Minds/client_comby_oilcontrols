@@ -9,12 +9,9 @@ namespace Domain.Entities
     public int Id { get; set; }
     public int RegionId { get; set; }
     public Region Region { get; set; }
-    public FuelTankHistory FuelTank { get; set; }
-    public int FuelTankHistoryId { get; set; }
     public RefillSchedule Schedule { get; set; }
     public string Address { get; set; }
     public string Comments { get; set; }
-    public ICollection<Refill> Refills { get; set; }
     public int LocationId { get; set; }
     public Location Location { get; set; }
   }

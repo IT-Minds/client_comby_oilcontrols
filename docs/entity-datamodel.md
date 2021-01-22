@@ -103,14 +103,6 @@ class Coupon {
   couponNumber
 }
 
-class FuelTankHistory {
-  id
-  type
-  tankNumber
-  tankSize
-  minimumFuelAmount
-}
-
 Truck --> "1" Route
 Route --> "0..*" Refill
 Refill --> "1" Location
@@ -128,10 +120,8 @@ Region --> "0..*" Street
 
 Location --> "1" FuelTank
 Location ..> RefillSchedule
-LocationHistory --> "1" FuelTankHistory
 LocationHistory ..> RefillSchedule
 Location "1" -- "1..*" LocationHistory
-FuelTankHistory ..> TankType
 @enduml
 
 ```

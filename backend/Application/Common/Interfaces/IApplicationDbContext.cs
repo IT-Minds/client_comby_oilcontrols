@@ -20,7 +20,6 @@ namespace Application.Common.Interfaces
     DbSet<FuelTank> FuelTanks { get; set; }
     DbSet<Street> Streets { get; set; }
     DbSet<LocationHistory> LocationHistories { get; set; }
-    DbSet<FuelTankHistory> FuelTankHistories { get; set; }
     DbSet<ExampleEntity> ExampleEntities { get; set; }
     DbSet<ExampleEntityList> ExampleEntityLists { get; set; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
