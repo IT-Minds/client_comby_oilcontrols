@@ -973,7 +973,7 @@ export class StreetClient extends ClientBase implements IStreetClient {
 }
 
 export interface ITruckClient {
-    getTruck(id?: number | undefined): Promise<TruckInfoDto>;
+    getTruck(truckIdentifier?: string | null | undefined): Promise<TruckInfoDto>;
     getTrucks(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfTruckInfoDto>;
 }
 
@@ -988,12 +988,10 @@ export class TruckClient extends ClientBase implements ITruckClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getTruck(id?: number | undefined): Promise<TruckInfoDto> {
+    getTruck(truckIdentifier?: string | null | undefined): Promise<TruckInfoDto> {
         let url_ = this.baseUrl + "/api/Truck?";
-        if (id === null)
-            throw new Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        if (truckIdentifier !== undefined && truckIdentifier !== null)
+            url_ += "truckIdentifier=" + encodeURIComponent("" + truckIdentifier) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{

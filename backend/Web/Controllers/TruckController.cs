@@ -10,9 +10,9 @@ namespace Web.Controllers
   public class TruckController : ApiControllerBase
   {
     [HttpGet]
-    public async Task<ActionResult<TruckInfoDto>> GetTruck([FromQuery] int id)
+    public async Task<ActionResult<TruckInfoDto>> GetTruck([FromQuery] string truckIdentifier)
     {
-      return await Mediator.Send(new GetTruckInfoQuery { TruckId = id });
+      return await Mediator.Send(new GetTruckInfoQuery { TruckIdentifier = truckIdentifier });
     }
 
     [HttpGet("page")]
