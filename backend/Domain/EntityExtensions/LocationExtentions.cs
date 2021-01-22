@@ -49,7 +49,6 @@ namespace Domain.EntityExtensions
       return fuelConsumed / heatIndex;
     }
 
-
     /// <summary>
     ///
     /// Required domain structure
@@ -69,6 +68,7 @@ namespace Domain.EntityExtensions
       var sortedRefills = location.Refills.Where(x => x.ActualDeliveryDate.HasValue).OrderBy(x => x.ActualDeliveryDate);
       var newestRefill = sortedRefills.Last();
       var refillDate = (DateTime)newestRefill.ActualDeliveryDate;
+
       var fuelAmount = newestRefill.EndAmount;
       var fuelConsumption = location.FuelConsumptionPerDegreeOfHeating();
 
