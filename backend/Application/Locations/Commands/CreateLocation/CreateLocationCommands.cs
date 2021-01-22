@@ -35,7 +35,7 @@ namespace Application.Locations.Commands.CreateLocation
       {
         var tank = new FuelTank
         {
-          Type = request.TankType,
+          TankType = request.TankType,
           TankCapacity = request.TankCapacity,
           TankNumber = request.TankNumber,
           MinimumFuelAmount = request.MinimumFuelAmount,

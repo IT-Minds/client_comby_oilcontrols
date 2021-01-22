@@ -51,7 +51,7 @@ namespace Application.Locations.Commands.UpdateLocationMetaData
         location.EstimateFuelConsumption = request.EstimateConsumption;
 
         var tank = location.FuelTank;
-        tank.Type = request.TankType;
+        tank.TankType = request.TankType;
         tank.TankNumber = request.TankNumber;
         tank.TankCapacity = request.TankCapacity;
         tank.MinimumFuelAmount = request.MinimumFuelAmount;
