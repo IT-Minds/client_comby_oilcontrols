@@ -2016,6 +2016,11 @@ export interface IStreetDto {
 
 export class TruckInfoDto implements ITruckInfoDto {
     id?: number;
+    truckIdentifier?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+    tankCapacity?: number;
+    refillNumber?: number;
 
     constructor(data?: ITruckInfoDto) {
         if (data) {
@@ -2029,6 +2034,11 @@ export class TruckInfoDto implements ITruckInfoDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.truckIdentifier = _data["truckIdentifier"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.tankCapacity = _data["tankCapacity"];
+            this.refillNumber = _data["refillNumber"];
         }
     }
 
@@ -2042,12 +2052,22 @@ export class TruckInfoDto implements ITruckInfoDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["truckIdentifier"] = this.truckIdentifier;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["tankCapacity"] = this.tankCapacity;
+        data["refillNumber"] = this.refillNumber;
         return data; 
     }
 }
 
 export interface ITruckInfoDto {
     id?: number;
+    truckIdentifier?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+    tankCapacity?: number;
+    refillNumber?: number;
 }
 
 export class CreateTruckRefillCommand implements ICreateTruckRefillCommand {

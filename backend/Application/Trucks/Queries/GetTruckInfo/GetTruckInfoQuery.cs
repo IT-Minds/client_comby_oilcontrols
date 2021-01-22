@@ -14,6 +14,7 @@ namespace Application.Trucks.Queries.GetTruckInfo
   public class GetTruckInfoQuery : IRequest<TruckInfoDto>
   {
     public int TruckId { get; set; }
+
     public class GetTruckInfoQueryHandler : IRequestHandler<GetTruckInfoQuery, TruckInfoDto>
     {
       private readonly IApplicationDbContext _context;
