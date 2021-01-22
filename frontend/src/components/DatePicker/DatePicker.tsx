@@ -1,5 +1,4 @@
 import "react-datepicker/dist/react-datepicker.css";
-import "./DatePicker.module.css";
 
 import React, { FC } from "react";
 import ReactDatePicker from "react-datepicker";
