@@ -1,7 +1,7 @@
 import "react-datepicker/dist/react-datepicker.css";
 
 import React, { FC } from "react";
-import ReactDatePicker from "react-datepicker";
+import ReactDatePicker, { ReactDatePickerProps } from "react-datepicker";
 
 interface Props {
   isClearable?: boolean;
@@ -10,7 +10,7 @@ interface Props {
   showPopperArrow?: boolean;
 }
 
-const DatePicker: FC<Props> = ({
+const DatePicker: FC<Props & Partial<ReactDatePickerProps>> = ({
   selectedDate,
   onChange,
   isClearable = false,
