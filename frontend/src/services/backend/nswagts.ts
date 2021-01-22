@@ -974,7 +974,7 @@ export class StreetClient extends ClientBase implements IStreetClient {
 
 export interface ITruckClient {
     getTruck(id?: number | undefined): Promise<TruckInfoDto>;
-    updateTruck(command: UpdateTruckCommand): Promise<number>;
+    updateTruck(command: UpdateTruckCommand): Promise<string>;
 }
 
 export class TruckClient extends ClientBase implements ITruckClient {
@@ -1028,7 +1028,7 @@ export class TruckClient extends ClientBase implements ITruckClient {
         return Promise.resolve<TruckInfoDto>(<any>null);
     }
 
-    updateTruck(command: UpdateTruckCommand): Promise<number> {
+    updateTruck(command: UpdateTruckCommand): Promise<string> {
         let url_ = this.baseUrl + "/api/Truck";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1050,7 +1050,7 @@ export class TruckClient extends ClientBase implements ITruckClient {
         });
     }
 
-    protected processUpdateTruck(response: Response): Promise<number> {
+    protected processUpdateTruck(response: Response): Promise<string> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -1065,7 +1065,7 @@ export class TruckClient extends ClientBase implements ITruckClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<number>(<any>null);
+        return Promise.resolve<string>(<any>null);
     }
 }
 
@@ -2092,8 +2092,8 @@ export interface ITruckInfoDto {
 }
 
 export class UpdateTruckCommand implements IUpdateTruckCommand {
-    id?: number;
     truckIdentifier?: string | undefined;
+    newTruckIdentifier?: string | undefined;
     description?: string | undefined;
     tankCapacity?: number;
     startRefillNumber?: number;
@@ -2110,8 +2110,8 @@ export class UpdateTruckCommand implements IUpdateTruckCommand {
 
     init(_data?: any) {
         if (_data) {
-            this.id = _data["id"];
             this.truckIdentifier = _data["truckIdentifier"];
+            this.newTruckIdentifier = _data["newTruckIdentifier"];
             this.description = _data["description"];
             this.tankCapacity = _data["tankCapacity"];
             this.startRefillNumber = _data["startRefillNumber"];
@@ -2128,8 +2128,8 @@ export class UpdateTruckCommand implements IUpdateTruckCommand {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
         data["truckIdentifier"] = this.truckIdentifier;
+        data["newTruckIdentifier"] = this.newTruckIdentifier;
         data["description"] = this.description;
         data["tankCapacity"] = this.tankCapacity;
         data["startRefillNumber"] = this.startRefillNumber;
@@ -2139,8 +2139,8 @@ export class UpdateTruckCommand implements IUpdateTruckCommand {
 }
 
 export interface IUpdateTruckCommand {
-    id?: number;
     truckIdentifier?: string | undefined;
+    newTruckIdentifier?: string | undefined;
     description?: string | undefined;
     tankCapacity?: number;
     startRefillNumber?: number;

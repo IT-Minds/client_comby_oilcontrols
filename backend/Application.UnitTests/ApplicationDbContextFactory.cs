@@ -168,7 +168,7 @@ namespace Application.UnitTests
       var refill102 = new Refill { Id = 102, CouponId = 102, StartAmount = 200, EndAmount = 300, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 1, 1), ActualDeliveryDate = new DateTime(2020, 1, 2, 10, 0, 0), LocationId = 100 };
 
       context.FuelTanks.Add(
-        new FuelTank { Id = 100, TankType = TankType.BUILDING, FuelType= FuelType.GASOLINE, TankNumber = 1001, TankCapacity = 300, MinimumFuelAmount = 0 }
+        new FuelTank { Id = 100, TankType = TankType.BUILDING, FuelType = FuelType.GASOLINE, TankNumber = 1001, TankCapacity = 300, MinimumFuelAmount = 0 }
       );
       context.Locations.Add(
         new Location { Id = 100, RegionId = 1, FuelTankId = 100, Address = "Very Nice 23.", Comments = "Very Nice 24." }
@@ -177,7 +177,7 @@ namespace Application.UnitTests
        new Route { Id = 100, Refills = new List<Refill> { refill100, refill101 } }
       );
       context.Trucks.Add(
-        new Truck { Id = 100, RouteId = 100 }
+        new Truck { Id = 100, RouteId = 100, TruckIdentifier = "Truck3" }
       );
       context.Coupons.AddRange(
         new Coupon { Id = 100, CouponNumber = 100, TruckId = 100 },

@@ -8,15 +8,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Trucks.Commands.UpdateTruck
 {
-  public class UpdateTruckCommand : IRequest<int>
+  public class UpdateTruckCommand : IRequest<string>
   {
-    public int Id { get; set; }
     public string TruckIdentifier { get; set; }
+    public string NewTruckIdentifier { get; set; }
     public string Description { get; set; }
     public double TankCapacity { get; set; }
     public int StartRefillNumber { get; set; }
     public string Name { get; set; }
-    public class UpdateTruckCommandHandler : IRequestHandler<UpdateTruckCommand, int>
+    public class UpdateTruckCommandHandler : IRequestHandler<UpdateTruckCommand, string>
     {
       private readonly IApplicationDbContext _context;
 
@@ -25,29 +25,29 @@ namespace Application.Trucks.Commands.UpdateTruck
         _context = context;
       }
 
-      public async Task<int> Handle(UpdateTruckCommand request, CancellationToken cancellationToken)
+      public async Task<string> Handle(UpdateTruckCommand request, CancellationToken cancellationToken)
       {
         var truck = await _context.Trucks
           .Include(x => x.DailyStates)
-          .FirstOrDefaultAsync(x => x.Id == request.Id);
+          .FirstOrDefaultAsync(x => x.TruckIdentifier == request.TruckIdentifier);
         if (truck == null)
         {
-          throw new ArgumentException("No truck with Id: " + request.Id + ".");
+          throw new ArgumentException("No truck with Truck Id: " + request.TruckIdentifier + ".");
         }
 
-        truck.TruckIdentifier = request.TruckIdentifier;
+        truck.TruckIdentifier = (request.NewTruckIdentifier == null || request.NewTruckIdentifier.Equals("")) ? request.TruckIdentifier : request.NewTruckIdentifier;
         truck.Description = request.Description;
         truck.TankCapacity = request.TankCapacity;
         truck.Name = request.Name;
         var dailyState = truck.DailyStates.OrderByDescending(x => x.Date).FirstOrDefault();
         if (dailyState == null)
         {
-          throw new ArgumentException("Currently no daily state registered for truck " + request.Id + ", and therefor not possible to update the Starting refill-number.");
+          throw new ArgumentException("Currently no daily state registered for truck " + request.TruckIdentifier + ", and therefor not possible to update the Starting refill-number.");
         }
         dailyState.StartRefillNumber = request.StartRefillNumber;
 
         await _context.SaveChangesAsync(cancellationToken);
-        return truck.Id;
+        return truck.TruckIdentifier;
       }
     }
   }

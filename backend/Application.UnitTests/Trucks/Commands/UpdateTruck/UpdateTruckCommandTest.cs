@@ -15,26 +15,26 @@ namespace Application.UnitTests.Trucks.Commands.UpdateTruck
     {
       var command = new UpdateTruckCommand
       {
-        Id = 100,
         Name = "McTruck",
         Description = "I'm lovin' it",
         TankCapacity = Math.PI,
         StartRefillNumber = 700,
-        TruckIdentifier = "7ruck"
+        TruckIdentifier = "Truck3",
+        NewTruckIdentifier = "7ruck"
       };
 
       var handler = new UpdateTruckCommand.UpdateTruckCommandHandler(Context);
 
       var result = await handler.Handle(command, CancellationToken.None);
 
-      var entity = Context.Trucks.Find(result);
+      var entity = Context.Trucks.FirstOrDefault(x => x.TruckIdentifier.Equals(result));
 
       entity.Should().NotBeNull();
       entity.Name.Should().Be(command.Name);
       entity.Description.Should().Be(command.Description);
       entity.TankCapacity.Should().Be(command.TankCapacity);
       entity.DailyStates.OrderByDescending(x => x.Date).FirstOrDefault().StartRefillNumber.Should().Be(command.StartRefillNumber);
-      entity.TruckIdentifier.Should().Be(command.TruckIdentifier);
+      entity.TruckIdentifier.Should().Be(command.NewTruckIdentifier);
     }
 
     [Fact]
@@ -42,32 +42,11 @@ namespace Application.UnitTests.Trucks.Commands.UpdateTruck
     {
       var command = new UpdateTruckCommand
       {
-        Id = -1,
         Name = "McTruck",
         Description = "I'm lovin' it",
         TankCapacity = Math.PI,
         StartRefillNumber = 700,
-        TruckIdentifier = "7ruck"
-      };
-
-      var handler = new UpdateTruckCommand.UpdateTruckCommandHandler(Context);
-
-      await Assert.ThrowsAsync<ArgumentException>(
-        async () => { await handler.Handle(command, CancellationToken.None); }
-      );
-    }
-
-    [Fact]
-    //I'm not actually this performs as expected as I would like the validator to handle the missing Id.
-    public async Task Handle_NoIdInCommand()
-    {
-      var command = new UpdateTruckCommand
-      {
-        Name = "McTruck",
-        Description = "I'm lovin' it",
-        TankCapacity = Math.PI,
-        StartRefillNumber = 700,
-        TruckIdentifier = "7ruck"
+        TruckIdentifier = "-1"
       };
 
       var handler = new UpdateTruckCommand.UpdateTruckCommandHandler(Context);

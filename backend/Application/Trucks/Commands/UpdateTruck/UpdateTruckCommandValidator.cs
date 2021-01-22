@@ -6,8 +6,8 @@ namespace Application.Trucks.Commands.UpdateTruck
   {
     public UpdateTruckCommandValidator()
     {
-      RuleFor(e => e.Id)
-        .NotNull();
+      RuleFor(e => e.TruckIdentifier)
+        .NotEmpty();
     }
   }
 }

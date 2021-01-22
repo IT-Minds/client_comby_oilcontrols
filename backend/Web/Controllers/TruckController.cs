@@ -15,7 +15,7 @@ namespace Web.Controllers
     }
 
     [HttpPut]
-    public async Task<ActionResult<int>> UpdateTruck(UpdateTruckCommand command)
+    public async Task<ActionResult<string>> UpdateTruck(UpdateTruckCommand command)
     {
       return await Mediator.Send(command);
     }
