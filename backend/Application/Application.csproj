@@ -15,5 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\UniContaDomain\UniContaDomain.csproj" />
   </ItemGroup>
 </Project>

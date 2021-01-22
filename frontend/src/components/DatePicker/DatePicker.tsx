@@ -1,17 +1,16 @@
 import "react-datepicker/dist/react-datepicker.css";
-import "./DatePicker.module.css";
 
-import React from "react";
+import React, { FC } from "react";
 import ReactDatePicker from "react-datepicker";
 
 interface Props {
   isClearable?: boolean;
-  onChange: (date: Date) => any;
+  onChange: (date: Date) => void;
   selectedDate: Date | null;
   showPopperArrow?: boolean;
 }
 
-const DatePicker = ({
+const DatePicker: FC<Props> = ({
   selectedDate,
   onChange,
   isClearable = false,

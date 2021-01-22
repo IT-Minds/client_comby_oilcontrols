@@ -1,4 +1,3 @@
-using Domain.Enums;
 using FluentAssertions;
 using System.Threading;
 using System.Threading.Tasks;
