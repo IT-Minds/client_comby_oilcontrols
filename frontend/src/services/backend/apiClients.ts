@@ -3,11 +3,10 @@ import {
   CouponsClient,
   ExampleEntityClient,
   HealthClient,
-  RefillClient,
   LocationClient,
+  RefillClient,
   StreetClient
 } from "./nswagts";
-  
 
 export const genExampleClient = (): Promise<ExampleEntityClient> => api(ExampleEntityClient);
 export const genHealthClient = (): Promise<HealthClient> => api(HealthClient);
