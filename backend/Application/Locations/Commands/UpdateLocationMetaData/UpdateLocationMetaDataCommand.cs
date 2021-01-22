@@ -5,12 +5,6 @@ using MediatR;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Application.Common.Exceptions;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Text.RegularExpressions;
-using System.IO;
-using Application.Common.Options;
-using Microsoft.Extensions.Options;
 
 namespace Application.Locations.Commands.UpdateLocationMetaData
 {

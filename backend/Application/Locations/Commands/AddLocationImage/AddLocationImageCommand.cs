@@ -12,7 +12,7 @@ using System.IO;
 using Application.Common.Options;
 using Microsoft.Extensions.Options;
 
-namespace Application.Locations.Commands.AddLocationImageCommand
+namespace Application.Locations.Commands.AddLocationImage
 {
   public class AddLocationImageCommand : IRequest<string>
   {

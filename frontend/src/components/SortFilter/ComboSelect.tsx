@@ -1,5 +1,6 @@
 import {
   Box,
+  IconButton,
   Input,
   InputGroup,
   InputRightElement,
@@ -14,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { useColors } from "hooks/useColors";
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { MdKeyboardArrowDown } from "react-icons/md";
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import DropdownType from "types/DropdownType";
 
 import styles from "./styles.module.css";
@@ -52,7 +53,8 @@ const ComboSelect: FC<Props> = ({
   }, [lightColor, darkColor, borderColorToken]);
 
   const filteredOptions = useMemo(() => options.filter(x => x.name.indexOf(searchValue) !== -1), [
-    searchValue
+    searchValue,
+    options
   ]);
 
   const select = useCallback((item: DropdownType) => {
@@ -67,21 +69,20 @@ const ComboSelect: FC<Props> = ({
     (e: React.KeyboardEvent<HTMLInputElement>, item: DropdownType) => {
       if (active) {
         const keyValue = e.code;
-        console.log(keyValue);
         if (keyValue === "ArrowDown") {
-          if (focusRef.current >= filteredOptions.length - 1) focusRef.current = -1;
+          if (focusRef.current >= Math.min(filteredOptions.length - 1, 249)) focusRef.current = -1;
           const id = "#combobox" + ++focusRef.current;
 
           const element = stackRef.current.querySelector(id);
-          console.log(id, element);
 
           (element as HTMLInputElement)?.focus();
         } else if (keyValue === "ArrowUp") {
-          if (focusRef.current <= 0) focusRef.current = filteredOptions.length;
+          if (focusRef.current <= 0) {
+            focusRef.current = Math.min(filteredOptions.length, 250);
+          }
           const id = "#combobox" + --focusRef.current;
 
           const element = stackRef.current.querySelector(id);
-          console.log(id, element);
 
           (element as HTMLInputElement)?.focus();
         } else if (keyValue === "Enter" || keyValue === "Space") {
@@ -101,26 +102,37 @@ const ComboSelect: FC<Props> = ({
     <Box className={styles.comboBox}>
       <Popover
         isOpen={active}
-        // onClose={() => setActive(false)}
         placement="bottom"
         // eslint-disable-next-line jsx-a11y/no-autofocus
         autoFocus={false}
         gutter={0}>
         <PopoverTrigger>
-          <InputGroup onClick={() => setActive(true)}>
+          <InputGroup>
             <Input
               isReadOnly={!active}
-              value={active ? searchValue : activeItem?.name ?? placeholder}
+              placeholder={placeholder}
+              value={active ? searchValue : activeItem?.name ?? ""}
               onChange={e => setSeachValue(e.target.value)}
               onKeyDown={e => focusElement(e, null)}
               ref={inputRef}
+              onClick={() => setActive(true)}
+              {...(active && {
+                borderColor: borderColor,
+                boxShadow: "0 0 0 1px " + borderColor
+              })}
             />
             <InputRightElement>
-              <MdKeyboardArrowDown onClick={() => setActive(!active)} />
+              <IconButton
+                size="xs"
+                aria-label="dropdown-toggle"
+                onClick={() => setActive(x => !active)}
+                icon={active ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
+              />
             </InputRightElement>
           </InputGroup>
         </PopoverTrigger>
         <PopoverContent
+          data-display="static"
           mt={"-4px"}
           borderTop="none"
           borderTopLeftRadius="0"
@@ -128,8 +140,18 @@ const ComboSelect: FC<Props> = ({
           borderColor={borderColor}
           boxShadow={"0 1px 0 1px " + borderColor}>
           <PopoverBody>
-            <VStack align="left" minH={30} maxH={60} overflowY="auto" ref={stackRef} spacing={0}>
-              {filteredOptions.map((x, i) => (
+            <VStack align="left" maxH={active ? 60 : 4} overflowY="auto" ref={stackRef} spacing={0}>
+              {isLoading && <Skeleton h={2} />}
+              {filteredOptions.length > 250 && (
+                <Input
+                  isReadOnly
+                  color="orange.500"
+                  variant="flushed"
+                  userSelect="none"
+                  value="Too many results, narrow your search."
+                />
+              )}
+              {filteredOptions.slice(0, 250).map((x, i) => (
                 <Input
                   isLazy
                   variant="flushed"
@@ -151,7 +173,6 @@ const ComboSelect: FC<Props> = ({
                   value={x.name}
                 />
               ))}
-              {isLoading && <Skeleton minH={8} />}
             </VStack>
           </PopoverBody>
         </PopoverContent>
