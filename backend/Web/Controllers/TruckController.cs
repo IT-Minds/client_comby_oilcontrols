@@ -1,3 +1,4 @@
+using Application.Trucks.Commands.UpdateTruck;
 using Application.Trucks.Queries;
 using Application.Trucks.Queries.GetTruckInfo;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,12 @@ namespace Web.Controllers
     public async Task<ActionResult<TruckInfoDto>> GetTruck([FromQuery] int id)
     {
       return await Mediator.Send(new GetTruckInfoQuery { TruckId = id });
+    }
+
+    [HttpPut]
+    public async Task<ActionResult<int>> UpdateTruck(UpdateTruckCommand command)
+    {
+      return await Mediator.Send(command);
     }
   }
 }
