@@ -15,6 +15,7 @@ namespace Application.Trucks.Commands.UpdateTruck
     public string Description { get; set; }
     public double TankCapacity { get; set; }
     public int StartRefillNumber { get; set; }
+    public string Name { get; set; }
     public class UpdateTruckCommandHandler : IRequestHandler<UpdateTruckCommand, int>
     {
       private readonly IApplicationDbContext _context;
@@ -37,11 +38,13 @@ namespace Application.Trucks.Commands.UpdateTruck
         truck.TruckIdentifier = request.TruckIdentifier;
         truck.Description = request.Description;
         truck.TankCapacity = request.TankCapacity;
+        truck.Name = request.Name;
         var dailyState = truck.DailyStates.OrderByDescending(x => x.Date).FirstOrDefault();
         if (dailyState == null)
         {
           throw new ArgumentException("Currently no daily state registered for truck " + request.Id + ", and therefor not possible to update the Starting refill-number.");
         }
+        dailyState.StartRefillNumber = request.StartRefillNumber;
 
         await _context.SaveChangesAsync(cancellationToken);
         return truck.Id;
