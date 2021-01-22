@@ -3,7 +3,7 @@ import LocaleMetaDataComp from "components/LocaleMetaDataForm/LocaleMetaDataComp
 import { useOffline } from "hooks/useOffline";
 import { NextPage } from "next";
 import React, { useCallback } from "react";
-import { genRefillClient } from "services/backend/apiClients";
+import { genLocationClient } from "services/backend/apiClients";
 import {
   IUpdateLocationMetaDataCommand,
   UpdateLocationMetaDataCommand
@@ -19,8 +19,8 @@ const DemoPage: NextPage = () => {
   const saveForm = useCallback(
     async (form: IUpdateLocationMetaDataCommand) => {
       awaitCallback(async () => {
-        const client = await genRefillClient();
-        await client.create(
+        const client = await genLocationClient();
+        await client.updateMetaData(
           new UpdateLocationMetaDataCommand({
             address: form.address,
             comment: form.comment,
