@@ -6,7 +6,7 @@ import ReactDatePicker from "react-datepicker";
 
 interface Props {
   isClearable?: boolean;
-  onChange: (date: Date) => any;
+  onChange: (date: Date) => void;
   selectedDate: Date | null;
   showPopperArrow?: boolean;
 }
