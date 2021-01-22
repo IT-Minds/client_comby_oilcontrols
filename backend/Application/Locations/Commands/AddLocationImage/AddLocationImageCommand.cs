@@ -12,7 +12,7 @@ using System.IO;
 using Application.Common.Options;
 using Microsoft.Extensions.Options;
 
-namespace Application.Locations.Commands.AddLocationImageCommand
+namespace Application.Locations.Commands.AddLocationImage
 {
   public class AddLocationImageCommand : IRequest<string>
   {
@@ -51,15 +51,23 @@ namespace Application.Locations.Commands.AddLocationImageCommand
         var filename = request.LocationId + "." + imgType;
         string filePath = Path.Combine(_options.LocationPath, filename);
 
-        if (System.IO.File.Exists(filePath))
+        try
         {
-          throw new ArgumentException("Image with " + request.LocationId + " already exists.");
+          if (System.IO.File.Exists(filePath))
+          {
+            throw new ArgumentException("Image with " + request.LocationId + " already exists.");
+          }
+
+          using (Stream fileStream = new FileStream(filePath, FileMode.Create))
+          {
+            await request.Picture.CopyToAsync(fileStream);
+          }
+        }
+        catch
+        {
+          throw new ForbiddenAccessException();
         }
 
-        using (Stream fileStream = new FileStream(filePath, FileMode.Create))
-        {
-          await request.Picture.CopyToAsync(fileStream);
-        }
 
         return filename;
       }

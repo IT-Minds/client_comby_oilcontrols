@@ -8,10 +8,10 @@ import {
   PopoverContent,
   PopoverTrigger,
   Text,
-  useColorModeValue,
   useDisclosure,
   VStack
 } from "@chakra-ui/react";
+import { useColors } from "hooks/useColors";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { FC, useEffect } from "react";
@@ -24,7 +24,7 @@ const localeMap = {
 
 const LanguageSelector: FC = () => {
   const { locale, locales, route, events } = useRouter();
-  const hoverbg = useColorModeValue("blue.100", "blue.700");
+  const { hoverBg } = useColors();
 
   const disclosure = useDisclosure();
 
@@ -46,7 +46,7 @@ const LanguageSelector: FC = () => {
           objectFit="contain"
           borderRadius={10}
           _hover={{
-            bg: hoverbg
+            bg: hoverBg
           }}
           padding={1}
           cursor="pointer"
@@ -63,7 +63,7 @@ const LanguageSelector: FC = () => {
                 <HStack
                   cursor="pointer"
                   _hover={{
-                    background: hoverbg
+                    background: hoverBg
                   }}
                   padding={1}
                   spacing={1}

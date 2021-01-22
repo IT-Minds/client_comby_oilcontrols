@@ -130,6 +130,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("FuelType")
+                        .HasColumnType("int");
+
                     b.Property<DateTimeOffset>("LastModified")
                         .HasColumnType("datetimeoffset");
 
@@ -148,7 +151,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("TankNumber")
                         .HasColumnType("int");
 
-                    b.Property<int>("Type")
+                    b.Property<int>("TankType")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -175,6 +178,12 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("DaysBetweenRefills")
+                        .HasColumnType("int");
+
+                    b.Property<double>("EstimateFuelConsumption")
+                        .HasColumnType("float");
+
                     b.Property<int>("FuelTankId")
                         .HasColumnType("int");
 
@@ -187,12 +196,17 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("ModifiedCount")
                         .HasColumnType("int");
 
+                    b.Property<int>("RegionId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Schedule")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("FuelTankId");
+
+                    b.HasIndex("RegionId");
 
                     b.ToTable("Locations");
                 });
@@ -204,7 +218,7 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<DateTime>("ActualDeliveryDate")
+                    b.Property<DateTime?>("ActualDeliveryDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("CouponId")
@@ -216,7 +230,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("EndAmount")
+                    b.Property<double?>("EndAmount")
                         .HasColumnType("float");
 
                     b.Property<DateTime>("ExpectedDeliveryDate")
@@ -234,16 +248,16 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("ModifiedCount")
                         .HasColumnType("int");
 
+                    b.Property<int>("RefillNumber")
+                        .HasColumnType("int");
+
                     b.Property<int?>("RouteId")
                         .HasColumnType("int");
 
-                    b.Property<double>("StartAmount")
+                    b.Property<double?>("StartAmount")
                         .HasColumnType("float");
 
                     b.Property<int>("TankState")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Type")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -377,14 +391,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("RegionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RegiondId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("RegionId");
 
-                    b.ToTable("Street");
+                    b.ToTable("Streets");
                 });
 
             modelBuilder.Entity("Domain.Entities.Truck", b =>
@@ -400,6 +411,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTimeOffset>("LastModified")
                         .HasColumnType("datetimeoffset");
 
@@ -409,7 +423,19 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("ModifiedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("RouteId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("TankCapacity")
+                        .HasColumnType("float");
+
+                    b.Property<string>("TruckIdentifier")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TruckNumber")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -449,6 +475,9 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<double>("MorningQuantity")
                         .HasColumnType("float");
+
+                    b.Property<int>("StartRefillNumber")
+                        .HasColumnType("int");
 
                     b.Property<int>("TruckId")
                         .HasColumnType("int");
@@ -526,18 +555,19 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Location", b =>
                 {
-                    b.HasOne("Domain.Entities.Region", "Region")
-                        .WithMany("Locations")
-                        .HasForeignKey("RegionId");
-
-                    b.Navigation("Region");
                     b.HasOne("Domain.Entities.FuelTank", "FuelTank")
                         .WithMany()
                         .HasForeignKey("FuelTankId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.Region", "Region")
+                        .WithMany("Locations")
+                        .HasForeignKey("RegionId");
+
                     b.Navigation("FuelTank");
+
+                    b.Navigation("Region");
                 });
 
             modelBuilder.Entity("Domain.Entities.Refill", b =>
@@ -549,7 +579,7 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Location", "Location")
-                        .WithMany()
+                        .WithMany("Refills")
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -619,6 +649,11 @@ namespace Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Domain.Entities.ExampleEntityList", b =>
                 {
                     b.Navigation("ExampleEntities");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Location", b =>
+                {
+                    b.Navigation("Refills");
                 });
 
             modelBuilder.Entity("Domain.Entities.Region", b =>

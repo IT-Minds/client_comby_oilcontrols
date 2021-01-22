@@ -1,8 +1,9 @@
-import { Box, Center, Flex, Text, useColorModeValue } from "@chakra-ui/react";
+import { Box, Center, Flex, Text } from "@chakra-ui/react";
 import { UserTypeContext } from "contexts/UserTypeContext";
+import { useColors } from "hooks/useColors";
 import Image from "next/image";
 import Link from "next/link";
-import { FC, forwardRef, ForwardRefRenderFunction, useContext } from "react";
+import { FC, useContext } from "react";
 import { UserType } from "types/UserType";
 
 import MyUserSnippet from "./components/MyUserSnippet";
@@ -14,16 +15,15 @@ type Props = {
 };
 
 const Menu: FC<Props> = ({ links }) => {
-  const bg = useColorModeValue("gray.100", "gray.700");
-  const hoverbg = useColorModeValue("blue.50", "blue.700");
+  const { hoverBg, menuBg } = useColors();
 
   const { isType } = useContext(UserTypeContext);
 
   return (
-    <Flex bg={bg} direction="column" h={"100%"} maxH={"100vh"} w="100%">
+    <Flex bg={menuBg} direction="column" h={"100%"} maxH={"100vh"} w="100%">
       <Box
         _hover={{
-          background: hoverbg
+          background: hoverBg
         }}
         cursor="pointer"
         padding={8}
