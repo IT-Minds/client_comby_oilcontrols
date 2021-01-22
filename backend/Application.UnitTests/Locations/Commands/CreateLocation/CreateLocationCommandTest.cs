@@ -33,7 +33,7 @@ namespace Application.UnitTests.Locations.Commands.CreateLocations
       entity.Address.Should().Be(command.Address);
       entity.Comments.Should().Be(command.Comment);
       entity.Schedule.Should().Be(command.Refillschedule);
-      entity.FuelTank.Type.Should().Be(command.TankType);
+      entity.FuelTank.TankType.Should().Be(command.TankType);
       entity.FuelTank.TankNumber.Should().Be(command.TankNumber);
       entity.FuelTank.TankCapacity.Should().Be(command.TankCapacity);
       entity.FuelTank.MinimumFuelAmount.Should().Be(command.MinimumFuelAmount);

@@ -10,15 +10,16 @@ import {
 } from "@chakra-ui/react";
 import { Locale } from "i18n/Locale";
 import { useI18n } from "next-rosetta";
-import { FC, useCallback, useRef, useState } from "react";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { genCouponsClient } from "services/backend/apiClients";
 import { CouponDto } from "services/backend/nswagts";
 
 type Props = {
   coupon: CouponDto;
+  triggered?: boolean;
 };
 
-const InvalidateCouponBtn: FC<Props> = ({ coupon }) => {
+const InvalidateCouponBtn: FC<Props> = ({ coupon, triggered = false }) => {
   const cancelRef = useRef();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -33,6 +34,14 @@ const InvalidateCouponBtn: FC<Props> = ({ coupon }) => {
 
     setLoading(false);
   }, []);
+
+  useEffect(() => {
+    if (triggered) {
+      onOpen();
+    } else {
+      onClose();
+    }
+  }, [triggered]);
 
   return (
     <>

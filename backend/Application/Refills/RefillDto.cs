@@ -25,7 +25,7 @@ namespace Application.Refills.Queries.GetRefills
         .ForMember(dest => dest.TruckId,
           map => map.MapFrom(from => from.Coupon.TruckId))
         .ForMember(dest => dest.LocationType,
-          map => map.MapFrom(from => from.Location.FuelTank.Type));
+          map => map.MapFrom(from => from.Location.FuelTank.TankType));
     }
   }
 }

@@ -37,7 +37,11 @@ namespace Application.Refills.Commands.CreateRefill
 
         var Location = await _context.Locations
           .Include(x => x.FuelTank)
-          .FirstOrDefaultAsync(x => x.FuelTank.Type == request.TankType && x.FuelTank.TankNumber == request.TankNumber);
+          .FirstOrDefaultAsync(x =>
+            x.FuelTank.TankType == request.TankType &&
+            x.FuelTank.TankNumber == request.TankNumber &&
+            x.FuelTank.FuelType == request.FuelType
+          );
         if (Location == null)
         {
           throw new NotFoundException(nameof(Location), request.TankType + " " + request.TankNumber);
@@ -64,7 +68,6 @@ namespace Application.Refills.Commands.CreateRefill
           EndAmount = request.EndAmount,
           Coupon = Coupon,
           ExpectedDeliveryDate = request.ExpectedDeliveryDate,
-          Type = request.FuelType,
           TankState = request.TankState,
           Location = Location
         };

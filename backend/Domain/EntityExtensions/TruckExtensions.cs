@@ -33,17 +33,17 @@ namespace Domain.EntityExtensions
       List<Refill> deliveries = new List<Refill>();
       if (latestDifferentRefill == null)
       {
-        deliveries = truck.Route.Refills.Where(x => x.ActualDeliveryDate.DayOfYear == date.DayOfYear).ToList();
+        deliveries = truck.Route.Refills.Where(x => x.ActualDeliveryDate.HasValue && ((DateTime)x.ActualDeliveryDate).DayOfYear == date.DayOfYear).ToList();
       }
       else
       {
-        deliveries = truck.Route.Refills.Where(x => x.ActualDeliveryDate > latestDifferentRefill.TimeStamp && x.Type == latestFuelType).ToList();
+        deliveries = truck.Route.Refills.Where(x => x.ActualDeliveryDate.HasValue && x.ActualDeliveryDate > latestDifferentRefill.TimeStamp && x.Location.FuelTank.FuelType == latestFuelType).ToList();
       }
 
       double deliveryDelta = 0.0;
       if (deliveries != null && deliveries.Count() != 0)
       {
-        deliveryDelta = deliveries.Sum(x => x.AmountDelivered());
+        deliveryDelta = deliveries.Sum(x => x.AmountDelivered() ?? 0);
       }
       return (latestDifferentRefill == null ? dailyState.MorningQuantity : 0) + refillDelta - deliveryDelta;
     }
