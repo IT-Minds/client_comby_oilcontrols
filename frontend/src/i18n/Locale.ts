@@ -64,4 +64,9 @@ export interface Locale {
       inputTemperature: string;
     };
   };
+
+  mytruck: {
+    title: string;
+    heading: string;
+  };
 }

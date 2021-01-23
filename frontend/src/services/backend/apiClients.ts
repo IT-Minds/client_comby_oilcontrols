@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { api } from "./api";
 import {
   CouponsClient,

@@ -1,41 +1,37 @@
-import {
-  forwardRef,
-  HStack,
-  IconButton,
-  Spacer,
-  Table,
-  Tbody,
-  Td,
-  Text,
-  Th,
-  Thead,
-  Tr
-} from "@chakra-ui/react";
+import { forwardRef, HStack, IconButton, Spacer, Table } from "@chakra-ui/react";
+import { Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
 import QuerySortBtn, { Direction } from "components/SortFilter/QuerySortBtn";
-import { ForwardRefRenderFunction, useCallback, useEffect, useState } from "react";
+import { useEffectAsync } from "hooks/useEffectAsync";
+import { ForwardRefRenderFunction, useCallback, useState } from "react";
 import { GiFuelTank } from "react-icons/gi";
 import { genTruckClient } from "services/backend/apiClients";
 import { ILocationRefillDto, RefillSchedule } from "services/backend/nswagts";
 import { capitalize } from "utils/capitalizeAnyString";
 
+import data from "./data";
+
+type SelectRowCb = (obj: { locationId?: number; refillId?: number; regionId?: number }) => void;
+
 type Props = {
   truckId: number;
+  refillCb: SelectRowCb;
 };
 
 const defaultSort = (a: ILocationRefillDto, b: ILocationRefillDto) =>
   a.refillId > b.refillId ? 1 : -1;
 
 // TODO i18n;
-const RunListTable: ForwardRefRenderFunction<HTMLTableElement, Props> = ({ truckId }, ref) => {
+const RunListTable: ForwardRefRenderFunction<HTMLTableElement, Props> = (
+  { truckId, refillCb },
+  ref
+) => {
   const [refills, setRefills] = useState<ILocationRefillDto[]>([]);
-  useEffect(() => {
+  useEffectAsync(async () => {
     if (process.browser) {
-      (async () => {
-        const client = await genTruckClient();
-        client.setCacheableResponse("NetworkFirst");
-        const something = await client.getTrucksRefills(truckId);
-        setRefills(something);
-      })();
+      const client = await genTruckClient();
+      client.setCacheableResponse("NetworkFirst");
+      const something = await client.getTrucksRefills(truckId).catch(() => data);
+      setRefills(something);
     }
   }, [truckId]);
 
@@ -93,12 +89,16 @@ const RunListTable: ForwardRefRenderFunction<HTMLTableElement, Props> = ({ truck
             <Td>{capitalize(RefillSchedule[row.schedule])}</Td>
             <Td>{row.expectedDeliveryDate.toLocaleDateString()}</Td>
             <Td>
-              <IconButton
-                size="sm"
-                colorScheme="orange"
-                aria-label="do something"
-                icon={<GiFuelTank size={30} />}
-              />
+              <HStack>
+                <IconButton
+                  key="click"
+                  size="sm"
+                  colorScheme="orange"
+                  aria-label="do something"
+                  onClick={() => refillCb({ ...row })}
+                  icon={<GiFuelTank size={30} />}
+                />
+              </HStack>
             </Td>
           </Tr>
         ))}

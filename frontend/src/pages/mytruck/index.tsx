@@ -1,10 +1,21 @@
-import { Container, Flex, Heading, IconButton, Text } from "@chakra-ui/react";
+import {
+  Badge,
+  Box,
+  Collapse,
+  Container,
+  Flex,
+  Heading,
+  HStack,
+  IconButton,
+  Text
+} from "@chakra-ui/react";
+import FillOutRefillForm from "components/FillOutRefillForm/FillOutRefillForm";
 import InvalidateCouponBtn from "components/InvalidateCouponBtn/InvalidateCouponBtn";
 import RunListTable from "components/RunList/RunListTable";
 import { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { I18nProps, useI18n } from "next-rosetta";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { MdPrint } from "react-icons/md";
 import { useReactToPrint } from "react-to-print";
 import { CouponDto, CouponStatus } from "services/backend/nswagts";
@@ -24,39 +35,85 @@ const LocalePage: NextPage<Props> = () => {
     content: () => componentRef.current
   });
 
+  const [refillingLocation, setRefillingLocation] = useState(0);
+
   return (
-    <main>
+    <Flex position="relative" h="95vh" w="100%">
       <Head>
-        <title>Oil Control - Trucker Page</title>
+        <title>
+          {t("mytruck.title", {
+            id: TruckId
+          })}
+        </title>
       </Head>
-      <Flex>
-        <Container maxW="xl" centerContent>
-          <Heading>
-            {t("mytruck.title", {
-              id: TruckId
-            })}
-          </Heading>
-          <Text fontSize="xl">Just some info text</Text>
-          <IconButton
-            aria-label="Print Table Button"
-            onClick={() => {
-              handlePrint();
-            }}
-            icon={<MdPrint />}
+      <Container maxW="xl" centerContent>
+        <Heading>
+          {t("mytruck.heading", {
+            id: TruckId
+          })}
+        </Heading>
+
+        <Box position="relative" overflow="visible">
+          <Collapse in={refillingLocation > 0} unmountOnExit={true}>
+            <IconButton
+              left={-8}
+              top={-5}
+              position="absolute"
+              aria-label="goback"
+              onClick={() => setRefillingLocation(0)}
+            />
+            <FillOutRefillForm submitCallback={x => alert(JSON.stringify(x, null, 2))} />
+          </Collapse>
+        </Box>
+
+        <Collapse in={refillingLocation === 0}>
+          <Text fontSize="xl" textAlign="left" justifyContent="center">
+            Current Tank{" "}
+            <Badge fontSize="0.8em" mb={1} colorScheme="green">
+              20.00 liters
+            </Badge>{" "}
+            of{" "}
+            <Badge fontSize="0.8em" mb={1} colorScheme="purple">
+              Oil
+            </Badge>
+            <IconButton
+              float="right"
+              colorScheme="blue"
+              aria-label="Print Table Button"
+              onClick={() => {
+                handlePrint();
+              }}
+              icon={<MdPrint />}
+            />
+          </Text>
+          <RunListTable
+            truckId={TruckId}
+            ref={componentRef}
+            refillCb={obj => setRefillingLocation(obj.locationId)}
           />
-          <RunListTable truckId={TruckId} ref={componentRef} />
-          <InvalidateCouponBtn
-            coupon={
-              new CouponDto({
-                couponNumber: 2,
-                status: CouponStatus.USED,
-                truckId: TruckId
-              })
-            }
-          />
-        </Container>
-      </Flex>
-    </main>
+        </Collapse>
+      </Container>
+      <HStack position="absolute" bottom={4} left={0} w="100%" justifyContent="space-between">
+        <InvalidateCouponBtn
+          coupon={
+            new CouponDto({
+              couponNumber: 2,
+              status: CouponStatus.USED,
+              truckId: TruckId
+            })
+          }
+        />
+        <InvalidateCouponBtn
+          coupon={
+            new CouponDto({
+              couponNumber: 2,
+              status: CouponStatus.USED,
+              truckId: TruckId
+            })
+          }
+        />
+      </HStack>
+    </Flex>
   );
 };
 

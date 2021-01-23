@@ -59,5 +59,10 @@ export const table: Locale = {
       selectRegion: "Vælg en temperatur",
       inputTemperature: "Indtast en temperatur"
     }
+  },
+
+  mytruck: {
+    title: "Comby Olistying - Lastbil #{{id}}",
+    heading: "Lastbil #{{id}}"
   }
 };

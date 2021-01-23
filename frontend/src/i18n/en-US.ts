@@ -60,5 +60,10 @@ export const table: Locale = {
       selectRegion: "Please select a region",
       inputTemperature: "Please enter a temperature"
     }
+  },
+
+  mytruck: {
+    title: "Comby OilControl - Truck {{id}}",
+    heading: "Truck {{id}}"
   }
 };

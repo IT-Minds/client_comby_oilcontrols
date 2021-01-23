@@ -1,26 +1,8 @@
-import {
-  Button,
-  Checkbox,
-  Container,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  HStack,
-  Image,
-  Input,
-  InputGroup,
-  InputRightAddon,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Select,
-  useDisclosure,
-  VStack
-} from "@chakra-ui/react";
+import { Button, Container, FormControl, FormErrorMessage, Switch } from "@chakra-ui/react";
+import { FormLabel, HStack, Image, Input, InputGroup } from "@chakra-ui/react";
+import { InputRightAddon, Modal, ModalBody, ModalCloseButton } from "@chakra-ui/react";
+import { ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react";
+import { Select, useDisclosure, VStack } from "@chakra-ui/react";
 import CameraComp from "components/Camera/CameraComponent";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck, MdPhotoCamera, MdRemoveRedEye, MdRepeat } from "react-icons/md";
@@ -31,27 +13,18 @@ import { capitalize } from "utils/capitalizeAnyString";
 import { formatInputNumber, parseInputToNumber } from "utils/formatNumber";
 import { logger } from "utils/logger";
 
-import { ReportForm } from "./ReportForm";
+import { RefillForm } from "./RefillForm";
 
 type Props = {
-  submitCallback: (reportForm: ReportForm) => void;
-  carId: string;
-  locations?: DropdownType[];
+  submitCallback: (reportForm: RefillForm) => void;
   couponNumbers?: DropdownType[];
 };
 
-const ReportingComp: FC<Props> = ({
-  submitCallback,
-  carId,
-  locations = [],
-  couponNumbers = []
-}) => {
-  const [localReportForm, setLocalReportForm] = useState<ReportForm>({
-    carId,
+const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) => {
+  const [localReportForm, setLocalReportForm] = useState<RefillForm>({
     liters: 0,
     fuelType: null,
     couponId: couponNumbers[0]?.id ?? "",
-    locationId: "",
     isSpecialFill: false,
     image: ""
   });
@@ -60,7 +33,7 @@ const ReportingComp: FC<Props> = ({
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const updateLocalForm = useCallback((value: unknown, key: keyof ReportForm) => {
+  const updateLocalForm = useCallback((value: unknown, key: keyof RefillForm) => {
     setLocalReportForm(form => {
       (form[key] as unknown) = value;
       return form;
@@ -86,30 +59,6 @@ const ReportingComp: FC<Props> = ({
       )}
       <form onSubmit={handleSubmit} hidden={isTakingPic}>
         <VStack spacing={2}>
-          <FormControl id="car-id" isReadOnly>
-            <FormLabel>Car id:</FormLabel>
-            <Input type="text" value={carId} />
-          </FormControl>
-
-          <FormControl
-            id="location-no"
-            isInvalid={
-              formSubmitAttempts > 0 && locations.every(l => localReportForm.locationId !== l.id)
-            }
-            isRequired>
-            <FormLabel>Select location:</FormLabel>
-            <Select
-              placeholder="Select location"
-              onChange={e => updateLocalForm(e.target.value, "locationId")}>
-              {locations.map(location => (
-                <option key={location.id} value={location.id}>
-                  {location.name}
-                </option>
-              ))}
-            </Select>
-            <FormErrorMessage>Please select one of the allowed locations</FormErrorMessage>
-          </FormControl>
-
           <FormControl
             id="coupon-no"
             isInvalid={
@@ -169,20 +118,25 @@ const ReportingComp: FC<Props> = ({
             </FormErrorMessage>
           </FormControl>
 
-          <FormControl id="partial">
+          <FormControl mb={4} display="flex" alignItems="center">
             <HStack>
-              <FormLabel mb={4}>Is partial fill:</FormLabel>
-              <Checkbox
+              <FormLabel mb={0}>Is partial fill:</FormLabel>
+              <Switch
+                id="partial"
+                onChange={e => updateLocalForm(e.target.checked, "isSpecialFill")}
+              />
+              {/* <Checkbox
                 mb={4}
-                onChange={e => updateLocalForm(e.target.checked, "isSpecialFill")}></Checkbox>
+                ></Checkbox> */}
             </HStack>
           </FormControl>
 
-          <FormControl
-            id="photo"
-            isInvalid={formSubmitAttempts > 0 && localReportForm.image.length <= 0}
-            isRequired>
-            <HStack>
+          <HStack justifyContent="space-between" w="100%">
+            <FormControl
+              id="photo"
+              isInvalid={formSubmitAttempts > 0 && localReportForm.image.length <= 0}
+              isRequired
+              w="unset">
               {localReportForm.image.length > 0 ? (
                 <Button onClick={onOpen} rightIcon={<MdRemoveRedEye />}>
                   View Image
@@ -197,16 +151,15 @@ const ReportingComp: FC<Props> = ({
               )}
               <Input hidden value={localReportForm.image} onChange={() => null} />
               <FormErrorMessage>An image is needed</FormErrorMessage>
-            </HStack>
-          </FormControl>
-
-          <Button
-            colorScheme="green"
-            type="submit"
-            rightIcon={<MdCheck />}
-            onClick={() => setFormSubmitAttempts(x => x + 1)}>
-            Submit
-          </Button>
+            </FormControl>
+            <Button
+              colorScheme="green"
+              type="submit"
+              rightIcon={<MdCheck />}
+              onClick={() => setFormSubmitAttempts(x => x + 1)}>
+              Submit
+            </Button>
+          </HStack>
         </VStack>
       </form>
 
@@ -237,4 +190,4 @@ const ReportingComp: FC<Props> = ({
   );
 };
 
-export default ReportingComp;
+export default FillOutRefillForm;
