@@ -25,7 +25,7 @@ const OrderRefillComp: FC<Props> = ({ submitCallback, locationId }) => {
   const cancelRef = useRef();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [refillDate, setRefillDate] = useState(new Date());
+  const [refillDate, setRefillDate] = useState<Date>(new Date());
 
   const { t } = useI18n<Locale>();
 
