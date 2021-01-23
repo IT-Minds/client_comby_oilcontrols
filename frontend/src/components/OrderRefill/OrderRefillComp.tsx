@@ -55,7 +55,7 @@ const OrderRefillComp: FC<Props> = ({ submitCallback, locationId }) => {
             <AlertDialogBody>
               <DatePicker
                 selectedDate={refillDate}
-                onChange={date => setRefillDate(date)}
+                onChange={(date: Date) => setRefillDate(date)}
                 showPopperArrow={false}
               />
             </AlertDialogBody>
