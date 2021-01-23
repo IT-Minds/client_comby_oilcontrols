@@ -33,11 +33,11 @@ namespace Infrastructure.Services
     }
 
 
-    public async Task<List<UniContaDomain.Entities.Debtor>> GetDebtors()
+    public async Task<List<UniContaDomain.Entities.UniContaDebtor>> GetDebtors()
     {
       var api = new CrudAPI(session, session.DefaultCompany);
 
-      var debtors = await api.Query<UniContaDomain.Entities.Debtor>(); // this is it!??
+      var debtors = await api.Query<UniContaDomain.Entities.UniContaDebtor>(); // this is it!??
 
       return debtors.ToList();
     }

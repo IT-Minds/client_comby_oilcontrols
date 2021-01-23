@@ -6,6 +6,7 @@ export const useLoadProgress = (router: NextRouter): number => {
   const [loadVal, setLoadVal] = useState(0);
   const loadValRef = useRef(null);
   const isLoading = useRef(false);
+  const timeoutRef = useRef<NodeJS.Timeout>(null);
 
   const incrementLoadVal = useCallback(() => {
     const recursiveIncrement = (curVal: number) => {
@@ -13,7 +14,8 @@ export const useLoadProgress = (router: NextRouter): number => {
         const toAdd = randomNumberBetweenXandY(2, curVal < 66 ? 16 : curVal < 80 ? 8 : 4);
         loadValRef.current = curVal + toAdd;
         setLoadVal(curVal + toAdd);
-        setTimeout(() => recursiveIncrement(curVal + toAdd), 5);
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = setTimeout(() => recursiveIncrement(curVal + toAdd), 5);
       }
     };
     isLoading.current = true;
@@ -24,16 +26,27 @@ export const useLoadProgress = (router: NextRouter): number => {
     loadValRef.current = 100;
     isLoading.current = false;
     setLoadVal(100);
-    setTimeout(() => {
+    clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
       loadValRef.current = 0;
       setLoadVal(0);
     }, 1400);
   }, []);
 
   useEffect(() => {
-    router.events.on("routeChangeStart", (_url, { shallow }) => !shallow && incrementLoadVal());
-    router.events.on("routeChangeComplete", (_url, { shallow }) => !shallow && finishLoading());
-    router.events.on("routeChangeError", (_url, { shallow }) => !shallow && finishLoading());
+    const genEvent = (cb: () => void) => (_url: unknown, { shallow = true }) => !shallow && cb();
+
+    router?.events?.on("routeChangeStart", genEvent(incrementLoadVal));
+    router?.events?.on("routeChangeComplete", genEvent(finishLoading));
+    router?.events?.on("routeChangeError", genEvent(finishLoading));
+
+    return () => {
+      clearTimeout(timeoutRef.current);
+
+      router.events.off("routeChangeStart", genEvent(incrementLoadVal));
+      router.events.off("routeChangeComplete", genEvent(finishLoading));
+      router.events.off("routeChangeError", genEvent(finishLoading));
+    };
   }, []);
 
   return loadVal;

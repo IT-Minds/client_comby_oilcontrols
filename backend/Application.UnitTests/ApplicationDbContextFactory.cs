@@ -75,10 +75,10 @@ namespace Application.UnitTests
         new Location { Id = 2, FuelTankId = 2 /* RegionId */ },
         new Location { Id = 3, FuelTankId = 3 /* RegionId */ },
         new Location { Id = 4, FuelTankId = 4 /* RegionId */ },
-        new Location { Id = 5, FuelTankId = 5, RegionId = 5 },
-        new Location { Id = 6, FuelTankId = 6, RegionId = 5 },
-        new Location { Id = 7, FuelTankId = 7, RegionId = 5 },
-        new Location { Id = 8, FuelTankId = 8, RegionId = 5 }
+        new Location { Id = 5, FuelTankId = 5, RegionId = 5, Schedule = RefillSchedule.AUTOMATIC },
+        new Location { Id = 6, FuelTankId = 6, RegionId = 5, Schedule = RefillSchedule.INTERVAL, DaysBetweenRefills = 7 },
+        new Location { Id = 7, FuelTankId = 7, RegionId = 5, Schedule = RefillSchedule.MANUAL },
+        new Location { Id = 8, FuelTankId = 8, RegionId = 5, Schedule = RefillSchedule.AUTOMATIC }
       );
 
       context.Locations.Add(

@@ -56,8 +56,8 @@ namespace Domain.EntityExtensions
       {
         return newestRefill.RefillNumber;
       }
-      var dailyState = truck.DailyStates.OrderByDescending(x => x.Date).FirstOrDefault();
-      if (newestRefill != null)
+      var dailyState = truck.DailyStates?.OrderByDescending(x => x.Date).FirstOrDefault();
+      if (dailyState != null)
       {
         return dailyState.StartRefillNumber;
       }

@@ -6,19 +6,21 @@ using Application.Trucks.Queries.GetTruckInfo;
 using Application.Trucks.Queries.GetTrucksPage;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Application.Locations;
+using Application.Locations.Queries;
 
 namespace Web.Controllers
 {
   public class TruckController : ApiControllerBase
   {
-    [HttpGet]
-    public async Task<ActionResult<TruckInfoDto>> GetTruck([FromQuery] string truckIdentifier)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<TruckInfoDto>> GetTruck([FromRoute] int id)
     {
-      return await Mediator.Send(new GetTruckInfoQuery { TruckIdentifier = truckIdentifier });
+      return await Mediator.Send(new GetTruckInfoQuery { Id = id });
     }
 
-    [HttpGet("page")]
-    [ResponseCache(Duration = 604800)]
+    [HttpGet]
     public async Task<ActionResult<PageResult<TruckInfoDto>>> GetTrucks(
       [FromQuery] string needle, [FromQuery] int size = 1000, [FromQuery] int? skip = 0
     )
@@ -47,6 +49,22 @@ namespace Web.Controllers
     public async Task<ActionResult<int>> CreateTruck(CreateTruckCommand command)
     {
       return await Mediator.Send(command);
+    }
+
+    [HttpGet("{id}/runList")]
+    [ResponseCache(Duration = 43200)] // 12 hour cache
+    public async Task<ActionResult<IList<LocationRefillDto>>> GetTrucksRefills([FromRoute] int id)
+    {
+      var result = await Mediator.Send(new GetLocationRequiringRefill
+      {
+        TruckId = id
+      });
+      if (result.Count <= 0)
+      {
+        return NoContent();
+      }
+
+      return result;
     }
   }
 }

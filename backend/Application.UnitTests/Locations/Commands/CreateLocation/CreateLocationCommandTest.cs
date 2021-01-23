@@ -16,7 +16,7 @@ namespace Application.UnitTests.Locations.Commands.CreateLocations
       {
         Address = "This is address 23",
         Comment = "This is comment.",
-        Refillschedule = RefillSchedule.AUTOMAIC,
+        Refillschedule = RefillSchedule.AUTOMATIC,
         TankType = TankType.BUILDING,
         TankNumber = 9696,
         TankCapacity = 4005.1,

@@ -1,17 +1,21 @@
-import { Button, Container, Flex, Heading, Text } from "@chakra-ui/react";
+import { Container, Flex, Heading, IconButton, Text } from "@chakra-ui/react";
 import InvalidateCouponBtn from "components/InvalidateCouponBtn/InvalidateCouponBtn";
+import RunListTable from "components/RunList/RunListTable";
 import { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { I18nProps, useI18n } from "next-rosetta";
-import { useRef, useState } from "react";
+import { useRef } from "react";
+import { MdPrint } from "react-icons/md";
 import { useReactToPrint } from "react-to-print";
 import { CouponDto, CouponStatus } from "services/backend/nswagts";
 
-import { Locale } from "../i18n/Locale";
+import { Locale } from "../../i18n/Locale";
 
 type Props = {
   //
 };
+
+const TruckId = 1;
 
 const LocalePage: NextPage<Props> = () => {
   const { t } = useI18n<Locale>();
@@ -19,33 +23,36 @@ const LocalePage: NextPage<Props> = () => {
   const handlePrint = useReactToPrint({
     content: () => componentRef.current
   });
-  const [triggered, setTriggered] = useState(false);
 
   return (
     <main>
       <Head>
         <title>Oil Control - Trucker Page</title>
       </Head>
-      <Flex ref={componentRef}>
+      <Flex>
         <Container maxW="xl" centerContent>
-          <Heading>{t("title")}</Heading>
+          <Heading>
+            {t("mytruck.title", {
+              id: TruckId
+            })}
+          </Heading>
           <Text fontSize="xl">Just some info text</Text>
-          <Button
+          <IconButton
+            aria-label="Print Table Button"
             onClick={() => {
-              setTriggered(true);
               handlePrint();
-            }}>
-            Click me
-          </Button>
+            }}
+            icon={<MdPrint />}
+          />
+          <RunListTable truckId={TruckId} ref={componentRef} />
           <InvalidateCouponBtn
             coupon={
               new CouponDto({
                 couponNumber: 2,
                 status: CouponStatus.USED,
-                truckId: 5
+                truckId: TruckId
               })
             }
-            triggered={triggered}
           />
         </Container>
       </Flex>
@@ -56,7 +63,7 @@ const LocalePage: NextPage<Props> = () => {
 export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context => {
   const locale = context.locale || context.defaultLocale;
 
-  const { table = {} } = await import(`../i18n/${locale}`);
+  const { table = {} } = await import(`../../i18n/${locale}`);
   return { props: { table }, revalidate: 5 * 60 };
 };
 

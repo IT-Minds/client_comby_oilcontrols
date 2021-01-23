@@ -65,19 +65,41 @@ namespace Domain.EntityExtensions
     public static DateTime PredictDayReachingMinimumFuelLevel(this Location location, int maxDays = 7)
     {
       double limit = location.FuelTank.MinimumFuelAmount;
-      var sortedRefills = location.Refills.Where(x => x.ActualDeliveryDate.HasValue).OrderBy(x => x.ActualDeliveryDate);
-      var newestRefill = sortedRefills.Last();
-      var refillDate = (DateTime)newestRefill.ActualDeliveryDate;
+      var newestRefill = location.Refills
+        .Where(x => x.ActualDeliveryDate.HasValue)
+        .OrderBy(x => x.ActualDeliveryDate).LastOrDefault();
+
+      if (newestRefill == null)
+      {
+        return DateTime.UtcNow;
+      }
+
 
       var fuelAmount = newestRefill.EndAmount;
-      var fuelConsumption = location.FuelConsumptionPerDegreeOfHeating();
+      double fuelConsumption;
+      try
+      {
+        fuelConsumption = location.FuelConsumptionPerDegreeOfHeating();
+      }
+      catch
+      {
+        return DateTime.UtcNow;
+      }
 
-      var currentDate = refillDate;
+      var currentDate = (DateTime)newestRefill.ActualDeliveryDate;
       var count = 0;
       do
       {
         currentDate = currentDate.AddDays(1);
-        var heatdegree = location.Region.DailyTemperatureEstimate(currentDate);
+        double heatdegree;
+        try
+        {
+          heatdegree= location.Region.DailyTemperatureEstimate(currentDate);
+        }
+        catch
+        {
+          heatdegree = 20; // TODO default / fallback temperature
+        }
         var fuelConsumed = heatdegree * fuelConsumption;
         fuelAmount = fuelAmount - fuelConsumed;
         count++;

@@ -24,7 +24,7 @@ import {
 import CameraComp from "components/Camera/CameraComponent";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck, MdPhotoCamera, MdRemoveRedEye, MdRepeat } from "react-icons/md";
-import { enumConvertor } from "services/backend/ext/enumConvertor";
+import { FuelTypeRecord } from "services/backend/ext/enumConvertor";
 import { FuelType } from "services/backend/nswagts";
 import DropdownType from "types/DropdownType";
 import { capitalize } from "utils/capitalizeAnyString";
@@ -131,7 +131,7 @@ const ReportingComp: FC<Props> = ({
           <FormControl
             isInvalid={
               formSubmitAttempts > 0 &&
-              Object.values(enumConvertor<number>(FuelType)).every(
+              Object.values(FuelTypeRecord).every(
                 key => localReportForm.fuelType !== (FuelType[key] as unknown)
               )
             }
@@ -140,7 +140,7 @@ const ReportingComp: FC<Props> = ({
             <Select
               onChange={e => updateLocalForm(FuelType[Number(e.target.value)], "fuelType")}
               placeholder="Select option">
-              {Object.entries(enumConvertor<number>(FuelType)).map(([a, b]) => (
+              {Object.entries(FuelTypeRecord).map(([a, b]) => (
                 <option key={b} value={b}>
                   {capitalize(a)}
                 </option>
