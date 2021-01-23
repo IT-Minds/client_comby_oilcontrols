@@ -13,7 +13,8 @@ namespace Application.Trucks.Queries.GetTruckInfo
 {
   public class GetTruckInfoQuery : IRequest<TruckInfoDto>
   {
-    public int TruckId { get; set; }
+    public string TruckIdentifier { get; set; }
+
     public class GetTruckInfoQueryHandler : IRequestHandler<GetTruckInfoQuery, TruckInfoDto>
     {
       private readonly IApplicationDbContext _context;
@@ -27,13 +28,13 @@ namespace Application.Trucks.Queries.GetTruckInfo
       public async Task<TruckInfoDto> Handle(GetTruckInfoQuery request, CancellationToken cancellationToken)
       {
         var truck = await _context.Trucks
-          .Where(x => x.Id == request.TruckId)
+          .Where(x => x.TruckIdentifier == request.TruckIdentifier)
           .ProjectTo<TruckInfoDto>(_mapper.ConfigurationProvider)
           .FirstOrDefaultAsync();
 
         if (truck == null)
         {
-          throw new ArgumentException("Invalid truck ID: " + request.TruckId);
+          throw new ArgumentException("Invalid Truck Identifier: " + request.TruckIdentifier);
         }
         return truck;
       }
