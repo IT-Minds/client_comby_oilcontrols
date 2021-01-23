@@ -47,5 +47,21 @@ namespace Domain.EntityExtensions
       }
       return (latestDifferentRefill == null ? dailyState.MorningQuantity : 0) + refillDelta - deliveryDelta;
     }
+
+    //Returns -1 if there is no "Refill Number" to be found at all.
+    public static int CurrentRefillNumber(this Truck truck)
+    {
+      var newestRefill = truck.Route?.Refills?.Where(x => x.ActualDeliveryDate != null)?.OrderByDescending(x => x.ActualDeliveryDate).FirstOrDefault();
+      if (newestRefill != null)
+      {
+        return newestRefill.RefillNumber;
+      }
+      var dailyState = truck.DailyStates.OrderByDescending(x => x.Date).FirstOrDefault();
+      if (newestRefill != null)
+      {
+        return dailyState.StartRefillNumber;
+      }
+      return -1;
+    }
   }
 }

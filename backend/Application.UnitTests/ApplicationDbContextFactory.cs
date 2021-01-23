@@ -54,8 +54,8 @@ namespace Application.UnitTests
       var route2 = new Route { Id = 2 };
 
       context.Trucks.AddRange(
-        new Truck { Id = 43, Route = route1 },
-        new Truck { Id = 44, Route = route2 }
+        new Truck { Id = 43, Route = route1, TruckIdentifier = "Truck1" },
+        new Truck { Id = 44, Route = route2, TruckIdentifier = "Truck2" }
       );
 
       context.FuelTanks.AddRange(
