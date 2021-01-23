@@ -19,8 +19,8 @@ namespace Application.UnitTests.Trucks.Commands.UpdateTruck
         Description = "I'm lovin' it",
         TankCapacity = Math.PI,
         StartRefillNumber = 700,
-        TruckIdentifier = "Truck3",
-        NewTruckIdentifier = "7ruck"
+        Id = 100,
+        TruckIdentifier = "7ruck"
       };
 
       var handler = new UpdateTruckCommand.UpdateTruckCommandHandler(Context);
@@ -34,7 +34,7 @@ namespace Application.UnitTests.Trucks.Commands.UpdateTruck
       entity.Description.Should().Be(command.Description);
       entity.TankCapacity.Should().Be(command.TankCapacity);
       entity.DailyStates.OrderByDescending(x => x.Date).FirstOrDefault().StartRefillNumber.Should().Be(command.StartRefillNumber);
-      entity.TruckIdentifier.Should().Be(command.NewTruckIdentifier);
+      entity.TruckIdentifier.Should().Be(command.TruckIdentifier);
     }
 
     [Fact]
@@ -46,7 +46,8 @@ namespace Application.UnitTests.Trucks.Commands.UpdateTruck
         Description = "I'm lovin' it",
         TankCapacity = Math.PI,
         StartRefillNumber = 700,
-        TruckIdentifier = "-1"
+        TruckIdentifier = "-1",
+        Id = -1
       };
 
       var handler = new UpdateTruckCommand.UpdateTruckCommandHandler(Context);

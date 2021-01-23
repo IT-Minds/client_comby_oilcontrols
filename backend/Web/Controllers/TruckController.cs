@@ -14,9 +14,15 @@ namespace Web.Controllers
       return await Mediator.Send(new GetTruckInfoQuery { TruckId = id });
     }
 
-    [HttpPut]
-    public async Task<ActionResult<string>> UpdateTruck(UpdateTruckCommand command)
+    [HttpPut("{id}")]
+    public async Task<ActionResult<string>> UpdateTruck([FromRoute] int id, UpdateTruckCommand command)
     {
+      if (command.Id != default(int) && command.Id != id)
+      {
+        // TODO Error
+      }
+
+      command.Id = id;
       return await Mediator.Send(command);
     }
   }

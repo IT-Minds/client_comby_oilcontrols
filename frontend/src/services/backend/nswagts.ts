@@ -974,7 +974,7 @@ export class StreetClient extends ClientBase implements IStreetClient {
 
 export interface ITruckClient {
     getTruck(id?: number | undefined): Promise<TruckInfoDto>;
-    updateTruck(command: UpdateTruckCommand): Promise<string>;
+    updateTruck(id: number, command: UpdateTruckCommand): Promise<string>;
 }
 
 export class TruckClient extends ClientBase implements ITruckClient {
@@ -1028,8 +1028,11 @@ export class TruckClient extends ClientBase implements ITruckClient {
         return Promise.resolve<TruckInfoDto>(<any>null);
     }
 
-    updateTruck(command: UpdateTruckCommand): Promise<string> {
-        let url_ = this.baseUrl + "/api/Truck";
+    updateTruck(id: number, command: UpdateTruckCommand): Promise<string> {
+        let url_ = this.baseUrl + "/api/Truck/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(command);
@@ -2092,8 +2095,8 @@ export interface ITruckInfoDto {
 }
 
 export class UpdateTruckCommand implements IUpdateTruckCommand {
+    id?: number;
     truckIdentifier?: string | undefined;
-    newTruckIdentifier?: string | undefined;
     description?: string | undefined;
     tankCapacity?: number;
     startRefillNumber?: number;
@@ -2110,8 +2113,8 @@ export class UpdateTruckCommand implements IUpdateTruckCommand {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.truckIdentifier = _data["truckIdentifier"];
-            this.newTruckIdentifier = _data["newTruckIdentifier"];
             this.description = _data["description"];
             this.tankCapacity = _data["tankCapacity"];
             this.startRefillNumber = _data["startRefillNumber"];
@@ -2128,8 +2131,8 @@ export class UpdateTruckCommand implements IUpdateTruckCommand {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["truckIdentifier"] = this.truckIdentifier;
-        data["newTruckIdentifier"] = this.newTruckIdentifier;
         data["description"] = this.description;
         data["tankCapacity"] = this.tankCapacity;
         data["startRefillNumber"] = this.startRefillNumber;
@@ -2139,8 +2142,8 @@ export class UpdateTruckCommand implements IUpdateTruckCommand {
 }
 
 export interface IUpdateTruckCommand {
+    id?: number;
     truckIdentifier?: string | undefined;
-    newTruckIdentifier?: string | undefined;
     description?: string | undefined;
     tankCapacity?: number;
     startRefillNumber?: number;
