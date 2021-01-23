@@ -1,4 +1,5 @@
 using Application.Common.Interfaces.Pagination;
+using Application.Trucks.Commands.UpdateTruck;
 using Application.Trucks.Queries;
 using Application.Trucks.Queries.GetTruckInfo;
 using Application.Trucks.Queries.GetTrucksPage;
@@ -27,6 +28,18 @@ namespace Web.Controllers
         Size = size,
         Skip = skip
       });
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<string>> UpdateTruck([FromRoute] int id, UpdateTruckCommand command)
+    {
+      if (command.Id != default(int) && command.Id != id)
+      {
+        // TODO Error
+      }
+
+      command.Id = id;
+      return await Mediator.Send(command);
     }
   }
 }

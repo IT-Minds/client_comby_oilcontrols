@@ -975,6 +975,7 @@ export class StreetClient extends ClientBase implements IStreetClient {
 export interface ITruckClient {
     getTruck(truckIdentifier?: string | null | undefined): Promise<TruckInfoDto>;
     getTrucks(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfTruckInfoDto>;
+    updateTruck(id: number, command: UpdateTruckCommand): Promise<string>;
 }
 
 export class TruckClient extends ClientBase implements ITruckClient {
@@ -1068,6 +1069,49 @@ export class TruckClient extends ClientBase implements ITruckClient {
             });
         }
         return Promise.resolve<PageResultOfTruckInfoDto>(<any>null);
+    }
+
+    updateTruck(id: number, command: UpdateTruckCommand): Promise<string> {
+        let url_ = this.baseUrl + "/api/Truck/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processUpdateTruck(_response);
+        });
+    }
+
+    protected processUpdateTruck(response: Response): Promise<string> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<string>(<any>null);
     }
 }
 
@@ -2167,6 +2211,62 @@ export interface IPageResultOfTruckInfoDto {
     pagesRemaining?: number;
     results?: TruckInfoDto[] | undefined;
     hasMore?: boolean;
+}
+
+export class UpdateTruckCommand implements IUpdateTruckCommand {
+    id?: number;
+    truckIdentifier?: string | undefined;
+    description?: string | undefined;
+    tankCapacity?: number;
+    startRefillNumber?: number;
+    name?: string | undefined;
+
+    constructor(data?: IUpdateTruckCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.truckIdentifier = _data["truckIdentifier"];
+            this.description = _data["description"];
+            this.tankCapacity = _data["tankCapacity"];
+            this.startRefillNumber = _data["startRefillNumber"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): UpdateTruckCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateTruckCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["truckIdentifier"] = this.truckIdentifier;
+        data["description"] = this.description;
+        data["tankCapacity"] = this.tankCapacity;
+        data["startRefillNumber"] = this.startRefillNumber;
+        data["name"] = this.name;
+        return data; 
+    }
+}
+
+export interface IUpdateTruckCommand {
+    id?: number;
+    truckIdentifier?: string | undefined;
+    description?: string | undefined;
+    tankCapacity?: number;
+    startRefillNumber?: number;
+    name?: string | undefined;
 }
 
 export class CreateTruckRefillCommand implements ICreateTruckRefillCommand {
