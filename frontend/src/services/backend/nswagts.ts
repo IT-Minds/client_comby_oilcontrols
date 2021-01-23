@@ -974,6 +974,7 @@ export class StreetClient extends ClientBase implements IStreetClient {
 
 export interface ITruckClient {
     getTruck(truckIdentifier?: string | null | undefined): Promise<TruckInfoDto>;
+    createTruck(command: CreateTruckCommand): Promise<number>;
     getTrucks(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfTruckInfoDto>;
     updateTruck(id: number, command: UpdateTruckCommand): Promise<string>;
 }
@@ -1025,6 +1026,46 @@ export class TruckClient extends ClientBase implements ITruckClient {
             });
         }
         return Promise.resolve<TruckInfoDto>(<any>null);
+    }
+
+    createTruck(command: CreateTruckCommand): Promise<number> {
+        let url_ = this.baseUrl + "/api/Truck";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processCreateTruck(_response);
+        });
+    }
+
+    protected processCreateTruck(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(<any>null);
     }
 
     getTrucks(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfTruckInfoDto> {
@@ -2267,6 +2308,54 @@ export interface IUpdateTruckCommand {
     tankCapacity?: number;
     startRefillNumber?: number;
     name?: string | undefined;
+}
+
+export class CreateTruckCommand implements ICreateTruckCommand {
+    truckIdentifier?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+    tankCapacity?: number;
+
+    constructor(data?: ICreateTruckCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.truckIdentifier = _data["truckIdentifier"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.tankCapacity = _data["tankCapacity"];
+        }
+    }
+
+    static fromJS(data: any): CreateTruckCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateTruckCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["truckIdentifier"] = this.truckIdentifier;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["tankCapacity"] = this.tankCapacity;
+        return data; 
+    }
+}
+
+export interface ICreateTruckCommand {
+    truckIdentifier?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+    tankCapacity?: number;
 }
 
 export class CreateTruckRefillCommand implements ICreateTruckRefillCommand {

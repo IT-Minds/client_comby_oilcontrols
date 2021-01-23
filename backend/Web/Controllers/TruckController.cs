@@ -1,3 +1,4 @@
+using Application.Trucks.Commands.CreateTruck;
 using Application.Common.Interfaces.Pagination;
 using Application.Trucks.Commands.UpdateTruck;
 using Application.Trucks.Queries;
@@ -39,6 +40,12 @@ namespace Web.Controllers
       }
 
       command.Id = id;
+      return await Mediator.Send(command);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<int>> CreateTruck(CreateTruckCommand command)
+    {
       return await Mediator.Send(command);
     }
   }
