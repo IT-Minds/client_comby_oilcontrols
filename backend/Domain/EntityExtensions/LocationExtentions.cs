@@ -7,23 +7,9 @@ namespace Domain.EntityExtensions
   {
     const int HEAT_BASE = 21;
 
-    public static double FuelConsumptionPerDegreeOfHeating(this Location location)
+    public static double HeatingIndex(this Location location, DateTime startDate, DateTime endDate)
     {
-      if (location.Refills == null)
-      {
-        throw new ArgumentException("No past refills for location: " + location.Id);
-      }
-
-      var pastRefills = location.Refills
-        .OrderByDescending(x => x.ActualDeliveryDate);
-
-      if (pastRefills == null || pastRefills.Count() == 0)
-      {
-        throw new ArgumentException("No past refills for location: " + location.Id);
-      }
-
-      var endDate = pastRefills.First().ActualDeliveryDate;
-      var startDate = pastRefills.Last().ActualDeliveryDate;
+      const int HEAT_BASE = 21;
 
       var dailyTemps = location.Region.DailyTemperatures.Where(x => x.Date >= startDate && x.Date <= endDate);
       if (dailyTemps == null || dailyTemps.Count() == 0)
@@ -31,12 +17,37 @@ namespace Domain.EntityExtensions
         throw new ArgumentException("No temperatures found for location " + location.Id + " in the period " + startDate + " " + endDate);
       }
 
-      var heatingDegree = dailyTemps.Sum(x => HEAT_BASE - x.Temperature);
-      var fuelConsumed = pastRefills.Where(x => x.ActualDeliveryDate > startDate).Sum(x => x.AmountDelivered());
-
-      return (fuelConsumed ??  0) / heatingDegree;
+      var heatIndex = dailyTemps.Sum(x => HEAT_BASE - x.Temperature);
+      return heatIndex;
     }
 
+    public static double FuelConsumptionPerDegreeOfHeating(this Location location)
+    {
+      if (location.Refills == null)
+      {
+        throw new ArgumentException("No past refills for location: " + location.Id);
+      }
+
+      var pastRefills = location.Refills.Where(x => x.ActualDeliveryDate != null).OrderByDescending(x => x.ActualDeliveryDate);
+      if (pastRefills == null || pastRefills.Count() == 0)
+      {
+        throw new ArgumentException("No past refills for location: " + location.Id);
+      }
+
+      var endDate = (DateTime)pastRefills.First().ActualDeliveryDate;
+      var startDate = (DateTime)pastRefills.Last().ActualDeliveryDate;
+
+      var dailyTemps = location.Region.DailyTemperatures.Where(x => x.Date >= startDate && x.Date <= endDate);
+      if (dailyTemps == null || dailyTemps.Count() == 0)
+      {
+        throw new ArgumentException("No temperatures found for location " + location.Id + " in the period " + startDate + " " + endDate);
+      }
+
+      var heatIndex = location.HeatingIndex(startDate, endDate);
+      var fuelConsumed = pastRefills.Where(x => x.ActualDeliveryDate > startDate).Sum(x => x.AmountDelivered() ?? 0 );
+
+      return fuelConsumed / heatIndex;
+    }
 
     /// <summary>
     ///
@@ -57,6 +68,7 @@ namespace Domain.EntityExtensions
       var sortedRefills = location.Refills.Where(x => x.ActualDeliveryDate.HasValue).OrderBy(x => x.ActualDeliveryDate);
       var newestRefill = sortedRefills.Last();
       var refillDate = (DateTime)newestRefill.ActualDeliveryDate;
+
       var fuelAmount = newestRefill.EndAmount;
       var fuelConsumption = location.FuelConsumptionPerDegreeOfHeating();
 
