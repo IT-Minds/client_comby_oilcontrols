@@ -89,7 +89,11 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions =
 
           <FormControl isRequired>
             <FormLabel>{t("dailyTemperature.selectDate")}:</FormLabel>
-            <DatePicker selectedDate={date} onChange={setDate} showPopperArrow={false} />
+            <DatePicker
+              selectedDate={date}
+              onChange={(x: Date) => setDate(x)}
+              showPopperArrow={false}
+            />
           </FormControl>
           <FormControl
             isRequired

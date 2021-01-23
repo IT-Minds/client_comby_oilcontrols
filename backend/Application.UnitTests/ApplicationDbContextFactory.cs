@@ -174,7 +174,7 @@ namespace Application.UnitTests
        new Route { Id = 100, Refills = new List<Refill> { refill100, refill101 } }
       );
       context.Trucks.Add(
-        new Truck { Id = 100, RouteId = 100 }
+        new Truck { Id = 100, RouteId = 100, TruckIdentifier = "Truck3" }
       );
       context.Coupons.AddRange(
         new Coupon { Id = 100, CouponNumber = 100, TruckId = 100 },
