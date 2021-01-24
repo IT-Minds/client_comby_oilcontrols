@@ -30,7 +30,10 @@ const RunListTable: ForwardRefRenderFunction<HTMLTableElement, Props> = (
     if (process.browser) {
       const client = await genTruckClient();
       client.setCacheableResponse("NetworkFirst");
-      const something = await client.getTrucksRefills(truckId).catch(() => data);
+      const something = await client.getTrucksRefills(truckId).then(
+        x => x ?? data,
+        () => data
+      );
       setRefills(something);
     }
   }, [truckId]);
