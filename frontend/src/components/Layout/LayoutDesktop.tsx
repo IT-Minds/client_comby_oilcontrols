@@ -55,7 +55,7 @@ const LayoutDesktop: FC = ({ children }) => {
       )}
 
       <Container
-        maxW="xl"
+        maxW="5xl"
         centerContent
         padding={displaymenu ? 1 : 2}
         paddingTop={displaymenu ? 1 : 8}>

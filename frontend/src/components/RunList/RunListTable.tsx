@@ -4,6 +4,7 @@ import QuerySortBtn, { Direction } from "components/SortFilter/QuerySortBtn";
 import { useEffectAsync } from "hooks/useEffectAsync";
 import { ForwardRefRenderFunction, useCallback, useState } from "react";
 import { GiFuelTank } from "react-icons/gi";
+import { MdRemoveRedEye } from "react-icons/md";
 import { genTruckClient } from "services/backend/apiClients";
 import { ILocationRefillDto, RefillSchedule } from "services/backend/nswagts";
 import { capitalize } from "utils/capitalizeAnyString";
@@ -55,7 +56,7 @@ const RunListTable: ForwardRefRenderFunction<HTMLTableElement, Props> = (
   }, []);
 
   return (
-    <Table variant="simple" ref={ref}>
+    <Table variant="simple" ref={ref} size="sm" w="100%">
       {/* <TableCaption>Imperial to metric conversion factors</TableCaption> */}
       <Thead>
         <Tr>
@@ -100,6 +101,14 @@ const RunListTable: ForwardRefRenderFunction<HTMLTableElement, Props> = (
                   aria-label="do something"
                   onClick={() => refillCb({ ...row })}
                   icon={<GiFuelTank size={30} />}
+                />
+                <IconButton
+                  key="click"
+                  size="sm"
+                  colorScheme="gray"
+                  aria-label="do something"
+                  onClick={() => refillCb({ ...row })}
+                  icon={<MdRemoveRedEye size={24} />}
                 />
               </HStack>
             </Td>

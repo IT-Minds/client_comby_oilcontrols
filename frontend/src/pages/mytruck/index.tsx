@@ -7,7 +7,8 @@ import {
   Heading,
   HStack,
   IconButton,
-  Text
+  Text,
+  VStack
 } from "@chakra-ui/react";
 import FillOutRefillForm from "components/FillOutRefillForm/FillOutRefillForm";
 import InvalidateCouponBtn from "components/InvalidateCouponBtn/InvalidateCouponBtn";
@@ -16,11 +17,12 @@ import { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { I18nProps, useI18n } from "next-rosetta";
 import { useRef, useState } from "react";
-import { MdPrint } from "react-icons/md";
+import { MdArrowBack, MdPrint } from "react-icons/md";
 import { useReactToPrint } from "react-to-print";
 import { CouponDto, CouponStatus } from "services/backend/nswagts";
 
 import { Locale } from "../../i18n/Locale";
+import styles from "./index.module.css";
 
 type Props = {
   //
@@ -38,7 +40,7 @@ const LocalePage: NextPage<Props> = () => {
   const [refillingLocation, setRefillingLocation] = useState(0);
 
   return (
-    <Flex position="relative" h="95vh" w="100%">
+    <VStack position="relative" overflow="visible" h="95vh" w="100%">
       <Head>
         <title>
           {t("mytruck.title", {
@@ -46,28 +48,28 @@ const LocalePage: NextPage<Props> = () => {
           })}
         </title>
       </Head>
-      <Container maxW="xl" centerContent>
-        <Heading>
-          {t("mytruck.heading", {
-            id: TruckId
-          })}
-        </Heading>
+      <Heading>
+        {t("mytruck.heading", {
+          id: TruckId
+        })}
+      </Heading>
 
-        <Box position="relative" overflow="visible">
-          <Collapse in={refillingLocation > 0} unmountOnExit={true}>
-            <IconButton
-              left={-8}
-              top={-5}
-              position="absolute"
-              aria-label="goback"
-              onClick={() => setRefillingLocation(0)}
-            />
-            <FillOutRefillForm submitCallback={x => alert(JSON.stringify(x, null, 2))} />
-          </Collapse>
-        </Box>
+      <Box className={styles.fullWidthChildren}>
+        <Collapse in={refillingLocation > 0} unmountOnExit={true}>
+          <IconButton
+            size="sm"
+            left={1}
+            top={15}
+            position="absolute"
+            aria-label="goback"
+            onClick={() => setRefillingLocation(0)}
+            icon={<MdArrowBack />}
+          />
+          <FillOutRefillForm submitCallback={x => alert(JSON.stringify(x, null, 2))} />
+        </Collapse>
 
         <Collapse in={refillingLocation === 0}>
-          <Text fontSize="xl" textAlign="left" justifyContent="center">
+          <Text fontSize="xl" textAlign="center" justifyContent="center">
             Current Tank{" "}
             <Badge fontSize="0.8em" mb={1} colorScheme="green">
               20.00 liters
@@ -92,7 +94,8 @@ const LocalePage: NextPage<Props> = () => {
             refillCb={obj => setRefillingLocation(obj.locationId)}
           />
         </Collapse>
-      </Container>
+      </Box>
+
       <HStack position="absolute" bottom={4} left={0} w="100%" justifyContent="space-between">
         <InvalidateCouponBtn
           coupon={
@@ -113,7 +116,7 @@ const LocalePage: NextPage<Props> = () => {
           }
         />
       </HStack>
-    </Flex>
+    </VStack>
   );
 };
 
