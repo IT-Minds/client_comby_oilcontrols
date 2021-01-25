@@ -37,5 +37,48 @@ namespace Application.UnitTests.EntityExtentions.LocationExtensions
         () => { var fuelConsumption = location.FuelConsumptionPerDegreeOfHeating(); }
       );
     }
+
+    [Fact]
+    public async Task Handle_PredictCorrectDayForRefillOnlyOneRefillFound()
+    {
+      var location = await Context.Locations
+        .Include(x => x.FuelTank)
+        .Include(x => x.Refills)
+        .Include(x => x.Region)
+        .ThenInclude(x => x.DailyTemperatures)
+        .FirstOrDefaultAsync(x => x.Id == 200);
+
+      var date = location.PredictDayReachingMinimumFuelLevel();
+      date.Should().Be(new DateTime(1990, 5, 1));
+    }
+
+    [Fact]
+    public async Task Handle_PredictCorrectDayForRefill()
+    {
+      var location = await Context.Locations
+        .Include(x => x.FuelTank)
+        .Include(x => x.Refills)
+        .Include(x => x.Region)
+        .ThenInclude(x => x.DailyTemperatures)
+        .FirstOrDefaultAsync(x => x.Id == 201);
+
+      var date = location.PredictDayReachingMinimumFuelLevel();
+      date.Should().Be(new DateTime(1990, 5, 8));
+    }
+
+    [Fact]
+    public async Task Handle_PredictCorrectDayNoPreviousRefills()
+    {
+      var location = await Context.Locations
+        .Include(x => x.FuelTank)
+        .Include(x => x.Refills)
+        .Include(x => x.Region)
+        .ThenInclude(x => x.DailyTemperatures)
+        .FirstOrDefaultAsync(x => x.Id == 202);
+
+      var date = location.PredictDayReachingMinimumFuelLevel();
+      date.Year.Should().Be(DateTime.UtcNow.Year);
+      date.DayOfYear.Should().Be(DateTime.UtcNow.DayOfYear);
+    }
   }
 }
