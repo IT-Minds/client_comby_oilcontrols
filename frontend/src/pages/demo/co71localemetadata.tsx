@@ -5,12 +5,7 @@ import { useOffline } from "hooks/useOffline";
 import { NextPage } from "next";
 import React, { useCallback } from "react";
 import { genLocationClient } from "services/backend/apiClients";
-import {
-  CreateLocationCommand,
-  IUpdateLocationMetaDataCommand,
-  UpdateLocationMetaDataCommand
-} from "services/backend/nswagts";
-import { urlToFile } from "utils/urlToFile";
+import { CreateLocationCommand, UpdateLocationMetaDataCommand } from "services/backend/nswagts";
 
 const DemoPage: NextPage = () => {
   const toast = useToast();
