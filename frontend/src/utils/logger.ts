@@ -18,6 +18,7 @@ type MyLog = {
   (message: string, ...args: unknown[]): void;
   info: SingleLogLine;
   debug: SingleLogLine;
+  verbose: SingleLogLine;
   error: SingleLogLine;
   warn: SingleLogLine;
 };
@@ -25,6 +26,7 @@ type MyLog = {
 const myLog = <MyLog>(<unknown>logCreator(console.log));
 myLog.info = logCreator(console.info);
 myLog.debug = logCreator(console.debug);
+myLog.verbose = logCreator(console.debug);
 myLog.error = logCreator(console.error);
 myLog.warn = logCreator(console.warn);
 

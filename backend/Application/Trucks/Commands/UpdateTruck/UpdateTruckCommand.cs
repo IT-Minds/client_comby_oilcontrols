@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Newtonsoft.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
@@ -10,6 +11,7 @@ namespace Application.Trucks.Commands.UpdateTruck
 {
   public class UpdateTruckCommand : IRequest<string>
   {
+    [JsonIgnore]
     public int Id { get; set; }
     public string TruckIdentifier { get; set; }
     public string Description { get; set; }

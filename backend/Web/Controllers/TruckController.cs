@@ -36,11 +36,6 @@ namespace Web.Controllers
     [HttpPut("{id}")]
     public async Task<ActionResult<string>> UpdateTruck([FromRoute] int id, UpdateTruckCommand command)
     {
-      if (command.Id != default(int) && command.Id != id)
-      {
-        // TODO Error
-      }
-
       command.Id = id;
       return await Mediator.Send(command);
     }
@@ -55,16 +50,10 @@ namespace Web.Controllers
     [ResponseCache(Duration = 43200)] // 12 hour cache
     public async Task<ActionResult<IList<LocationRefillDto>>> GetTrucksRefills([FromRoute] int id)
     {
-      var result = await Mediator.Send(new GetLocationRequiringRefill
+      return await Mediator.Send(new GetLocationRequiringRefill
       {
         TruckId = id
       });
-      if (result.Count <= 0)
-      {
-        return NoContent();
-      }
-
-      return result;
     }
   }
 }
