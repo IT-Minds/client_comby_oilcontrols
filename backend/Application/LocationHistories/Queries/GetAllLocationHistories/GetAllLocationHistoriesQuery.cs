@@ -25,7 +25,7 @@ namespace Application.LocationHistories.Queries.GetAllLocationHistories
     public async Task<int> PagesRemaining(IQueryable<LocationHistory> query)
     {
       var count = await query.CountAsync();
-      var pagesLeft = Math.Clamp((int)(Math.Floor((float)count / (float)Size)) - 1, 0, int.MaxValue);
+      var pagesLeft = (int)(Math.Ceiling((float)count / (float)Size)) - 1;
 
       return pagesLeft;
     }
