@@ -200,9 +200,9 @@ namespace Application.UnitTests
 
       //START: Location history test data.
       context.LocationHistories.AddRange(
-        new LocationHistory { Address = "old address 1", Comments = "old comment 1", LocationId = 1, RegionId = 1, Schedule = RefillSchedule.MANUAL },
-        new LocationHistory { Address = "old address 2", Comments = "old comment 2", LocationId = 1, RegionId = 1, Schedule = RefillSchedule.MANUAL },
-        new LocationHistory { Address = "old address 3", Comments = "old comment 3", LocationId = 1, RegionId = 1, Schedule = RefillSchedule.MANUAL }
+        new LocationHistory { Address = "old address 1", Comments = "old comment 1", LocationId = 1, RegionId = 1, Schedule = RefillSchedule.MANUAL, LastModified = new DateTimeOffset(new DateTime(1990, 1, 1)) },
+        new LocationHistory { Address = "old address 2", Comments = "old comment 2", LocationId = 1, RegionId = 1, Schedule = RefillSchedule.MANUAL, LastModified = new DateTimeOffset(new DateTime(1990, 1, 2)) },
+        new LocationHistory { Address = "old address 3", Comments = "old comment 3", LocationId = 1, RegionId = 1, Schedule = RefillSchedule.MANUAL, LastModified = new DateTimeOffset(new DateTime(1990, 1, 3)) }
       );
       //END
 

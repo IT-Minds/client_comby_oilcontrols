@@ -35,8 +35,8 @@ namespace Application.LocationHistories.Queries.GetAllLocationHistories
     {
       var partial = query
         .Where(x => x.LocationId == LocationId)
-        .OrderBy(x => x.LastModified)
-        .Where(x => x.LastModified > Needle);
+        .OrderByDescending(x => x.LastModified)
+        .Where(x => x.LastModified.DateTime.CompareTo(Needle) > 0);
 
       if (Skip.HasValue)
       {
