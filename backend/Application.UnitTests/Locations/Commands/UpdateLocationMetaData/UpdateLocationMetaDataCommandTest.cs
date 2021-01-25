@@ -31,20 +31,6 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
       var oldLocation = Context.Locations.Find(1);
       var historyNumber = oldLocation.LocationHistories == null ? 0 : oldLocation.LocationHistories.Count();
 
-      oldLocation = new Domain.Entities.Location
-      {
-        Address = oldLocation.Address,
-        Comments = oldLocation.Comments,
-        Schedule = oldLocation.Schedule,
-        Region = oldLocation.Region,
-        FuelTank = oldLocation.FuelTank,
-        Refills = oldLocation.Refills,
-        DaysBetweenRefills = oldLocation.DaysBetweenRefills,
-        EstimateFuelConsumption = oldLocation.EstimateFuelConsumption
-
-      };
-
-
       var handler = new UpdateLocationMetaDataCommand.UpdateLocationMetaDataCommandHandler(Context);
       var result = await handler.Handle(command, CancellationToken.None);
       var entity = Context.Locations.Find(result);
@@ -60,11 +46,12 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
       entity.FuelTank.MinimumFuelAmount.Should().Be(command.MinimumFuelAmount);
       entity.EstimateFuelConsumption.Should().Be(command.EstimateConsumption);
       entity.LocationHistories.Count().Should().Be(historyNumber + 1);
+      newestHistory.Should().NotBeNull();
       newestHistory.LocationId.Should().Be(entity.Id);
-      newestHistory.RegionId.Should().Be(oldLocation.RegionId);
-      newestHistory.Schedule.Should().Be(oldLocation.Schedule);
-      newestHistory.Address.Should().Be(oldLocation.Address);
-      newestHistory.Comments.Should().Be(oldLocation.Comments);
+      newestHistory.RegionId.Should().Be(entity.RegionId);
+      newestHistory.Schedule.Should().Be(entity.Schedule);
+      newestHistory.Address.Should().Be(entity.Address);
+      newestHistory.Comments.Should().Be(entity.Comments);
     }
 
     [Fact]

@@ -46,16 +46,6 @@ namespace Application.Locations.Commands.UpdateLocationMetaData
           throw new NotFoundException(nameof(location.FuelTank), request.LocationId);
         }
 
-        var locationHistory = new LocationHistory
-        {
-          RegionId = location.RegionId,
-          Schedule = location.Schedule,
-          Address = location.Address,
-          Comments = location.Comments,
-          LocationId = location.Id
-        };
-        _context.LocationHistories.Add(locationHistory);
-
         location.Address = request.Address;
         location.Comments = request.Comment;
         location.Schedule = request.Refillschedule;
