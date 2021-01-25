@@ -22,10 +22,9 @@ namespace Application.UnitTests.EntityExtentions.LocationExtensions
     public async Task Handle_NoRefillsForLocation()
     {
       var location = await Context.Locations.Include(x => x.Refills).FirstOrDefaultAsync(x => x.Id == 6);
+      var fuelConsumption = location.FuelConsumptionPerDegreeOfHeating();
+      fuelConsumption.Should().Be(location.EstimateFuelConsumption);
 
-      Assert.Throws<ArgumentException>(
-        () => { var fuelConsumption = location.FuelConsumptionPerDegreeOfHeating(); }
-      );
     }
 
     [Fact]
@@ -49,6 +48,34 @@ namespace Application.UnitTests.EntityExtentions.LocationExtensions
 
       var result = location.EstimatedYearlyFuelConsumption(1950);
       result.Should().Be(949000);
+    }
+
+    [Fact]
+    public async Task Handle_EstimateYearlyFuelConsumptionRefillsRegistered()
+    {
+      var location = await Context.Locations
+        .Include(x => x.Region)
+        .ThenInclude(x => x.DailyTemperatures)
+        .Include(x => x.Refills)
+        .FirstOrDefaultAsync(x => x.Id == 301);
+
+      var result = location.EstimatedYearlyFuelConsumption(1950);
+      result.Should().Be(32850);
+    }
+
+    [Fact]
+    public async Task Handle_EstimateYearlyFuelConsumptionNoTemperatures()
+    {
+      var location = await Context.Locations
+        .Include(x => x.Region)
+        .ThenInclude(x => x.DailyTemperatures)
+        .Include(x => x.Refills)
+        .FirstOrDefaultAsync(x => x.Id == 302);
+
+      Assert.Throws<ArgumentException>(
+        () => { var result = location.EstimatedYearlyFuelConsumption(1950); }
+      );
+
     }
   }
 }
