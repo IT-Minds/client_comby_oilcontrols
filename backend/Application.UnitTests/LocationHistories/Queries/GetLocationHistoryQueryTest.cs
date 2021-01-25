@@ -56,5 +56,21 @@ namespace Application.UnitTests.LocationHistories.GetLocationHistory
       result.Results.Count.Should().Be(0);
       result.PagesRemaining.Should().Be(0);
     }
+
+    [Fact]
+    public async Task Handle_NoNeedle()
+    {
+      var query = new GetLocationHistoryQuery
+      {
+        LocationId = -1,
+        Size = 500,
+        Skip = 0
+      };
+      var handler = new GetLocationHistoryQuery.GetLocationHistoryQueryHandler(_context, _mapper);
+      var result = await handler.Handle(query, CancellationToken.None);
+      result.Should().BeOfType<PageResult<LocationHistoryDto>>();
+      result.Results.Count.Should().Be(0);
+      result.PagesRemaining.Should().Be(0);
+    }
   }
 }
