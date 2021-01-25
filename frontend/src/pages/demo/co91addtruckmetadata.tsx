@@ -5,6 +5,8 @@ import { Locale } from "i18n/Locale";
 import { GetStaticProps, NextPage } from "next";
 import { I18nProps } from "next-rosetta";
 import { useCallback } from "react";
+import { genTruckClient } from "services/backend/apiClients";
+import { CreateTruckCommand, UpdateTruckCommand } from "services/backend/nswagts";
 
 const DemoPage: NextPage = () => {
   const toast = useToast();
@@ -12,18 +14,28 @@ const DemoPage: NextPage = () => {
   const bg = useColorModeValue("gray.100", "gray.700");
 
   const saveForm = useCallback(
-    async truckMetaDataForm => {
+    async form => {
       awaitCallback(async () => {
-        // TODO: WAITING FOR BACKEND COMMAND + INTERFACE
-        // const client = await genRefillClient();
-        // await client.create(
-        //   new CreateRefillCommand({
-        //     truckNumber: truckMetaDataForm.truckNumber,
-        //     name: truckMetaDataForm.name,
-        //     description: truckMetaDataForm.description,
-        //     tankCapacity: truckMetaDataForm.tankCapacity
-        //   })
-        // );
+        const client = await genTruckClient();
+        await (form.id
+          ? client.updateTruck(
+              form.id,
+              new UpdateTruckCommand({
+                startRefillNumber: form.startRefillNumber,
+                truckIdentifier: form.truckIdentifier,
+                name: form.name,
+                description: form.description,
+                tankCapacity: form.tankCapacity
+              })
+            )
+          : client.createTruck(
+              new CreateTruckCommand({
+                truckIdentifier: form.truckIdentifier,
+                name: form.name,
+                description: form.description,
+                tankCapacity: form.tankCapacity
+              })
+            ));
 
         toast({
           title: "Truck Meta Data Saved",
@@ -40,7 +52,7 @@ const DemoPage: NextPage = () => {
   return (
     <Container maxW="xl" centerContent>
       <Box padding="4" bg={bg} maxW="6xl" maxH="4xl" resize="both" overflow="auto">
-        <AddTruckMetaData submitCallback={x => saveForm(x)}></AddTruckMetaData>
+        <AddTruckMetaData submitCallback={x => saveForm(x)} truckMetaData={null}></AddTruckMetaData>
       </Box>
     </Container>
   );
