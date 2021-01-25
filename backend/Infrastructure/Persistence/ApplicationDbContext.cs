@@ -44,7 +44,7 @@ namespace Infrastructure.Persistence
 
     public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
-      foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
+      foreach (var entry in ChangeTracker.Entries<AuditableEntity>().ToList())
       {
         switch (entry.State)
         {
@@ -54,22 +54,25 @@ namespace Infrastructure.Persistence
             entry.Entity.LastModifiedBy = _currentUserService.UserId;
             entry.Entity.LastModified = _dateTimeOffsetService.Now;
             entry.Entity.ModifiedCount = 0;
-
             break;
           case EntityState.Modified:
             entry.Entity.LastModifiedBy = _currentUserService.UserId;
             entry.Entity.LastModified = _dateTimeOffsetService.Now;
             entry.Entity.ModifiedCount++;
+            if (entry.Entity.GetType().Equals(typeof(Location)))
+            {
+              OnLocationChange(entry.Entity as Location);
+            }
             break;
         }
       }
 
       var result = await base.SaveChangesAsync(cancellationToken);
 
-      #pragma warning disable 4014
+#pragma warning disable 4014
       OnLocationsChange(ChangeTracker.Entries<AuditableEntity>()
         .Where(x => x.Entity.GetType().Equals(typeof(Location))), cancellationToken);
-      #pragma warning restore 4014
+#pragma warning restore 4014
 
       return result;
     }
