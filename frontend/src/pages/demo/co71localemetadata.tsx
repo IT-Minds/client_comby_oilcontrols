@@ -1,13 +1,16 @@
 import { Box, Container, useColorModeValue, useToast } from "@chakra-ui/react";
 import LocaleMetaDataComp from "components/LocaleMetaDataForm/LocaleMetaDataComp";
+import { LocaleMetaDataForm } from "components/LocaleMetaDataForm/LocaleMetaDataCompForm";
 import { useOffline } from "hooks/useOffline";
 import { NextPage } from "next";
 import React, { useCallback } from "react";
 import { genLocationClient } from "services/backend/apiClients";
 import {
+  CreateLocationCommand,
   IUpdateLocationMetaDataCommand,
   UpdateLocationMetaDataCommand
 } from "services/backend/nswagts";
+import { urlToFile } from "utils/urlToFile";
 
 const DemoPage: NextPage = () => {
   const toast = useToast();
@@ -17,22 +20,25 @@ const DemoPage: NextPage = () => {
   const bg = useColorModeValue("gray.100", "gray.700");
 
   const saveForm = useCallback(
-    async (form: IUpdateLocationMetaDataCommand) => {
+    async (form: LocaleMetaDataForm) => {
       awaitCallback(async () => {
         const client = await genLocationClient();
-        await client.updateMetaData(
-          new UpdateLocationMetaDataCommand({
-            address: form.address,
-            comment: form.comment,
-            estimateConsumption: form.estimateConsumption,
-            locationId: form.locationId,
-            refillschedule: form.refillschedule,
-            tankType: form.tankType,
-            tankNumber: form.tankNumber,
-            tankCapacity: form.tankCapacity,
-            minimumFuelAmount: form.minimumFuelAmount
-          })
-        );
+        const newId = await (form.locationId
+          ? client.updateMetaData(new UpdateLocationMetaDataCommand(form))
+          : client.addNewLocation(
+              new CreateLocationCommand({
+                address: form.address,
+                comment: form.comment,
+                estimateConsumption: form.estimateConsumption,
+                refillschedule: form.refillschedule,
+                tankType: form.tankType,
+                tankNumber: form.tankNumber,
+                tankCapacity: form.tankCapacity,
+                minimumFuelAmount: form.minimumFuelAmount
+              })
+            ));
+
+        await client.saveLocationImage(1, { data: form.image, fileName: form.image.name });
 
         toast({
           title: "Filldata created/updated",
@@ -49,7 +55,7 @@ const DemoPage: NextPage = () => {
   return (
     <Container maxW="xl" centerContent>
       <Box padding="4" bg={bg} maxW="6xl" maxH="4xl" resize="both" overflow="auto">
-        <LocaleMetaDataComp submitCallback={x => saveForm(x)} />
+        <LocaleMetaDataComp submitCallback={x => saveForm(x)} localeMetaData={null} />
       </Box>
     </Container>
   );
