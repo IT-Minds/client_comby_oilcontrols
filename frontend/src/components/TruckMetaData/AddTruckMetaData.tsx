@@ -25,7 +25,7 @@ type Props = {
 };
 
 const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
-  const [localTruckMetaDataForm, setlocalTruckMetaDataForm] = useState<ITruckInfoDto>(
+  const [localTruckMetaDataForm, setLocalTruckMetaDataForm] = useState<ITruckInfoDto>(
     truckMetaData ?? {
       id: null,
       refillNumber: null,
@@ -41,7 +41,7 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
 
   const updateLocalForm = useCallback((value: unknown, key: keyof ITruckInfoDto) => {
-    setlocalTruckMetaDataForm(form => {
+    setLocalTruckMetaDataForm(form => {
       (form[key] as unknown) = value;
       return form;
     });
