@@ -37,5 +37,18 @@ namespace Application.UnitTests.EntityExtentions.LocationExtensions
         () => { var fuelConsumption = location.FuelConsumptionPerDegreeOfHeating(); }
       );
     }
+
+    [Fact]
+    public async Task Handle_EstimateYearlyFuelConsumptionNoRefillsRegistered()
+    {
+      var location = await Context.Locations
+        .Include(x => x.Region)
+        .ThenInclude(x => x.DailyTemperatures)
+        .Include(x => x.Refills)
+        .FirstOrDefaultAsync(x => x.Id == 300);
+
+      var result = location.EstimatedYearlyFuelConsumption(1950);
+      result.Should().Be(949000);
+    }
   }
 }

@@ -31,7 +31,7 @@ namespace Domain.EntityExtensions
       var pastRefills = location.Refills.Where(x => x.ActualDeliveryDate != null).OrderByDescending(x => x.ActualDeliveryDate);
       if (pastRefills == null || pastRefills.Count() == 0)
       {
-        throw new ArgumentException("No past refills for location: " + location.Id);
+        return location.EstimateFuelConsumption;
       }
 
       var endDate = (DateTime)pastRefills.First().ActualDeliveryDate;
@@ -116,7 +116,7 @@ namespace Domain.EntityExtensions
       while (period.Year == year)
       {
         heatDegreeSum += (double)HEAT_BASE - location.Region.DailyTemperatureEstimate(period);
-        period.AddDays(1);
+        period = period.AddDays(1);
       }
 
       return location.FuelConsumptionPerDegreeOfHeating() * heatDegreeSum;

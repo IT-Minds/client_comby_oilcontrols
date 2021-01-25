@@ -67,7 +67,7 @@ namespace Application.UnitTests
         new FuelTank { Id = 6, /* TankNumber */ FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 50 },
         new FuelTank { Id = 8, /* TankNumber */ FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 50 },
         new FuelTank { Id = 7, /* TankNumber */ FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 50 },
-        new FuelTank { Id = 100, TankType = TankType.BUILDING, FuelType= FuelType.GASOLINE, TankNumber = 1001, TankCapacity = 300, MinimumFuelAmount = 0 }
+        new FuelTank { Id = 100, TankType = TankType.BUILDING, FuelType = FuelType.GASOLINE, TankNumber = 1001, TankCapacity = 300, MinimumFuelAmount = 0 }
       );
 
       context.Locations.AddRange(
@@ -198,6 +198,25 @@ namespace Application.UnitTests
       );
       //END
 
+      //START: Test data predict yearly fuel consumption
+      context.Regions.Add(new Region { Id = 300 });
+      context.FuelTanks.AddRange(
+        new FuelTank { Id = 300, TankNumber = 300, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 }
+      );
+      context.Locations.AddRange(
+        new Location { Id = 300, RegionId = 300, FuelTankId = 300, Address = "Address region 300.", Comments = "Location 300.", EstimateFuelConsumption = 100 }
+      );
+
+      DateTime period = new DateTime(1944, 1, 1);
+      int id = 1950;
+      while (period.Year < 1951)
+      {
+        context.RegionDailyTemps.Add(
+          new RegionDailyTemp { Id = id++, RegionId = 300, Date = period, Temperature = -5 }
+        );
+        period = period.AddDays(1);
+      }
+      //END
       context.SaveChanges();
     }
 
