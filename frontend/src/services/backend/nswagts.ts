@@ -1117,6 +1117,195 @@ export class RefillClient extends ClientBase implements IRefillClient {
     }
     return Promise.resolve<string>(<any>null);
   }
+  complete(id: number, command: CompleteRefillCommand): Promise<number>;
+  get(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined, tankType?: TankType | null | undefined): Promise<PageResultOfRefillDto>;
+  orderRefill(command: OrderRefillCommand): Promise<number>;
+  saveCouponImage(id: number, file?: FileParameter | null | undefined): Promise<string>;
+}
+
+export class RefillClient extends ClientBase implements IRefillClient {
+  private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+  constructor(configuration: AuthClient, baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+    super(configuration);
+    this.http = http ? http : <any>window;
+    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+  }
+
+  complete(id: number, command: CompleteRefillCommand): Promise<number> {
+    let url_ = this.baseUrl + "/api/Refill/{id}";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(command);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.transformOptions(options_).then(transformedOptions_ => {
+      return this.http.fetch(url_, transformedOptions_);
+    }).then((_response: Response) => {
+      return this.transformResult(url_, _response, (_response: Response) => this.processComplete(_response));
+    });
+  }
+
+  protected processComplete(response: Response): Promise<number> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 !== undefined ? resultData200 : <any>null;
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<number>(<any>null);
+  }
+
+  get(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined, tankType?: TankType | null | undefined): Promise<PageResultOfRefillDto> {
+    let url_ = this.baseUrl + "/api/Refill?";
+    if (needle !== undefined && needle !== null)
+      url_ += "needle=" + encodeURIComponent("" + needle) + "&";
+    if (size === null)
+      throw new Error("The parameter 'size' cannot be null.");
+    else if (size !== undefined)
+      url_ += "size=" + encodeURIComponent("" + size) + "&";
+    if (skip !== undefined && skip !== null)
+      url_ += "skip=" + encodeURIComponent("" + skip) + "&";
+    if (tankType !== undefined && tankType !== null)
+      url_ += "tankType=" + encodeURIComponent("" + tankType) + "&";
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <RequestInit>{
+      method: "GET",
+      headers: {
+        "Accept": "application/json"
+      }
+    };
+
+    return this.transformOptions(options_).then(transformedOptions_ => {
+      return this.http.fetch(url_, transformedOptions_);
+    }).then((_response: Response) => {
+      return this.transformResult(url_, _response, (_response: Response) => this.processGet(_response));
+    });
+  }
+
+  protected processGet(response: Response): Promise<PageResultOfRefillDto> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = PageResultOfRefillDto.fromJS(resultData200);
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<PageResultOfRefillDto>(<any>null);
+  }
+
+  orderRefill(command: OrderRefillCommand): Promise<number> {
+    let url_ = this.baseUrl + "/api/Refill";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(command);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.transformOptions(options_).then(transformedOptions_ => {
+      return this.http.fetch(url_, transformedOptions_);
+    }).then((_response: Response) => {
+      return this.transformResult(url_, _response, (_response: Response) => this.processOrderRefill(_response));
+    });
+  }
+
+  protected processOrderRefill(response: Response): Promise<number> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 !== undefined ? resultData200 : <any>null;
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<number>(<any>null);
+  }
+
+  saveCouponImage(id: number, file?: FileParameter | null | undefined): Promise<string> {
+    let url_ = this.baseUrl + "/api/Refill/{id}/image";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = new FormData();
+    if (file !== null && file !== undefined)
+      content_.append("file", file.data, file.fileName ? file.fileName : "file");
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Accept": "application/json"
+      }
+    };
+
+    return this.transformOptions(options_).then(transformedOptions_ => {
+      return this.http.fetch(url_, transformedOptions_);
+    }).then((_response: Response) => {
+      return this.transformResult(url_, _response, (_response: Response) => this.processSaveCouponImage(_response));
+    });
+  }
+
+  protected processSaveCouponImage(response: Response): Promise<string> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 !== undefined ? resultData200 : <any>null;
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<string>(<any>null);
+  }
 }
 
 export interface IStreetClient {
@@ -1180,6 +1369,234 @@ export class StreetClient extends ClientBase implements IStreetClient {
 }
 
 export interface ITruckClient {
+  getTruck(id: number): Promise<TruckInfoIdDto>;
+  updateTruck(id: number, command: UpdateTruckCommand): Promise<TruckInfoIdDto>;
+  getTrucks(needle?: number | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfTruckInfoIdDtoAndInteger>;
+  createTruck(command: CreateTruckCommand): Promise<TruckInfoIdDto>;
+  getTrucksRefills(id: number): Promise<LocationRefillDto[]>;
+}
+
+export class TruckClient extends ClientBase implements ITruckClient {
+  private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+  constructor(configuration: AuthClient, baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+    super(configuration);
+    this.http = http ? http : <any>window;
+    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+  }
+
+  getTruck(id: number): Promise<TruckInfoIdDto> {
+    let url_ = this.baseUrl + "/api/Truck/{id}";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <RequestInit>{
+      method: "GET",
+      headers: {
+        "Accept": "application/json"
+      }
+    };
+
+    return this.transformOptions(options_).then(transformedOptions_ => {
+      return this.http.fetch(url_, transformedOptions_);
+    }).then((_response: Response) => {
+      return this.transformResult(url_, _response, (_response: Response) => this.processGetTruck(_response));
+    });
+  }
+
+  protected processGetTruck(response: Response): Promise<TruckInfoIdDto> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = TruckInfoIdDto.fromJS(resultData200);
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<TruckInfoIdDto>(<any>null);
+  }
+
+  updateTruck(id: number, command: UpdateTruckCommand): Promise<TruckInfoIdDto> {
+    let url_ = this.baseUrl + "/api/Truck/{id}";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(command);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.transformOptions(options_).then(transformedOptions_ => {
+      return this.http.fetch(url_, transformedOptions_);
+    }).then((_response: Response) => {
+      return this.transformResult(url_, _response, (_response: Response) => this.processUpdateTruck(_response));
+    });
+  }
+
+  protected processUpdateTruck(response: Response): Promise<TruckInfoIdDto> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = TruckInfoIdDto.fromJS(resultData200);
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<TruckInfoIdDto>(<any>null);
+  }
+
+  getTrucks(needle?: number | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfTruckInfoIdDtoAndInteger> {
+    let url_ = this.baseUrl + "/api/Truck?";
+    if (needle === null)
+      throw new Error("The parameter 'needle' cannot be null.");
+    else if (needle !== undefined)
+      url_ += "needle=" + encodeURIComponent("" + needle) + "&";
+    if (size === null)
+      throw new Error("The parameter 'size' cannot be null.");
+    else if (size !== undefined)
+      url_ += "size=" + encodeURIComponent("" + size) + "&";
+    if (skip !== undefined && skip !== null)
+      url_ += "skip=" + encodeURIComponent("" + skip) + "&";
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <RequestInit>{
+      method: "GET",
+      headers: {
+        "Accept": "application/json"
+      }
+    };
+
+    return this.transformOptions(options_).then(transformedOptions_ => {
+      return this.http.fetch(url_, transformedOptions_);
+    }).then((_response: Response) => {
+      return this.transformResult(url_, _response, (_response: Response) => this.processGetTrucks(_response));
+    });
+  }
+
+  protected processGetTrucks(response: Response): Promise<PageResultOfTruckInfoIdDtoAndInteger> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = PageResultOfTruckInfoIdDtoAndInteger.fromJS(resultData200);
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<PageResultOfTruckInfoIdDtoAndInteger>(<any>null);
+  }
+
+  createTruck(command: CreateTruckCommand): Promise<TruckInfoIdDto> {
+    let url_ = this.baseUrl + "/api/Truck";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(command);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.transformOptions(options_).then(transformedOptions_ => {
+      return this.http.fetch(url_, transformedOptions_);
+    }).then((_response: Response) => {
+      return this.transformResult(url_, _response, (_response: Response) => this.processCreateTruck(_response));
+    });
+  }
+
+  protected processCreateTruck(response: Response): Promise<TruckInfoIdDto> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = TruckInfoIdDto.fromJS(resultData200);
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<TruckInfoIdDto>(<any>null);
+  }
+
+  getTrucksRefills(id: number): Promise<LocationRefillDto[]> {
+    let url_ = this.baseUrl + "/api/Truck/{id}/runList";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <RequestInit>{
+      method: "GET",
+      headers: {
+        "Accept": "application/json"
+      }
+    };
+
+    return this.transformOptions(options_).then(transformedOptions_ => {
+      return this.http.fetch(url_, transformedOptions_);
+    }).then((_response: Response) => {
+      return this.transformResult(url_, _response, (_response: Response) => this.processGetTrucksRefills(_response));
+    });
+  }
+
+  protected processGetTrucksRefills(response: Response): Promise<LocationRefillDto[]> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        if (Array.isArray(resultData200)) {
+          result200 = [] as any;
+          for (let item of resultData200)
+            result200!.push(LocationRefillDto.fromJS(item));
+        }
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<LocationRefillDto[]>(<any>null);
+  }
   getTruck(id: number): Promise<TruckInfoIdDto>;
   updateTruck(id: number, command: UpdateTruckCommand): Promise<TruckInfoIdDto>;
   getTrucks(needle?: number | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfTruckInfoIdDtoAndInteger>;
@@ -1519,6 +1936,31 @@ export class PageResultOfCouponDtoAndString implements IPageResultOfCouponDtoAnd
   pagesRemaining?: number;
   results?: CouponDto[] | null;
   hasMore?: boolean;
+  truckId?: number;
+  couponNumbers?: number[] | null;
+}
+
+export class PageResultOfCouponDtoAndString implements IPageResultOfCouponDtoAndString {
+  newNeedle?: string | null;
+  pagesRemaining?: number;
+  results?: CouponDto[] | null;
+  hasMore?: boolean;
+
+  constructor(data?: IPageResultOfCouponDtoAndString) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
+      if (data.results) {
+        this.results = [];
+        for (let i = 0; i < data.results.length; i++) {
+          let item = data.results[i];
+          this.results[i] = item && !(<any>item).toJSON ? new CouponDto(item) : <CouponDto>item;
+        }
+      }
+    }
+  }
 
   constructor(data?: IPageResultOfCouponDtoAndString) {
     if (data) {
@@ -1546,12 +1988,59 @@ export class PageResultOfCouponDtoAndString implements IPageResultOfCouponDtoAnd
           this.results!.push(CouponDto.fromJS(item));
       }
       this.hasMore = _data["hasMore"] !== undefined ? _data["hasMore"] : <any>null;
+    static fromJS(data: any): PageResultOfCouponDtoAndString {
+    data = typeof data === 'object' ? data : {};
+    let result = new PageResultOfCouponDtoAndString();
+    result.init(data);
+    return result;
+  }
+}
+
+  static fromJS(data: any): PageResultOfCouponDtoAndString {
+  data = typeof data === 'object' ? data : {};
+  let result = new PageResultOfCouponDtoAndString();
+  result.init(data);
+  return result;
+}
+
+{
+  data = typeof data === 'object' ? data : {};
+  data["newNeedle"] = this.newNeedle !== undefined ? this.newNeedle : <any>null;
+  data["pagesRemaining"] = this.pagesRemaining !== undefined ? this.pagesRemaining : <any>null;
+  if (Array.isArray(this.results)) {
+    data["results"] = [];
+    for (let item of this.results)
+      data["results"].push(item.toJSON());
+  }
+  data["hasMore"] = this.hasMore !== undefined ? this.hasMore : <any>null;
+  return data;
+}
+}
+
+export interface IPageResultOfCouponDtoAndString {
+  newNeedle?: string | null;
+  pagesRemaining?: number;
+  results?: ICouponDto[] | null;
+  hasMore?: boolean;
+}
+
+export class PageResultOfCouponDto extends PageResultOfCouponDtoAndString implements IPageResultOfCouponDto {
+  newNeedle?: string | null;
+
+  constructor(data?: IPageResultOfCouponDto) {
+    super(data);
+  }
+
+  init(_data?: any) {
+    super.init(_data);
+    if (_data) {
+      this.newNeedle = _data["newNeedle"] !== undefined ? _data["newNeedle"] : <any>null;
     }
   }
 
-  static fromJS(data: any): PageResultOfCouponDtoAndString {
+  static fromJS(data: any): PageResultOfCouponDto {
     data = typeof data === 'object' ? data : {};
-    let result = new PageResultOfCouponDtoAndString();
+    let result = new PageResultOfCouponDto();
     result.init(data);
     return result;
   }
@@ -1559,17 +2048,13 @@ export class PageResultOfCouponDtoAndString implements IPageResultOfCouponDtoAnd
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data["newNeedle"] = this.newNeedle !== undefined ? this.newNeedle : <any>null;
-    data["pagesRemaining"] = this.pagesRemaining !== undefined ? this.pagesRemaining : <any>null;
-    if (Array.isArray(this.results)) {
-      data["results"] = [];
-      for (let item of this.results)
-        data["results"].push(item.toJSON());
-    }
-    data["hasMore"] = this.hasMore !== undefined ? this.hasMore : <any>null;
+    super.toJSON(data);
     return data;
   }
 }
 
+export interface IPageResultOfCouponDto extends IPageResultOfCouponDtoAndString {
+  newNeedle?: string | null;
 export interface IPageResultOfCouponDtoAndString {
   newNeedle?: string | null;
   pagesRemaining?: number;
@@ -1816,23 +2301,48 @@ export class PageResultOfExampleEntityDtoAndString implements IPageResultOfExamp
         for (let i = 0; i < data.results.length; i++) {
           let item = data.results[i];
           this.results[i] = item && !(<any>item).toJSON ? new ExampleEntityDto(item) : <ExampleEntityDto>item;
+          id ?: number;
+          name ?: string | null;
+          exampleEnum ?: ExampleEnum;
+          exampleEntityListId ?: number | null;
+        }
+
+        export class PageResultOfExampleEntityDtoAndString implements IPageResultOfExampleEntityDtoAndString {
+          newNeedle?: string | null;
+          pagesRemaining?: number;
+          results?: ExampleEntityDto[] | null;
+          hasMore?: boolean;
+
+          constructor(data?: IPageResultOfExampleEntityDtoAndString) {
+            if (data) {
+              for (var property in data) {
+                if (data.hasOwnProperty(property))
+                  (<any>this)[property] = (<any>data)[property];
+              }
+              if (data.results) {
+                this.results = [];
+                for (let i = 0; i < data.results.length; i++) {
+                  let item = data.results[i];
+                  this.results[i] = item && !(<any>item).toJSON ? new ExampleEntityDto(item) : <ExampleEntityDto>item;
+                }
+              }
+            }
+          }
         }
       }
-    }
-  }
 
-  init(_data?: any) {
-    if (_data) {
-      this.newNeedle = _data["newNeedle"] !== undefined ? _data["newNeedle"] : <any>null;
-      this.pagesRemaining = _data["pagesRemaining"] !== undefined ? _data["pagesRemaining"] : <any>null;
-      if (Array.isArray(_data["results"])) {
-        this.results = [] as any;
-        for (let item of _data["results"])
-          this.results!.push(ExampleEntityDto.fromJS(item));
+      init(_data ?: any) {
+        if (_data) {
+          this.newNeedle = _data["newNeedle"] !== undefined ? _data["newNeedle"] : <any>null;
+          this.pagesRemaining = _data["pagesRemaining"] !== undefined ? _data["pagesRemaining"] : <any>null;
+          if (Array.isArray(_data["results"])) {
+            this.results = [] as any;
+            for (let item of _data["results"])
+              this.results!.push(ExampleEntityDto.fromJS(item));
+          }
+          this.hasMore = _data["hasMore"] !== undefined ? _data["hasMore"] : <any>null;
+        }
       }
-      this.hasMore = _data["hasMore"] !== undefined ? _data["hasMore"] : <any>null;
-    }
-  }
 
   static fromJS(data: any): PageResultOfExampleEntityDtoAndString {
     data = typeof data === 'object' ? data : {};
@@ -1855,6 +2365,50 @@ export class PageResultOfExampleEntityDtoAndString implements IPageResultOfExamp
   }
 }
 
+export interface IPageResultOfExampleEntityDtoAndString {
+  newNeedle?: string | null;
+  pagesRemaining?: number;
+  results?: IExampleEntityDto[] | null;
+  hasMore?: boolean;
+}
+
+export class PageResultOfExampleEntityDto extends PageResultOfExampleEntityDtoAndString implements IPageResultOfExampleEntityDto {
+  newNeedle?: string | null;
+
+  constructor(data?: IPageResultOfExampleEntityDto) {
+    super(data);
+  }
+  static fromJS(data: any): PageResultOfExampleEntityDtoAndString {
+    data = typeof data === 'object' ? data : {};
+    let result = new PageResultOfExampleEntityDtoAndString();
+    result.init(data);
+    return result;
+  }
+
+  init(_data?: any) {
+    super.init(_data);
+    if (_data) {
+      this.newNeedle = _data["newNeedle"] !== undefined ? _data["newNeedle"] : <any>null;
+    }
+  }
+
+  static fromJS(data: any): PageResultOfExampleEntityDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new PageResultOfExampleEntityDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["newNeedle"] = this.newNeedle !== undefined ? this.newNeedle : <any>null;
+    super.toJSON(data);
+    return data;
+  }
+}
+
+export interface IPageResultOfExampleEntityDto extends IPageResultOfExampleEntityDtoAndString {
+  newNeedle?: string | null;
 export interface IPageResultOfExampleEntityDtoAndString {
   newNeedle?: string | null;
   pagesRemaining?: number;
@@ -2131,13 +2685,13 @@ export interface ICreateLocationCommand {
   estimateConsumption?: number;
 }
 
-export class PageResultOfLocationHistoryDto implements IPageResultOfLocationHistoryDto {
+export class PageResultOfLocationHistoryDtoAndString implements IPageResultOfLocationHistoryDtoAndString {
   newNeedle?: string | null;
   pagesRemaining?: number;
   results?: LocationHistoryDto[] | null;
   hasMore?: boolean;
 
-  constructor(data?: IPageResultOfLocationHistoryDto) {
+  constructor(data?: IPageResultOfLocationHistoryDtoAndString) {
     if (data) {
       for (var property in data) {
         if (data.hasOwnProperty(property))
@@ -2152,17 +2706,61 @@ export class PageResultOfLocationHistoryDto implements IPageResultOfLocationHist
       }
     }
   }
+}
+  }
+
+init(_data ?: any) {
+  if (_data) {
+    this.newNeedle = _data["newNeedle"] !== undefined ? _data["newNeedle"] : <any>null;
+    this.pagesRemaining = _data["pagesRemaining"] !== undefined ? _data["pagesRemaining"] : <any>null;
+    if (Array.isArray(_data["results"])) {
+      this.results = [] as any;
+      for (let item of _data["results"])
+        this.results!.push(LocationHistoryDto.fromJS(item));
+    }
+    this.hasMore = _data["hasMore"] !== undefined ? _data["hasMore"] : <any>null;
+  }
+}
+
+    static fromJS(data: any): PageResultOfLocationHistoryDtoAndString {
+  data = typeof data === 'object' ? data : {};
+  let result = new PageResultOfLocationHistoryDtoAndString();
+  result.init(data);
+  return result;
+}
+
+toJSON(data ?: any) {
+  data = typeof data === 'object' ? data : {};
+  data["newNeedle"] = this.newNeedle !== undefined ? this.newNeedle : <any>null;
+  data["pagesRemaining"] = this.pagesRemaining !== undefined ? this.pagesRemaining : <any>null;
+  if (Array.isArray(this.results)) {
+    data["results"] = [];
+    for (let item of this.results)
+      data["results"].push(item.toJSON());
+  }
+  data["hasMore"] = this.hasMore !== undefined ? this.hasMore : <any>null;
+  return data;
+}
+}
+
+export interface IPageResultOfLocationHistoryDtoAndString {
+  newNeedle?: string | null;
+  pagesRemaining?: number;
+  results?: ILocationHistoryDto[] | null;
+  hasMore?: boolean;
+}
+
+export class PageResultOfLocationHistoryDto extends PageResultOfLocationHistoryDtoAndString implements IPageResultOfLocationHistoryDto {
+  newNeedle?: string | null;
+
+  constructor(data?: IPageResultOfLocationHistoryDto) {
+    super(data);
+  }
 
   init(_data?: any) {
+    super.init(_data);
     if (_data) {
       this.newNeedle = _data["newNeedle"] !== undefined ? _data["newNeedle"] : <any>null;
-      this.pagesRemaining = _data["pagesRemaining"] !== undefined ? _data["pagesRemaining"] : <any>null;
-      if (Array.isArray(_data["results"])) {
-        this.results = [] as any;
-        for (let item of _data["results"])
-          this.results!.push(LocationHistoryDto.fromJS(item));
-      }
-      this.hasMore = _data["hasMore"] !== undefined ? _data["hasMore"] : <any>null;
     }
   }
 
@@ -2176,22 +2774,13 @@ export class PageResultOfLocationHistoryDto implements IPageResultOfLocationHist
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data["newNeedle"] = this.newNeedle !== undefined ? this.newNeedle : <any>null;
-    data["pagesRemaining"] = this.pagesRemaining !== undefined ? this.pagesRemaining : <any>null;
-    if (Array.isArray(this.results)) {
-      data["results"] = [];
-      for (let item of this.results)
-        data["results"].push(item.toJSON());
-    }
-    data["hasMore"] = this.hasMore !== undefined ? this.hasMore : <any>null;
+    super.toJSON(data);
     return data;
   }
 }
 
-export interface IPageResultOfLocationHistoryDto {
+export interface IPageResultOfLocationHistoryDto extends IPageResultOfLocationHistoryDtoAndString {
   newNeedle?: string | null;
-  pagesRemaining?: number;
-  results?: ILocationHistoryDto[] | null;
-  hasMore?: boolean;
 }
 
 export class LocationHistoryDto implements ILocationHistoryDto {
@@ -2255,10 +2844,7 @@ export interface ILocationHistoryDto {
   timeOfChange?: Date;
 }
 
-export class CreateRefillCommand implements ICreateRefillCommand {
-  truckId?: number;
-  tankType?: TankType;
-  tankNumber?: number;
+export class CompleteRefillCommand implements ICompleteRefillCommand {
   startAmount?: number;
   endAmount?: number;
   couponNumber?: number;
@@ -2285,24 +2871,26 @@ export class CreateRefillCommand implements ICreateRefillCommand {
       this.refillNumber = _data["refillNumber"] !== undefined ? _data["refillNumber"] : <any>null;
     }
   }
+}
 
-  static fromJS(data: any): CompleteRefillCommand {
-    data = typeof data === 'object' ? data : {};
-    let result = new CompleteRefillCommand();
-    result.init(data);
-    return result;
+    static fromJS(data: any): CompleteRefillCommand {
+  data = typeof data === 'object' ? data : {};
+  let result = new CompleteRefillCommand();
+  result.init(data);
+  return result;
+}
   }
 
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data["startAmount"] = this.startAmount !== undefined ? this.startAmount : <any>null;
-    data["endAmount"] = this.endAmount !== undefined ? this.endAmount : <any>null;
-    data["couponNumber"] = this.couponNumber !== undefined ? this.couponNumber : <any>null;
-    data["actualDeliveryDate"] = this.actualDeliveryDate ? this.actualDeliveryDate.toISOString() : <any>null;
-    data["tankState"] = this.tankState !== undefined ? this.tankState : <any>null;
-    data["refillNumber"] = this.refillNumber !== undefined ? this.refillNumber : <any>null;
-    return data;
-  }
+toJSON(data ?: any) {
+  data = typeof data === 'object' ? data : {};
+  data["startAmount"] = this.startAmount !== undefined ? this.startAmount : <any>null;
+  data["endAmount"] = this.endAmount !== undefined ? this.endAmount : <any>null;
+  data["couponNumber"] = this.couponNumber !== undefined ? this.couponNumber : <any>null;
+  data["actualDeliveryDate"] = this.actualDeliveryDate ? this.actualDeliveryDate.toISOString() : <any>null;
+  data["tankState"] = this.tankState !== undefined ? this.tankState : <any>null;
+  data["refillNumber"] = this.refillNumber !== undefined ? this.refillNumber : <any>null;
+  return data;
+}
 }
 
 export interface ICompleteRefillCommand {
@@ -2341,23 +2929,67 @@ export class PageResultOfRefillDtoAndString implements IPageResultOfRefillDtoAnd
       }
     }
   }
+}
+  }
+
+init(_data ?: any) {
+  if (_data) {
+    this.newNeedle = _data["newNeedle"] !== undefined ? _data["newNeedle"] : <any>null;
+    this.pagesRemaining = _data["pagesRemaining"] !== undefined ? _data["pagesRemaining"] : <any>null;
+    if (Array.isArray(_data["results"])) {
+      this.results = [] as any;
+      for (let item of _data["results"])
+        this.results!.push(RefillDto.fromJS(item));
+    }
+    this.hasMore = _data["hasMore"] !== undefined ? _data["hasMore"] : <any>null;
+  }
+}
+
+    static fromJS(data: any): PageResultOfRefillDtoAndString {
+  data = typeof data === 'object' ? data : {};
+  let result = new PageResultOfRefillDtoAndString();
+  result.init(data);
+  return result;
+}
+
+toJSON(data ?: any) {
+  data = typeof data === 'object' ? data : {};
+  data["newNeedle"] = this.newNeedle !== undefined ? this.newNeedle : <any>null;
+  data["pagesRemaining"] = this.pagesRemaining !== undefined ? this.pagesRemaining : <any>null;
+  if (Array.isArray(this.results)) {
+    data["results"] = [];
+    for (let item of this.results)
+      data["results"].push(item.toJSON());
+  }
+  data["hasMore"] = this.hasMore !== undefined ? this.hasMore : <any>null;
+  return data;
+}
+}
+
+export interface IPageResultOfRefillDtoAndString {
+  newNeedle?: string | null;
+  pagesRemaining?: number;
+  results?: IRefillDto[] | null;
+  hasMore?: boolean;
+}
+
+export class PageResultOfRefillDto extends PageResultOfRefillDtoAndString implements IPageResultOfRefillDto {
+  newNeedle?: string | null;
+
+  constructor(data?: IPageResultOfRefillDto) {
+    super(data);
+  }
 
   init(_data?: any) {
+    super.init(_data);
     if (_data) {
       this.newNeedle = _data["newNeedle"] !== undefined ? _data["newNeedle"] : <any>null;
-      this.pagesRemaining = _data["pagesRemaining"] !== undefined ? _data["pagesRemaining"] : <any>null;
-      if (Array.isArray(_data["results"])) {
-        this.results = [] as any;
-        for (let item of _data["results"])
-          this.results!.push(RefillDto.fromJS(item));
-      }
-      this.hasMore = _data["hasMore"] !== undefined ? _data["hasMore"] : <any>null;
     }
   }
 
-  static fromJS(data: any): PageResultOfRefillDtoAndString {
+  static fromJS(data: any): PageResultOfRefillDto {
     data = typeof data === 'object' ? data : {};
-    let result = new PageResultOfRefillDtoAndString();
+    let result = new PageResultOfRefillDto();
     result.init(data);
     return result;
   }
@@ -2365,13 +2997,7 @@ export class PageResultOfRefillDtoAndString implements IPageResultOfRefillDtoAnd
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data["newNeedle"] = this.newNeedle !== undefined ? this.newNeedle : <any>null;
-    data["pagesRemaining"] = this.pagesRemaining !== undefined ? this.pagesRemaining : <any>null;
-    if (Array.isArray(this.results)) {
-      data["results"] = [];
-      for (let item of this.results)
-        data["results"].push(item.toJSON());
-    }
-    data["hasMore"] = this.hasMore !== undefined ? this.hasMore : <any>null;
+    super.toJSON(data);
     return data;
   }
 }
@@ -2493,29 +3119,31 @@ export class OrderRefillCommand implements IOrderRefillCommand {
       }
     }
   }
+}
 
-  init(_data?: any) {
-    if (_data) {
-      this.expectedDeliveryDate = _data["expectedDeliveryDate"] ? new Date(_data["expectedDeliveryDate"].toString()) : <any>null;
-      this.locationId = _data["locationId"] !== undefined ? _data["locationId"] : <any>null;
-      this.truckId = _data["truckId"] !== undefined ? _data["truckId"] : <any>null;
-    }
+init(_data ?: any) {
+  if (_data) {
+    this.expectedDeliveryDate = _data["expectedDeliveryDate"] ? new Date(_data["expectedDeliveryDate"].toString()) : <any>null;
+    this.locationId = _data["locationId"] !== undefined ? _data["locationId"] : <any>null;
+    this.truckId = _data["truckId"] !== undefined ? _data["truckId"] : <any>null;
+  }
+}
   }
 
   static fromJS(data: any): OrderRefillCommand {
-    data = typeof data === 'object' ? data : {};
-    let result = new OrderRefillCommand();
-    result.init(data);
-    return result;
-  }
+  data = typeof data === 'object' ? data : {};
+  let result = new OrderRefillCommand();
+  result.init(data);
+  return result;
+}
 
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data["expectedDeliveryDate"] = this.expectedDeliveryDate ? this.expectedDeliveryDate.toISOString() : <any>null;
-    data["locationId"] = this.locationId !== undefined ? this.locationId : <any>null;
-    data["truckId"] = this.truckId !== undefined ? this.truckId : <any>null;
-    return data;
-  }
+toJSON(data ?: any) {
+  data = typeof data === 'object' ? data : {};
+  data["expectedDeliveryDate"] = this.expectedDeliveryDate ? this.expectedDeliveryDate.toISOString() : <any>null;
+  data["locationId"] = this.locationId !== undefined ? this.locationId : <any>null;
+  data["truckId"] = this.truckId !== undefined ? this.truckId : <any>null;
+  return data;
+}
 }
 
 export interface IOrderRefillCommand {
@@ -2545,23 +3173,67 @@ export class PageResultOfStreetDtoAndString implements IPageResultOfStreetDtoAnd
       }
     }
   }
+}
+  }
+
+init(_data ?: any) {
+  if (_data) {
+    this.newNeedle = _data["newNeedle"] !== undefined ? _data["newNeedle"] : <any>null;
+    this.pagesRemaining = _data["pagesRemaining"] !== undefined ? _data["pagesRemaining"] : <any>null;
+    if (Array.isArray(_data["results"])) {
+      this.results = [] as any;
+      for (let item of _data["results"])
+        this.results!.push(StreetDto.fromJS(item));
+    }
+    this.hasMore = _data["hasMore"] !== undefined ? _data["hasMore"] : <any>null;
+  }
+}
+
+    static fromJS(data: any): PageResultOfStreetDtoAndString {
+  data = typeof data === 'object' ? data : {};
+  let result = new PageResultOfStreetDtoAndString();
+  result.init(data);
+  return result;
+}
+
+toJSON(data ?: any) {
+  data = typeof data === 'object' ? data : {};
+  data["newNeedle"] = this.newNeedle !== undefined ? this.newNeedle : <any>null;
+  data["pagesRemaining"] = this.pagesRemaining !== undefined ? this.pagesRemaining : <any>null;
+  if (Array.isArray(this.results)) {
+    data["results"] = [];
+    for (let item of this.results)
+      data["results"].push(item.toJSON());
+  }
+  data["hasMore"] = this.hasMore !== undefined ? this.hasMore : <any>null;
+  return data;
+}
+}
+
+export interface IPageResultOfStreetDtoAndString {
+  newNeedle?: string | null;
+  pagesRemaining?: number;
+  results?: IStreetDto[] | null;
+  hasMore?: boolean;
+}
+
+export class PageResultOfStreetDto extends PageResultOfStreetDtoAndString implements IPageResultOfStreetDto {
+  newNeedle?: string | null;
+
+  constructor(data?: IPageResultOfStreetDto) {
+    super(data);
+  }
 
   init(_data?: any) {
+    super.init(_data);
     if (_data) {
       this.newNeedle = _data["newNeedle"] !== undefined ? _data["newNeedle"] : <any>null;
-      this.pagesRemaining = _data["pagesRemaining"] !== undefined ? _data["pagesRemaining"] : <any>null;
-      if (Array.isArray(_data["results"])) {
-        this.results = [] as any;
-        for (let item of _data["results"])
-          this.results!.push(StreetDto.fromJS(item));
-      }
-      this.hasMore = _data["hasMore"] !== undefined ? _data["hasMore"] : <any>null;
     }
   }
 
-  static fromJS(data: any): PageResultOfStreetDtoAndString {
+  static fromJS(data: any): PageResultOfStreetDto {
     data = typeof data === 'object' ? data : {};
-    let result = new PageResultOfStreetDtoAndString();
+    let result = new PageResultOfStreetDto();
     result.init(data);
     return result;
   }
@@ -2569,13 +3241,7 @@ export class PageResultOfStreetDtoAndString implements IPageResultOfStreetDtoAnd
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data["newNeedle"] = this.newNeedle !== undefined ? this.newNeedle : <any>null;
-    data["pagesRemaining"] = this.pagesRemaining !== undefined ? this.pagesRemaining : <any>null;
-    if (Array.isArray(this.results)) {
-      data["results"] = [];
-      for (let item of this.results)
-        data["results"].push(item.toJSON());
-    }
-    data["hasMore"] = this.hasMore !== undefined ? this.hasMore : <any>null;
+    super.toJSON(data);
     return data;
   }
 }
@@ -2679,33 +3345,35 @@ export class TruckInfoDto implements ITruckInfoDto {
       }
     }
   }
+}
 
-  init(_data?: any) {
-    if (_data) {
-      this.truckIdentifier = _data["truckIdentifier"] !== undefined ? _data["truckIdentifier"] : <any>null;
-      this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
-      this.description = _data["description"] !== undefined ? _data["description"] : <any>null;
-      this.tankCapacity = _data["tankCapacity"] !== undefined ? _data["tankCapacity"] : <any>null;
-      this.refillNumber = _data["refillNumber"] !== undefined ? _data["refillNumber"] : <any>null;
-    }
+init(_data ?: any) {
+  if (_data) {
+    this.truckIdentifier = _data["truckIdentifier"] !== undefined ? _data["truckIdentifier"] : <any>null;
+    this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
+    this.description = _data["description"] !== undefined ? _data["description"] : <any>null;
+    this.tankCapacity = _data["tankCapacity"] !== undefined ? _data["tankCapacity"] : <any>null;
+    this.refillNumber = _data["refillNumber"] !== undefined ? _data["refillNumber"] : <any>null;
+  }
+}
   }
 
   static fromJS(data: any): TruckInfoDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new TruckInfoDto();
-    result.init(data);
-    return result;
-  }
+  data = typeof data === 'object' ? data : {};
+  let result = new TruckInfoDto();
+  result.init(data);
+  return result;
+}
 
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data["truckIdentifier"] = this.truckIdentifier !== undefined ? this.truckIdentifier : <any>null;
-    data["name"] = this.name !== undefined ? this.name : <any>null;
-    data["description"] = this.description !== undefined ? this.description : <any>null;
-    data["tankCapacity"] = this.tankCapacity !== undefined ? this.tankCapacity : <any>null;
-    data["refillNumber"] = this.refillNumber !== undefined ? this.refillNumber : <any>null;
-    return data;
-  }
+toJSON(data ?: any) {
+  data = typeof data === 'object' ? data : {};
+  data["truckIdentifier"] = this.truckIdentifier !== undefined ? this.truckIdentifier : <any>null;
+  data["name"] = this.name !== undefined ? this.name : <any>null;
+  data["description"] = this.description !== undefined ? this.description : <any>null;
+  data["tankCapacity"] = this.tankCapacity !== undefined ? this.tankCapacity : <any>null;
+  data["refillNumber"] = this.refillNumber !== undefined ? this.refillNumber : <any>null;
+  return data;
+}
 }
 
 export interface ITruckInfoDto {
@@ -2776,26 +3444,63 @@ export class PageResultOfTruckInfoIdDtoAndInteger implements IPageResultOfTruckI
       this.hasMore = _data["hasMore"] !== undefined ? _data["hasMore"] : <any>null;
     }
   }
+}
+
+  static fromJS(data: any): TruckInfoIdDto {
+  data = typeof data === 'object' ? data : {};
+  let result = new TruckInfoIdDto();
+  result.init(data);
+  return result;
+}
+
+toJSON(data ?: any) {
+  data = typeof data === 'object' ? data : {};
+  data["id"] = this.id !== undefined ? this.id : <any>null;
+  super.toJSON(data);
+  return data;
+}
+}
+
+    static fromJS(data: any): PageResultOfTruckInfoIdDtoAndInteger {
+  data = typeof data === 'object' ? data : {};
+  let result = new PageResultOfTruckInfoIdDtoAndInteger();
+  result.init(data);
+  return result;
+}
+  }
+
+init(_data ?: any) {
+  if (_data) {
+    this.newNeedle = _data["newNeedle"] !== undefined ? _data["newNeedle"] : <any>null;
+    this.pagesRemaining = _data["pagesRemaining"] !== undefined ? _data["pagesRemaining"] : <any>null;
+    if (Array.isArray(_data["results"])) {
+      this.results = [] as any;
+      for (let item of _data["results"])
+        this.results!.push(TruckInfoIdDto.fromJS(item));
+    }
+    this.hasMore = _data["hasMore"] !== undefined ? _data["hasMore"] : <any>null;
+  }
+}
 
   static fromJS(data: any): PageResultOfTruckInfoIdDtoAndInteger {
-    data = typeof data === 'object' ? data : {};
-    let result = new PageResultOfTruckInfoIdDtoAndInteger();
-    result.init(data);
-    return result;
-  }
+  data = typeof data === 'object' ? data : {};
+  let result = new PageResultOfTruckInfoIdDtoAndInteger();
+  result.init(data);
+  return result;
+}
 
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data["newNeedle"] = this.newNeedle !== undefined ? this.newNeedle : <any>null;
-    data["pagesRemaining"] = this.pagesRemaining !== undefined ? this.pagesRemaining : <any>null;
-    if (Array.isArray(this.results)) {
-      data["results"] = [];
-      for (let item of this.results)
-        data["results"].push(item.toJSON());
-    }
-    data["hasMore"] = this.hasMore !== undefined ? this.hasMore : <any>null;
-    return data;
+toJSON(data ?: any) {
+  data = typeof data === 'object' ? data : {};
+  data["newNeedle"] = this.newNeedle !== undefined ? this.newNeedle : <any>null;
+  data["pagesRemaining"] = this.pagesRemaining !== undefined ? this.pagesRemaining : <any>null;
+  if (Array.isArray(this.results)) {
+    data["results"] = [];
+    for (let item of this.results)
+      data["results"].push(item.toJSON());
   }
+  data["hasMore"] = this.hasMore !== undefined ? this.hasMore : <any>null;
+  return data;
+}
 }
 
 export interface IPageResultOfTruckInfoIdDtoAndInteger {
@@ -2823,19 +3528,19 @@ export class UpdateTruckCommand implements IUpdateTruckCommand {
       this.truckInfo = _data["truckInfo"] ? TruckInfoIdDto.fromJS(_data["truckInfo"]) : <any>null;
     }
   }
+}
 
-  static fromJS(data: any): UpdateTruckCommand {
-    data = typeof data === 'object' ? data : {};
-    let result = new UpdateTruckCommand();
-    result.init(data);
-    return result;
+init(_data ?: any) {
+  if (_data) {
+    this.truckInfo = _data["truckInfo"] ? TruckInfoIdDto.fromJS(_data["truckInfo"]) : <any>null;
   }
+}
 
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data["truckInfo"] = this.truckInfo ? this.truckInfo.toJSON() : <any>null;
-    return data;
-  }
+toJSON(data ?: any) {
+  data = typeof data === 'object' ? data : {};
+  data["truckInfo"] = this.truckInfo ? this.truckInfo.toJSON() : <any>null;
+  return data;
+}
 }
 
 export interface IUpdateTruckCommand {
@@ -2860,19 +3565,19 @@ export class CreateTruckCommand implements ICreateTruckCommand {
       this.truckInfo = _data["truckInfo"] ? TruckInfoDto.fromJS(_data["truckInfo"]) : <any>null;
     }
   }
+}
 
-  static fromJS(data: any): CreateTruckCommand {
-    data = typeof data === 'object' ? data : {};
-    let result = new CreateTruckCommand();
-    result.init(data);
-    return result;
+init(_data ?: any) {
+  if (_data) {
+    this.truckInfo = _data["truckInfo"] ? TruckInfoDto.fromJS(_data["truckInfo"]) : <any>null;
   }
+}
 
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data["truckInfo"] = this.truckInfo ? this.truckInfo.toJSON() : <any>null;
-    return data;
-  }
+toJSON(data ?: any) {
+  data = typeof data === 'object' ? data : {};
+  data["truckInfo"] = this.truckInfo ? this.truckInfo.toJSON() : <any>null;
+  return data;
+}
 }
 
 export interface ICreateTruckCommand {
@@ -2945,6 +3650,13 @@ export interface ILocationRefillDto {
   address?: string | null;
   expectedDeliveryDate?: Date;
   debtorBlocked?: boolean;
+}
+
+export enum FuelType {
+  OIL = 0,
+  PETROLEUM = 1,
+  GASOLINE = 2,
+  OTHER = 3,
 }
 
 export enum FuelType {
