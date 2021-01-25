@@ -2,6 +2,8 @@ using Application.Common.Interfaces;
 using Domain.Common;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,10 +38,11 @@ namespace Infrastructure.Persistence
     public DbSet<TruckRefill> TruckRefills { get; set; }
     public DbSet<FuelTank> FuelTanks { get; set; }
     public DbSet<Street> Streets { get; set; }
+    public DbSet<LocationHistory> LocationHistories { get; set; }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
-      foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
+      foreach (var entry in ChangeTracker.Entries<AuditableEntity>().ToList())
       {
         switch (entry.State)
         {
@@ -49,11 +52,19 @@ namespace Infrastructure.Persistence
             entry.Entity.LastModifiedBy = _currentUserService.UserId;
             entry.Entity.LastModified = _dateTimeOffsetService.Now;
             entry.Entity.ModifiedCount = 0;
+            if (entry.Entity.GetType().Equals(typeof(Location)))
+            {
+              OnLocationChange(entry.Entity as Location);
+            }
             break;
           case EntityState.Modified:
             entry.Entity.LastModifiedBy = _currentUserService.UserId;
             entry.Entity.LastModified = _dateTimeOffsetService.Now;
             entry.Entity.ModifiedCount++;
+            if (entry.Entity.GetType().Equals(typeof(Location)))
+            {
+              OnLocationChange(entry.Entity as Location);
+            }
             break;
         }
       }
@@ -66,6 +77,19 @@ namespace Infrastructure.Persistence
       builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
       base.OnModelCreating(builder);
+    }
+
+    private void OnLocationChange(Location location)
+    {
+      var locationHistory = new LocationHistory
+      {
+        RegionId = location.RegionId,
+        Schedule = location.Schedule,
+        Address = location.Address,
+        Comments = location.Comments,
+        LocationId = location.Id
+      };
+      this.LocationHistories.Add(locationHistory);
     }
   }
 }

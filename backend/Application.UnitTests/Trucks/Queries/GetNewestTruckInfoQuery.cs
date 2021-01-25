@@ -28,7 +28,7 @@ namespace Application.UnitTests.Trucks.Queries.GetNewestTruckInfo
     {
       var query = new GetTruckInfoQuery
       {
-        TruckId = 43
+        Id = 43
       };
 
       var handler = new GetTruckInfoQuery.GetTruckInfoQueryHandler(_context, _mapper);
@@ -42,7 +42,7 @@ namespace Application.UnitTests.Trucks.Queries.GetNewestTruckInfo
     {
       var query = new GetTruckInfoQuery
       {
-        TruckId = -1
+        Id = -1
       };
 
       var handler = new GetTruckInfoQuery.GetTruckInfoQueryHandler(_context, _mapper);

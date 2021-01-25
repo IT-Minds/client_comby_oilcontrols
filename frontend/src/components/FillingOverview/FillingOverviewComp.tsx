@@ -110,26 +110,6 @@ const FillingOverviewComp: FC<Props> = ({
                   options={[
                     { id: "1", name: "test1" },
                     { id: "2", name: "test2" },
-                    { id: "2", name: "test2" },
-                    { id: "2", name: "test2" },
-                    { id: "2", name: "test2" },
-                    { id: "2", name: "test2" },
-                    { id: "2", name: "test2" },
-                    { id: "2", name: "test2" },
-                    { id: "2", name: "test2" },
-                    { id: "2", name: "test2" },
-                    { id: "2", name: "test2" },
-                    { id: "2", name: "test2" },
-                    { id: "2", name: "test2" },
-                    { id: "2", name: "test2" },
-                    { id: "2", name: "test2" },
-                    { id: "2", name: "test2" },
-                    { id: "2", name: "test2" },
-                    { id: "2", name: "test2" },
-                    { id: "2", name: "test2" },
-                    { id: "2", name: "test2" },
-                    { id: "2", name: "test2" },
-                    { id: "2", name: "test2" },
                     { id: "3", name: "test3" }
                   ]}
                   filterCb={(a, b) => console.log(a, b)}

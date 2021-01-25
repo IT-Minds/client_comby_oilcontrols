@@ -5,7 +5,7 @@ import { FC, useContext, useEffect } from "react";
 import { UserType } from "types/UserType";
 
 const localePattern = /^(\/[a-z]{2}-[A-Z]{2})?/;
-const eolPattern = /$/;
+const eolPattern = /(\/?\?.*)?$/;
 
 const matchWithLocale = (route: string) =>
   new RegExp(localePattern.source + route + eolPattern.source);

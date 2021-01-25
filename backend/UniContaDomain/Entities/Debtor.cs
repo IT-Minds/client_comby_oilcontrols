@@ -1,6 +1,6 @@
 namespace UniContaDomain.Entities
 {
-    public class Debtor : Uniconta.ClientTools.DataModel.DebtorClient
+    public class UniContaDebtor : Uniconta.ClientTools.DataModel.DebtorClient
     {
     }
 }

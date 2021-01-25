@@ -11,6 +11,8 @@ import {
 import { Locale } from "i18n/Locale";
 import { useI18n } from "next-rosetta";
 import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { GiGasPump } from "react-icons/gi";
+import { RiFileShredLine } from "react-icons/ri";
 import { genCouponsClient } from "services/backend/apiClients";
 import { CouponDto } from "services/backend/nswagts";
 
@@ -45,7 +47,12 @@ const InvalidateCouponBtn: FC<Props> = ({ coupon, triggered = false }) => {
 
   return (
     <>
-      <Button colorScheme="red" onClick={onOpen} isLoading={isLoading}>
+      <Button
+        colorScheme="red"
+        onClick={onOpen}
+        isLoading={isLoading}
+        rightIcon={<RiFileShredLine />}
+        leftIcon={<GiGasPump />}>
         {t("coupons.invalidate.invalidate")}
       </Button>
 

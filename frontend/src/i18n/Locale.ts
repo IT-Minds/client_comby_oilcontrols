@@ -45,6 +45,7 @@ export interface Locale {
     delete: string;
     cancel: string;
     invalidate: string;
+    submit: string;
   };
 
   coupons: {
@@ -52,5 +53,20 @@ export interface Locale {
       invalidate: string;
       confirm: string;
     };
+  };
+
+  dailyTemperature: {
+    selectRegion: string;
+    temperature: string;
+    selectDate: string;
+    formErrors: {
+      selectRegion: string;
+      inputTemperature: string;
+    };
+  };
+
+  mytruck: {
+    title: string;
+    heading: string;
   };
 }

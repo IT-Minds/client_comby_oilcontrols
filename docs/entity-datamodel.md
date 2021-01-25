@@ -26,7 +26,15 @@ class Location {
   estimateFuelConsumption
 }
 
+class LocationHistory {
+  id
+  address
+  comment
+  refillSchedule
+}
+
 class FuelTank {
+  id
   type
   tankNumber
   tankCapacity
@@ -120,6 +128,8 @@ Region --> "0..*" Street
 
 Location --> "1" FuelTank
 Location ..> RefillSchedule
+LocationHistory ..> RefillSchedule
+Location "1" -- "1..*" LocationHistory
 @enduml
 
 ```

@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Uniconta.Common" Version="1.1.86.4" />
     <PackageReference Include="Uniconta.WindowsAPI" Version="1.1.86.4" />
   </ItemGroup>
 

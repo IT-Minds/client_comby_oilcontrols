@@ -211,6 +211,52 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("Locations");
                 });
 
+            modelBuilder.Entity("Domain.Entities.LocationHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Comments")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("LastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LocationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ModifiedCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RegionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Schedule")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LocationId");
+
+                    b.HasIndex("RegionId");
+
+                    b.ToTable("LocationHistories");
+                });
+
             modelBuilder.Entity("Domain.Entities.Refill", b =>
                 {
                     b.Property<int>("Id")
@@ -435,9 +481,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("TruckIdentifier")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TruckNumber")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("RouteId");
@@ -570,6 +613,25 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Region");
                 });
 
+            modelBuilder.Entity("Domain.Entities.LocationHistory", b =>
+                {
+                    b.HasOne("Domain.Entities.Location", "Location")
+                        .WithMany("LocationHistories")
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Region", "Region")
+                        .WithMany()
+                        .HasForeignKey("RegionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Location");
+
+                    b.Navigation("Region");
+                });
+
             modelBuilder.Entity("Domain.Entities.Refill", b =>
                 {
                     b.HasOne("Domain.Entities.Coupon", "Coupon")
@@ -653,6 +715,8 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Location", b =>
                 {
+                    b.Navigation("LocationHistories");
+
                     b.Navigation("Refills");
                 });
 

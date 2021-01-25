@@ -1,8 +1,6 @@
 import { FuelType } from "services/backend/nswagts";
 
-export interface ReportForm {
-  carId: string;
-  locationId: string;
+export interface RefillForm {
   couponId: string;
   fuelType: FuelType;
   liters: number;
