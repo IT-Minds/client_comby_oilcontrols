@@ -46,7 +46,7 @@ namespace Domain.EntityExtensions
       var heatIndex = location.HeatingIndex(startDate, endDate);
       var fuelConsumed = pastRefills.Where(x => x.ActualDeliveryDate > startDate).Sum(x => x.AmountDelivered() ?? 0);
 
-      return fuelConsumed / heatIndex;
+      return fuelConsumed == 0 ? location.EstimateFuelConsumption : fuelConsumed / heatIndex;
     }
 
     /// <summary>
@@ -74,7 +74,6 @@ namespace Domain.EntityExtensions
         return DateTime.UtcNow;
       }
 
-
       var fuelAmount = newestRefill.EndAmount;
       double fuelConsumption;
       try
@@ -94,11 +93,12 @@ namespace Domain.EntityExtensions
         double heatdegree;
         try
         {
-          heatdegree = location.Region.DailyTemperatureEstimate(currentDate);
+          //Calculate the "heat index/opvarmingsgrad" for this particular date based on the temperature estimate.
+          heatdegree = HEAT_BASE - location.Region.DailyTemperatureEstimate(currentDate);
         }
         catch
         {
-          heatdegree = 20; // TODO default / fallback temperature
+          heatdegree = HEAT_BASE; // TODO default / fallback temperature
         }
         var fuelConsumed = heatdegree * fuelConsumption;
         fuelAmount = fuelAmount - fuelConsumed;

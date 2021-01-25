@@ -18,6 +18,7 @@ namespace Domain.Entities
     public ICollection<LocationHistory> LocationHistories { get; set; }
     //Used with the interval schedule type.
     public int DaysBetweenRefills { get; set; }
+    //Estiamte consumption is assumed to be fuel cosumed / opvarmningsgrad.
     public double EstimateFuelConsumption { get; set; }
   }
 }

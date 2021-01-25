@@ -67,7 +67,7 @@ namespace Application.UnitTests
         new FuelTank { Id = 6, /* TankNumber */ FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 50 },
         new FuelTank { Id = 8, /* TankNumber */ FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 50 },
         new FuelTank { Id = 7, /* TankNumber */ FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 50 },
-        new FuelTank { Id = 100, TankType = TankType.BUILDING, FuelType= FuelType.GASOLINE, TankNumber = 1001, TankCapacity = 300, MinimumFuelAmount = 0 }
+        new FuelTank { Id = 100, TankType = TankType.BUILDING, FuelType = FuelType.GASOLINE, TankNumber = 1001, TankCapacity = 300, MinimumFuelAmount = 0 }
       );
 
       context.Locations.AddRange(
@@ -198,6 +198,51 @@ namespace Application.UnitTests
       );
       //END
 
+      //Start: Testdata day reaching minimum fuel levels prediction
+      context.Regions.Add(new Region { Id = 200 });
+
+      context.RegionDailyTemps.AddRange(
+        new RegionDailyTemp { Id = 210, RegionId = 200, Date = new DateTime(1990, 5, 1), Temperature = -10 },
+        new RegionDailyTemp { Id = 211, RegionId = 200, Date = new DateTime(1990, 5, 2), Temperature = -11 },
+        new RegionDailyTemp { Id = 212, RegionId = 200, Date = new DateTime(1990, 5, 3), Temperature = -12 },
+        new RegionDailyTemp { Id = 213, RegionId = 200, Date = new DateTime(1990, 5, 4), Temperature = -13 },
+        new RegionDailyTemp { Id = 214, RegionId = 200, Date = new DateTime(1990, 5, 5), Temperature = -14 },
+        new RegionDailyTemp { Id = 215, RegionId = 200, Date = new DateTime(1990, 5, 6), Temperature = -15 },
+        new RegionDailyTemp { Id = 216, RegionId = 200, Date = new DateTime(1990, 5, 7), Temperature = -16 },
+        new RegionDailyTemp { Id = 217, RegionId = 200, Date = new DateTime(1990, 5, 8), Temperature = -17 },
+        new RegionDailyTemp { Id = 218, RegionId = 200, Date = new DateTime(1990, 5, 9), Temperature = -18 }
+      );
+      context.RegionDailyTemps.AddRange(
+        new RegionDailyTemp { Id = 219, RegionId = 200, Date = new DateTime(1989, 5, 1), Temperature = -10 },
+        new RegionDailyTemp { Id = 220, RegionId = 200, Date = new DateTime(1989, 5, 2), Temperature = -11 },
+        new RegionDailyTemp { Id = 221, RegionId = 200, Date = new DateTime(1989, 5, 3), Temperature = -12 },
+        new RegionDailyTemp { Id = 222, RegionId = 200, Date = new DateTime(1989, 5, 4), Temperature = -13 },
+        new RegionDailyTemp { Id = 223, RegionId = 200, Date = new DateTime(1989, 5, 5), Temperature = -14 },
+        new RegionDailyTemp { Id = 224, RegionId = 200, Date = new DateTime(1989, 5, 6), Temperature = -15 },
+        new RegionDailyTemp { Id = 225, RegionId = 200, Date = new DateTime(1989, 5, 7), Temperature = -16 },
+        new RegionDailyTemp { Id = 226, RegionId = 200, Date = new DateTime(1989, 5, 8), Temperature = -17 },
+        new RegionDailyTemp { Id = 227, RegionId = 200, Date = new DateTime(1989, 5, 9), Temperature = -18 }
+      );
+
+      context.FuelTanks.AddRange(
+        new FuelTank { Id = 200, TankNumber = 200, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
+        new FuelTank { Id = 201, TankNumber = 201, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
+        new FuelTank { Id = 202, TankNumber = 202, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 }
+      );
+
+      context.Locations.AddRange(
+        new Location { Id = 200, RegionId = 200, FuelTankId = 200, Address = "Address region 200.", Comments = "Location 200.", EstimateFuelConsumption = 100 },
+        new Location { Id = 201, RegionId = 200, FuelTankId = 201, Address = "Address region 200.", Comments = "Location 201.", EstimateFuelConsumption = 100 },
+        new Location { Id = 202, RegionId = 200, FuelTankId = 202, Address = "Address region 200.", Comments = "Location 201.", EstimateFuelConsumption = 100 }
+      );
+
+      context.Refills.AddRange(
+        new Refill { Id = 200, CouponId = 200, StartAmount = 100, EndAmount = 200, TankState = TankState.PARTIALLY_FILLED, ExpectedDeliveryDate = new DateTime(1990, 5, 1), ActualDeliveryDate = new DateTime(1990, 5, 1), LocationId = 200, Created = new DateTime(1990, 5, 1) },
+        new Refill { Id = 201, CouponId = 201, StartAmount = 100, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1990, 5, 1), ActualDeliveryDate = new DateTime(1990, 5, 1), LocationId = 201, Created = new DateTime(1990, 5, 1) },
+        new Refill { Id = 202, CouponId = 202, StartAmount = 200, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1990, 5, 4), ActualDeliveryDate = new DateTime(1990, 5, 4), LocationId = 201, Created = new DateTime(1990, 5, 4) }
+      );
+
+      //END
       context.SaveChanges();
     }
 
