@@ -21,19 +21,12 @@ const DemoPage: NextPage = () => {
           ? client.updateTruck(
               form.id,
               new UpdateTruckCommand({
-                startRefillNumber: form.startRefillNumber,
-                truckIdentifier: form.truckIdentifier,
-                name: form.name,
-                description: form.description,
-                tankCapacity: form.tankCapacity
+                truckInfo: form
               })
             )
           : client.createTruck(
               new CreateTruckCommand({
-                truckIdentifier: form.truckIdentifier,
-                name: form.name,
-                description: form.description,
-                tankCapacity: form.tankCapacity
+                truckInfo: form
               })
             ));
 

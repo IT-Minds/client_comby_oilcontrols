@@ -16,31 +16,31 @@ import { Locale } from "i18n/Locale";
 import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
-import { ITruckInfoDto } from "services/backend/nswagts";
+import { TruckInfoDto, TruckInfoIdDto } from "services/backend/nswagts";
 import { logger } from "utils/logger";
 
 type Props = {
-  submitCallback: (truckMetaDataForm: ITruckInfoDto) => void;
-  truckMetaData?: ITruckInfoDto;
+  submitCallback: (truckMetaDataForm: TruckInfoDto) => void;
+  truckMetaData?: TruckInfoIdDto;
 };
 
 const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
-  const [localTruckMetaDataForm, setLocalTruckMetaDataForm] = useState<ITruckInfoDto>(
-    truckMetaData ?? {
-      id: null,
-      refillNumber: null,
-      truckIdentifier: null,
-      description: null,
-      name: null,
-      tankCapacity: null
-    }
+  const [localTruckMetaDataForm, setLocalTruckMetaDataForm] = useState<TruckInfoDto>(
+    truckMetaData ??
+      new TruckInfoDto({
+        refillNumber: null,
+        truckIdentifier: null,
+        description: null,
+        name: null,
+        tankCapacity: null
+      })
   );
 
   const { t } = useI18n<Locale>();
 
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
 
-  const updateLocalForm = useCallback((value: unknown, key: keyof ITruckInfoDto) => {
+  const updateLocalForm = useCallback((value: unknown, key: keyof TruckInfoDto) => {
     setLocalTruckMetaDataForm(form => {
       (form[key] as unknown) = value;
       return form;
