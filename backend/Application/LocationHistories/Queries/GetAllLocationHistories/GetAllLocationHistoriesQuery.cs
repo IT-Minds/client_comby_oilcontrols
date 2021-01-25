@@ -25,7 +25,7 @@ namespace Application.LocationHistories.Queries.GetAllLocationHistories
     public async Task<int> PagesRemaining(IQueryable<LocationHistory> query)
     {
       var count = await query.CountAsync();
-      var pagesLeft = (int)(Math.Floor((float)count / (float)Size)) - 1;
+      var pagesLeft = Math.Clamp((int)(Math.Floor((float)count / (float)Size)) - 1, 0, int.MaxValue);
 
       return pagesLeft;
     }
@@ -34,7 +34,7 @@ namespace Application.LocationHistories.Queries.GetAllLocationHistories
     {
       var partial = query
         .OrderBy(x => x.LastModified)
-        .Where(x => x.LocationId < Needle);
+        .Where(x => x.LocationId > Needle);
 
       if (Skip.HasValue)
       {
