@@ -1,25 +1,13 @@
-import {
-  Badge,
-  Box,
-  Collapse,
-  Container,
-  Flex,
-  Heading,
-  HStack,
-  IconButton,
-  Text,
-  VStack
-} from "@chakra-ui/react";
+import { Badge, Box, Collapse, Heading, HStack, IconButton, Text, VStack } from "@chakra-ui/react";
 import FillOutRefillForm from "components/FillOutRefillForm/FillOutRefillForm";
 import InvalidateCouponBtn from "components/InvalidateCouponBtn/InvalidateCouponBtn";
 import RunListTable from "components/RunList/RunListTable";
 import { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { I18nProps, useI18n } from "next-rosetta";
-import { useRef, useState } from "react";
-import { MdArrowBack, MdPrint } from "react-icons/md";
-import { useReactToPrint } from "react-to-print";
-import { CouponDto, CouponStatus } from "services/backend/nswagts";
+import { useState } from "react";
+import { MdArrowBack } from "react-icons/md";
+import { CouponDto, CouponStatus, FuelType } from "services/backend/nswagts";
 
 import { Locale } from "../../i18n/Locale";
 import styles from "./index.module.css";
@@ -32,10 +20,6 @@ const TruckId = 1;
 
 const LocalePage: NextPage<Props> = () => {
   const { t } = useI18n<Locale>();
-  const componentRef = useRef<HTMLDivElement>();
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current
-  });
 
   const [refillingLocation, setRefillingLocation] = useState(0);
 
@@ -78,20 +62,11 @@ const LocalePage: NextPage<Props> = () => {
             <Badge fontSize="0.8em" mb={1} colorScheme="purple">
               Oil
             </Badge>
-            <IconButton
-              float="right"
-              colorScheme="blue"
-              aria-label="Print Table Button"
-              onClick={() => {
-                handlePrint();
-              }}
-              icon={<MdPrint />}
-            />
           </Text>
           <RunListTable
             truckId={TruckId}
-            ref={componentRef}
             refillCb={obj => setRefillingLocation(obj.locationId)}
+            fuelTypeHighlight={FuelType.OIL}
           />
         </Collapse>
       </Box>

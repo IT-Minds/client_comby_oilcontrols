@@ -13,10 +13,10 @@ namespace Application.Locations
     public int RegionId { get; set; }
     public RefillSchedule Schedule { get; set; }
     public TankType LocationType { get; set; }
+    public FuelType FuelType { get; set; }
     public string Address { get; set; }
     public DateTime ExpectedDeliveryDate { get; set; }
-
-    // public bool DebtorBlocked { get; set; }
+    public bool DebtorBlocked { get; set; } = false; // TODO map real data
 
 
     public void Mapping(Profile profile)
@@ -32,6 +32,11 @@ namespace Application.Locations
 
       .ForMember(dest => dest.LocationType,
           map => map.MapFrom(from => from.Location.FuelTank.TankType))
+
+      .ForMember(dest => dest.FuelType,
+          map => map.MapFrom(from => from.Location.FuelTank.FuelType))
+
+      .ForMember(dest => dest.DebtorBlocked, map => map.Ignore())
 
       ;
     }

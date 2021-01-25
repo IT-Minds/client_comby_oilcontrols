@@ -2427,7 +2427,6 @@ export interface IPageResultOfTruckInfoDto {
 }
 
 export class UpdateTruckCommand implements IUpdateTruckCommand {
-    id?: number;
     truckIdentifier?: string | null;
     description?: string | null;
     tankCapacity?: number;
@@ -2445,7 +2444,6 @@ export class UpdateTruckCommand implements IUpdateTruckCommand {
 
     init(_data?: any) {
         if (_data) {
-            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
             this.truckIdentifier = _data["truckIdentifier"] !== undefined ? _data["truckIdentifier"] : <any>null;
             this.description = _data["description"] !== undefined ? _data["description"] : <any>null;
             this.tankCapacity = _data["tankCapacity"] !== undefined ? _data["tankCapacity"] : <any>null;
@@ -2463,7 +2461,6 @@ export class UpdateTruckCommand implements IUpdateTruckCommand {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id !== undefined ? this.id : <any>null;
         data["truckIdentifier"] = this.truckIdentifier !== undefined ? this.truckIdentifier : <any>null;
         data["description"] = this.description !== undefined ? this.description : <any>null;
         data["tankCapacity"] = this.tankCapacity !== undefined ? this.tankCapacity : <any>null;
@@ -2474,7 +2471,6 @@ export class UpdateTruckCommand implements IUpdateTruckCommand {
 }
 
 export interface IUpdateTruckCommand {
-    id?: number;
     truckIdentifier?: string | null;
     description?: string | null;
     tankCapacity?: number;
@@ -2536,8 +2532,10 @@ export class LocationRefillDto implements ILocationRefillDto {
     regionId?: number;
     schedule?: RefillSchedule;
     locationType?: TankType;
+    fuelType?: FuelType;
     address?: string | null;
     expectedDeliveryDate?: Date;
+    debtorBlocked?: boolean;
 
     constructor(data?: ILocationRefillDto) {
         if (data) {
@@ -2555,8 +2553,10 @@ export class LocationRefillDto implements ILocationRefillDto {
             this.regionId = _data["regionId"] !== undefined ? _data["regionId"] : <any>null;
             this.schedule = _data["schedule"] !== undefined ? _data["schedule"] : <any>null;
             this.locationType = _data["locationType"] !== undefined ? _data["locationType"] : <any>null;
+            this.fuelType = _data["fuelType"] !== undefined ? _data["fuelType"] : <any>null;
             this.address = _data["address"] !== undefined ? _data["address"] : <any>null;
             this.expectedDeliveryDate = _data["expectedDeliveryDate"] ? new Date(_data["expectedDeliveryDate"].toString()) : <any>null;
+            this.debtorBlocked = _data["debtorBlocked"] !== undefined ? _data["debtorBlocked"] : <any>null;
         }
     }
 
@@ -2574,8 +2574,10 @@ export class LocationRefillDto implements ILocationRefillDto {
         data["regionId"] = this.regionId !== undefined ? this.regionId : <any>null;
         data["schedule"] = this.schedule !== undefined ? this.schedule : <any>null;
         data["locationType"] = this.locationType !== undefined ? this.locationType : <any>null;
+        data["fuelType"] = this.fuelType !== undefined ? this.fuelType : <any>null;
         data["address"] = this.address !== undefined ? this.address : <any>null;
         data["expectedDeliveryDate"] = this.expectedDeliveryDate ? this.expectedDeliveryDate.toISOString() : <any>null;
+        data["debtorBlocked"] = this.debtorBlocked !== undefined ? this.debtorBlocked : <any>null;
         return data; 
     }
 }
@@ -2586,8 +2588,10 @@ export interface ILocationRefillDto {
     regionId?: number;
     schedule?: RefillSchedule;
     locationType?: TankType;
+    fuelType?: FuelType;
     address?: string | null;
     expectedDeliveryDate?: Date;
+    debtorBlocked?: boolean;
 }
 
 export class CreateTruckRefillCommand implements ICreateTruckRefillCommand {

@@ -1,12 +1,21 @@
-import { forwardRef, HStack, IconButton, Spacer, Table } from "@chakra-ui/react";
+import {
+  forwardRef,
+  HStack,
+  IconButton,
+  Spacer,
+  Table,
+  useBreakpointValue
+} from "@chakra-ui/react";
 import { Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
 import QuerySortBtn, { Direction } from "components/SortFilter/QuerySortBtn";
 import { useEffectAsync } from "hooks/useEffectAsync";
-import { ForwardRefRenderFunction, useCallback, useState } from "react";
+import { useRouter } from "next/router";
+import { ForwardRefRenderFunction, useCallback, useRef, useState } from "react";
 import { GiFuelTank } from "react-icons/gi";
-import { MdRemoveRedEye } from "react-icons/md";
+import { MdPrint, MdRemoveRedEye } from "react-icons/md";
+import { useReactToPrint } from "react-to-print";
 import { genTruckClient } from "services/backend/apiClients";
-import { ILocationRefillDto, RefillSchedule } from "services/backend/nswagts";
+import { FuelType, ILocationRefillDto, RefillSchedule, TankType } from "services/backend/nswagts";
 import { capitalize } from "utils/capitalizeAnyString";
 
 import data from "./data";
@@ -16,23 +25,33 @@ type SelectRowCb = (obj: { locationId?: number; refillId?: number; regionId?: nu
 type Props = {
   truckId: number;
   refillCb: SelectRowCb;
+  fuelTypeHighlight?: FuelType;
 };
 
 const defaultSort = (a: ILocationRefillDto, b: ILocationRefillDto) =>
   a.refillId > b.refillId ? 1 : -1;
 
 // TODO i18n;
-const RunListTable: ForwardRefRenderFunction<HTMLTableElement, Props> = (
-  { truckId, refillCb },
-  ref
-) => {
+const RunListTable: ForwardRefRenderFunction<HTMLTableElement, Props> = ({
+  truckId,
+  refillCb,
+  fuelTypeHighlight
+}) => {
   const [refills, setRefills] = useState<ILocationRefillDto[]>([]);
+  const cols = useBreakpointValue({
+    base: 1,
+    sm: 2,
+    md: 3,
+    xl: 4
+  });
+  const { locale } = useRouter();
+
   useEffectAsync(async () => {
     if (process.browser) {
       const client = await genTruckClient();
-      client.setCacheableResponse("NetworkFirst");
+      client.setCacheableResponse();
       const something = await client.getTrucksRefills(truckId).then(
-        x => x ?? data,
+        x => x ?? [],
         () => data
       );
       setRefills(something);
@@ -55,12 +74,27 @@ const RunListTable: ForwardRefRenderFunction<HTMLTableElement, Props> = (
     );
   }, []);
 
+  const [isPrinting, setIsPrinting] = useState(false);
+  const componentRef = useRef<HTMLTableElement>();
+  const handlePrint = useReactToPrint({
+    onBeforeGetContent: () => setIsPrinting(true),
+    onAfterPrint: () => setIsPrinting(false),
+
+    content: () => componentRef.current
+  });
+
   return (
-    <Table variant="simple" ref={ref} size="sm" w="100%">
-      {/* <TableCaption>Imperial to metric conversion factors</TableCaption> */}
+    <Table variant="simple" ref={componentRef} size="sm" w="100%">
+      {/* <TableCaption>{cols}</TableCaption> */}
       <Thead>
         <Tr>
-          {/* <Th>Location Type</Th> */}
+          <Th hidden={!isPrinting && cols < 4}>
+            <HStack spacing={1}>
+              <Text>Location Type</Text>
+              <Spacer />
+              <QuerySortBtn queryKey="locationType" sortCb={sortCb} />
+            </HStack>
+          </Th>
           <Th>
             <HStack spacing={1}>
               <Text>Address</Text>
@@ -68,11 +102,18 @@ const RunListTable: ForwardRefRenderFunction<HTMLTableElement, Props> = (
               <QuerySortBtn queryKey="address" sortCb={sortCb} />
             </HStack>
           </Th>
-          <Th>
+          <Th hidden={!isPrinting && cols < 3}>
             <HStack spacing={1}>
               <Text>Agreement Type</Text>
               <Spacer />
               <QuerySortBtn queryKey="schedule" sortCb={sortCb} />
+            </HStack>
+          </Th>
+          <Th hidden={!isPrinting && cols < 2}>
+            <HStack spacing={1}>
+              <Text>Fuel Type</Text>
+              <Spacer />
+              <QuerySortBtn queryKey="fuelType" sortCb={sortCb} />
             </HStack>
           </Th>
           <Th>
@@ -82,23 +123,39 @@ const RunListTable: ForwardRefRenderFunction<HTMLTableElement, Props> = (
               <QuerySortBtn queryKey="expectedDeliveryDate" sortCb={sortCb} />
             </HStack>
           </Th>
-          <Th></Th>
+          <Th pl="0" hidden={isPrinting}>
+            <IconButton
+              float="right"
+              colorScheme="blue"
+              aria-label="Print Table Button"
+              size={"sm"}
+              onClick={() => {
+                handlePrint();
+              }}
+              icon={<MdPrint />}
+            />
+          </Th>
         </Tr>
       </Thead>
       <Tbody>
         {refills.sort(sort).map(row => (
-          <Tr key={row.refillId}>
-            {/* <Td>{capitalize(TankType[row.locationType])}</Td> */}
+          <Tr
+            key={row.refillId}
+            opacity={
+              fuelTypeHighlight !== undefined && fuelTypeHighlight === row.fuelType ? 1 : 0.3
+            }>
+            <Td hidden={!isPrinting && cols < 4}>{capitalize(TankType[row.locationType])}</Td>
             <Td>{row.address}</Td>
-            <Td>{capitalize(RefillSchedule[row.schedule])}</Td>
-            <Td>{row.expectedDeliveryDate.toLocaleDateString()}</Td>
-            <Td>
-              <HStack>
+            <Td hidden={!isPrinting && cols < 3}>{capitalize(RefillSchedule[row.schedule])}</Td>
+            <Td hidden={!isPrinting && cols < 2}>{capitalize(FuelType[row.fuelType])}</Td>
+            <Td>{row.expectedDeliveryDate.toLocaleDateString(locale)}</Td>
+            <Td pl="0" hidden={isPrinting}>
+              <HStack float="right">
                 <IconButton
                   key="click"
                   size="sm"
                   colorScheme="orange"
-                  aria-label="do something"
+                  aria-label={"do something" + row.refillId}
                   onClick={() => refillCb({ ...row })}
                   icon={<GiFuelTank size={30} />}
                 />
@@ -106,7 +163,7 @@ const RunListTable: ForwardRefRenderFunction<HTMLTableElement, Props> = (
                   key="click"
                   size="sm"
                   colorScheme="gray"
-                  aria-label="do something"
+                  aria-label={"do something 2" + row.refillId}
                   onClick={() => refillCb({ ...row })}
                   icon={<MdRemoveRedEye size={24} />}
                 />

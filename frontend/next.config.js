@@ -15,7 +15,7 @@ module.exports = withBundleAnalyzer(
     pwa: {
       disable: process.env.NODE_ENV === "development",
       register: false,
-      skipWaiting: false,
+      skipWaiting: true,
       dest: "public"
     },
     i18n: {
