@@ -17,7 +17,6 @@ import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
 import { ITruckInfoDto } from "services/backend/nswagts";
-import { formatInputNumber, parseInputToNumber } from "utils/formatNumber";
 import { logger } from "utils/logger";
 
 type Props = {
