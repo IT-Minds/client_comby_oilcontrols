@@ -1,44 +1,41 @@
-using Application.Common.Exceptions;
+
 using Application.Common.Interfaces;
+using AutoMapper;
 using Domain.Entities;
-using Domain.Enums;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Application.Trucks.Commands.CreateTruck
 {
-  public class CreateTruckCommand : IRequest<int>
+  public class CreateTruckCommand : IRequest<TruckInfoIdDto>
   {
-    public string TruckIdentifier { get; set; }
-    public string Name { get; set; }
-    public string Description { get; set; }
-    public double TankCapacity { get; set; }
+    public TruckInfoDto TruckInfo { get; set; }
 
-    public class CreateTruckCommandHandler : IRequestHandler<CreateTruckCommand, int>
+    public class CreateTruckCommandHandler : IRequestHandler<CreateTruckCommand, TruckInfoIdDto>
     {
       private readonly IApplicationDbContext _context;
+      private readonly IMapper _mapper;
 
-      public CreateTruckCommandHandler(IApplicationDbContext context)
+      public CreateTruckCommandHandler(IApplicationDbContext context, IMapper mapper)
       {
         _context = context;
+        _mapper = mapper;
       }
 
-      public async Task<int> Handle(CreateTruckCommand request, CancellationToken cancellationToken)
+      public async Task<TruckInfoIdDto> Handle(CreateTruckCommand request, CancellationToken cancellationToken)
       {
         var truck = new Truck
         {
-          TruckIdentifier = request.TruckIdentifier,
-          Name = request.Name,
-          Description = request.Description,
-          TankCapacity = request.TankCapacity
+          TruckIdentifier = request.TruckInfo.TruckIdentifier,
+          Name = request.TruckInfo.Name,
+          Description = request.TruckInfo.Description,
+          TankCapacity = request.TruckInfo.TankCapacity
         };
         _context.Trucks.Add(truck);
-        var result = await _context.SaveChangesAsync(cancellationToken);
-        return truck.Id;
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return _mapper.Map<TruckInfoIdDto>(truck);
       }
     }
   }

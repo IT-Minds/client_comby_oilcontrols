@@ -55,6 +55,20 @@ export interface Locale {
     };
   };
 
+  truckMetaData: {
+    startNumber: string;
+    carNumber: string;
+    carName: string;
+    description: string;
+    tankSize: string;
+    formError: {
+      carNumber: string;
+      carName: string;
+      description: string;
+      tankSize: string;
+    };
+  };
+
   dailyTemperature: {
     selectRegion: string;
     temperature: string;
@@ -68,5 +82,20 @@ export interface Locale {
   mytruck: {
     title: string;
     heading: string;
+    tankLevel: string;
+    tank: {
+      current: string;
+      liters: string;
+      of: string;
+    };
+  };
+
+  enums: {
+    fuelType: {
+      0: string;
+      1: string;
+      2: string;
+      3: string;
+    };
   };
 }

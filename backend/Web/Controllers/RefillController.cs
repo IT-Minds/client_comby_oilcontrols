@@ -1,5 +1,5 @@
 using Application.Common.Interfaces.Pagination;
-using Application.Refills.Commands.CreateRefill;
+using Application.Refills.Commands.CompleteRefill;
 using Application.Refills.Queries.GetRefills;
 using Application.Refills.Queries.GetRefills.Location;
 using Domain.Enums;
@@ -14,9 +14,10 @@ namespace Web.Controllers
 {
   public class RefillController : ApiControllerBase
   {
-    [HttpPost]
-    public async Task<ActionResult<int>> Create(CreateRefillCommand command)
+    [HttpPost("{id}")]
+    public async Task<ActionResult<int>> Complete([FromRoute] int id, CompleteRefillCommand command)
     {
+      command.Id = id;
       return await Mediator.Send(command);
     }
 
@@ -34,7 +35,7 @@ namespace Web.Controllers
       });
     }
 
-    [HttpPost("{id}")]
+    [HttpPost("{id}/image")]
     [Consumes("multipart/form-data")]
     public async Task<ActionResult<string>> SaveCouponImage([FromRoute] int id, IFormFile file)
     {
@@ -45,7 +46,7 @@ namespace Web.Controllers
       });
     }
 
-    [HttpPost("/OrderRefill")]
+    [HttpPost]
     public async Task<ActionResult<int>> OrderRefill(OrderRefillCommand command)
     {
       return await Mediator.Send(command);

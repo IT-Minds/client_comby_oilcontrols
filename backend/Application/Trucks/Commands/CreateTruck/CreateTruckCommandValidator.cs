@@ -6,7 +6,9 @@ namespace Application.Trucks.Commands.CreateTruck
   {
     public CreateTruckCommandValidator()
     {
-      RuleFor(e => e.TruckIdentifier)
+      RuleFor(e => e.TruckInfo)
+        .NotNull();
+      RuleFor(e => e.TruckInfo.TruckIdentifier)
         .NotEmpty();
     }
   }

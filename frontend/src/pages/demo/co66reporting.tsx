@@ -7,7 +7,7 @@ import { GetStaticProps, NextPage } from "next";
 import { I18nProps } from "next-rosetta";
 import { useCallback } from "react";
 import { genRefillClient } from "services/backend/apiClients";
-import { CreateRefillCommand, TankState, TankType } from "services/backend/nswagts";
+import { CompleteRefillCommand, TankState } from "services/backend/nswagts";
 import { urlToFile } from "utils/urlToFile";
 
 const couponNumbers = [
@@ -27,17 +27,15 @@ const DemoPage: NextPage = () => {
     (reportForm: RefillForm) => {
       awaitCallback(async () => {
         const client = await genRefillClient();
-        const newRefillID = await client.create(
-          new CreateRefillCommand({
+        const newRefillID = await client.complete(
+          2,
+          new CompleteRefillCommand({
             couponNumber: Number(reportForm.couponId),
-            expectedDeliveryDate: new Date(),
-            fuelType: reportForm.fuelType,
+            actualDeliveryDate: new Date(),
             startAmount: 2,
-            endAmount: 0 + reportForm.liters,
-            tankNumber: 123,
+            endAmount: 20,
             tankState: TankState.FULL,
-            tankType: TankType.BUILDING,
-            truckId: 2
+            refillNumber: 123
           })
         );
 

@@ -11,21 +11,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Trucks.Queries.GetTrucksPage
 {
-  public class GetTrucksPageQuery : IPageRequest<TruckInfoDto>, IPageBody<Truck, string>
+  public class GetTrucksPageQuery : IPageRequest<TruckInfoIdDto, int>, IPageBody<Truck, int>
   {
     public int Size { get; set; }
     public int? Skip { get; set; }
-    public string Needle { get; set; }
+    public int Needle { get; set; }
 
-    public string GetNewNeedle(IQueryable<Truck> query)
+    public int GetNewNeedle(IQueryable<Truck> query)
     {
-      return query.Select(x => x.TruckIdentifier).Take(Size).LastOrDefault();
+      return query.Select(x => x.Id).Take(Size).LastOrDefault();
     }
 
     public async Task<int> PagesRemaining(IQueryable<Truck> query)
     {
       var count = await query.CountAsync();
-      var pagesLeft = (int)(Math.Floor((float)count / (float)Size)) - 1;
+      var pagesLeft = (int)(Math.Ceiling((float)count / (float)Size)) - 1;
 
       return pagesLeft;
     }
@@ -34,7 +34,7 @@ namespace Application.Trucks.Queries.GetTrucksPage
     {
       var partial = query
         .OrderBy(x => x.LastModified)
-        .Where(x => String.Compare(x.TruckIdentifier, Needle) > 0);
+        .Where(x => x.Id > Needle);
 
       if (Skip.HasValue)
       {
@@ -43,7 +43,7 @@ namespace Application.Trucks.Queries.GetTrucksPage
       return partial;
     }
 
-    public class GetTrucksPageQueryHandler : IPageRequestHandler<GetTrucksPageQuery, TruckInfoDto>
+    public class GetTrucksPageQueryHandler : IPageRequestHandler<GetTrucksPageQuery, TruckInfoIdDto, int>
     {
       private readonly IApplicationDbContext _context;
       private readonly IMapper _mapper;
@@ -54,9 +54,9 @@ namespace Application.Trucks.Queries.GetTrucksPage
         _mapper = mapper;
       }
 
-      public async Task<PageResult<TruckInfoDto>> Handle(GetTrucksPageQuery request, CancellationToken cancellationToken)
+      public async Task<PageResult<TruckInfoIdDto, int>> Handle(GetTrucksPageQuery request, CancellationToken cancellationToken)
       {
-        var page = new PageResult<TruckInfoDto>();
+        var page = new PageResult<TruckInfoIdDto, int>();
 
         var baseQuery = _context.Trucks
           .Include(x => x.DailyStates)
@@ -70,7 +70,7 @@ namespace Application.Trucks.Queries.GetTrucksPage
         page.PagesRemaining = pagesRemaining;
         page.Results = await query
           .Take(request.Size)
-          .ProjectTo<TruckInfoDto>(_mapper.ConfigurationProvider)
+          .ProjectTo<TruckInfoIdDto>(_mapper.ConfigurationProvider)
           .ToListAsync(cancellationToken);
         page.NewNeedle = needle;
 

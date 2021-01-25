@@ -1,8 +1,7 @@
 using Application.Common.Interfaces.Pagination;
-using Application.Trucks.Queries;
+using Application.Trucks;
 using Application.Trucks.Queries.GetTrucksPage;
 using AutoMapper;
-using Domain.Enums;
 using FluentAssertions;
 using Infrastructure.Persistence;
 using System.Linq;
@@ -30,13 +29,13 @@ namespace Application.UnitTests.Trucks.Queries.GetTRucksPage
       var query = new GetTrucksPageQuery
       {
         Size = 500,
-        Needle = "",
+        Needle = 0,
         Skip = 0
       };
       var numTruck = _context.Trucks.Count();
       var handler = new GetTrucksPageQuery.GetTrucksPageQueryHandler(_context, _mapper);
       var result = await handler.Handle(query, CancellationToken.None);
-      result.Should().BeOfType<PageResult<TruckInfoDto>>();
+      result.Should().BeOfType<PageResult<TruckInfoIdDto, int>>();
       result.Results.Count.Should().Be(numTruck);
     }
 
@@ -47,12 +46,12 @@ namespace Application.UnitTests.Trucks.Queries.GetTRucksPage
       {
         Size = 1,
         Skip = 0,
-        Needle = "a"
+        Needle = 0
       };
 
       var handler = new GetTrucksPageQuery.GetTrucksPageQueryHandler(_context, _mapper);
       var result = await handler.Handle(query, CancellationToken.None);
-      result.Should().BeOfType<PageResult<TruckInfoDto>>();
+      result.Should().BeOfType<PageResult<TruckInfoIdDto, int>>();
       result.Results.Count.Should().Be(1);
       result.PagesRemaining.Should().Be(2);
       result.Results[0].Id.Should().Be(43);
@@ -66,12 +65,12 @@ namespace Application.UnitTests.Trucks.Queries.GetTRucksPage
       {
         Size = 1,
         Skip = 2,
-        Needle = ""
+        Needle = 0
       };
 
       var handler = new GetTrucksPageQuery.GetTrucksPageQueryHandler(_context, _mapper);
       var result = await handler.Handle(query, CancellationToken.None);
-      result.Should().BeOfType<PageResult<TruckInfoDto>>();
+      result.Should().BeOfType<PageResult<TruckInfoIdDto, int>>();
       result.Results.Count.Should().Be(1);
       result.PagesRemaining.Should().Be(0);
       result.Results[0].Id.Should().Be(100);
@@ -85,11 +84,11 @@ namespace Application.UnitTests.Trucks.Queries.GetTRucksPage
       {
         Size = 0,
         Skip = 0,
-        Needle = ""
+        Needle = 0
       };
       var handler = new GetTrucksPageQuery.GetTrucksPageQueryHandler(_context, _mapper);
       var result = await handler.Handle(query, CancellationToken.None);
-      result.Should().BeOfType<PageResult<TruckInfoDto>>();
+      result.Should().BeOfType<PageResult<TruckInfoIdDto, int>>();
       result.Results.Count.Should().Be(0);
       result.PagesRemaining.Should().Be(int.MaxValue);
     }

@@ -45,7 +45,6 @@ const QuerySingleSelectBtn: FC<Props> = ({
     filters.forEach(filter => {
       const [checkQueryGroup, checkKey, value] = filter.split("_");
 
-      console.log(filter);
       if (queryGroup === checkQueryGroup) {
         if (queryKey === checkKey) {
           setCheckedItem(value);
@@ -66,7 +65,6 @@ const QuerySingleSelectBtn: FC<Props> = ({
     } else {
       filters.push(`${queryGroup}_${queryKey}_${checkedItem}`);
     }
-    console.log(filters, copy);
     copy["thfilter"] = filters;
     router.replace(
       {

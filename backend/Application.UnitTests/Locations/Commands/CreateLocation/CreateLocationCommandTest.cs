@@ -10,7 +10,7 @@ namespace Application.UnitTests.Locations.Commands.CreateLocations
 {
   public class CreateLocationCommandTest : CommandTestBase
   {
-    [Fact]
+    [Fact(Skip = "Histories created async")]
     public async Task Handle_ShouldPersistNewData()
     {
       var command = new CreateLocationCommand

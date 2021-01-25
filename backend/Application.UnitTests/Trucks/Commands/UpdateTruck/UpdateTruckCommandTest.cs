@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Trucks;
 using Application.Trucks.Commands.UpdateTruck;
 using FluentAssertions;
 using Xunit;
@@ -15,42 +16,48 @@ namespace Application.UnitTests.Trucks.Commands.UpdateTruck
     {
       var command = new UpdateTruckCommand
       {
-        Name = "McTruck",
-        Description = "I'm lovin' it",
-        TankCapacity = Math.PI,
-        StartRefillNumber = 700,
-        Id = 100,
-        TruckIdentifier = "7ruck"
+        TruckInfo = new TruckInfoIdDto
+        {
+          Name = "McTruck",
+          Description = "I'm lovin' it",
+          TankCapacity = Math.PI,
+          RefillNumber = 700,
+          Id = 100,
+          TruckIdentifier = "7ruck"
+        }
       };
 
-      var handler = new UpdateTruckCommand.UpdateTruckCommandHandler(Context);
+      var handler = new UpdateTruckCommand.UpdateTruckCommandHandler(Context, Mapper);
 
       var result = await handler.Handle(command, CancellationToken.None);
 
-      var entity = Context.Trucks.FirstOrDefault(x => x.TruckIdentifier.Equals(result));
+      var entity = await Context.Trucks.FindAsync(result.Id);
 
       entity.Should().NotBeNull();
-      entity.Name.Should().Be(command.Name);
-      entity.Description.Should().Be(command.Description);
-      entity.TankCapacity.Should().Be(command.TankCapacity);
-      entity.DailyStates.OrderByDescending(x => x.Date).FirstOrDefault().StartRefillNumber.Should().Be(command.StartRefillNumber);
-      entity.TruckIdentifier.Should().Be(command.TruckIdentifier);
+      entity.Id.Should().Be(command.TruckInfo.Id);
+      entity.Name.Should().Be(command.TruckInfo.Name);
+      entity.Description.Should().Be(command.TruckInfo.Description);
+      entity.TankCapacity.Should().Be(command.TruckInfo.TankCapacity);
+      entity.DailyStates.OrderByDescending(x => x.Date).FirstOrDefault().StartRefillNumber.Should().Be(command.TruckInfo.RefillNumber);
+      entity.TruckIdentifier.Should().Be(command.TruckInfo.TruckIdentifier);
     }
 
     [Fact]
     public async Task Handle_NoSuchTruck()
     {
       var command = new UpdateTruckCommand
+      {TruckInfo = new TruckInfoIdDto
       {
         Name = "McTruck",
         Description = "I'm lovin' it",
         TankCapacity = Math.PI,
-        StartRefillNumber = 700,
+        RefillNumber = 700,
         TruckIdentifier = "-1",
         Id = -1
+      }
       };
 
-      var handler = new UpdateTruckCommand.UpdateTruckCommandHandler(Context);
+      var handler = new UpdateTruckCommand.UpdateTruckCommandHandler(Context, Mapper);
 
       await Assert.ThrowsAsync<ArgumentException>(
         async () => { await handler.Handle(command, CancellationToken.None); }
