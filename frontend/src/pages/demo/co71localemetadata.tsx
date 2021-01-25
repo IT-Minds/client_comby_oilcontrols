@@ -33,7 +33,7 @@ const DemoPage: NextPage = () => {
               })
             ));
 
-        await client.saveLocationImage(1, { data: form.image, fileName: form.image.name });
+        await client.saveLocationImage(newId, { data: form.image, fileName: form.image.name });
 
         toast({
           title: "Filldata created/updated",
