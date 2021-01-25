@@ -54,11 +54,19 @@ namespace Infrastructure.Persistence
             entry.Entity.LastModifiedBy = _currentUserService.UserId;
             entry.Entity.LastModified = _dateTimeOffsetService.Now;
             entry.Entity.ModifiedCount = 0;
+            if (entry.Entity.GetType().Equals(typeof(Location)))
+            {
+              OnLocationChange(entry.Entity as Location);
+            }
             break;
           case EntityState.Modified:
             entry.Entity.LastModifiedBy = _currentUserService.UserId;
             entry.Entity.LastModified = _dateTimeOffsetService.Now;
             entry.Entity.ModifiedCount++;
+            if (entry.Entity.GetType().Equals(typeof(Location)))
+            {
+              OnLocationChange(entry.Entity as Location);
+            }
             break;
         }
       }
