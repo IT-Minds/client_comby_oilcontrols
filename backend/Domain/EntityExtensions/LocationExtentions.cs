@@ -44,7 +44,7 @@ namespace Domain.EntityExtensions
       }
 
       var heatIndex = location.HeatingIndex(startDate, endDate);
-      var fuelConsumed = pastRefills.Where(x => x.ActualDeliveryDate > startDate).Sum(x => x.AmountDelivered() ?? 0 );
+      var fuelConsumed = pastRefills.Where(x => x.ActualDeliveryDate > startDate).Sum(x => x.AmountDelivered() ?? 0);
 
       return fuelConsumed / heatIndex;
     }
@@ -94,7 +94,7 @@ namespace Domain.EntityExtensions
         double heatdegree;
         try
         {
-          heatdegree= location.Region.DailyTemperatureEstimate(currentDate);
+          heatdegree = location.Region.DailyTemperatureEstimate(currentDate);
         }
         catch
         {
@@ -107,6 +107,19 @@ namespace Domain.EntityExtensions
       while (fuelAmount > location.FuelTank.MinimumFuelAmount && count < maxDays);
 
       return currentDate.AddDays(-1);
+    }
+
+    public static double EstimatedYearlyFuelConsumption(this Location location, int year)
+    {
+      DateTime period = new DateTime(year, 1, 1);
+      double heatDegreeSum = 0;
+      while (period.Year == year)
+      {
+        heatDegreeSum += (double)HEAT_BASE - location.Region.DailyTemperatureEstimate(period);
+        period.AddDays(1);
+      }
+
+      return location.FuelConsumptionPerDegreeOfHeating() * heatDegreeSum;
     }
   }
 }
