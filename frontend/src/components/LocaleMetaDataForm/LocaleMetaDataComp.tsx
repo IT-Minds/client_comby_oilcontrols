@@ -4,80 +4,69 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  HStack,
   Input,
+  InputGroup,
+  InputRightAddon,
   NumberInput,
   NumberInputField,
   Select,
-  StackDivider,
   VStack
 } from "@chakra-ui/react";
+import StreetSelector from "components/StreetSelector/StreetSelector";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
-import { IUpdateLocationMetaDataCommand, RefillSchedule, TankType } from "services/backend/nswagts";
+import { RefillSchedule, TankType } from "services/backend/nswagts";
 import { logger } from "utils/logger";
 
+import { LocaleMetaDataForm } from "./LocaleMetaDataCompForm";
+
 type Props = {
-  submitCallback: (reportForm: IUpdateLocationMetaDataCommand) => void;
+  submitCallback: (reportForm: LocaleMetaDataForm) => void;
+  localeMetaData: LocaleMetaDataForm;
 };
 
-const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
-  const [localForm, setLocalForm] = useState<IUpdateLocationMetaDataCommand>({
-    address: "",
-    comment: "",
-    estimateConsumption: null,
-    locationId: null,
-    minimumFuelAmount: null,
-    refillschedule: null,
-    tankCapacity: null,
-    tankNumber: null,
-    tankType: null
-  });
+const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
+  const [localForm, setLocalForm] = useState<LocaleMetaDataForm>(
+    localeMetaData ?? {
+      address: "",
+      comment: "",
+      estimateConsumption: null,
+      regionId: null,
+      minimumFuelAmount: null,
+      refillschedule: null,
+      tankCapacity: null,
+      tankNumber: null,
+      tankType: null,
+      image: null
+    }
+  );
 
-  const [address, setAddress] = useState(null);
-  const [city, setCity] = useState(null);
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
 
-  const updateLocalForm = useCallback(
-    (value: unknown, key: keyof IUpdateLocationMetaDataCommand) => {
-      setLocalForm(form => {
-        (form[key] as unknown) = value;
-        return form;
-      });
-    },
-    []
-  );
+  const updateLocalForm = useCallback((value: unknown, key: keyof typeof localForm) => {
+    setLocalForm(form => {
+      (form[key] as unknown) = value;
+      return form;
+    });
+  }, []);
 
   const handleSubmit = useCallback((event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     logger.debug("Submitting form ReportingComp");
-    localForm.address = address + city;
     submitCallback(localForm);
     setFormSubmitAttempts(0);
   }, []);
+
+  const saveImage = async () => {
+    const [handle] = await (window as any).showOpenFilePicker();
+    const file = await handle.getFile();
+    updateLocalForm(file, "image");
+  };
 
   return (
     <Container>
       <form onSubmit={handleSubmit}>
         <VStack spacing={2}>
-          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.locationId}>
-            {
-              //TODO: translation
-            }
-            <FormLabel>Location ID:</FormLabel>
-            <NumberInput
-              placeholder="Location Id"
-              onChange={value => {
-                updateLocalForm(parseInt(value), "locationId");
-              }}>
-              <NumberInputField />
-            </NumberInput>
-            {
-              //TODO: translation
-            }
-            <FormErrorMessage>Please specify a location ID</FormErrorMessage>
-          </FormControl>
-
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.tankType}>
             {
               //TODO: translation
@@ -116,39 +105,21 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
             <FormErrorMessage>Please enter a tank number</FormErrorMessage>
           </FormControl>
 
-          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !address}>
+          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.address}>
             {
               //TODO: translation
             }
             <FormLabel>Address:</FormLabel>
-            <Input
-              placeholder="Address"
-              onChange={e => {
-                setAddress(e.target.value);
-              }}
-            />
+
+            <StreetSelector
+              cb={x => {
+                updateLocalForm(x.name, "address");
+                updateLocalForm(x.regionId, "regionId" as keyof typeof localForm);
+              }}></StreetSelector>
             {
               //TODO: translation
             }
             <FormErrorMessage>Please enter an address</FormErrorMessage>
-          </FormControl>
-
-          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !city}>
-            {
-              //TODO: translation
-            }
-            <FormLabel>City/Zip code:</FormLabel>
-            <Input
-              placeholder="City/zip code"
-              onChange={e => {
-                setCity(e.target.value);
-              }}
-              value={city ?? ""}
-            />
-            {
-              //TODO: translation
-            }
-            <FormErrorMessage>Please enter City/Zip code</FormErrorMessage>
           </FormControl>
 
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.refillschedule}>
@@ -162,7 +133,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
               {
                 //TODO: translation
               }
-              <option value={RefillSchedule.AUTOMAIC}>Automatic</option>
+              <option value={RefillSchedule.AUTOMATIC}>Automatic</option>
               <option value={RefillSchedule.INTERVAL}>Interval</option>
               <option value={RefillSchedule.MANUAL}>Manual</option>
             </Select>
@@ -177,13 +148,16 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
               //TODO: translation
             }
             <FormLabel>Tank Capacity:</FormLabel>
-            <NumberInput
-              placeholder="Tank capacity"
-              onChange={value => {
-                updateLocalForm(parseInt(value), "tankCapacity");
-              }}>
-              <NumberInputField />
-            </NumberInput>
+            <InputGroup>
+              <NumberInput
+                placeholder="Tank capacity"
+                onChange={value => {
+                  updateLocalForm(parseInt(value), "tankCapacity");
+                }}>
+                <NumberInputField />
+              </NumberInput>
+              <InputRightAddon>liters</InputRightAddon>
+            </InputGroup>
             {
               //TODO: translation
             }
@@ -197,13 +171,16 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
               //TODO: translation
             }
             <FormLabel>Minimum Fuel Amount: </FormLabel>
-            <NumberInput
-              placeholder="Min. fuel amount"
-              onChange={value => {
-                updateLocalForm(parseInt(value), "minimumFuelAmount");
-              }}>
-              <NumberInputField />
-            </NumberInput>
+            <InputGroup>
+              <NumberInput
+                placeholder="Min. fuel amount"
+                onChange={value => {
+                  updateLocalForm(parseInt(value), "minimumFuelAmount");
+                }}>
+                <NumberInputField />
+              </NumberInput>
+              <InputRightAddon>liters</InputRightAddon>
+            </InputGroup>
             {
               //TODO: translation
             }
@@ -217,13 +194,16 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
               //TODO: translation
             }
             <FormLabel>Daily Fuel Consumption Estimate: </FormLabel>
-            <NumberInput
-              placeholder="Est. fuel consumption"
-              onChange={value => {
-                updateLocalForm(parseInt(value), "estimateConsumption");
-              }}>
-              <NumberInputField />
-            </NumberInput>
+            <InputGroup>
+              <NumberInput
+                placeholder="Est. fuel consumption"
+                onChange={value => {
+                  updateLocalForm(parseInt(value), "estimateConsumption");
+                }}>
+                <NumberInputField />
+              </NumberInput>
+              <InputRightAddon>liters</InputRightAddon>
+            </InputGroup>
             {
               //TODO: translation
             }
@@ -249,17 +229,20 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback }) => {
             <FormErrorMessage>Please enter a comment</FormErrorMessage>
           </FormControl>
 
-          <FormControl>
+          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.image}>
             <VStack>
               {
                 //TODO: translation
               }
-              <FormLabel>Images</FormLabel>
-              {
-                //TODO: Should be an upload input type.
-              }
-              <Input></Input>
+              <FormLabel>Select an image to upload</FormLabel>
+              <Button colorScheme="blue" onClick={saveImage}>
+                {localForm.image ? "Re-select image" : "Select image"}
+              </Button>
             </VStack>
+            {
+              //TODO: translation
+            }
+            <FormErrorMessage>Please select an image</FormErrorMessage>
           </FormControl>
 
           {
