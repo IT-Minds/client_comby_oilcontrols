@@ -281,6 +281,36 @@ namespace Application.UnitTests
       );
       //END
 
+      //START: Test data predict yearly fuel consumption
+      context.Regions.AddRange(
+        new Region { Id = 300 },
+        new Region { Id = 301 }
+      );
+      context.FuelTanks.AddRange(
+        new FuelTank { Id = 300, TankNumber = 300, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
+        new FuelTank { Id = 301, TankNumber = 301, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
+        new FuelTank { Id = 302, TankNumber = 302, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 }
+      );
+      context.Locations.AddRange(
+        new Location { Id = 300, RegionId = 300, FuelTankId = 300, Address = "Address region 300.", Comments = "Location 300.", EstimateFuelConsumption = 100 },
+        new Location { Id = 301, RegionId = 300, FuelTankId = 301, Address = "Address region 300.", Comments = "Location 301.", EstimateFuelConsumption = 100 },
+        new Location { Id = 302, RegionId = 301, FuelTankId = 302, Address = "Address region 300.", Comments = "Location 302.", EstimateFuelConsumption = 100 }
+      );
+
+      context.Refills.AddRange(
+        new Refill { Id = 300, CouponId = 300, StartAmount = 100, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1950, 5, 1), ActualDeliveryDate = new DateTime(1950, 5, 1), LocationId = 301 },
+        new Refill { Id = 301, CouponId = 301, StartAmount = 100, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1950, 5, 10), ActualDeliveryDate = new DateTime(1950, 5, 10), LocationId = 301 }
+      );
+
+      DateTime period = new DateTime(1944, 1, 1);
+      int id = 1950;
+      while (period.Year < 1951)
+      {
+        context.RegionDailyTemps.Add(
+          new RegionDailyTemp { Id = id++, RegionId = 300, Date = period, Temperature = -5 }
+        );
+        period = period.AddDays(1);
+      }
       //Start: Testdata day reaching minimum fuel levels prediction
       context.Regions.Add(new Region { Id = 200 });
 
