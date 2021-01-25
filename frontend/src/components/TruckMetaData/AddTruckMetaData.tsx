@@ -14,30 +14,32 @@ import { Locale } from "i18n/Locale";
 import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
+import { ITruckInfoDto } from "services/backend/nswagts";
 import { logger } from "utils/logger";
 
-import { AddTruckMetaDataForm } from "./AddTruckMetaDataForm";
-
 type Props = {
-  submitCallback: (addTruckMetaDataForm: AddTruckMetaDataForm) => void;
-  //truckMetaData: TYPE;
+  submitCallback: (truckMetaDataForm: ITruckInfoDto) => void;
+  truckMetaData?: ITruckInfoDto;
 };
 
-const AddTruckMetaData: FC<Props> = ({ submitCallback }) => {
-  const [localAddTruckMetaDataForm, setlocalAddTruckMetaDataForm] = useState<AddTruckMetaDataForm>({
-    startNumber: 123, //dummy
-    carNumber: null,
-    description: null,
-    name: null,
-    tankSize: null
-  });
+const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
+  const [localTruckMetaDataForm, setlocalTruckMetaDataForm] = useState<ITruckInfoDto>(
+    truckMetaData ?? {
+      id: null,
+      refillNumber: null,
+      truckIdentifier: null,
+      description: null,
+      name: null,
+      tankCapacity: null
+    }
+  );
 
   const { t } = useI18n<Locale>();
 
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
 
-  const updateLocalForm = useCallback((value: unknown, key: keyof AddTruckMetaDataForm) => {
-    setlocalAddTruckMetaDataForm(form => {
+  const updateLocalForm = useCallback((value: unknown, key: keyof ITruckInfoDto) => {
+    setlocalTruckMetaDataForm(form => {
       (form[key] as unknown) = value;
       return form;
     });
@@ -47,11 +49,11 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback }) => {
     (event: FormEvent<HTMLFormElement>) => {
       logger.debug("Submitting form AddTruckMetaDataForm");
 
-      submitCallback(localAddTruckMetaDataForm);
+      submitCallback(localTruckMetaDataForm);
       setFormSubmitAttempts(0);
       event.preventDefault();
     },
-    [localAddTruckMetaDataForm]
+    [localTruckMetaDataForm]
   );
 
   return (
@@ -60,18 +62,18 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback }) => {
         <VStack align="center" justify="center">
           <FormControl>
             <FormLabel>{t("truckMetaData.startNumber")}:</FormLabel>
-            <Input isReadOnly value={localAddTruckMetaDataForm.startNumber}></Input>
+            <Input value={localTruckMetaDataForm.refillNumber}></Input>
           </FormControl>
 
           <FormControl
             isRequired
-            isInvalid={formSubmitAttempts > 0 && !localAddTruckMetaDataForm.carNumber}>
+            isInvalid={formSubmitAttempts > 0 && !localTruckMetaDataForm.truckIdentifier}>
             <FormLabel> {t("truckMetaData.carNumber")}:</FormLabel>
             <NumberInput
               min={0}
               max={999}
               onChange={value => {
-                updateLocalForm(value, "carNumber");
+                updateLocalForm(value, "truckIdentifier");
               }}>
               <NumberInputField />
             </NumberInput>
@@ -80,7 +82,7 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback }) => {
 
           <FormControl
             isRequired
-            isInvalid={formSubmitAttempts > 0 && !localAddTruckMetaDataForm.name}>
+            isInvalid={formSubmitAttempts > 0 && !localTruckMetaDataForm.name}>
             <FormLabel>{t("truckMetaData.carName")}:</FormLabel>
             <Input
               onChange={e => {
@@ -91,8 +93,8 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback }) => {
 
           <FormControl
             isRequired
-            isInvalid={formSubmitAttempts > 0 && !localAddTruckMetaDataForm.description}>
-            <FormLabel>{t("truckMetaData.formError.carNumber")}:</FormLabel>
+            isInvalid={formSubmitAttempts > 0 && !localTruckMetaDataForm.description}>
+            <FormLabel>{t("truckMetaData.description")}:</FormLabel>
             <Textarea
               onChange={e => {
                 updateLocalForm(e.target.value, "description");
@@ -102,12 +104,12 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback }) => {
 
           <FormControl
             isRequired
-            isInvalid={formSubmitAttempts > 0 && !localAddTruckMetaDataForm.tankSize}>
+            isInvalid={formSubmitAttempts > 0 && !localTruckMetaDataForm.tankCapacity}>
             <FormLabel>{t("truckMetaData.tankSize")}:</FormLabel>
             <NumberInput
               min={0}
               onChange={value => {
-                updateLocalForm(value, "tankSize");
+                updateLocalForm(value, "tankCapacity");
               }}>
               <NumberInputField />
             </NumberInput>
