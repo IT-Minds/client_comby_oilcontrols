@@ -22,7 +22,8 @@ type Props = {
 
 const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) => {
   const [localReportForm, setLocalReportForm] = useState<RefillForm>({
-    liters: 0,
+    startliters: 0,
+    endliters: 0,
     fuelType: null,
     couponId: couponNumbers[0]?.id ?? "",
     isSpecialFill: false,
@@ -97,25 +98,46 @@ const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) =>
             </Select>
             <FormErrorMessage>Please select one of the allowed fuel types</FormErrorMessage>
           </FormControl>
+          <FormControl
+            id="liters"
+            isInvalid={formSubmitAttempts > 0 && isNaN(localReportForm.endliters)}
+            isRequired>
+            <FormLabel>Fuel in tank AFTER refill:</FormLabel>
+
+            <InputGroup>
+              <Input
+                placeholder="Enter "
+                onChange={e =>
+                  updateLocalForm(
+                    parseInputToNumber(formatInputNumber(e.target.value)),
+                    "endliters"
+                  )
+                }
+                minW="50%"></Input>
+              <InputRightAddon>liters</InputRightAddon>
+            </InputGroup>
+            <FormErrorMessage>Please enter a valid amount of liters</FormErrorMessage>
+          </FormControl>
 
           <FormControl
             id="liters"
-            isInvalid={formSubmitAttempts > 0 && isNaN(localReportForm.liters)}
+            isInvalid={formSubmitAttempts > 0 && isNaN(localReportForm.startliters)}
             isRequired>
-            <FormLabel>Amount filled:</FormLabel>
+            <FormLabel>Fuel in tank BEFORE refill:</FormLabel>
 
             <InputGroup>
               <Input
                 placeholder="Enter amount filled into tank"
                 onChange={e =>
-                  updateLocalForm(parseInputToNumber(formatInputNumber(e.target.value)), "liters")
+                  updateLocalForm(
+                    parseInputToNumber(formatInputNumber(e.target.value)),
+                    "startliters"
+                  )
                 }
                 minW="50%"></Input>
               <InputRightAddon>liters</InputRightAddon>
             </InputGroup>
-            <FormErrorMessage>
-              Please enter a valid amount of liters filled into the tank
-            </FormErrorMessage>
+            <FormErrorMessage>Please enter a valid amount of liters</FormErrorMessage>
           </FormControl>
 
           <FormControl mb={4} display="flex" alignItems="center">

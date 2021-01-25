@@ -82,5 +82,20 @@ export interface Locale {
   mytruck: {
     title: string;
     heading: string;
+    tankLevel: string;
+    tank: {
+      current: string;
+      liters: string;
+      of: string;
+    };
+  };
+
+  enums: {
+    fuelType: {
+      0: string;
+      1: string;
+      2: string;
+      3: string;
+    };
   };
 }

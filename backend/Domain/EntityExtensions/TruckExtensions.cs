@@ -52,9 +52,9 @@ namespace Domain.EntityExtensions
     public static int CurrentRefillNumber(this Truck truck)
     {
       var newestRefill = truck.Route?.Refills?.Where(x => x.ActualDeliveryDate != null)?.OrderByDescending(x => x.ActualDeliveryDate).FirstOrDefault();
-      if (newestRefill != null)
+      if (newestRefill != null && newestRefill.RefillNumber != null)
       {
-        return newestRefill.RefillNumber;
+        return (int)newestRefill.RefillNumber;
       }
       var dailyState = truck.DailyStates?.OrderByDescending(x => x.Date).FirstOrDefault();
       if (dailyState != null)

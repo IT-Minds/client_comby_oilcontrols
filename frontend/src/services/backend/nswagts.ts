@@ -816,10 +816,10 @@ export class LocationClient extends ClientBase implements ILocationClient {
 }
 
 export interface IRefillClient {
-    create(command: CreateRefillCommand): Promise<number>;
+    complete(id: number, command: CompleteRefillCommand): Promise<number>;
     get(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined, tankType?: TankType | null | undefined): Promise<PageResultOfRefillDto>;
-    saveCouponImage(id: number, file?: FileParameter | null | undefined): Promise<string>;
     orderRefill(command: OrderRefillCommand): Promise<number>;
+    saveCouponImage(id: number, file?: FileParameter | null | undefined): Promise<string>;
 }
 
 export class RefillClient extends ClientBase implements IRefillClient {
@@ -833,8 +833,11 @@ export class RefillClient extends ClientBase implements IRefillClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    create(command: CreateRefillCommand): Promise<number> {
-        let url_ = this.baseUrl + "/api/Refill";
+    complete(id: number, command: CompleteRefillCommand): Promise<number> {
+        let url_ = this.baseUrl + "/api/Refill/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(command);
@@ -851,11 +854,11 @@ export class RefillClient extends ClientBase implements IRefillClient {
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.http.fetch(url_, transformedOptions_);
         }).then((_response: Response) => {
-            return this.transformResult(url_, _response, (_response: Response) => this.processCreate(_response));
+            return this.transformResult(url_, _response, (_response: Response) => this.processComplete(_response));
         });
     }
 
-    protected processCreate(response: Response): Promise<number> {
+    protected processComplete(response: Response): Promise<number> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -919,8 +922,48 @@ export class RefillClient extends ClientBase implements IRefillClient {
         return Promise.resolve<PageResultOfRefillDto>(<any>null);
     }
 
+    orderRefill(command: OrderRefillCommand): Promise<number> {
+        let url_ = this.baseUrl + "/api/Refill";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processOrderRefill(_response));
+        });
+    }
+
+    protected processOrderRefill(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(<any>null);
+    }
+
     saveCouponImage(id: number, file?: FileParameter | null | undefined): Promise<string> {
-        let url_ = this.baseUrl + "/api/Refill/{id}";
+        let url_ = this.baseUrl + "/api/Refill/{id}/image";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -961,46 +1004,6 @@ export class RefillClient extends ClientBase implements IRefillClient {
             });
         }
         return Promise.resolve<string>(<any>null);
-    }
-
-    orderRefill(command: OrderRefillCommand): Promise<number> {
-        let url_ = this.baseUrl + "/OrderRefill";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(command);
-
-        let options_ = <RequestInit>{
-            body: content_,
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            }
-        };
-
-        return this.transformOptions(options_).then(transformedOptions_ => {
-            return this.http.fetch(url_, transformedOptions_);
-        }).then((_response: Response) => {
-            return this.transformResult(url_, _response, (_response: Response) => this.processOrderRefill(_response));
-        });
-    }
-
-    protected processOrderRefill(response: Response): Promise<number> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 !== undefined ? resultData200 : <any>null;
-            return result200;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<number>(<any>null);
     }
 }
 
@@ -1065,10 +1068,10 @@ export class StreetClient extends ClientBase implements IStreetClient {
 }
 
 export interface ITruckClient {
-    getTruck(id: number): Promise<TruckInfoDto>;
-    updateTruck(id: number, command: UpdateTruckCommand): Promise<string>;
-    getTrucks(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfTruckInfoDto>;
-    createTruck(command: CreateTruckCommand): Promise<number>;
+    getTruck(id: number): Promise<TruckInfoIdDto>;
+    updateTruck(id: number, command: UpdateTruckCommand): Promise<TruckInfoIdDto>;
+    getTrucks(needle?: number | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfTruckInfoIdDtoAndInteger>;
+    createTruck(command: CreateTruckCommand): Promise<TruckInfoIdDto>;
     getTrucksRefills(id: number): Promise<LocationRefillDto[]>;
 }
 
@@ -1083,7 +1086,7 @@ export class TruckClient extends ClientBase implements ITruckClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getTruck(id: number): Promise<TruckInfoDto> {
+    getTruck(id: number): Promise<TruckInfoIdDto> {
         let url_ = this.baseUrl + "/api/Truck/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -1104,14 +1107,14 @@ export class TruckClient extends ClientBase implements ITruckClient {
         });
     }
 
-    protected processGetTruck(response: Response): Promise<TruckInfoDto> {
+    protected processGetTruck(response: Response): Promise<TruckInfoIdDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = TruckInfoDto.fromJS(resultData200);
+            result200 = TruckInfoIdDto.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -1119,10 +1122,10 @@ export class TruckClient extends ClientBase implements ITruckClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<TruckInfoDto>(<any>null);
+        return Promise.resolve<TruckInfoIdDto>(<any>null);
     }
 
-    updateTruck(id: number, command: UpdateTruckCommand): Promise<string> {
+    updateTruck(id: number, command: UpdateTruckCommand): Promise<TruckInfoIdDto> {
         let url_ = this.baseUrl + "/api/Truck/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -1147,14 +1150,14 @@ export class TruckClient extends ClientBase implements ITruckClient {
         });
     }
 
-    protected processUpdateTruck(response: Response): Promise<string> {
+    protected processUpdateTruck(response: Response): Promise<TruckInfoIdDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            result200 = TruckInfoIdDto.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -1162,12 +1165,14 @@ export class TruckClient extends ClientBase implements ITruckClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<string>(<any>null);
+        return Promise.resolve<TruckInfoIdDto>(<any>null);
     }
 
-    getTrucks(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfTruckInfoDto> {
+    getTrucks(needle?: number | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfTruckInfoIdDtoAndInteger> {
         let url_ = this.baseUrl + "/api/Truck?";
-        if (needle !== undefined && needle !== null)
+        if (needle === null)
+            throw new Error("The parameter 'needle' cannot be null.");
+        else if (needle !== undefined)
             url_ += "needle=" + encodeURIComponent("" + needle) + "&";
         if (size === null)
             throw new Error("The parameter 'size' cannot be null.");
@@ -1191,14 +1196,14 @@ export class TruckClient extends ClientBase implements ITruckClient {
         });
     }
 
-    protected processGetTrucks(response: Response): Promise<PageResultOfTruckInfoDto> {
+    protected processGetTrucks(response: Response): Promise<PageResultOfTruckInfoIdDtoAndInteger> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PageResultOfTruckInfoDto.fromJS(resultData200);
+            result200 = PageResultOfTruckInfoIdDtoAndInteger.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -1206,10 +1211,10 @@ export class TruckClient extends ClientBase implements ITruckClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<PageResultOfTruckInfoDto>(<any>null);
+        return Promise.resolve<PageResultOfTruckInfoIdDtoAndInteger>(<any>null);
     }
 
-    createTruck(command: CreateTruckCommand): Promise<number> {
+    createTruck(command: CreateTruckCommand): Promise<TruckInfoIdDto> {
         let url_ = this.baseUrl + "/api/Truck";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1231,14 +1236,14 @@ export class TruckClient extends ClientBase implements ITruckClient {
         });
     }
 
-    protected processCreateTruck(response: Response): Promise<number> {
+    protected processCreateTruck(response: Response): Promise<TruckInfoIdDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            result200 = TruckInfoIdDto.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -1246,7 +1251,7 @@ export class TruckClient extends ClientBase implements ITruckClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<number>(<any>null);
+        return Promise.resolve<TruckInfoIdDto>(<any>null);
     }
 
     getTrucksRefills(id: number): Promise<LocationRefillDto[]> {
@@ -1397,13 +1402,13 @@ export interface IAssignCouponsCommand {
     couponNumbers?: number[] | null;
 }
 
-export class PageResultOfCouponDto implements IPageResultOfCouponDto {
+export class PageResultOfCouponDtoAndString implements IPageResultOfCouponDtoAndString {
     newNeedle?: string | null;
     pagesRemaining?: number;
     results?: CouponDto[] | null;
     hasMore?: boolean;
 
-    constructor(data?: IPageResultOfCouponDto) {
+    constructor(data?: IPageResultOfCouponDtoAndString) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1432,9 +1437,9 @@ export class PageResultOfCouponDto implements IPageResultOfCouponDto {
         }
     }
 
-    static fromJS(data: any): PageResultOfCouponDto {
+    static fromJS(data: any): PageResultOfCouponDtoAndString {
         data = typeof data === 'object' ? data : {};
-        let result = new PageResultOfCouponDto();
+        let result = new PageResultOfCouponDtoAndString();
         result.init(data);
         return result;
     }
@@ -1453,11 +1458,44 @@ export class PageResultOfCouponDto implements IPageResultOfCouponDto {
     }
 }
 
-export interface IPageResultOfCouponDto {
+export interface IPageResultOfCouponDtoAndString {
     newNeedle?: string | null;
     pagesRemaining?: number;
     results?: ICouponDto[] | null;
     hasMore?: boolean;
+}
+
+export class PageResultOfCouponDto extends PageResultOfCouponDtoAndString implements IPageResultOfCouponDto {
+    newNeedle?: string | null;
+
+    constructor(data?: IPageResultOfCouponDto) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.newNeedle = _data["newNeedle"] !== undefined ? _data["newNeedle"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): PageResultOfCouponDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PageResultOfCouponDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["newNeedle"] = this.newNeedle !== undefined ? this.newNeedle : <any>null;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IPageResultOfCouponDto extends IPageResultOfCouponDtoAndString {
+    newNeedle?: string | null;
 }
 
 export class CouponDto implements ICouponDto {
@@ -1649,13 +1687,13 @@ export interface IUpdateExampleEntityCommand {
     exampleEntityListId?: number | null;
 }
 
-export class PageResultOfExampleEntityDto implements IPageResultOfExampleEntityDto {
+export class PageResultOfExampleEntityDtoAndString implements IPageResultOfExampleEntityDtoAndString {
     newNeedle?: string | null;
     pagesRemaining?: number;
     results?: ExampleEntityDto[] | null;
     hasMore?: boolean;
 
-    constructor(data?: IPageResultOfExampleEntityDto) {
+    constructor(data?: IPageResultOfExampleEntityDtoAndString) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1684,9 +1722,9 @@ export class PageResultOfExampleEntityDto implements IPageResultOfExampleEntityD
         }
     }
 
-    static fromJS(data: any): PageResultOfExampleEntityDto {
+    static fromJS(data: any): PageResultOfExampleEntityDtoAndString {
         data = typeof data === 'object' ? data : {};
-        let result = new PageResultOfExampleEntityDto();
+        let result = new PageResultOfExampleEntityDtoAndString();
         result.init(data);
         return result;
     }
@@ -1705,11 +1743,44 @@ export class PageResultOfExampleEntityDto implements IPageResultOfExampleEntityD
     }
 }
 
-export interface IPageResultOfExampleEntityDto {
+export interface IPageResultOfExampleEntityDtoAndString {
     newNeedle?: string | null;
     pagesRemaining?: number;
     results?: IExampleEntityDto[] | null;
     hasMore?: boolean;
+}
+
+export class PageResultOfExampleEntityDto extends PageResultOfExampleEntityDtoAndString implements IPageResultOfExampleEntityDto {
+    newNeedle?: string | null;
+
+    constructor(data?: IPageResultOfExampleEntityDto) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.newNeedle = _data["newNeedle"] !== undefined ? _data["newNeedle"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): PageResultOfExampleEntityDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PageResultOfExampleEntityDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["newNeedle"] = this.newNeedle !== undefined ? this.newNeedle : <any>null;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IPageResultOfExampleEntityDto extends IPageResultOfExampleEntityDtoAndString {
+    newNeedle?: string | null;
 }
 
 export class ExampleEntityDto implements IExampleEntityDto {
@@ -1948,18 +2019,15 @@ export interface ICreateLocationCommand {
     estimateConsumption?: number;
 }
 
-export class CreateRefillCommand implements ICreateRefillCommand {
-    truckId?: number;
-    tankType?: TankType;
-    tankNumber?: number;
+export class CompleteRefillCommand implements ICompleteRefillCommand {
     startAmount?: number;
     endAmount?: number;
     couponNumber?: number;
-    expectedDeliveryDate?: Date;
-    fuelType?: FuelType;
+    actualDeliveryDate?: Date;
     tankState?: TankState;
+    refillNumber?: number;
 
-    constructor(data?: ICreateRefillCommand) {
+    constructor(data?: ICompleteRefillCommand) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1970,57 +2038,41 @@ export class CreateRefillCommand implements ICreateRefillCommand {
 
     init(_data?: any) {
         if (_data) {
-            this.truckId = _data["truckId"] !== undefined ? _data["truckId"] : <any>null;
-            this.tankType = _data["tankType"] !== undefined ? _data["tankType"] : <any>null;
-            this.tankNumber = _data["tankNumber"] !== undefined ? _data["tankNumber"] : <any>null;
             this.startAmount = _data["startAmount"] !== undefined ? _data["startAmount"] : <any>null;
             this.endAmount = _data["endAmount"] !== undefined ? _data["endAmount"] : <any>null;
             this.couponNumber = _data["couponNumber"] !== undefined ? _data["couponNumber"] : <any>null;
-            this.expectedDeliveryDate = _data["expectedDeliveryDate"] ? new Date(_data["expectedDeliveryDate"].toString()) : <any>null;
-            this.fuelType = _data["fuelType"] !== undefined ? _data["fuelType"] : <any>null;
+            this.actualDeliveryDate = _data["actualDeliveryDate"] ? new Date(_data["actualDeliveryDate"].toString()) : <any>null;
             this.tankState = _data["tankState"] !== undefined ? _data["tankState"] : <any>null;
+            this.refillNumber = _data["refillNumber"] !== undefined ? _data["refillNumber"] : <any>null;
         }
     }
 
-    static fromJS(data: any): CreateRefillCommand {
+    static fromJS(data: any): CompleteRefillCommand {
         data = typeof data === 'object' ? data : {};
-        let result = new CreateRefillCommand();
+        let result = new CompleteRefillCommand();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["truckId"] = this.truckId !== undefined ? this.truckId : <any>null;
-        data["tankType"] = this.tankType !== undefined ? this.tankType : <any>null;
-        data["tankNumber"] = this.tankNumber !== undefined ? this.tankNumber : <any>null;
         data["startAmount"] = this.startAmount !== undefined ? this.startAmount : <any>null;
         data["endAmount"] = this.endAmount !== undefined ? this.endAmount : <any>null;
         data["couponNumber"] = this.couponNumber !== undefined ? this.couponNumber : <any>null;
-        data["expectedDeliveryDate"] = this.expectedDeliveryDate ? this.expectedDeliveryDate.toISOString() : <any>null;
-        data["fuelType"] = this.fuelType !== undefined ? this.fuelType : <any>null;
+        data["actualDeliveryDate"] = this.actualDeliveryDate ? this.actualDeliveryDate.toISOString() : <any>null;
         data["tankState"] = this.tankState !== undefined ? this.tankState : <any>null;
+        data["refillNumber"] = this.refillNumber !== undefined ? this.refillNumber : <any>null;
         return data; 
     }
 }
 
-export interface ICreateRefillCommand {
-    truckId?: number;
-    tankType?: TankType;
-    tankNumber?: number;
+export interface ICompleteRefillCommand {
     startAmount?: number;
     endAmount?: number;
     couponNumber?: number;
-    expectedDeliveryDate?: Date;
-    fuelType?: FuelType;
+    actualDeliveryDate?: Date;
     tankState?: TankState;
-}
-
-export enum FuelType {
-    OIL = 0,
-    PETROLEUM = 1,
-    GASOLINE = 2,
-    OTHER = 3,
+    refillNumber?: number;
 }
 
 export enum TankState {
@@ -2029,13 +2081,13 @@ export enum TankState {
     PARTIALLY_FILLED = 2,
 }
 
-export class PageResultOfRefillDto implements IPageResultOfRefillDto {
+export class PageResultOfRefillDtoAndString implements IPageResultOfRefillDtoAndString {
     newNeedle?: string | null;
     pagesRemaining?: number;
     results?: RefillDto[] | null;
     hasMore?: boolean;
 
-    constructor(data?: IPageResultOfRefillDto) {
+    constructor(data?: IPageResultOfRefillDtoAndString) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2064,9 +2116,9 @@ export class PageResultOfRefillDto implements IPageResultOfRefillDto {
         }
     }
 
-    static fromJS(data: any): PageResultOfRefillDto {
+    static fromJS(data: any): PageResultOfRefillDtoAndString {
         data = typeof data === 'object' ? data : {};
-        let result = new PageResultOfRefillDto();
+        let result = new PageResultOfRefillDtoAndString();
         result.init(data);
         return result;
     }
@@ -2085,11 +2137,44 @@ export class PageResultOfRefillDto implements IPageResultOfRefillDto {
     }
 }
 
-export interface IPageResultOfRefillDto {
+export interface IPageResultOfRefillDtoAndString {
     newNeedle?: string | null;
     pagesRemaining?: number;
     results?: IRefillDto[] | null;
     hasMore?: boolean;
+}
+
+export class PageResultOfRefillDto extends PageResultOfRefillDtoAndString implements IPageResultOfRefillDto {
+    newNeedle?: string | null;
+
+    constructor(data?: IPageResultOfRefillDto) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.newNeedle = _data["newNeedle"] !== undefined ? _data["newNeedle"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): PageResultOfRefillDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PageResultOfRefillDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["newNeedle"] = this.newNeedle !== undefined ? this.newNeedle : <any>null;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IPageResultOfRefillDto extends IPageResultOfRefillDtoAndString {
+    newNeedle?: string | null;
 }
 
 export class RefillDto implements IRefillDto {
@@ -2159,7 +2244,7 @@ export interface IRefillDto {
 export class OrderRefillCommand implements IOrderRefillCommand {
     expectedDeliveryDate?: Date;
     locationId?: number;
-    routeId?: number;
+    truckId?: number;
 
     constructor(data?: IOrderRefillCommand) {
         if (data) {
@@ -2174,7 +2259,7 @@ export class OrderRefillCommand implements IOrderRefillCommand {
         if (_data) {
             this.expectedDeliveryDate = _data["expectedDeliveryDate"] ? new Date(_data["expectedDeliveryDate"].toString()) : <any>null;
             this.locationId = _data["locationId"] !== undefined ? _data["locationId"] : <any>null;
-            this.routeId = _data["routeId"] !== undefined ? _data["routeId"] : <any>null;
+            this.truckId = _data["truckId"] !== undefined ? _data["truckId"] : <any>null;
         }
     }
 
@@ -2189,7 +2274,7 @@ export class OrderRefillCommand implements IOrderRefillCommand {
         data = typeof data === 'object' ? data : {};
         data["expectedDeliveryDate"] = this.expectedDeliveryDate ? this.expectedDeliveryDate.toISOString() : <any>null;
         data["locationId"] = this.locationId !== undefined ? this.locationId : <any>null;
-        data["routeId"] = this.routeId !== undefined ? this.routeId : <any>null;
+        data["truckId"] = this.truckId !== undefined ? this.truckId : <any>null;
         return data; 
     }
 }
@@ -2197,16 +2282,16 @@ export class OrderRefillCommand implements IOrderRefillCommand {
 export interface IOrderRefillCommand {
     expectedDeliveryDate?: Date;
     locationId?: number;
-    routeId?: number;
+    truckId?: number;
 }
 
-export class PageResultOfStreetDto implements IPageResultOfStreetDto {
+export class PageResultOfStreetDtoAndString implements IPageResultOfStreetDtoAndString {
     newNeedle?: string | null;
     pagesRemaining?: number;
     results?: StreetDto[] | null;
     hasMore?: boolean;
 
-    constructor(data?: IPageResultOfStreetDto) {
+    constructor(data?: IPageResultOfStreetDtoAndString) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2235,9 +2320,9 @@ export class PageResultOfStreetDto implements IPageResultOfStreetDto {
         }
     }
 
-    static fromJS(data: any): PageResultOfStreetDto {
+    static fromJS(data: any): PageResultOfStreetDtoAndString {
         data = typeof data === 'object' ? data : {};
-        let result = new PageResultOfStreetDto();
+        let result = new PageResultOfStreetDtoAndString();
         result.init(data);
         return result;
     }
@@ -2256,11 +2341,44 @@ export class PageResultOfStreetDto implements IPageResultOfStreetDto {
     }
 }
 
-export interface IPageResultOfStreetDto {
+export interface IPageResultOfStreetDtoAndString {
     newNeedle?: string | null;
     pagesRemaining?: number;
     results?: IStreetDto[] | null;
     hasMore?: boolean;
+}
+
+export class PageResultOfStreetDto extends PageResultOfStreetDtoAndString implements IPageResultOfStreetDto {
+    newNeedle?: string | null;
+
+    constructor(data?: IPageResultOfStreetDto) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.newNeedle = _data["newNeedle"] !== undefined ? _data["newNeedle"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): PageResultOfStreetDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PageResultOfStreetDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["newNeedle"] = this.newNeedle !== undefined ? this.newNeedle : <any>null;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IPageResultOfStreetDto extends IPageResultOfStreetDtoAndString {
+    newNeedle?: string | null;
 }
 
 export class StreetDto implements IStreetDto {
@@ -2308,7 +2426,6 @@ export interface IStreetDto {
 }
 
 export class TruckInfoDto implements ITruckInfoDto {
-    id?: number;
     truckIdentifier?: string | null;
     name?: string | null;
     description?: string | null;
@@ -2326,7 +2443,6 @@ export class TruckInfoDto implements ITruckInfoDto {
 
     init(_data?: any) {
         if (_data) {
-            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
             this.truckIdentifier = _data["truckIdentifier"] !== undefined ? _data["truckIdentifier"] : <any>null;
             this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
             this.description = _data["description"] !== undefined ? _data["description"] : <any>null;
@@ -2344,7 +2460,6 @@ export class TruckInfoDto implements ITruckInfoDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id !== undefined ? this.id : <any>null;
         data["truckIdentifier"] = this.truckIdentifier !== undefined ? this.truckIdentifier : <any>null;
         data["name"] = this.name !== undefined ? this.name : <any>null;
         data["description"] = this.description !== undefined ? this.description : <any>null;
@@ -2355,7 +2470,6 @@ export class TruckInfoDto implements ITruckInfoDto {
 }
 
 export interface ITruckInfoDto {
-    id?: number;
     truckIdentifier?: string | null;
     name?: string | null;
     description?: string | null;
@@ -2363,24 +2477,50 @@ export interface ITruckInfoDto {
     refillNumber?: number;
 }
 
-export class PageResultOfTruckInfoDto implements IPageResultOfTruckInfoDto {
-    newNeedle?: string | null;
+export class TruckInfoIdDto extends TruckInfoDto implements ITruckInfoIdDto {
+    id?: number;
+
+    constructor(data?: ITruckInfoIdDto) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): TruckInfoIdDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TruckInfoIdDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface ITruckInfoIdDto extends ITruckInfoDto {
+    id?: number;
+}
+
+export class PageResultOfTruckInfoIdDtoAndInteger implements IPageResultOfTruckInfoIdDtoAndInteger {
+    newNeedle?: number;
     pagesRemaining?: number;
-    results?: TruckInfoDto[] | null;
+    results?: TruckInfoIdDto[] | null;
     hasMore?: boolean;
 
-    constructor(data?: IPageResultOfTruckInfoDto) {
+    constructor(data?: IPageResultOfTruckInfoIdDtoAndInteger) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
-            }
-            if (data.results) {
-                this.results = [];
-                for (let i = 0; i < data.results.length; i++) {
-                    let item = data.results[i];
-                    this.results[i] = item && !(<any>item).toJSON ? new TruckInfoDto(item) : <TruckInfoDto>item;
-                }
             }
         }
     }
@@ -2392,15 +2532,15 @@ export class PageResultOfTruckInfoDto implements IPageResultOfTruckInfoDto {
             if (Array.isArray(_data["results"])) {
                 this.results = [] as any;
                 for (let item of _data["results"])
-                    this.results!.push(TruckInfoDto.fromJS(item));
+                    this.results!.push(TruckInfoIdDto.fromJS(item));
             }
             this.hasMore = _data["hasMore"] !== undefined ? _data["hasMore"] : <any>null;
         }
     }
 
-    static fromJS(data: any): PageResultOfTruckInfoDto {
+    static fromJS(data: any): PageResultOfTruckInfoIdDtoAndInteger {
         data = typeof data === 'object' ? data : {};
-        let result = new PageResultOfTruckInfoDto();
+        let result = new PageResultOfTruckInfoIdDtoAndInteger();
         result.init(data);
         return result;
     }
@@ -2419,19 +2559,15 @@ export class PageResultOfTruckInfoDto implements IPageResultOfTruckInfoDto {
     }
 }
 
-export interface IPageResultOfTruckInfoDto {
-    newNeedle?: string | null;
+export interface IPageResultOfTruckInfoIdDtoAndInteger {
+    newNeedle?: number;
     pagesRemaining?: number;
-    results?: ITruckInfoDto[] | null;
+    results?: TruckInfoIdDto[] | null;
     hasMore?: boolean;
 }
 
 export class UpdateTruckCommand implements IUpdateTruckCommand {
-    truckIdentifier?: string | null;
-    description?: string | null;
-    tankCapacity?: number;
-    startRefillNumber?: number;
-    name?: string | null;
+    truckInfo?: TruckInfoIdDto | null;
 
     constructor(data?: IUpdateTruckCommand) {
         if (data) {
@@ -2439,16 +2575,13 @@ export class UpdateTruckCommand implements IUpdateTruckCommand {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
+            this.truckInfo = data.truckInfo && !(<any>data.truckInfo).toJSON ? new TruckInfoIdDto(data.truckInfo) : <TruckInfoIdDto>this.truckInfo; 
         }
     }
 
     init(_data?: any) {
         if (_data) {
-            this.truckIdentifier = _data["truckIdentifier"] !== undefined ? _data["truckIdentifier"] : <any>null;
-            this.description = _data["description"] !== undefined ? _data["description"] : <any>null;
-            this.tankCapacity = _data["tankCapacity"] !== undefined ? _data["tankCapacity"] : <any>null;
-            this.startRefillNumber = _data["startRefillNumber"] !== undefined ? _data["startRefillNumber"] : <any>null;
-            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
+            this.truckInfo = _data["truckInfo"] ? TruckInfoIdDto.fromJS(_data["truckInfo"]) : <any>null;
         }
     }
 
@@ -2461,28 +2594,17 @@ export class UpdateTruckCommand implements IUpdateTruckCommand {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["truckIdentifier"] = this.truckIdentifier !== undefined ? this.truckIdentifier : <any>null;
-        data["description"] = this.description !== undefined ? this.description : <any>null;
-        data["tankCapacity"] = this.tankCapacity !== undefined ? this.tankCapacity : <any>null;
-        data["startRefillNumber"] = this.startRefillNumber !== undefined ? this.startRefillNumber : <any>null;
-        data["name"] = this.name !== undefined ? this.name : <any>null;
+        data["truckInfo"] = this.truckInfo ? this.truckInfo.toJSON() : <any>null;
         return data; 
     }
 }
 
 export interface IUpdateTruckCommand {
-    truckIdentifier?: string | null;
-    description?: string | null;
-    tankCapacity?: number;
-    startRefillNumber?: number;
-    name?: string | null;
+    truckInfo?: ITruckInfoIdDto | null;
 }
 
 export class CreateTruckCommand implements ICreateTruckCommand {
-    truckIdentifier?: string | null;
-    name?: string | null;
-    description?: string | null;
-    tankCapacity?: number;
+    truckInfo?: TruckInfoDto | null;
 
     constructor(data?: ICreateTruckCommand) {
         if (data) {
@@ -2490,15 +2612,13 @@ export class CreateTruckCommand implements ICreateTruckCommand {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
+            this.truckInfo = data.truckInfo && !(<any>data.truckInfo).toJSON ? new TruckInfoDto(data.truckInfo) : <TruckInfoDto>this.truckInfo; 
         }
     }
 
     init(_data?: any) {
         if (_data) {
-            this.truckIdentifier = _data["truckIdentifier"] !== undefined ? _data["truckIdentifier"] : <any>null;
-            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
-            this.description = _data["description"] !== undefined ? _data["description"] : <any>null;
-            this.tankCapacity = _data["tankCapacity"] !== undefined ? _data["tankCapacity"] : <any>null;
+            this.truckInfo = _data["truckInfo"] ? TruckInfoDto.fromJS(_data["truckInfo"]) : <any>null;
         }
     }
 
@@ -2511,19 +2631,13 @@ export class CreateTruckCommand implements ICreateTruckCommand {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["truckIdentifier"] = this.truckIdentifier !== undefined ? this.truckIdentifier : <any>null;
-        data["name"] = this.name !== undefined ? this.name : <any>null;
-        data["description"] = this.description !== undefined ? this.description : <any>null;
-        data["tankCapacity"] = this.tankCapacity !== undefined ? this.tankCapacity : <any>null;
+        data["truckInfo"] = this.truckInfo ? this.truckInfo.toJSON() : <any>null;
         return data; 
     }
 }
 
 export interface ICreateTruckCommand {
-    truckIdentifier?: string | null;
-    name?: string | null;
-    description?: string | null;
-    tankCapacity?: number;
+    truckInfo?: ITruckInfoDto | null;
 }
 
 export class LocationRefillDto implements ILocationRefillDto {
@@ -2592,6 +2706,13 @@ export interface ILocationRefillDto {
     address?: string | null;
     expectedDeliveryDate?: Date;
     debtorBlocked?: boolean;
+}
+
+export enum FuelType {
+    OIL = 0,
+    PETROLEUM = 1,
+    GASOLINE = 2,
+    OTHER = 3,
 }
 
 export class CreateTruckRefillCommand implements ICreateTruckRefillCommand {

@@ -34,7 +34,7 @@ const OrderRefillComp: FC<Props> = ({ submitCallback, locationId }) => {
     submitCallback({
       locationId,
       expectedDeliveryDate: refillDate,
-      routeId: 0
+      truckId: 0
     });
     onClose();
   }, [refillDate]);

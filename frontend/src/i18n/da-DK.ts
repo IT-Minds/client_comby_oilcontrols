@@ -78,6 +78,20 @@ export const table: Locale = {
 
   mytruck: {
     title: "Comby Olistying - Lastbil #{{id}}",
-    heading: "Lastbil #{{id}}"
+    heading: "Lastbil #{{id}}",
+    tank: {
+      current: "Nuværende Tank: ",
+      liters: "{{liters}} liter",
+      of: " af "
+    },
+    tankLevel: ""
+  },
+  enums: {
+    fuelType: {
+      "0": "Benzin",
+      "1": "Petroleum",
+      "2": "Gasolin",
+      "3": "Andet"
+    }
   }
 };

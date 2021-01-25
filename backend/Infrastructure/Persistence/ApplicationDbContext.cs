@@ -2,7 +2,9 @@ using Application.Common.Interfaces;
 using Domain.Common;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -40,9 +42,9 @@ namespace Infrastructure.Persistence
     public DbSet<Street> Streets { get; set; }
     public DbSet<LocationHistory> LocationHistories { get; set; }
 
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
-      foreach (var entry in ChangeTracker.Entries<AuditableEntity>().ToList())
+      foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
       {
         switch (entry.State)
         {
@@ -52,24 +54,24 @@ namespace Infrastructure.Persistence
             entry.Entity.LastModifiedBy = _currentUserService.UserId;
             entry.Entity.LastModified = _dateTimeOffsetService.Now;
             entry.Entity.ModifiedCount = 0;
-            if (entry.Entity.GetType().Equals(typeof(Location)))
-            {
-              OnLocationChange(entry.Entity as Location);
-            }
+
             break;
           case EntityState.Modified:
             entry.Entity.LastModifiedBy = _currentUserService.UserId;
             entry.Entity.LastModified = _dateTimeOffsetService.Now;
             entry.Entity.ModifiedCount++;
-            if (entry.Entity.GetType().Equals(typeof(Location)))
-            {
-              OnLocationChange(entry.Entity as Location);
-            }
             break;
         }
       }
 
-      return base.SaveChangesAsync(cancellationToken);
+      var result = await base.SaveChangesAsync(cancellationToken);
+
+      #pragma warning disable 4014
+      OnLocationsChange(ChangeTracker.Entries<AuditableEntity>()
+        .Where(x => x.Entity.GetType().Equals(typeof(Location))), cancellationToken);
+      #pragma warning restore 4014
+
+      return result;
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -79,17 +81,31 @@ namespace Infrastructure.Persistence
       base.OnModelCreating(builder);
     }
 
-    private void OnLocationChange(Location location)
+    private Task OnLocationsChange(IEnumerable<EntityEntry<AuditableEntity>> entities, CancellationToken cancellationToken)
     {
-      var locationHistory = new LocationHistory
+      foreach (var entity in entities)
       {
-        RegionId = location.RegionId,
-        Schedule = location.Schedule,
-        Address = location.Address,
-        Comments = location.Comments,
-        LocationId = location.Id
-      };
-      this.LocationHistories.Add(locationHistory);
+        if (entity.State == EntityState.Added || entity.State == EntityState.Modified)
+        {
+          var locationHistory = new LocationHistory
+          {
+            RegionId = (entity.Entity as Location).RegionId,
+            Schedule = (entity.Entity as Location).Schedule,
+            Address = (entity.Entity as Location).Address,
+            Comments = (entity.Entity as Location).Comments,
+            LocationId = (entity.Entity as Location).Id
+          };
+          entity.Entity.CreatedBy = _currentUserService.UserId;
+          entity.Entity.Created = _dateTimeOffsetService.Now;
+          entity.Entity.LastModifiedBy = _currentUserService.UserId;
+          entity.Entity.LastModified = _dateTimeOffsetService.Now;
+          entity.Entity.ModifiedCount = 0;
+
+          this.LocationHistories.Add(locationHistory);
+        }
+      }
+
+      return base.SaveChangesAsync(cancellationToken);
     }
   }
 }

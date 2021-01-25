@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,11 +10,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Trucks.Queries.GetTruckInfo
 {
-  public class GetTruckInfoQuery : IRequest<TruckInfoDto>
+  public class GetTruckInfoQuery : IRequest<TruckInfoIdDto>
   {
     public int Id { get; set; }
 
-    public class GetTruckInfoQueryHandler : IRequestHandler<GetTruckInfoQuery, TruckInfoDto>
+    public class GetTruckInfoQueryHandler : IRequestHandler<GetTruckInfoQuery, TruckInfoIdDto>
     {
       private readonly IApplicationDbContext _context;
       private readonly IMapper _mapper;
@@ -25,11 +24,11 @@ namespace Application.Trucks.Queries.GetTruckInfo
         _context = context;
         _mapper = mapper;
       }
-      public async Task<TruckInfoDto> Handle(GetTruckInfoQuery request, CancellationToken cancellationToken)
+      public async Task<TruckInfoIdDto> Handle(GetTruckInfoQuery request, CancellationToken cancellationToken)
       {
         var truck = await _context.Trucks
           .Where(x => x.Id == request.Id)
-          .ProjectTo<TruckInfoDto>(_mapper.ConfigurationProvider)
+          .ProjectTo<TruckInfoIdDto>(_mapper.ConfigurationProvider)
           .FirstOrDefaultAsync();
 
         if (truck == null)

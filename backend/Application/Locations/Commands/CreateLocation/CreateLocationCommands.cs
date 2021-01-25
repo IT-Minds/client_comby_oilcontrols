@@ -49,7 +49,7 @@ namespace Application.Locations.Commands.CreateLocation
           Comments = request.Comment,
           Schedule = request.Refillschedule,
           RegionId = request.RegionId,
-          FuelTankId = tank.Id
+          FuelTank = tank
         };
         _context.Locations.Add(location);
 

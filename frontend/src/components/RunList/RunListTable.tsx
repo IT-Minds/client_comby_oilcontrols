@@ -1,16 +1,9 @@
-import {
-  forwardRef,
-  HStack,
-  IconButton,
-  Spacer,
-  Table,
-  useBreakpointValue
-} from "@chakra-ui/react";
+import { HStack, IconButton, Spacer, Table, useBreakpointValue } from "@chakra-ui/react";
 import { Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
 import QuerySortBtn, { Direction } from "components/SortFilter/QuerySortBtn";
 import { useEffectAsync } from "hooks/useEffectAsync";
 import { useRouter } from "next/router";
-import { ForwardRefRenderFunction, useCallback, useRef, useState } from "react";
+import { FC, useCallback, useRef, useState } from "react";
 import { GiFuelTank } from "react-icons/gi";
 import { MdPrint, MdRemoveRedEye } from "react-icons/md";
 import { useReactToPrint } from "react-to-print";
@@ -20,7 +13,7 @@ import { capitalize } from "utils/capitalizeAnyString";
 
 import data from "./data";
 
-type SelectRowCb = (obj: { locationId?: number; refillId?: number; regionId?: number }) => void;
+type SelectRowCb = (obj: ILocationRefillDto) => void;
 
 type Props = {
   truckId: number;
@@ -32,11 +25,7 @@ const defaultSort = (a: ILocationRefillDto, b: ILocationRefillDto) =>
   a.refillId > b.refillId ? 1 : -1;
 
 // TODO i18n;
-const RunListTable: ForwardRefRenderFunction<HTMLTableElement, Props> = ({
-  truckId,
-  refillCb,
-  fuelTypeHighlight
-}) => {
+const RunListTable: FC<Props> = ({ truckId, refillCb, fuelTypeHighlight }) => {
   const [refills, setRefills] = useState<ILocationRefillDto[]>([]);
   const cols = useBreakpointValue({
     base: 1,
@@ -152,7 +141,6 @@ const RunListTable: ForwardRefRenderFunction<HTMLTableElement, Props> = ({
             <Td pl="0" hidden={isPrinting}>
               <HStack float="right">
                 <IconButton
-                  key="click"
                   size="sm"
                   colorScheme="orange"
                   aria-label={"do something" + row.refillId}
@@ -160,11 +148,10 @@ const RunListTable: ForwardRefRenderFunction<HTMLTableElement, Props> = ({
                   icon={<GiFuelTank size={30} />}
                 />
                 <IconButton
-                  key="click"
                   size="sm"
                   colorScheme="gray"
                   aria-label={"do something 2" + row.refillId}
-                  onClick={() => refillCb({ ...row })}
+                  onClick={() => refillCb(row)}
                   icon={<MdRemoveRedEye size={24} />}
                 />
               </HStack>
@@ -176,4 +163,4 @@ const RunListTable: ForwardRefRenderFunction<HTMLTableElement, Props> = ({
   );
 };
 
-export default forwardRef(RunListTable);
+export default RunListTable;
