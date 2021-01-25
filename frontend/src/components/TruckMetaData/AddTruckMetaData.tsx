@@ -5,6 +5,8 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  InputGroup,
+  InputRightAddon,
   NumberInput,
   NumberInputField,
   Textarea,
@@ -15,6 +17,7 @@ import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
 import { ITruckInfoDto } from "services/backend/nswagts";
+import { formatInputNumber, parseInputToNumber } from "utils/formatNumber";
 import { logger } from "utils/logger";
 
 type Props = {
@@ -106,13 +109,17 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
             isRequired
             isInvalid={formSubmitAttempts > 0 && !localTruckMetaDataForm.tankCapacity}>
             <FormLabel>{t("truckMetaData.tankSize")}:</FormLabel>
-            <NumberInput
-              min={0}
-              onChange={value => {
-                updateLocalForm(value, "tankCapacity");
-              }}>
-              <NumberInputField />
-            </NumberInput>
+            <InputGroup>
+              <NumberInput
+                min={0}
+                onChange={value => {
+                  updateLocalForm(value, "tankCapacity");
+                }}>
+                <NumberInputField />
+              </NumberInput>
+
+              <InputRightAddon>liters</InputRightAddon>
+            </InputGroup>
             <FormErrorMessage>{t("truckMetaData.formError.tankSize")}</FormErrorMessage>
           </FormControl>
 
