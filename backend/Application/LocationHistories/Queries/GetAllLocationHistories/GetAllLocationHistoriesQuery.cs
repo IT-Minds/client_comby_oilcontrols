@@ -33,7 +33,7 @@ namespace Application.LocationHistories.Queries.GetAllLocationHistories
     public IQueryable<LocationHistory> PreparePage(IQueryable<LocationHistory> query)
     {
       var partial = query
-        .OrderBy(x => x.LastModified)
+        .OrderBy(x => x.Created)
         .Where(x => x.LocationId > Needle);
 
       if (Skip.HasValue)

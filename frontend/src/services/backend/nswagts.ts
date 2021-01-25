@@ -817,7 +817,7 @@ export class LocationClient extends ClientBase implements ILocationClient {
 
 export interface ILocationHistoryClient {
   get(needle?: number | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationHistoryDto>;
-  get2(id: number, needle?: Date | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationHistoryDto>;
+  getLocationHistory(id: number, needle?: Date | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationHistoryDto>;
 }
 
 export class LocationHistoryClient extends ClientBase implements ILocationHistoryClient {
@@ -877,7 +877,7 @@ export class LocationHistoryClient extends ClientBase implements ILocationHistor
     return Promise.resolve<PageResultOfLocationHistoryDto>(<any>null);
   }
 
-  get2(id: number, needle?: Date | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationHistoryDto> {
+  getLocationHistory(id: number, needle?: Date | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationHistoryDto> {
     let url_ = this.baseUrl + "/api/LocationHistory/{id}?";
     if (id === undefined || id === null)
       throw new Error("The parameter 'id' must be defined.");
@@ -904,11 +904,11 @@ export class LocationHistoryClient extends ClientBase implements ILocationHistor
     return this.transformOptions(options_).then(transformedOptions_ => {
       return this.http.fetch(url_, transformedOptions_);
     }).then((_response: Response) => {
-      return this.transformResult(url_, _response, (_response: Response) => this.processGet2(_response));
+      return this.transformResult(url_, _response, (_response: Response) => this.processGetLocationHistory(_response));
     });
   }
 
-  protected processGet2(response: Response): Promise<PageResultOfLocationHistoryDto> {
+  protected processGetLocationHistory(response: Response): Promise<PageResultOfLocationHistoryDto> {
     const status = response.status;
     let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
     if (status === 200) {
@@ -2201,6 +2201,7 @@ export class LocationHistoryDto implements ILocationHistoryDto {
   address?: string | null;
   comments?: string | null;
   locationId?: number;
+  timeOfChange?: Date;
 
   constructor(data?: ILocationHistoryDto) {
     if (data) {
@@ -2210,35 +2211,38 @@ export class LocationHistoryDto implements ILocationHistoryDto {
       }
     }
   }
+}
 
-  init(_data?: any) {
-    if (_data) {
-      this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
-      this.regionId = _data["regionId"] !== undefined ? _data["regionId"] : <any>null;
-      this.schedule = _data["schedule"] !== undefined ? _data["schedule"] : <any>null;
-      this.address = _data["address"] !== undefined ? _data["address"] : <any>null;
-      this.comments = _data["comments"] !== undefined ? _data["comments"] : <any>null;
-      this.locationId = _data["locationId"] !== undefined ? _data["locationId"] : <any>null;
-    }
+init(_data ?: any) {
+  if (_data) {
+    this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+    this.regionId = _data["regionId"] !== undefined ? _data["regionId"] : <any>null;
+    this.schedule = _data["schedule"] !== undefined ? _data["schedule"] : <any>null;
+    this.address = _data["address"] !== undefined ? _data["address"] : <any>null;
+    this.comments = _data["comments"] !== undefined ? _data["comments"] : <any>null;
+    this.locationId = _data["locationId"] !== undefined ? _data["locationId"] : <any>null;
+    this.timeOfChange = _data["timeOfChange"] ? new Date(_data["timeOfChange"].toString()) : <any>null;
   }
+}
+}
 
   static fromJS(data: any): LocationHistoryDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new LocationHistoryDto();
-    result.init(data);
-    return result;
-  }
+  data = typeof data === 'object' ? data : {};
+  let result = new LocationHistoryDto();
+  result.init(data);
+  return result;
+}
 
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data["id"] = this.id !== undefined ? this.id : <any>null;
-    data["regionId"] = this.regionId !== undefined ? this.regionId : <any>null;
-    data["schedule"] = this.schedule !== undefined ? this.schedule : <any>null;
-    data["address"] = this.address !== undefined ? this.address : <any>null;
-    data["comments"] = this.comments !== undefined ? this.comments : <any>null;
-    data["locationId"] = this.locationId !== undefined ? this.locationId : <any>null;
-    return data;
-  }
+{
+  data["id"] = this.id !== undefined ? this.id : <any>null;
+  data["regionId"] = this.regionId !== undefined ? this.regionId : <any>null;
+  data["schedule"] = this.schedule !== undefined ? this.schedule : <any>null;
+  data["address"] = this.address !== undefined ? this.address : <any>null;
+  data["comments"] = this.comments !== undefined ? this.comments : <any>null;
+  data["locationId"] = this.locationId !== undefined ? this.locationId : <any>null;
+  data["timeOfChange"] = this.timeOfChange ? this.timeOfChange.toISOString() : <any>null;
+  return data;
+}
 }
 
 export interface ILocationHistoryDto {
@@ -2248,6 +2252,7 @@ export interface ILocationHistoryDto {
   address?: string | null;
   comments?: string | null;
   locationId?: number;
+  timeOfChange?: Date;
 }
 
 export class CreateRefillCommand implements ICreateRefillCommand {

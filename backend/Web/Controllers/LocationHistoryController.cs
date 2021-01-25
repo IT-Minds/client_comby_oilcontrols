@@ -10,7 +10,6 @@ namespace Web.Controllers
   public class LocationHistoryController : ApiControllerBase
   {
     [HttpGet]
-    [ResponseCache(Duration = 604800)] // 7 week cache
     public async Task<ActionResult<PageResult<LocationHistoryDto>>> Get(
      [FromQuery] int needle, [FromQuery] int size = 1000, [FromQuery] int? skip = 0
     )
@@ -24,8 +23,7 @@ namespace Web.Controllers
     }
 
     [HttpGet("{id}")]
-    [ResponseCache(Duration = 604800)] // 7 week cache
-    public async Task<ActionResult<PageResult<LocationHistoryDto>>> Get(
+    public async Task<ActionResult<PageResult<LocationHistoryDto>>> GetLocationHistory(
     [FromRoute] int id, [FromQuery] DateTime needle, [FromQuery] int size = 1000, [FromQuery] int? skip = 0
 )
     {
