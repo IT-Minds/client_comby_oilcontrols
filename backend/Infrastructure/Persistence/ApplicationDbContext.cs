@@ -46,6 +46,17 @@ namespace Infrastructure.Persistence
     {
       foreach (var entry in ChangeTracker.Entries<AuditableEntity>().ToList())
       {
+        if (entry.State == EntityState.Added || entry.State == EntityState.Modified)
+        {
+          if (entry.Entity.GetType().Equals(typeof(Location)))
+          {
+            OnLocationChange(entry.Entity as Location);
+          }
+        }
+      }
+
+      foreach (var entry in ChangeTracker.Entries<AuditableEntity>().ToList())
+      {
         switch (entry.State)
         {
           case EntityState.Added:
@@ -59,10 +70,6 @@ namespace Infrastructure.Persistence
             entry.Entity.LastModifiedBy = _currentUserService.UserId;
             entry.Entity.LastModified = _dateTimeOffsetService.Now;
             entry.Entity.ModifiedCount++;
-            if (entry.Entity.GetType().Equals(typeof(Location)))
-            {
-              OnLocationChange(entry.Entity as Location);
-            }
             break;
         }
       }
