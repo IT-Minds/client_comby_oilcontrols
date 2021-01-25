@@ -40,7 +40,8 @@ export const table: Locale = {
   actions: {
     cancel: "Annuller",
     delete: "Slet",
-    invalidate: "Ugyldiggøre"
+    invalidate: "Ugyldiggøre",
+    submit: "Send"
   },
 
   coupons: {
@@ -63,5 +64,20 @@ export const table: Locale = {
       description: "Indtast en beskrivelse",
       tankSize: "Indtast tankstørrelse"
     }
+  },
+
+  dailyTemperature: {
+    selectRegion: "Vælg region",
+    temperature: "Temperatur",
+    selectDate: "Vælg en dato",
+    formErrors: {
+      selectRegion: "Vælg en temperatur",
+      inputTemperature: "Indtast en temperatur"
+    }
+  },
+
+  mytruck: {
+    title: "Comby Olistying - Lastbil #{{id}}",
+    heading: "Lastbil #{{id}}"
   }
 };

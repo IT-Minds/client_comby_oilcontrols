@@ -1,4 +1,5 @@
 import "../styles.global.css";
+import "../reactdatepicker.global.css";
 import "isomorphic-unfetch";
 
 import { ChakraProvider, Progress } from "@chakra-ui/react";

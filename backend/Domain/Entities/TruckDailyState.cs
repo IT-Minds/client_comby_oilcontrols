@@ -13,5 +13,7 @@ namespace Domain.Entities
     public double MorningQuantity { get; set; }
     public double EveningQuantity { get; set; }
     public ICollection<TruckRefill> TruckRefills { get; set; }
+    //TODO: Should probably specify what type of fuel is currently contained within the truck.
+    public int StartRefillNumber { get; set; }
   }
 }

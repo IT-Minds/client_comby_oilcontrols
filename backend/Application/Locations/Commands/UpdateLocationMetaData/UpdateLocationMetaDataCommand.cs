@@ -5,12 +5,7 @@ using MediatR;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Application.Common.Exceptions;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Text.RegularExpressions;
-using System.IO;
-using Application.Common.Options;
-using Microsoft.Extensions.Options;
+using Domain.Entities;
 
 namespace Application.Locations.Commands.UpdateLocationMetaData
 {
@@ -24,7 +19,6 @@ namespace Application.Locations.Commands.UpdateLocationMetaData
     public int TankNumber { get; set; }
     public double TankCapacity { get; set; }
     public double MinimumFuelAmount { get; set; }
-    //TODO Estiamte consumption isn't currently in the data model, but this is also a calculated property right?
     public double EstimateConsumption { get; set; }
 
     public class UpdateLocationMetaDataCommandHandler : IRequestHandler<UpdateLocationMetaDataCommand, int>
@@ -55,9 +49,10 @@ namespace Application.Locations.Commands.UpdateLocationMetaData
         location.Address = request.Address;
         location.Comments = request.Comment;
         location.Schedule = request.Refillschedule;
+        location.EstimateFuelConsumption = request.EstimateConsumption;
 
         var tank = location.FuelTank;
-        tank.Type = request.TankType;
+        tank.TankType = request.TankType;
         tank.TankNumber = request.TankNumber;
         tank.TankCapacity = request.TankCapacity;
         tank.MinimumFuelAmount = request.MinimumFuelAmount;

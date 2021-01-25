@@ -40,7 +40,8 @@ export const table: Locale = {
   actions: {
     cancel: "Cancel",
     delete: "Delete",
-    invalidate: "Invalidate"
+    invalidate: "Invalidate",
+    submit: "Submit"
   },
 
   coupons: {
@@ -62,5 +63,20 @@ export const table: Locale = {
       description: "Please specify a description",
       tankSize: "Please specify a tank size"
     }
+  },
+
+  dailyTemperature: {
+    selectRegion: "Select region",
+    temperature: "Temperature",
+    selectDate: "Select a date",
+    formErrors: {
+      selectRegion: "Please select a region",
+      inputTemperature: "Please enter a temperature"
+    }
+  },
+
+  mytruck: {
+    title: "Comby OilControl - Truck {{id}}",
+    heading: "Truck {{id}}"
   }
 };

@@ -14,7 +14,6 @@ import {
 } from "@chakra-ui/react";
 import { useOffline } from "hooks/useOffline";
 import { usePagedFetched } from "hooks/usePagedFetched";
-import Image from "next/image";
 import { FC, useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import ListReducer, { ListReducerActionType } from "react-list-reducer";
 import { genExampleClient } from "services/backend/apiClients";
@@ -43,8 +42,7 @@ const Demo: FC<Props> = ({
   buildTime,
   preLoadedData = [],
   preloadDataNeedle = "0",
-  preloadLoadedAll = false,
-  preLoadedPageCount = 1
+  preloadLoadedAll = false
 }) => {
   const toast = useToast();
 

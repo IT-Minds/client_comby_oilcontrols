@@ -1,6 +1,5 @@
 import {
   Box,
-  Code,
   Collapse,
   Flex,
   HStack,
@@ -14,6 +13,7 @@ import {
   VStack
 } from "@chakra-ui/react";
 import ColorModeToggle from "components/ColorModeToggle/ColorModeToggle";
+import { useColors } from "hooks/useColors";
 import { Locale } from "i18n/Locale";
 import Link from "next/link";
 import { useI18n } from "next-rosetta";
@@ -25,7 +25,7 @@ import UserTypeSwitcher from "./UserTypeSwitcher";
 
 const MyUserSnippet: FC = () => {
   const bg = useColorModeValue("gray.200", "gray.900");
-  const hoverbg = useColorModeValue("blue.100", "blue.700");
+  const { hoverBg } = useColors();
   const borderColor = useColorModeValue("gray.400", "gray.700");
   const nameLength = useBreakpointValue({ base: 150, lg: 200 });
   const { t } = useI18n<Locale>();
@@ -38,7 +38,7 @@ const MyUserSnippet: FC = () => {
         padding={4}
         onClick={() => setIsActive(!isActive)}
         _hover={{
-          background: hoverbg
+          background: hoverBg
         }}
         cursor="pointer"
         borderColor={borderColor}
@@ -67,7 +67,7 @@ const MyUserSnippet: FC = () => {
             <HStack
               cursor="pointer"
               _hover={{
-                background: hoverbg
+                background: hoverBg
               }}
               padding={1}
               paddingLeft={8}>
@@ -78,7 +78,7 @@ const MyUserSnippet: FC = () => {
             <HStack
               cursor="pointer"
               _hover={{
-                background: hoverbg
+                background: hoverBg
               }}
               padding={1}
               paddingLeft={8}>
@@ -88,7 +88,7 @@ const MyUserSnippet: FC = () => {
           <Box
             cursor="pointer"
             _hover={{
-              background: hoverbg
+              background: hoverBg
             }}
             padding={1}
             paddingLeft={8}>
