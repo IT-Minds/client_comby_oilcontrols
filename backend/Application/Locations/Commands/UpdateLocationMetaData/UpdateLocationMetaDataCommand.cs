@@ -5,6 +5,7 @@ using MediatR;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Application.Common.Exceptions;
+using Domain.Entities;
 
 namespace Application.Locations.Commands.UpdateLocationMetaData
 {

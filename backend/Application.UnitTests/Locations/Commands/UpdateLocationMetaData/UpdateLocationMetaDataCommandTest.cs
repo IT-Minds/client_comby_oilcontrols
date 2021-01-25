@@ -4,6 +4,7 @@ using Application.ExampleEntities.Commands.CreateExampleEntity;
 using Application.Locations.Commands.UpdateLocationMetaData;
 using Domain.Enums;
 using FluentAssertions;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -27,12 +28,13 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
         MinimumFuelAmount = 50.5,
         EstimateConsumption = 10
       };
+      var oldLocation = Context.Locations.Find(1);
+      var historyNumber = oldLocation.LocationHistories == null ? 0 : oldLocation.LocationHistories.Count();
 
       var handler = new UpdateLocationMetaDataCommand.UpdateLocationMetaDataCommandHandler(Context);
-
       var result = await handler.Handle(command, CancellationToken.None);
-
       var entity = Context.Locations.Find(result);
+      var newestHistory = entity.LocationHistories.OrderByDescending(x => x.Created).FirstOrDefault();
 
       entity.Should().NotBeNull();
       entity.Address.Should().Be(command.Address);
@@ -43,6 +45,13 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
       entity.FuelTank.TankCapacity.Should().Be(command.TankCapacity);
       entity.FuelTank.MinimumFuelAmount.Should().Be(command.MinimumFuelAmount);
       entity.EstimateFuelConsumption.Should().Be(command.EstimateConsumption);
+      entity.LocationHistories.Count().Should().Be(historyNumber + 1);
+      newestHistory.Should().NotBeNull();
+      newestHistory.LocationId.Should().Be(entity.Id);
+      newestHistory.RegionId.Should().Be(entity.RegionId);
+      newestHistory.Schedule.Should().Be(entity.Schedule);
+      newestHistory.Address.Should().Be(entity.Address);
+      newestHistory.Comments.Should().Be(entity.Comments);
     }
 
     [Fact]
