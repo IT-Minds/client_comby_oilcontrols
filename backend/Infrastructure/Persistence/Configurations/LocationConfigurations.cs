@@ -11,6 +11,9 @@ namespace Infrastructure.Persistence.Configurations
       builder.HasOne<Region>(e => e.Region)
         .WithMany(e => e.Locations)
         .IsRequired(false);
+      builder.HasOne<Debtor>(e => e.Debtor)
+        .WithMany(e => e.Locations);
+
     }
   }
 }
