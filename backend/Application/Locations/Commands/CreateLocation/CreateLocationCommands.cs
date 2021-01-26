@@ -19,8 +19,9 @@ namespace Application.Locations.Commands.CreateLocation
     public int TankNumber { get; set; }
     public double TankCapacity { get; set; }
     public double MinimumFuelAmount { get; set; }
-    //TODO Estiamte consumption isn't currently in the data model. But is added with CO-95.
     public double EstimateConsumption { get; set; }
+    public int DaysBetweenRefills { get; set; }
+    public FuelType FuelType { get; set; }
 
     public class CreateLocationCommandHandler : IRequestHandler<CreateLocationCommand, int>
     {
@@ -39,7 +40,7 @@ namespace Application.Locations.Commands.CreateLocation
           TankCapacity = request.TankCapacity,
           TankNumber = request.TankNumber,
           MinimumFuelAmount = request.MinimumFuelAmount,
-          //TODO Estiamte consumption isn't currently in the data model. But is added with CO-95.
+          FuelType = request.FuelType
         };
         _context.FuelTanks.Add(tank);
 
@@ -49,7 +50,9 @@ namespace Application.Locations.Commands.CreateLocation
           Comments = request.Comment,
           Schedule = request.Refillschedule,
           RegionId = request.RegionId,
-          FuelTank = tank
+          FuelTank = tank,
+          EstimateFuelConsumption = request.EstimateConsumption,
+          DaysBetweenRefills = request.DaysBetweenRefills
         };
         _context.Locations.Add(location);
 

@@ -93,7 +93,7 @@ namespace Domain.EntityExtensions
         double heatdegree;
         try
         {
-          //Calculate the "heat index" for this particular date based on the temperature estimate.
+          //Calculate the "heat index/opvarmingsgrad" for this particular date based on the temperature estimate.
           heatdegree = HEAT_BASE - location.Region.DailyTemperatureEstimate(currentDate);
         }
         catch

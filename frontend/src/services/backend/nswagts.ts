@@ -815,6 +815,116 @@ export class LocationClient extends ClientBase implements ILocationClient {
     }
 }
 
+export interface ILocationHistoryClient {
+    getAllLocationHistories(needle?: number | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationHistoryDto>;
+    getLocationHistory(id: number, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationHistoryDto>;
+}
+
+export class LocationHistoryClient extends ClientBase implements ILocationHistoryClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(configuration: AuthClient, baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super(configuration);
+        this.http = http ? http : <any>window;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    getAllLocationHistories(needle?: number | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationHistoryDto> {
+        let url_ = this.baseUrl + "/api/LocationHistory?";
+        if (needle === null)
+            throw new Error("The parameter 'needle' cannot be null.");
+        else if (needle !== undefined)
+            url_ += "needle=" + encodeURIComponent("" + needle) + "&";
+        if (size === null)
+            throw new Error("The parameter 'size' cannot be null.");
+        else if (size !== undefined)
+            url_ += "size=" + encodeURIComponent("" + size) + "&";
+        if (skip !== undefined && skip !== null)
+            url_ += "skip=" + encodeURIComponent("" + skip) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetAllLocationHistories(_response));
+        });
+    }
+
+    protected processGetAllLocationHistories(response: Response): Promise<PageResultOfLocationHistoryDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PageResultOfLocationHistoryDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<PageResultOfLocationHistoryDto>(<any>null);
+    }
+
+    getLocationHistory(id: number, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationHistoryDto> {
+        let url_ = this.baseUrl + "/api/LocationHistory/{id}?";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (needle !== undefined && needle !== null)
+            url_ += "needle=" + encodeURIComponent(needle ? "" + needle.toJSON() : "") + "&";
+        if (size === null)
+            throw new Error("The parameter 'size' cannot be null.");
+        else if (size !== undefined)
+            url_ += "size=" + encodeURIComponent("" + size) + "&";
+        if (skip !== undefined && skip !== null)
+            url_ += "skip=" + encodeURIComponent("" + skip) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetLocationHistory(_response));
+        });
+    }
+
+    protected processGetLocationHistory(response: Response): Promise<PageResultOfLocationHistoryDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PageResultOfLocationHistoryDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<PageResultOfLocationHistoryDto>(<any>null);
+    }
+}
+
 export interface IRefillClient {
     complete(id: number, command: CompleteRefillCommand): Promise<number>;
     get(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined, tankType?: TankType | null | undefined): Promise<PageResultOfRefillDto>;
@@ -1881,6 +1991,8 @@ export class UpdateLocationMetaDataCommand implements IUpdateLocationMetaDataCom
     tankCapacity?: number;
     minimumFuelAmount?: number;
     estimateConsumption?: number;
+    daysBetweenRefills?: number;
+    fuelType?: FuelType;
 
     constructor(data?: IUpdateLocationMetaDataCommand) {
         if (data) {
@@ -1902,6 +2014,8 @@ export class UpdateLocationMetaDataCommand implements IUpdateLocationMetaDataCom
             this.tankCapacity = _data["tankCapacity"] !== undefined ? _data["tankCapacity"] : <any>null;
             this.minimumFuelAmount = _data["minimumFuelAmount"] !== undefined ? _data["minimumFuelAmount"] : <any>null;
             this.estimateConsumption = _data["estimateConsumption"] !== undefined ? _data["estimateConsumption"] : <any>null;
+            this.daysBetweenRefills = _data["daysBetweenRefills"] !== undefined ? _data["daysBetweenRefills"] : <any>null;
+            this.fuelType = _data["fuelType"] !== undefined ? _data["fuelType"] : <any>null;
         }
     }
 
@@ -1923,6 +2037,8 @@ export class UpdateLocationMetaDataCommand implements IUpdateLocationMetaDataCom
         data["tankCapacity"] = this.tankCapacity !== undefined ? this.tankCapacity : <any>null;
         data["minimumFuelAmount"] = this.minimumFuelAmount !== undefined ? this.minimumFuelAmount : <any>null;
         data["estimateConsumption"] = this.estimateConsumption !== undefined ? this.estimateConsumption : <any>null;
+        data["daysBetweenRefills"] = this.daysBetweenRefills !== undefined ? this.daysBetweenRefills : <any>null;
+        data["fuelType"] = this.fuelType !== undefined ? this.fuelType : <any>null;
         return data; 
     }
 }
@@ -1937,6 +2053,8 @@ export interface IUpdateLocationMetaDataCommand {
     tankCapacity?: number;
     minimumFuelAmount?: number;
     estimateConsumption?: number;
+    daysBetweenRefills?: number;
+    fuelType?: FuelType;
 }
 
 export enum RefillSchedule {
@@ -1951,6 +2069,13 @@ export enum TankType {
     TANK = 2,
 }
 
+export enum FuelType {
+    OIL = 0,
+    PETROLEUM = 1,
+    GASOLINE = 2,
+    OTHER = 3,
+}
+
 export class CreateLocationCommand implements ICreateLocationCommand {
     address?: string | null;
     comment?: string | null;
@@ -1961,6 +2086,8 @@ export class CreateLocationCommand implements ICreateLocationCommand {
     tankCapacity?: number;
     minimumFuelAmount?: number;
     estimateConsumption?: number;
+    daysBetweenRefills?: number;
+    fuelType?: FuelType;
 
     constructor(data?: ICreateLocationCommand) {
         if (data) {
@@ -1982,6 +2109,8 @@ export class CreateLocationCommand implements ICreateLocationCommand {
             this.tankCapacity = _data["tankCapacity"] !== undefined ? _data["tankCapacity"] : <any>null;
             this.minimumFuelAmount = _data["minimumFuelAmount"] !== undefined ? _data["minimumFuelAmount"] : <any>null;
             this.estimateConsumption = _data["estimateConsumption"] !== undefined ? _data["estimateConsumption"] : <any>null;
+            this.daysBetweenRefills = _data["daysBetweenRefills"] !== undefined ? _data["daysBetweenRefills"] : <any>null;
+            this.fuelType = _data["fuelType"] !== undefined ? _data["fuelType"] : <any>null;
         }
     }
 
@@ -2003,6 +2132,8 @@ export class CreateLocationCommand implements ICreateLocationCommand {
         data["tankCapacity"] = this.tankCapacity !== undefined ? this.tankCapacity : <any>null;
         data["minimumFuelAmount"] = this.minimumFuelAmount !== undefined ? this.minimumFuelAmount : <any>null;
         data["estimateConsumption"] = this.estimateConsumption !== undefined ? this.estimateConsumption : <any>null;
+        data["daysBetweenRefills"] = this.daysBetweenRefills !== undefined ? this.daysBetweenRefills : <any>null;
+        data["fuelType"] = this.fuelType !== undefined ? this.fuelType : <any>null;
         return data; 
     }
 }
@@ -2017,6 +2148,164 @@ export interface ICreateLocationCommand {
     tankCapacity?: number;
     minimumFuelAmount?: number;
     estimateConsumption?: number;
+    daysBetweenRefills?: number;
+    fuelType?: FuelType;
+}
+
+export class PageResultOfLocationHistoryDtoAndString implements IPageResultOfLocationHistoryDtoAndString {
+    newNeedle?: string | null;
+    pagesRemaining?: number;
+    results?: LocationHistoryDto[] | null;
+    hasMore?: boolean;
+
+    constructor(data?: IPageResultOfLocationHistoryDtoAndString) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            if (data.results) {
+                this.results = [];
+                for (let i = 0; i < data.results.length; i++) {
+                    let item = data.results[i];
+                    this.results[i] = item && !(<any>item).toJSON ? new LocationHistoryDto(item) : <LocationHistoryDto>item;
+                }
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.newNeedle = _data["newNeedle"] !== undefined ? _data["newNeedle"] : <any>null;
+            this.pagesRemaining = _data["pagesRemaining"] !== undefined ? _data["pagesRemaining"] : <any>null;
+            if (Array.isArray(_data["results"])) {
+                this.results = [] as any;
+                for (let item of _data["results"])
+                    this.results!.push(LocationHistoryDto.fromJS(item));
+            }
+            this.hasMore = _data["hasMore"] !== undefined ? _data["hasMore"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): PageResultOfLocationHistoryDtoAndString {
+        data = typeof data === 'object' ? data : {};
+        let result = new PageResultOfLocationHistoryDtoAndString();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["newNeedle"] = this.newNeedle !== undefined ? this.newNeedle : <any>null;
+        data["pagesRemaining"] = this.pagesRemaining !== undefined ? this.pagesRemaining : <any>null;
+        if (Array.isArray(this.results)) {
+            data["results"] = [];
+            for (let item of this.results)
+                data["results"].push(item.toJSON());
+        }
+        data["hasMore"] = this.hasMore !== undefined ? this.hasMore : <any>null;
+        return data; 
+    }
+}
+
+export interface IPageResultOfLocationHistoryDtoAndString {
+    newNeedle?: string | null;
+    pagesRemaining?: number;
+    results?: ILocationHistoryDto[] | null;
+    hasMore?: boolean;
+}
+
+export class PageResultOfLocationHistoryDto extends PageResultOfLocationHistoryDtoAndString implements IPageResultOfLocationHistoryDto {
+    newNeedle?: string | null;
+
+    constructor(data?: IPageResultOfLocationHistoryDto) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.newNeedle = _data["newNeedle"] !== undefined ? _data["newNeedle"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): PageResultOfLocationHistoryDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PageResultOfLocationHistoryDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["newNeedle"] = this.newNeedle !== undefined ? this.newNeedle : <any>null;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IPageResultOfLocationHistoryDto extends IPageResultOfLocationHistoryDtoAndString {
+    newNeedle?: string | null;
+}
+
+export class LocationHistoryDto implements ILocationHistoryDto {
+    id?: number;
+    regionId?: number;
+    schedule?: RefillSchedule;
+    address?: string | null;
+    comments?: string | null;
+    locationId?: number;
+    timeOfChange?: Date;
+
+    constructor(data?: ILocationHistoryDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+            this.regionId = _data["regionId"] !== undefined ? _data["regionId"] : <any>null;
+            this.schedule = _data["schedule"] !== undefined ? _data["schedule"] : <any>null;
+            this.address = _data["address"] !== undefined ? _data["address"] : <any>null;
+            this.comments = _data["comments"] !== undefined ? _data["comments"] : <any>null;
+            this.locationId = _data["locationId"] !== undefined ? _data["locationId"] : <any>null;
+            this.timeOfChange = _data["timeOfChange"] ? new Date(_data["timeOfChange"].toString()) : <any>null;
+        }
+    }
+
+    static fromJS(data: any): LocationHistoryDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new LocationHistoryDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        data["regionId"] = this.regionId !== undefined ? this.regionId : <any>null;
+        data["schedule"] = this.schedule !== undefined ? this.schedule : <any>null;
+        data["address"] = this.address !== undefined ? this.address : <any>null;
+        data["comments"] = this.comments !== undefined ? this.comments : <any>null;
+        data["locationId"] = this.locationId !== undefined ? this.locationId : <any>null;
+        data["timeOfChange"] = this.timeOfChange ? this.timeOfChange.toISOString() : <any>null;
+        return data; 
+    }
+}
+
+export interface ILocationHistoryDto {
+    id?: number;
+    regionId?: number;
+    schedule?: RefillSchedule;
+    address?: string | null;
+    comments?: string | null;
+    locationId?: number;
+    timeOfChange?: Date;
 }
 
 export class CompleteRefillCommand implements ICompleteRefillCommand {
@@ -2706,13 +2995,6 @@ export interface ILocationRefillDto {
     address?: string | null;
     expectedDeliveryDate?: Date;
     debtorBlocked?: boolean;
-}
-
-export enum FuelType {
-    OIL = 0,
-    PETROLEUM = 1,
-    GASOLINE = 2,
-    OTHER = 3,
 }
 
 export class CreateTruckRefillCommand implements ICreateTruckRefillCommand {

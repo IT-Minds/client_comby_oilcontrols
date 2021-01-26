@@ -40,7 +40,7 @@ namespace Application.ExampleEntities.Queries.GetExampleEntities.PageName
     public async Task<int> PagesRemaining(IQueryable<ExampleEntity> query)
     {
       var count = await query.CountAsync();
-      var pagesLeft = (int)(Math.Floor((float)count / (float)Size)) - 1;
+      var pagesLeft = (int)(Math.Ceiling((float)count / (float)Size)) - 1;
 
       return pagesLeft;
     }

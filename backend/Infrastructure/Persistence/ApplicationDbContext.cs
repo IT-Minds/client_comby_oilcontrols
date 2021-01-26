@@ -54,7 +54,6 @@ namespace Infrastructure.Persistence
             entry.Entity.LastModifiedBy = _currentUserService.UserId;
             entry.Entity.LastModified = _dateTimeOffsetService.Now;
             entry.Entity.ModifiedCount = 0;
-
             break;
           case EntityState.Modified:
             entry.Entity.LastModifiedBy = _currentUserService.UserId;
@@ -66,10 +65,10 @@ namespace Infrastructure.Persistence
 
       var result = await base.SaveChangesAsync(cancellationToken);
 
-      #pragma warning disable 4014
+#pragma warning disable 4014
       OnLocationsChange(ChangeTracker.Entries<AuditableEntity>()
         .Where(x => x.Entity.GetType().Equals(typeof(Location))), cancellationToken);
-      #pragma warning restore 4014
+#pragma warning restore 4014
 
       return result;
     }
