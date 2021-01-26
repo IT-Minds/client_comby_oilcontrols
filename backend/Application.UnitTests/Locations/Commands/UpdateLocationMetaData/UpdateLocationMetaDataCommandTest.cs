@@ -26,7 +26,9 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
         TankNumber = 443,
         TankCapacity = 4005.1,
         MinimumFuelAmount = 50.5,
-        EstimateConsumption = 10
+        EstimateConsumption = 10,
+        FuelType = FuelType.OTHER,
+        DaysBetweenRefills = 15,
       };
       var oldLocation = Context.Locations.Find(1);
       var historyNumber = oldLocation.LocationHistories == null ? 0 : oldLocation.LocationHistories.Count();
@@ -40,10 +42,13 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
       entity.Address.Should().Be(command.Address);
       entity.Comments.Should().Be(command.Comment);
       entity.Schedule.Should().Be(command.Refillschedule);
+      entity.DaysBetweenRefills.Should().Be(command.DaysBetweenRefills);
+      entity.EstimateFuelConsumption.Should().Be(command.EstimateConsumption);
       entity.FuelTank.TankType.Should().Be(command.TankType);
       entity.FuelTank.TankNumber.Should().Be(command.TankNumber);
       entity.FuelTank.TankCapacity.Should().Be(command.TankCapacity);
       entity.FuelTank.MinimumFuelAmount.Should().Be(command.MinimumFuelAmount);
+      entity.FuelTank.FuelType.Should().Be(command.FuelType);
       entity.EstimateFuelConsumption.Should().Be(command.EstimateConsumption);
       entity.LocationHistories.Count().Should().Be(historyNumber + 1);
       newestHistory.Should().NotBeNull();

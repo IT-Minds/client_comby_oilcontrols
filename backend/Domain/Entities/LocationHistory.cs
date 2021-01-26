@@ -14,5 +14,7 @@ namespace Domain.Entities
     public string Comments { get; set; }
     public int LocationId { get; set; }
     public Location Location { get; set; }
+    public int DaysBetweenRefills { get; set; }
+    public double EstimateFuelConsumption { get; set; }
   }
 }
