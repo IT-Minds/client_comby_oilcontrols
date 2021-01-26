@@ -20,6 +20,8 @@ namespace Application.Locations.Commands.UpdateLocationMetaData
     public double TankCapacity { get; set; }
     public double MinimumFuelAmount { get; set; }
     public double EstimateConsumption { get; set; }
+    public int DaysBetweenRefills { get; set; }
+    public FuelType FuelType { get; set; }
 
     public class UpdateLocationMetaDataCommandHandler : IRequestHandler<UpdateLocationMetaDataCommand, int>
     {
@@ -50,12 +52,14 @@ namespace Application.Locations.Commands.UpdateLocationMetaData
         location.Comments = request.Comment;
         location.Schedule = request.Refillschedule;
         location.EstimateFuelConsumption = request.EstimateConsumption;
+        location.DaysBetweenRefills = request.DaysBetweenRefills;
 
         var tank = location.FuelTank;
         tank.TankType = request.TankType;
         tank.TankNumber = request.TankNumber;
         tank.TankCapacity = request.TankCapacity;
         tank.MinimumFuelAmount = request.MinimumFuelAmount;
+        tank.FuelType = request.FuelType;
 
         await _context.SaveChangesAsync(cancellationToken);
         return request.LocationId;
