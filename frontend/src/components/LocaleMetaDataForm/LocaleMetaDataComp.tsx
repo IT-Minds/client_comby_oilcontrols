@@ -276,6 +276,9 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
               //TODO: translation
             }
             <FormLabel>Debtor:</FormLabel>
+            {
+              //TODO: Bind to model
+            }
             <Textarea></Textarea>
             {
               //TODO: translation
@@ -284,6 +287,9 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
           </FormControl>
           <FormControl isRequired>
             <FormLabel>Select date:</FormLabel>
+            {
+              //TODO: Bind to model
+            }
             <DatePicker
               selectedDate={new Date()}
               onChange={(x: Date) => {
