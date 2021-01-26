@@ -6,37 +6,55 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
+  Select,
   useDisclosure
 } from "@chakra-ui/react";
 import { Locale } from "i18n/Locale";
 import { useI18n } from "next-rosetta";
-import { FC, useCallback, useRef, useState } from "react";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { RiFileShredLine } from "react-icons/ri";
 import { genCouponsClient } from "services/backend/apiClients";
-import { CouponDto } from "services/backend/nswagts";
+import DropdownType from "types/DropdownType";
 
 type Props = {
-  coupon: CouponDto;
+  coupons: DropdownType[];
+  triggered?: boolean;
 };
 
-const InvalidateCouponBtn: FC<Props> = ({ coupon }) => {
+const InvalidateCouponBtn: FC<Props> = ({ coupons, triggered = false }) => {
   const cancelRef = useRef();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { t } = useI18n<Locale>();
 
   const [isLoading, setLoading] = useState(false);
+  const [chosenCoupon, setChosenCoupon] = useState(coupons[0]?.id ?? "0");
   const invalidateActions = useCallback(async () => {
     setLoading(true);
     onClose();
     const client = await genCouponsClient();
-    await client.invalidateCoupon(coupon.couponNumber);
+    await client.invalidateCoupon(Number.parseInt(chosenCoupon));
 
     setLoading(false);
-  }, []);
+  }, [chosenCoupon]);
+
+  useEffect(() => {
+    if (triggered) {
+      onOpen();
+    } else {
+      onClose();
+    }
+  }, [triggered]);
 
   return (
     <>
-      <Button colorScheme="red" onClick={onOpen} isLoading={isLoading}>
+      <Button
+        colorScheme="red"
+        onClick={onOpen}
+        isLoading={isLoading}
+        rightIcon={<RiFileShredLine />}
+        // leftIcon={<GiGasPump />}>
+      >
         {t("coupons.invalidate.invalidate")}
       </Button>
 
@@ -48,7 +66,14 @@ const InvalidateCouponBtn: FC<Props> = ({ coupon }) => {
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              {t("coupons.invalidate.confirm", { coupon: coupon.couponNumber })}
+              {t("coupons.invalidate.confirm", { coupon: chosenCoupon })}
+              <Select onChange={e => setChosenCoupon(e.target.value)}>
+                {coupons.map(coupon => (
+                  <option key={coupon.id} value={coupon.id}>
+                    {coupon.name}
+                  </option>
+                ))}
+              </Select>
             </AlertDialogBody>
 
             <AlertDialogFooter>

@@ -50,7 +50,6 @@ const QueryMultiSelectBtn: FC<Props> = ({
     filters.forEach(filter => {
       const [checkQueryGroup, checkKey, ...values] = filter.split("_");
 
-      console.log(filter);
       if (queryGroup === checkQueryGroup) {
         if (queryKey === checkKey) {
           setCheckedItems(values);
@@ -71,7 +70,6 @@ const QueryMultiSelectBtn: FC<Props> = ({
     } else {
       filters.push(`${queryGroup}_${queryKey}_${checkedItems.join("_")}`);
     }
-    console.log(filters, copy);
     copy["thfilter"] = filters;
     router.replace(
       {

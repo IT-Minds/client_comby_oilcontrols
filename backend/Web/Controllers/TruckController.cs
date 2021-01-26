@@ -1,16 +1,59 @@
-using Application.Trucks.Queries;
+using Application.Trucks.Commands.CreateTruck;
+using Application.Common.Interfaces.Pagination;
+using Application.Trucks.Commands.UpdateTruck;
+using Application.Trucks;
 using Application.Trucks.Queries.GetTruckInfo;
+using Application.Trucks.Queries.GetTrucksPage;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Application.Locations;
+using Application.Locations.Queries;
 
 namespace Web.Controllers
 {
   public class TruckController : ApiControllerBase
   {
-    [HttpGet]
-    public async Task<ActionResult<TruckInfoDto>> GetTruck([FromQuery] int id)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<TruckInfoIdDto>> GetTruck([FromRoute] int id)
     {
-      return await Mediator.Send(new GetTruckInfoQuery { TruckId = id });
+      return await Mediator.Send(new GetTruckInfoQuery { Id = id });
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<PageResult<TruckInfoIdDto, int>>> GetTrucks(
+      [FromQuery] int needle, [FromQuery] int size = 1000, [FromQuery] int? skip = 0
+    )
+    {
+      return await Mediator.Send(new GetTrucksPageQuery
+      {
+        Needle = needle,
+        Size = size,
+        Skip = skip
+      });
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<TruckInfoIdDto>> UpdateTruck([FromRoute] int id, UpdateTruckCommand command)
+    {
+      command.TruckInfo.Id = id;
+      return await Mediator.Send(command);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<TruckInfoIdDto>> CreateTruck(CreateTruckCommand command)
+    {
+      return await Mediator.Send(command);
+    }
+
+    [HttpGet("{id}/runList")]
+    [ResponseCache(Duration = 43200)] // 12 hour cache
+    public async Task<ActionResult<IList<LocationRefillDto>>> GetTrucksRefills([FromRoute] int id)
+    {
+      return await Mediator.Send(new GetLocationRequiringRefill
+      {
+        TruckId = id
+      });
     }
   }
 }

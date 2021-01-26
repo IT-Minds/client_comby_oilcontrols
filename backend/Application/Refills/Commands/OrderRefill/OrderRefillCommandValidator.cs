@@ -11,7 +11,7 @@ namespace Application.Refills.Commands.OrderRefill
         .NotNull();
       RuleFor(e => e.LocationId)
         .NotNull();
-      RuleFor(e => e.RouteId)
+      RuleFor(e => e.TruckId)
         .NotNull();
     }
   }

@@ -42,6 +42,7 @@ module.exports = {
         specialLink: ["hrefLeft", "hrefRight"],
         aspects: ["invalidHref", "preferButton"]
       }
-    ]
+    ],
+    "linebreak-style": ["error", "unix"]
   }
 };

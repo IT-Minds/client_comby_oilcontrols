@@ -1,0 +1,7 @@
+.fullWidthChildren {
+  width: 100%;
+}
+
+.fullWidthChildren > div {
+  width: 100%;
+}

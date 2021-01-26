@@ -2,6 +2,10 @@ using Application.Common.Interfaces;
 using Domain.Common;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,8 +40,9 @@ namespace Infrastructure.Persistence
     public DbSet<TruckRefill> TruckRefills { get; set; }
     public DbSet<FuelTank> FuelTanks { get; set; }
     public DbSet<Street> Streets { get; set; }
+    public DbSet<LocationHistory> LocationHistories { get; set; }
 
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
       foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
       {
@@ -49,6 +54,7 @@ namespace Infrastructure.Persistence
             entry.Entity.LastModifiedBy = _currentUserService.UserId;
             entry.Entity.LastModified = _dateTimeOffsetService.Now;
             entry.Entity.ModifiedCount = 0;
+
             break;
           case EntityState.Modified:
             entry.Entity.LastModifiedBy = _currentUserService.UserId;
@@ -58,7 +64,14 @@ namespace Infrastructure.Persistence
         }
       }
 
-      return base.SaveChangesAsync(cancellationToken);
+      var result = await base.SaveChangesAsync(cancellationToken);
+
+      #pragma warning disable 4014
+      OnLocationsChange(ChangeTracker.Entries<AuditableEntity>()
+        .Where(x => x.Entity.GetType().Equals(typeof(Location))), cancellationToken);
+      #pragma warning restore 4014
+
+      return result;
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -66,6 +79,33 @@ namespace Infrastructure.Persistence
       builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
       base.OnModelCreating(builder);
+    }
+
+    private Task OnLocationsChange(IEnumerable<EntityEntry<AuditableEntity>> entities, CancellationToken cancellationToken)
+    {
+      foreach (var entity in entities)
+      {
+        if (entity.State == EntityState.Added || entity.State == EntityState.Modified)
+        {
+          var locationHistory = new LocationHistory
+          {
+            RegionId = (entity.Entity as Location).RegionId,
+            Schedule = (entity.Entity as Location).Schedule,
+            Address = (entity.Entity as Location).Address,
+            Comments = (entity.Entity as Location).Comments,
+            LocationId = (entity.Entity as Location).Id
+          };
+          entity.Entity.CreatedBy = _currentUserService.UserId;
+          entity.Entity.Created = _dateTimeOffsetService.Now;
+          entity.Entity.LastModifiedBy = _currentUserService.UserId;
+          entity.Entity.LastModified = _dateTimeOffsetService.Now;
+          entity.Entity.ModifiedCount = 0;
+
+          this.LocationHistories.Add(locationHistory);
+        }
+      }
+
+      return base.SaveChangesAsync(cancellationToken);
     }
   }
 }

@@ -1,5 +1,4 @@
 export const formatInputNumber = (n: string): string => {
-  console.log(n);
   const commaMatch = n.match(/,/g);
 
   console.assert(commaMatch === null || commaMatch.length <= 1, "a lot of commas", commaMatch, n);

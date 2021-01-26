@@ -1,13 +1,20 @@
 import { Box, Container, useColorModeValue, useToast } from "@chakra-ui/react";
-import ReportingComp from "components/Reporting/ReportingComponent";
+import FillOutRefillForm from "components/FillOutRefillForm/FillOutRefillForm";
+import { RefillForm } from "components/FillOutRefillForm/RefillForm";
 import { useOffline } from "hooks/useOffline";
 import { Locale } from "i18n/Locale";
 import { GetStaticProps, NextPage } from "next";
 import { I18nProps } from "next-rosetta";
 import { useCallback } from "react";
 import { genRefillClient } from "services/backend/apiClients";
-import { CreateRefillCommand, TankState, TankType } from "services/backend/nswagts";
+import { CompleteRefillCommand, TankState } from "services/backend/nswagts";
 import { urlToFile } from "utils/urlToFile";
+
+const couponNumbers = [
+  { name: "Coupon 1", id: "1" },
+  { name: "Coupon 2", id: "2" },
+  { name: "Coupon 3", id: "3" }
+];
 
 const DemoPage: NextPage = () => {
   const toast = useToast();
@@ -17,20 +24,18 @@ const DemoPage: NextPage = () => {
   const bg = useColorModeValue("gray.100", "gray.700");
 
   const saveForm = useCallback(
-    async reportForm => {
+    (reportForm: RefillForm) => {
       awaitCallback(async () => {
         const client = await genRefillClient();
-        const newRefillID = await client.create(
-          new CreateRefillCommand({
+        const newRefillID = await client.complete(
+          2,
+          new CompleteRefillCommand({
             couponNumber: Number(reportForm.couponId),
-            expectedDeliveryDate: new Date(),
-            fuelType: reportForm.fuelType,
+            actualDeliveryDate: new Date(),
             startAmount: 2,
-            endAmount: 0 + reportForm.liters,
-            tankNumber: 123,
+            endAmount: 20,
             tankState: TankState.FULL,
-            tankType: TankType.BUILDING,
-            truckId: Number(reportForm.carId)
+            refillNumber: 123
           })
         );
 
@@ -54,19 +59,7 @@ const DemoPage: NextPage = () => {
   return (
     <Container maxW="100%" maxH="100%" centerContent>
       <Box padding="4" bg={bg} maxW="6xl" maxH="4xl" resize="both" overflow="auto">
-        <ReportingComp
-          submitCallback={x => saveForm(x)}
-          carId="2"
-          locations={[
-            { name: "Build 1", id: "1" },
-            { name: "Build 2", id: "2" },
-            { name: "Build 3", id: "3" }
-          ]}
-          couponNumbers={[
-            { name: "Coupon 1", id: "1" },
-            { name: "Coupon 2", id: "2" },
-            { name: "Coupon 3", id: "3" }
-          ]}></ReportingComp>
+        <FillOutRefillForm submitCallback={saveForm} couponNumbers={couponNumbers} />
       </Box>
     </Container>
   );

@@ -23,7 +23,7 @@ const localeMap = {
 };
 
 const LanguageSelector: FC = () => {
-  const { locale, locales, route, events } = useRouter();
+  const { locale, locales, route, events, query } = useRouter();
   const { hoverBg } = useColors();
 
   const disclosure = useDisclosure();
@@ -59,7 +59,14 @@ const LanguageSelector: FC = () => {
         <PopoverBody marginTop={4}>
           <VStack align="flex-end ">
             {locales?.map(loc => (
-              <Link href={route} locale={loc} key={loc} passHref>
+              <Link
+                href={{
+                  pathname: route,
+                  query
+                }}
+                locale={loc}
+                key={loc}
+                passHref>
                 <HStack
                   cursor="pointer"
                   _hover={{

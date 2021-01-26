@@ -40,7 +40,8 @@ export const table: Locale = {
   actions: {
     cancel: "Cancel",
     delete: "Delete",
-    invalidate: "Invalidate"
+    invalidate: "Invalidate",
+    submit: "Submit"
   },
 
   coupons: {
@@ -48,6 +49,49 @@ export const table: Locale = {
       invalidate: "Invalidate Coupon",
       confirm:
         "Are you sure you want to invalidate coupon '{{coupon}}', this action can't be undone?"
+    }
+  },
+
+  truckMetaData: {
+    startNumber: "Start number",
+    carNumber: "Car number",
+    carName: "Car name",
+    description: "Description",
+    tankSize: "Tank size",
+    formError: {
+      carNumber: "Please enter a car number",
+      carName: "Please specify a car name",
+      description: "Please specify a description",
+      tankSize: "Please specify a tank size"
+    }
+  },
+
+  dailyTemperature: {
+    selectRegion: "Select region",
+    temperature: "Temperature",
+    selectDate: "Select a date",
+    formErrors: {
+      selectRegion: "Please select a region",
+      inputTemperature: "Please enter a temperature"
+    }
+  },
+
+  mytruck: {
+    title: "Comby OilControl - Truck {{id}}",
+    heading: "Truck {{id}}",
+    tank: {
+      current: "Current Tank: ",
+      liters: "{{liters}} liters",
+      of: " of "
+    },
+    tankLevel: ""
+  },
+  enums: {
+    fuelType: {
+      "0": "Oil",
+      "1": "Petroleum",
+      "2": "Gasoline",
+      "3": "Other"
     }
   }
 };
