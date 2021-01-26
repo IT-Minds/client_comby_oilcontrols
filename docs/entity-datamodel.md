@@ -24,6 +24,9 @@ class Location {
   refillSchedule
   daysBetweenRefills
   estimateFuelConsumption
+  currentDebtorId
+  upcomingDebtorId
+  debtorChangeDate
 }
 
 class LocationHistory {
@@ -82,6 +85,10 @@ class Street {
   name
 }
 
+class Debtor {
+  id
+}
+
 enum FuelType {
   OIL
   PETROLEUM
@@ -125,7 +132,7 @@ Truck --> "0..*" TruckDailyState
 TruckDailyState --> "0..*" TruckRefill
 TruckRefill ..> FuelType
 Region --> "0..*" Street
-
+Debtor --> "0..*" Location
 Location --> "1" FuelTank
 Location ..> RefillSchedule
 LocationHistory ..> RefillSchedule
