@@ -1881,6 +1881,8 @@ export class UpdateLocationMetaDataCommand implements IUpdateLocationMetaDataCom
     tankCapacity?: number;
     minimumFuelAmount?: number;
     estimateConsumption?: number;
+    daysBetweenRefills?: number;
+    fuelType?: FuelType;
 
     constructor(data?: IUpdateLocationMetaDataCommand) {
         if (data) {
@@ -1902,6 +1904,8 @@ export class UpdateLocationMetaDataCommand implements IUpdateLocationMetaDataCom
             this.tankCapacity = _data["tankCapacity"] !== undefined ? _data["tankCapacity"] : <any>null;
             this.minimumFuelAmount = _data["minimumFuelAmount"] !== undefined ? _data["minimumFuelAmount"] : <any>null;
             this.estimateConsumption = _data["estimateConsumption"] !== undefined ? _data["estimateConsumption"] : <any>null;
+            this.daysBetweenRefills = _data["daysBetweenRefills"] !== undefined ? _data["daysBetweenRefills"] : <any>null;
+            this.fuelType = _data["fuelType"] !== undefined ? _data["fuelType"] : <any>null;
         }
     }
 
@@ -1923,6 +1927,8 @@ export class UpdateLocationMetaDataCommand implements IUpdateLocationMetaDataCom
         data["tankCapacity"] = this.tankCapacity !== undefined ? this.tankCapacity : <any>null;
         data["minimumFuelAmount"] = this.minimumFuelAmount !== undefined ? this.minimumFuelAmount : <any>null;
         data["estimateConsumption"] = this.estimateConsumption !== undefined ? this.estimateConsumption : <any>null;
+        data["daysBetweenRefills"] = this.daysBetweenRefills !== undefined ? this.daysBetweenRefills : <any>null;
+        data["fuelType"] = this.fuelType !== undefined ? this.fuelType : <any>null;
         return data; 
     }
 }
@@ -1937,6 +1943,8 @@ export interface IUpdateLocationMetaDataCommand {
     tankCapacity?: number;
     minimumFuelAmount?: number;
     estimateConsumption?: number;
+    daysBetweenRefills?: number;
+    fuelType?: FuelType;
 }
 
 export enum RefillSchedule {
@@ -1951,6 +1959,13 @@ export enum TankType {
     TANK = 2,
 }
 
+export enum FuelType {
+    OIL = 0,
+    PETROLEUM = 1,
+    GASOLINE = 2,
+    OTHER = 3,
+}
+
 export class CreateLocationCommand implements ICreateLocationCommand {
     address?: string | null;
     comment?: string | null;
@@ -1961,6 +1976,8 @@ export class CreateLocationCommand implements ICreateLocationCommand {
     tankCapacity?: number;
     minimumFuelAmount?: number;
     estimateConsumption?: number;
+    daysBetweenRefills?: number;
+    fuelType?: FuelType;
 
     constructor(data?: ICreateLocationCommand) {
         if (data) {
@@ -1982,6 +1999,8 @@ export class CreateLocationCommand implements ICreateLocationCommand {
             this.tankCapacity = _data["tankCapacity"] !== undefined ? _data["tankCapacity"] : <any>null;
             this.minimumFuelAmount = _data["minimumFuelAmount"] !== undefined ? _data["minimumFuelAmount"] : <any>null;
             this.estimateConsumption = _data["estimateConsumption"] !== undefined ? _data["estimateConsumption"] : <any>null;
+            this.daysBetweenRefills = _data["daysBetweenRefills"] !== undefined ? _data["daysBetweenRefills"] : <any>null;
+            this.fuelType = _data["fuelType"] !== undefined ? _data["fuelType"] : <any>null;
         }
     }
 
@@ -2003,6 +2022,8 @@ export class CreateLocationCommand implements ICreateLocationCommand {
         data["tankCapacity"] = this.tankCapacity !== undefined ? this.tankCapacity : <any>null;
         data["minimumFuelAmount"] = this.minimumFuelAmount !== undefined ? this.minimumFuelAmount : <any>null;
         data["estimateConsumption"] = this.estimateConsumption !== undefined ? this.estimateConsumption : <any>null;
+        data["daysBetweenRefills"] = this.daysBetweenRefills !== undefined ? this.daysBetweenRefills : <any>null;
+        data["fuelType"] = this.fuelType !== undefined ? this.fuelType : <any>null;
         return data; 
     }
 }
@@ -2017,6 +2038,8 @@ export interface ICreateLocationCommand {
     tankCapacity?: number;
     minimumFuelAmount?: number;
     estimateConsumption?: number;
+    daysBetweenRefills?: number;
+    fuelType?: FuelType;
 }
 
 export class CompleteRefillCommand implements ICompleteRefillCommand {
@@ -2706,13 +2729,6 @@ export interface ILocationRefillDto {
     address?: string | null;
     expectedDeliveryDate?: Date;
     debtorBlocked?: boolean;
-}
-
-export enum FuelType {
-    OIL = 0,
-    PETROLEUM = 1,
-    GASOLINE = 2,
-    OTHER = 3,
 }
 
 export class CreateTruckRefillCommand implements ICreateTruckRefillCommand {
