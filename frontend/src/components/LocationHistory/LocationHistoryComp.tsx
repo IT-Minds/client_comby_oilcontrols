@@ -15,54 +15,64 @@ import { useOffline } from "hooks/useOffline";
 import { usePagedFetched } from "hooks/usePagedFetched";
 import React, { FC, useEffect, useMemo, useReducer, useState } from "react";
 import ListReducer, { ListReducerActionType } from "react-list-reducer";
+import { genLocationHistoryClient } from "services/backend/apiClients";
+import { IPageResult } from "services/backend/ext/IPageResult";
+import {
+  ILocationHistoryDto,
+  IPageResultOfLocationHistoryDto,
+  LocationHistoryDto,
+  PageResultOfLocationHistoryDto
+} from "services/backend/nswagts";
+import { parseInputToNumber } from "utils/formatNumber";
 
 import { LocationHistory } from "./LocationHistory";
 
 type Props = {
-  preLoadedData?: LocationHistory[];
+  preLoadedData?: LocationHistoryDto[];
   preloadDataNeedle?: string;
   preloadLoadedAll?: boolean;
   preLoadedPageCount?: number;
+  locationId: number;
 };
 
 export const PAGE_SHOW_SIZE = 15;
 
 const LocationHistoryComp: FC<Props> = ({
   preLoadedData = [],
-  preloadDataNeedle = "0",
-  preloadLoadedAll = false
+  preloadDataNeedle = "",
+  preloadLoadedAll = false,
+  locationId = 1
 }) => {
   const toast = useToast();
 
-  //TODO - LocationHistoryDto
   const [data, dataDispatch] = useReducer(
-    ListReducer<LocationHistory>("locationId"),
+    ListReducer<ILocationHistoryDto>("locationId"),
     preLoadedData
   );
   const [pageShowing, setPageShowing] = useState(0);
 
   const { awaitCallback, isOnline } = useOffline();
 
-  //TODO - WAITING FOR BACKEND
-  // const { done, error, fetchData, needle } = usePagedFetched(
-  //   "createdAt",
-  //   (needle, size, sortBy, skip) =>
-  //     genLocationHistoryClient().then(client => client.get(needle, size, sortBy, skip)),
-  //   dataDispatch,
-  //   {
-  //     autoStart: !preloadLoadedAll,
-  //     initialNeedle: preloadDataNeedle,
-  //     pageSize: PAGE_SHOW_SIZE
-  //   }
-  // );
+  const { done, error, fetchData, needle } = usePagedFetched(
+    "0",
+    (needle, size, _sortBy, skip) =>
+      genLocationHistoryClient().then(client =>
+        client.getLocationHistory(locationId, new Date(needle), size, skip)
+      ),
+    dataDispatch,
+    {
+      autoStart: !preloadLoadedAll,
+      initialNeedle: preloadDataNeedle,
+      pageSize: PAGE_SHOW_SIZE
+    }
+  );
 
   const pages = useMemo(() => {
     const maxDataLength = data.length;
     const allPageMax = maxDataLength > 0 ? Math.ceil(maxDataLength / PAGE_SHOW_SIZE) : 0;
 
     return [...new Array(allPageMax)].map((x, i) => i);
-    // }, [data, done]); <- use when backend is ready
-  }, [data]);
+  }, [data, done]);
 
   /**
    * Splits the data into table pages.
@@ -103,7 +113,7 @@ const LocationHistoryComp: FC<Props> = ({
 
     const startIndex =
       (pageShowing - realPageMax) * PAGE_SHOW_SIZE + (realPageMax * PAGE_SHOW_SIZE - data.length);
-    // const fillCount = realPageMax * PAGE_SHOW_SIZE - data.length;
+    const fillCount = realPageMax * PAGE_SHOW_SIZE - data.length;
 
     return {
       data: []
@@ -115,26 +125,25 @@ const LocationHistoryComp: FC<Props> = ({
     return elements.length;
   }, [pages, data]);
 
-  //TODO - ENABLE WHEN BACKEND IS READY
-  // useEffect(() => {
-  //   if (done)
-  //     toast({
-  //       title: "All data loaded",
-  //       description:
-  //         "All the pages for the table is now loaded and the skeleton should not be visible",
-  //       status: "success",
-  //       duration: 3000,
-  //       isClosable: true
-  //     });
-  //   if (error)
-  //     toast({
-  //       title: "Error during data fetch!",
-  //       description: "An error occurred during fetch of all page data",
-  //       status: "error",
-  //       duration: 5000,
-  //       isClosable: true
-  //     });
-  // }, [done, error]);
+  useEffect(() => {
+    if (done)
+      toast({
+        title: "All data loaded",
+        description:
+          "All the pages for the table is now loaded and the skeleton should not be visible",
+        status: "success",
+        duration: 3000,
+        isClosable: true
+      });
+    if (error)
+      toast({
+        title: "Error during data fetch!",
+        description: "An error occurred during fetch of all page data",
+        status: "error",
+        duration: 5000,
+        isClosable: true
+      });
+  }, [done, error]);
 
   return (
     <Container>
@@ -142,24 +151,30 @@ const LocationHistoryComp: FC<Props> = ({
         <TableCaption placement="top">Location History</TableCaption>
         <Thead>
           <Tr>
-            <Th>Location</Th>
-            <Th>Id</Th>
+            <Th>Address</Th>
+            <Th>Comments</Th>
+            <Th>Region ID</Th>
+            <Th>Schedule</Th>
+            <Th>Time of change</Th>
           </Tr>
         </Thead>
         <Tbody>
           {dataSplitter.data.map(lh => (
-            <tr key={lh.locationId}>
-              <td>{lh.name}</td>
-              <td>{lh.locationId}</td>
+            <tr key={lh.id}>
+              <td>{lh.address}</td>
+              <td>{lh.comments}</td>
+              <td>{lh.regionId}</td>
+              <td>{lh.schedule}</td>
+              <td>{lh.timeOfChange}</td>
             </tr>
           ))}
         </Tbody>
       </Table>
       {pages.length > 1 && (
         <PageIndicator activePage={pageShowing} onClickPage={setPageShowing} pages={pages}>
-          {/* {!done && elementsOnLastPage >= PAGE_SHOW_SIZE && (
+          {!done && elementsOnLastPage >= PAGE_SHOW_SIZE && (
             <Button colorScheme="blue" size="sm" variant="outline"></Button>
-          )} */}
+          )}
         </PageIndicator>
       )}
     </Container>
