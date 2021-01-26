@@ -44,7 +44,7 @@ namespace Infrastructure.Persistence
 
     public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
-      foreach (var entry in ChangeTracker.Entries<AuditableEntity>().ToList())
+      foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
       {
         switch (entry.State)
         {

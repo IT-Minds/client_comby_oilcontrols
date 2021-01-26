@@ -816,8 +816,8 @@ export class LocationClient extends ClientBase implements ILocationClient {
 }
 
 export interface ILocationHistoryClient {
-    get(needle?: number | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationHistoryDto>;
-    getLocationHistory(id: number, needle?: Date | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationHistoryDto>;
+    getAllLocationHistories(needle?: number | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationHistoryDto>;
+    getLocationHistory(id: number, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationHistoryDto>;
 }
 
 export class LocationHistoryClient extends ClientBase implements ILocationHistoryClient {
@@ -831,7 +831,7 @@ export class LocationHistoryClient extends ClientBase implements ILocationHistor
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    get(needle?: number | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationHistoryDto> {
+    getAllLocationHistories(needle?: number | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationHistoryDto> {
         let url_ = this.baseUrl + "/api/LocationHistory?";
         if (needle === null)
             throw new Error("The parameter 'needle' cannot be null.");
@@ -855,11 +855,11 @@ export class LocationHistoryClient extends ClientBase implements ILocationHistor
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.http.fetch(url_, transformedOptions_);
         }).then((_response: Response) => {
-            return this.transformResult(url_, _response, (_response: Response) => this.processGet(_response));
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetAllLocationHistories(_response));
         });
     }
 
-    protected processGet(response: Response): Promise<PageResultOfLocationHistoryDto> {
+    protected processGetAllLocationHistories(response: Response): Promise<PageResultOfLocationHistoryDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -877,14 +877,12 @@ export class LocationHistoryClient extends ClientBase implements ILocationHistor
         return Promise.resolve<PageResultOfLocationHistoryDto>(<any>null);
     }
 
-    getLocationHistory(id: number, needle?: Date | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationHistoryDto> {
+    getLocationHistory(id: number, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationHistoryDto> {
         let url_ = this.baseUrl + "/api/LocationHistory/{id}?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        if (needle === null)
-            throw new Error("The parameter 'needle' cannot be null.");
-        else if (needle !== undefined)
+        if (needle !== undefined && needle !== null)
             url_ += "needle=" + encodeURIComponent(needle ? "" + needle.toJSON() : "") + "&";
         if (size === null)
             throw new Error("The parameter 'size' cannot be null.");

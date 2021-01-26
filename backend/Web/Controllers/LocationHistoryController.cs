@@ -10,7 +10,7 @@ namespace Web.Controllers
   public class LocationHistoryController : ApiControllerBase
   {
     [HttpGet]
-    public async Task<ActionResult<PageResult<LocationHistoryDto>>> Get(
+    public async Task<ActionResult<PageResult<LocationHistoryDto>>> GetAllLocationHistories(
      [FromQuery] int needle, [FromQuery] int size = 1000, [FromQuery] int? skip = 0
     )
     {
@@ -24,13 +24,17 @@ namespace Web.Controllers
 
     [HttpGet("{id}")]
     public async Task<ActionResult<PageResult<LocationHistoryDto>>> GetLocationHistory(
-    [FromRoute] int id, [FromQuery] DateTime needle, [FromQuery] int size = 1000, [FromQuery] int? skip = 0
-)
+    [FromRoute] int id, [FromQuery] DateTime? needle = null, [FromQuery] int size = 1000, [FromQuery] int? skip = 0)
     {
+      if (!needle.HasValue)
+      {
+        needle = DateTime.MaxValue;
+      }
+
       return await Mediator.Send(new GetLocationHistoryQuery
       {
         LocationId = id,
-        Needle = needle,
+        Needle = (DateTime)needle,
         Size = size,
         Skip = skip
       });
