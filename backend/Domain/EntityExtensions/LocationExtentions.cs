@@ -25,11 +25,11 @@ namespace Domain.EntityExtensions
     {
       if (location.Refills == null)
       {
-        throw new ArgumentException("No past refills for location: " + location.Id);
+        return location.EstimateFuelConsumption;
       }
 
       var pastRefills = location.Refills.Where(x => x.ActualDeliveryDate != null).OrderByDescending(x => x.ActualDeliveryDate);
-      if (pastRefills == null || pastRefills.Count() == 0)
+      if (pastRefills == null || pastRefills.Count() < 3)
       {
         return location.EstimateFuelConsumption;
       }
@@ -40,7 +40,7 @@ namespace Domain.EntityExtensions
       var dailyTemps = location.Region.DailyTemperatures.Where(x => x.Date >= startDate && x.Date <= endDate);
       if (dailyTemps == null || dailyTemps.Count() == 0)
       {
-        throw new ArgumentException("No temperatures found for location " + location.Id + " in the period " + startDate + " " + endDate);
+        return location.EstimateFuelConsumption;
       }
 
       var heatIndex = location.HeatingIndex(startDate, endDate);
