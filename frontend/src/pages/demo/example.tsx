@@ -54,7 +54,7 @@ export const getStaticProps: GetStaticProps<Props & I18nProps<Locale>> = async c
       table,
       // !This is a hack to get around undefined values in dataset
       exampleEntities: JSON.parse(JSON.stringify(data.results)),
-      needle: data.newNeedle,
+      needle: data.newNeedle ?? "0",
       hasMore: data.hasMore,
       pageCount: data.pagesRemaining + 1
     },
