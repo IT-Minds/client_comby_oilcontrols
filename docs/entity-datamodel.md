@@ -132,7 +132,7 @@ Truck --> "0..*" TruckDailyState
 TruckDailyState --> "0..*" TruckRefill
 TruckRefill ..> FuelType
 Region --> "0..*" Street
-Debtor --> "0..*" Location
+Debtor "1..3" -- "0..*" Location
 Location --> "1" FuelTank
 Location ..> RefillSchedule
 LocationHistory ..> RefillSchedule

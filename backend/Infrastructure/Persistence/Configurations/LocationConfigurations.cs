@@ -13,7 +13,12 @@ namespace Infrastructure.Persistence.Configurations
         .IsRequired(false);
       builder.HasOne<Debtor>(e => e.Debtor)
         .WithMany(e => e.Locations);
-
+      builder.HasOne<Debtor>(e => e.UpcomingDebtor)
+        .WithMany(e => e.UpcomingLocations)
+        .IsRequired(false);
+      builder.HasOne<Debtor>(e => e.BaseDebtor)
+        .WithMany(e => e.AdministeredLocations)
+        .IsRequired(false);
     }
   }
 }

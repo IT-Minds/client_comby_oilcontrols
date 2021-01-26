@@ -26,5 +26,7 @@ namespace Domain.Entities
     public int UpcomingDebtorId { get; set; }
     public Debtor UpcomingDebtor { get; set; }
     public DateTime DebtorChangeDate { get; set; }
+    public int BaseDebtorId { get; set; }
+    public Debtor BaseDebtor { get; set; }
   }
 }
