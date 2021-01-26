@@ -9,9 +9,10 @@ namespace Web.Controllers
 {
   public class LocationController : ApiControllerBase
   {
-    [HttpPost("/UpdateMetaData")]
-    public async Task<ActionResult<int>> UpdateMetaData(UpdateLocationMetaDataCommand command)
+    [HttpPut("{id}")]
+    public async Task<ActionResult<int>> UpdateMetaData([FromRoute] int id, UpdateLocationMetaDataCommand command)
     {
+      command.Id = id;
       return await Mediator.Send(command);
     }
 

@@ -18,20 +18,9 @@ const DemoPage: NextPage = () => {
     async (form: LocaleMetaDataForm) => {
       awaitCallback(async () => {
         const client = await genLocationClient();
-        const newId = await (form.locationId
-          ? client.updateMetaData(new UpdateLocationMetaDataCommand(form))
-          : client.addNewLocation(
-              new CreateLocationCommand({
-                address: form.address,
-                comment: form.comment,
-                estimateConsumption: form.estimateConsumption,
-                refillschedule: form.refillschedule,
-                tankType: form.tankType,
-                tankNumber: form.tankNumber,
-                tankCapacity: form.tankCapacity,
-                minimumFuelAmount: form.minimumFuelAmount
-              })
-            ));
+        const newId = await (form.id
+          ? client.updateMetaData(form.id, new UpdateLocationMetaDataCommand(form))
+          : client.addNewLocation(new CreateLocationCommand(form)));
 
         await client.saveLocationImage(newId, { data: form.image, fileName: form.image.name });
 

@@ -18,7 +18,7 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
     {
       var command = new UpdateLocationMetaDataCommand
       {
-        LocationId = 1,
+        Id = 1,
         Address = "This is address 23",
         Comment = "This is comment.",
         Refillschedule = RefillSchedule.AUTOMATIC,
@@ -64,7 +64,7 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
     {
       var command = new UpdateLocationMetaDataCommand
       {
-        LocationId = -1,
+        Id = -1,
         Address = "This is address 23",
         Comment = "This is comment.",
         Refillschedule = RefillSchedule.AUTOMATIC,
@@ -87,7 +87,7 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
     {
       var command = new UpdateLocationMetaDataCommand
       {
-        LocationId = 1,
+        Id = 1,
         Address = "This is address 23",
         Comment = "This is comment.",
         Refillschedule = RefillSchedule.AUTOMATIC,
