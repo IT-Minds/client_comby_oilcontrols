@@ -1,5 +1,6 @@
 import {
   Button,
+  Center,
   Container,
   FormControl,
   FormErrorMessage,
@@ -65,17 +66,19 @@ const FillingComp: FC<Props> = ({ fillData }) => {
         <FormErrorMessage>Please enter card number</FormErrorMessage>
       </FormControl>
 
-      <Button
-        mt={4}
-        colorScheme="blue"
-        rightIcon={<MdAdd />}
-        type="submit"
-        onClick={() => {
-          setFormSubmitAttempts(x => x + 1);
-          addFilling();
-        }}>
-        Add filling
-      </Button>
+      <Center>
+        <Button
+          mt={4}
+          colorScheme="blue"
+          rightIcon={<MdAdd />}
+          type="submit"
+          onClick={() => {
+            setFormSubmitAttempts(x => x + 1);
+            addFilling();
+          }}>
+          Add filling
+        </Button>
+      </Center>
     </Container>
   );
 };
