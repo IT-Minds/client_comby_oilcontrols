@@ -6,10 +6,17 @@ import {
   FormLabel,
   Heading,
   HStack,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   NumberInput,
   NumberInputField,
   Select,
   Text,
+  useDisclosure,
   VStack
 } from "@chakra-ui/react";
 import React, { FC, FormEvent, useCallback, useState } from "react";
@@ -40,10 +47,10 @@ const CarInfoComp: FC<Props> = ({ submitCallback, car }) => {
     fillings: []
   });
 
-  const [isAddFilling, setIsAddFilling] = useState(false);
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
 
   const [fillings, setFillings] = useState<FillingForm[]>([]);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const addFilling = useCallback(
     (data: FillingForm) => {
@@ -80,15 +87,7 @@ const CarInfoComp: FC<Props> = ({ submitCallback, car }) => {
 
   return (
     <Container>
-      {isAddFilling && (
-        <FillingComp
-          fillData={data => {
-            addFilling(data);
-            setIsAddFilling(false);
-          }}
-        />
-      )}
-      <form onSubmit={handleSubmit} hidden={isAddFilling}>
+      <form onSubmit={handleSubmit}>
         <VStack align="center" justify="center">
           <Heading as="h4" size="md">
             Information of car {car}
@@ -118,7 +117,7 @@ const CarInfoComp: FC<Props> = ({ submitCallback, car }) => {
             </HStack>
             <FormErrorMessage>Please enter values</FormErrorMessage>
           </FormControl>
-          <Button colorScheme="blue" rightIcon={<MdAdd />} onClick={() => setIsAddFilling(true)}>
+          <Button colorScheme="blue" rightIcon={<MdAdd />} onClick={onOpen}>
             Add filling
           </Button>
           <FormControl hidden={fillings.length < 1}>
@@ -154,6 +153,22 @@ const CarInfoComp: FC<Props> = ({ submitCallback, car }) => {
           </Button>
         </VStack>
       </form>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Fill information</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <FillingComp
+              fillData={data => {
+                addFilling(data);
+                onClose();
+              }}
+            />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Container>
   );
 };
