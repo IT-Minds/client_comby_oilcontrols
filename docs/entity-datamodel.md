@@ -89,6 +89,10 @@ class Debtor {
   id
 }
 
+class LocationDebtor {
+
+}
+
 enum FuelType {
   OIL
   PETROLEUM
@@ -118,6 +122,12 @@ class Coupon {
   couponNumber
 }
 
+enum LocationDebtorType {
+  MAIN
+  BASE
+  UPCOMING
+}
+
 Truck --> "1" Route
 Route --> "0..*" Refill
 Refill --> "1" Location
@@ -132,11 +142,13 @@ Truck --> "0..*" TruckDailyState
 TruckDailyState --> "0..*" TruckRefill
 TruckRefill ..> FuelType
 Region --> "0..*" Street
-Debtor "1..3" -- "0..*" Location
+Debtor "1" -- "*" LocationDebtor
+Location "1" -- "*" LocationDebtor
 Location --> "1" FuelTank
 Location ..> RefillSchedule
 LocationHistory ..> RefillSchedule
 Location "1" -- "1..*" LocationHistory
+LocationDebtor ..> LocationDebtorType
 @enduml
 
 ```
