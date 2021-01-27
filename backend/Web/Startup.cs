@@ -117,7 +117,8 @@ namespace Web
         var transaction = context.Database.CurrentTransaction;
         context.Database.Migrate();
         transaction?.Commit();
-        SeedSampleData(context);
+        if (env.IsDevelopment())
+          SeedSampleData(context);
       }
 
       //TODO Handle cors
