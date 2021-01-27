@@ -21,12 +21,6 @@ namespace Domain.Entities
     public int DaysBetweenRefills { get; set; }
     //Estiamte consumption is assumed to be fuel cosumed / opvarmningsgrad.
     public double EstimateFuelConsumption { get; set; }
-    public int DebtorId { get; set; }
-    public Debtor Debtor { get; set; }
-    public int UpcomingDebtorId { get; set; }
-    public Debtor UpcomingDebtor { get; set; }
-    public DateTime DebtorChangeDate { get; set; }
-    public int BaseDebtorId { get; set; }
-    public Debtor BaseDebtor { get; set; }
+    public ICollection<LocationDebtor> Debtors { get; set; }
   }
 }

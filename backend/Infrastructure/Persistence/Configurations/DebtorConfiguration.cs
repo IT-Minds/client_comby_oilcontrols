@@ -8,7 +8,7 @@ namespace Infrastructure.Persistence.Configurations
   {
     public void Configure(EntityTypeBuilder<Debtor> builder)
     {
-      builder.HasMany<Location>(e => e.Locations)
+      builder.HasMany(e => e.Locations)
         .WithOne(e => e.Debtor)
         .IsRequired(false);
     }
