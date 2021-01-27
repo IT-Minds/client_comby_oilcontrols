@@ -125,5 +125,19 @@ namespace Domain.EntityExtensions
       var totalConsumption = location.EstimatedYearlyFuelConsumption(DateTime.UtcNow.Year);
       return (totalConsumption * oilPrice) / 12;
     }
+    public static Debtor MainDebtor(this Location location)
+    {
+      return location.Debtors.First(x => x.Type == Enums.LocationDebtorType.MAIN).Debtor;
+    }
+
+    public static Debtor BaseDebtor(this Location location)
+    {
+      return location.Debtors.FirstOrDefault(x => x.Type == Enums.LocationDebtorType.BASE).Debtor;
+    }
+
+    public static Debtor UpcomingDebtor(this Location location)
+    {
+      return location.Debtors.FirstOrDefault(x => x.Type == Enums.LocationDebtorType.UPCOMING).Debtor;
+    }
   }
 }
