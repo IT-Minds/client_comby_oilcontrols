@@ -45,12 +45,57 @@ export interface Locale {
     delete: string;
     cancel: string;
     invalidate: string;
+    submit: string;
   };
 
   coupons: {
     invalidate: {
       invalidate: string;
       confirm: string;
+    };
+  };
+
+  truckMetaData: {
+    startNumber: string;
+    carNumber: string;
+    carName: string;
+    description: string;
+    tankSize: string;
+    formError: {
+      carNumber: string;
+      carName: string;
+      description: string;
+      tankSize: string;
+    };
+  };
+
+  dailyTemperature: {
+    selectRegion: string;
+    temperature: string;
+    selectDate: string;
+    formErrors: {
+      selectRegion: string;
+      inputTemperature: string;
+    };
+  };
+
+  mytruck: {
+    title: string;
+    heading: string;
+    tankLevel: string;
+    tank: {
+      current: string;
+      liters: string;
+      of: string;
+    };
+  };
+
+  enums: {
+    fuelType: {
+      0: string;
+      1: string;
+      2: string;
+      3: string;
     };
   };
 }

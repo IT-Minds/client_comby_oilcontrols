@@ -6,6 +6,11 @@
 @startuml
 class Truck {
   id
+  truckIdentifier
+  truckNumber
+  name
+  description
+  tankCapacity
 }
 
 class Route {
@@ -17,12 +22,22 @@ class Location {
   address
   comment
   refillSchedule
+  daysBetweenRefills
+  estimateFuelConsumption
+}
+
+class LocationHistory {
+  id
+  address
+  comment
+  refillSchedule
 }
 
 class FuelTank {
+  id
   type
   tankNumber
-  tankSize
+  tankCapacity
   minimumFuelAmount
 }
 
@@ -34,6 +49,7 @@ class Refill {
   actualDeliveryDate
   fuelType
   tankState
+  refillNumber
 }
 
 class Region {
@@ -51,6 +67,7 @@ class TruckDailyState {
   date
   morningQuantity
   eveningQuantity
+  startRefillNumber
 }
 
 class TruckRefill {
@@ -111,6 +128,8 @@ Region --> "0..*" Street
 
 Location --> "1" FuelTank
 Location ..> RefillSchedule
+LocationHistory ..> RefillSchedule
+Location "1" -- "1..*" LocationHistory
 @enduml
 
 ```

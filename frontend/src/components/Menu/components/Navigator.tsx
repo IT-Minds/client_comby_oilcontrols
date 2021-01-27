@@ -1,4 +1,5 @@
-import { Collapse, HStack, Text, useColorModeValue, VStack } from "@chakra-ui/react";
+import { Box, Collapse, HStack, Text, VStack } from "@chakra-ui/react";
+import { useColors } from "hooks/useColors";
 import { Locale } from "i18n/Locale";
 import Link from "next/link";
 import { useI18n } from "next-rosetta";
@@ -14,7 +15,7 @@ type Props = {
 };
 
 const Navigator: FC<Props> = ({ links }) => {
-  const hoverbg = useColorModeValue("blue.100", "blue.700");
+  const { hoverBg } = useColors();
 
   const [selected, setSelected] = useState<string>(null);
 
@@ -39,7 +40,7 @@ const Navigator: FC<Props> = ({ links }) => {
                     <HStack
                       cursor="pointer"
                       _hover={{
-                        background: hoverbg
+                        background: hoverBg
                       }}
                       padding={1}
                       paddingLeft={16}>
@@ -52,7 +53,9 @@ const Navigator: FC<Props> = ({ links }) => {
           </VStack>
         ) : (
           <Link href={link.href} passHref key={link.id}>
-            <MenuLink link={link} />
+            <Box>
+              <MenuLink link={link} />
+            </Box>
           </Link>
         )
       )}

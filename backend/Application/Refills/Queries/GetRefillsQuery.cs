@@ -70,7 +70,7 @@ namespace Application.Refills.Queries.GetRefills.Location
 
         if (request.TankType.HasValue)
         {
-          baseQuery = baseQuery.Where(refill => refill.Location.FuelTank.Type == request.TankType);
+          baseQuery = baseQuery.Where(refill => refill.Location.FuelTank.TankType == request.TankType);
         }
         var query = request.PreparePage(baseQuery);
         var pagesRemaining = await request.PagesRemaining(query);

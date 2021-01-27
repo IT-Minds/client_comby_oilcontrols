@@ -1,4 +1,5 @@
-import { Flex, FlexOptions, Text, useColorModeValue } from "@chakra-ui/react";
+import { Flex, FlexOptions, Text } from "@chakra-ui/react";
+import { useColors } from "hooks/useColors";
 import { Locale } from "i18n/Locale";
 import { useI18n } from "next-rosetta";
 import { FC, MouseEvent } from "react";
@@ -11,7 +12,7 @@ type PropsNav = {
 };
 
 const MenuLink: FC<PropsNav & Partial<FlexOptions>> = ({ children, link, onClick }) => {
-  const hoverbg = useColorModeValue("blue.100", "blue.700");
+  const { hoverBg } = useColors();
 
   const { t } = useI18n<Locale>();
 
@@ -20,7 +21,7 @@ const MenuLink: FC<PropsNav & Partial<FlexOptions>> = ({ children, link, onClick
       cursor="pointer"
       onClick={onClick}
       _hover={{
-        background: hoverbg
+        background: hoverBg
       }}
       padding={2}
       paddingLeft={6}

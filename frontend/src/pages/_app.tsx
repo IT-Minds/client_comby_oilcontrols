@@ -1,4 +1,5 @@
 import "../styles.global.css";
+import "../reactdatepicker.global.css";
 import "isomorphic-unfetch";
 
 import { ChakraProvider, Progress } from "@chakra-ui/react";
@@ -31,10 +32,19 @@ const MyApp = ({ Component, pageProps, __N_SSG, router }: AppPropsType & Props):
       logger.info("Environment should be readable");
 
       const envSettings = isomorphicEnvSettings();
-      if (envSettings === null && process.browser) {
+      if (envSettings) setEnvSettings(envSettings);
+      if (process.browser) {
         fetch("/api/getEnv")
-          .then(res => res.json())
-          .then(envSettings => setEnvSettings(envSettings));
+          .then(res => {
+            if (res.ok) return res.json();
+            throw res.statusText;
+          })
+          .then(
+            envSettings => setEnvSettings(envSettings),
+            e => {
+              logger.debug("env error", e);
+            }
+          );
       }
     }
   }, []);

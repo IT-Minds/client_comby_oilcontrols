@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Domain.Common;
 using Domain.Enums;
 
@@ -13,6 +14,11 @@ namespace Domain.Entities
     public RefillSchedule Schedule { get; set; }
     public string Address { get; set; }
     public string Comments { get; set; }
-    //TODO: CO-68 Introduces address to this entity, should in the future probably be changed such that it relates to the street entity either directly or indirectly through a dedicated "address entity".
+    public ICollection<Refill> Refills { get; set; }
+    public ICollection<LocationHistory> LocationHistories { get; set; }
+    //Used with the interval schedule type.
+    public int DaysBetweenRefills { get; set; }
+    //Estiamte consumption is assumed to be fuel cosumed / opvarmningsgrad.
+    public double EstimateFuelConsumption { get; set; }
   }
 }

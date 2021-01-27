@@ -39,7 +39,8 @@ export const table: Locale = {
   actions: {
     cancel: "Annuller",
     delete: "Slet",
-    invalidate: "Ugyldiggøre"
+    invalidate: "Ugyldiggøre",
+    submit: "Send"
   },
 
   coupons: {
@@ -47,6 +48,49 @@ export const table: Locale = {
       invalidate: "Marker kupon ugyldig",
       confirm:
         "Er du sikker på, at du vil ugyldiggøre kuponen '{{coupon}}', denne handling kan ikke fortrydes?"
+    }
+  },
+
+  truckMetaData: {
+    startNumber: "Startudleveringsnummer",
+    carNumber: "Bilnummer",
+    carName: "Bilnavn",
+    description: "Beskrivelse",
+    tankSize: "Tankstørrelse",
+    formError: {
+      carNumber: "Indtast bilnummer",
+      carName: "Indtast bilnavn",
+      description: "Indtast en beskrivelse",
+      tankSize: "Indtast tankstørrelse"
+    }
+  },
+
+  dailyTemperature: {
+    selectRegion: "Vælg region",
+    temperature: "Temperatur",
+    selectDate: "Vælg en dato",
+    formErrors: {
+      selectRegion: "Vælg en temperatur",
+      inputTemperature: "Indtast en temperatur"
+    }
+  },
+
+  mytruck: {
+    title: "Comby Olistying - Lastbil #{{id}}",
+    heading: "Lastbil #{{id}}",
+    tank: {
+      current: "Nuværende Tank: ",
+      liters: "{{liters}} liter",
+      of: " af "
+    },
+    tankLevel: ""
+  },
+  enums: {
+    fuelType: {
+      "0": "Benzin",
+      "1": "Petroleum",
+      "2": "Gasolin",
+      "3": "Andet"
     }
   }
 };

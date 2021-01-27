@@ -2,6 +2,10 @@ using Application.Common.Interfaces;
 using Domain.Common;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,10 +39,13 @@ namespace Infrastructure.Persistence
     public DbSet<TruckDailyState> TruckDailyStates { get; set; }
     public DbSet<TruckRefill> TruckRefills { get; set; }
     public DbSet<FuelTank> FuelTanks { get; set; }
+    public DbSet<Street> Streets { get; set; }
+    public DbSet<LocationHistory> LocationHistories { get; set; }
 
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
-      foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
+      var entities = ChangeTracker.Entries<AuditableEntity>();
+      foreach (var entry in entities)
       {
         switch (entry.State)
         {
@@ -57,7 +64,11 @@ namespace Infrastructure.Persistence
         }
       }
 
-      return base.SaveChangesAsync(cancellationToken);
+      OnLocationsChange(entities.Where(x => x.Entity.GetType().Equals(typeof(Location))), cancellationToken);
+
+      var result = await base.SaveChangesAsync(cancellationToken);
+
+      return result;
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -65,6 +76,31 @@ namespace Infrastructure.Persistence
       builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
       base.OnModelCreating(builder);
+    }
+
+    private void OnLocationsChange(IEnumerable<EntityEntry<AuditableEntity>> entities, CancellationToken cancellationToken)
+    {
+      foreach (EntityEntry<AuditableEntity> entity in entities.ToList())
+      {
+        if (entity.State == EntityState.Added || entity.State == EntityState.Modified)
+        {
+          var locationHistory = new LocationHistory
+          {
+            RegionId = (entity.Entity as Location).RegionId,
+            Schedule = (entity.Entity as Location).Schedule,
+            Address = (entity.Entity as Location).Address,
+            Comments = (entity.Entity as Location).Comments,
+            Location = (entity.Entity as Location),
+            CreatedBy = _currentUserService.UserId,
+            Created = _dateTimeOffsetService.Now,
+            LastModifiedBy = _currentUserService.UserId,
+            LastModified = _dateTimeOffsetService.Now,
+            ModifiedCount = 0,
+          };
+
+          this.LocationHistories.Add(locationHistory);
+        }
+      }
     }
   }
 }

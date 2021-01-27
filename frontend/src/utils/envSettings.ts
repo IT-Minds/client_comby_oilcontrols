@@ -11,7 +11,7 @@ const isomorphicEnvSettings = (): EnvironmentSettings => {
   logger.debug("isomorphicEnvSettings - isBrowser", process.browser);
 
   if (process.browser) {
-    const esStr = window.sessionStorage.getItem(key);
+    const esStr = window.localStorage.getItem(key);
 
     envSettings = JSON.parse(esStr);
   } else {
@@ -21,7 +21,7 @@ const isomorphicEnvSettings = (): EnvironmentSettings => {
 };
 
 export const setEnvSettings = (envSettings: EnvironmentSettings): void => {
-  if (window) window.sessionStorage.setItem(key, JSON.stringify(envSettings));
+  if (process.browser && window) window.localStorage.setItem(key, JSON.stringify(envSettings));
 };
 
 export const serverEnv = (): EnvironmentSettings =>
