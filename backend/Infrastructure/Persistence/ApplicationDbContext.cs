@@ -44,7 +44,8 @@ namespace Infrastructure.Persistence
 
     public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
-      foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
+      var entities = ChangeTracker.Entries<AuditableEntity>();
+      foreach (var entry in entities)
       {
         switch (entry.State)
         {
@@ -63,12 +64,9 @@ namespace Infrastructure.Persistence
         }
       }
 
-      var result = await base.SaveChangesAsync(cancellationToken);
+      OnLocationsChange(entities.Where(x => x.Entity.GetType().Equals(typeof(Location))), cancellationToken);
 
-#pragma warning disable 4014
-      OnLocationsChange(ChangeTracker.Entries<AuditableEntity>()
-        .Where(x => x.Entity.GetType().Equals(typeof(Location))), cancellationToken);
-#pragma warning restore 4014
+      var result = await base.SaveChangesAsync(cancellationToken);
 
       return result;
     }
@@ -80,9 +78,9 @@ namespace Infrastructure.Persistence
       base.OnModelCreating(builder);
     }
 
-    private Task OnLocationsChange(IEnumerable<EntityEntry<AuditableEntity>> entities, CancellationToken cancellationToken)
+    private void OnLocationsChange(IEnumerable<EntityEntry<AuditableEntity>> entities, CancellationToken cancellationToken)
     {
-      foreach (var entity in entities)
+      foreach (EntityEntry<AuditableEntity> entity in entities.ToList())
       {
         if (entity.State == EntityState.Added || entity.State == EntityState.Modified)
         {
@@ -92,19 +90,17 @@ namespace Infrastructure.Persistence
             Schedule = (entity.Entity as Location).Schedule,
             Address = (entity.Entity as Location).Address,
             Comments = (entity.Entity as Location).Comments,
-            LocationId = (entity.Entity as Location).Id
+            Location = (entity.Entity as Location),
+            CreatedBy = _currentUserService.UserId,
+            Created = _dateTimeOffsetService.Now,
+            LastModifiedBy = _currentUserService.UserId,
+            LastModified = _dateTimeOffsetService.Now,
+            ModifiedCount = 0,
           };
-          entity.Entity.CreatedBy = _currentUserService.UserId;
-          entity.Entity.Created = _dateTimeOffsetService.Now;
-          entity.Entity.LastModifiedBy = _currentUserService.UserId;
-          entity.Entity.LastModified = _dateTimeOffsetService.Now;
-          entity.Entity.ModifiedCount = 0;
 
           this.LocationHistories.Add(locationHistory);
         }
       }
-
-      return base.SaveChangesAsync(cancellationToken);
     }
   }
 }

@@ -6,12 +6,14 @@ using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Application.Common.Exceptions;
 using Domain.Entities;
+using Newtonsoft.Json;
 
 namespace Application.Locations.Commands.UpdateLocationMetaData
 {
   public class UpdateLocationMetaDataCommand : IRequest<int>
   {
-    public int LocationId { get; set; }
+    [JsonIgnore]
+    public int Id { get; set; }
     public string Address { get; set; }
     public string Comment { get; set; }
     public RefillSchedule Refillschedule { get; set; }
@@ -36,16 +38,16 @@ namespace Application.Locations.Commands.UpdateLocationMetaData
       {
         var location = await _context.Locations
           .Include(x => x.FuelTank)
-          .FirstOrDefaultAsync(x => x.Id == request.LocationId);
+          .FirstOrDefaultAsync(x => x.Id == request.Id);
 
         if (location == null)
         {
-          throw new NotFoundException(nameof(location), request.LocationId);
+          throw new NotFoundException(nameof(location), request.Id);
         }
         //TODO: This is not necessarily what we want to do here.
         if (location.FuelTank == null)
         {
-          throw new NotFoundException(nameof(location.FuelTank), request.LocationId);
+          throw new NotFoundException(nameof(location.FuelTank), request.Id);
         }
 
         location.Address = request.Address;
@@ -62,7 +64,7 @@ namespace Application.Locations.Commands.UpdateLocationMetaData
         tank.FuelType = request.FuelType;
 
         await _context.SaveChangesAsync(cancellationToken);
-        return request.LocationId;
+        return request.Id;
       }
     }
   }

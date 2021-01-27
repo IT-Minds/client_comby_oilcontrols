@@ -47,7 +47,7 @@ namespace Application.UnitTests.LocationHistories.GetLocationHistory
       {
         LocationId = -1,
         Size = 500,
-        Needle = new DateTime(1, 1, 1),
+        Needle = new DateTime(3000, 1, 1),
         Skip = 0
       };
       var handler = new GetLocationHistoryQuery.GetLocationHistoryQueryHandler(_context, _mapper);
@@ -64,7 +64,8 @@ namespace Application.UnitTests.LocationHistories.GetLocationHistory
       {
         LocationId = -1,
         Size = 500,
-        Skip = 0
+        Skip = 0,
+        Needle = DateTime.MaxValue
       };
       var handler = new GetLocationHistoryQuery.GetLocationHistoryQueryHandler(_context, _mapper);
       var result = await handler.Handle(query, CancellationToken.None);

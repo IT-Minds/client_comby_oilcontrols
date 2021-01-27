@@ -674,7 +674,7 @@ export class HealthClient extends ClientBase implements IHealthClient {
 }
 
 export interface ILocationClient {
-    updateMetaData(command: UpdateLocationMetaDataCommand): Promise<number>;
+    updateMetaData(id: number, command: UpdateLocationMetaDataCommand): Promise<number>;
     saveLocationImage(id: number, file?: FileParameter | null | undefined): Promise<string>;
     addNewLocation(command: CreateLocationCommand): Promise<number>;
 }
@@ -690,15 +690,18 @@ export class LocationClient extends ClientBase implements ILocationClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    updateMetaData(command: UpdateLocationMetaDataCommand): Promise<number> {
-        let url_ = this.baseUrl + "/UpdateMetaData";
+    updateMetaData(id: number, command: UpdateLocationMetaDataCommand): Promise<number> {
+        let url_ = this.baseUrl + "/api/Location/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(command);
 
         let options_ = <RequestInit>{
             body: content_,
-            method: "POST",
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
@@ -1982,7 +1985,6 @@ export interface ICreateExampleEntityListCommand {
 }
 
 export class UpdateLocationMetaDataCommand implements IUpdateLocationMetaDataCommand {
-    locationId?: number;
     address?: string | null;
     comment?: string | null;
     refillschedule?: RefillSchedule;
@@ -2005,7 +2007,6 @@ export class UpdateLocationMetaDataCommand implements IUpdateLocationMetaDataCom
 
     init(_data?: any) {
         if (_data) {
-            this.locationId = _data["locationId"] !== undefined ? _data["locationId"] : <any>null;
             this.address = _data["address"] !== undefined ? _data["address"] : <any>null;
             this.comment = _data["comment"] !== undefined ? _data["comment"] : <any>null;
             this.refillschedule = _data["refillschedule"] !== undefined ? _data["refillschedule"] : <any>null;
@@ -2028,7 +2029,6 @@ export class UpdateLocationMetaDataCommand implements IUpdateLocationMetaDataCom
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["locationId"] = this.locationId !== undefined ? this.locationId : <any>null;
         data["address"] = this.address !== undefined ? this.address : <any>null;
         data["comment"] = this.comment !== undefined ? this.comment : <any>null;
         data["refillschedule"] = this.refillschedule !== undefined ? this.refillschedule : <any>null;
@@ -2044,7 +2044,6 @@ export class UpdateLocationMetaDataCommand implements IUpdateLocationMetaDataCom
 }
 
 export interface IUpdateLocationMetaDataCommand {
-    locationId?: number;
     address?: string | null;
     comment?: string | null;
     refillschedule?: RefillSchedule;
