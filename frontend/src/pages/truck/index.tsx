@@ -2,6 +2,7 @@ import { Box, Container, useColorModeValue } from "@chakra-ui/react";
 import TruckListComp from "components/TruckList/TruckListComp";
 import { Locale } from "i18n/Locale";
 import { GetStaticProps, NextPage } from "next";
+import Link from "next/link";
 import { I18nProps } from "next-rosetta";
 import { useState } from "react";
 import { genTruckClient } from "services/backend/apiClients";
@@ -28,6 +29,9 @@ const TruckPage: NextPage<Props> = ({ truckEntities, needle, hasMore, pageCount 
           preLoadedPageCount={pageCount}
           truckId={setTruckId}
         />
+        <Link href={`truck/${truckId}`}>
+          <a>{truckId}</a>
+        </Link>
         {truckId}
       </Box>
     </Container>
