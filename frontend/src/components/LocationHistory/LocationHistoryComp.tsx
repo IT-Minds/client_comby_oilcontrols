@@ -6,7 +6,6 @@ import {
   Tbody,
   Th,
   Thead,
-  toast,
   Tr,
   useToast
 } from "@chakra-ui/react";
@@ -14,18 +13,9 @@ import PageIndicator from "components/Demo/components/PageIndicator";
 import { useOffline } from "hooks/useOffline";
 import { usePagedFetched } from "hooks/usePagedFetched";
 import React, { FC, useEffect, useMemo, useReducer, useState } from "react";
-import ListReducer, { ListReducerActionType } from "react-list-reducer";
+import ListReducer from "react-list-reducer";
 import { genLocationHistoryClient } from "services/backend/apiClients";
-import { IPageResult } from "services/backend/ext/IPageResult";
-import {
-  ILocationHistoryDto,
-  IPageResultOfLocationHistoryDto,
-  LocationHistoryDto,
-  PageResultOfLocationHistoryDto
-} from "services/backend/nswagts";
-import { parseInputToNumber } from "utils/formatNumber";
-
-import { LocationHistory } from "./LocationHistory";
+import { ILocationHistoryDto, LocationHistoryDto } from "services/backend/nswagts";
 
 type Props = {
   preLoadedData?: LocationHistoryDto[];
@@ -110,10 +100,6 @@ const LocationHistoryComp: FC<Props> = ({
         data: realDataOnCurrentPage
       };
     }
-
-    const startIndex =
-      (pageShowing - realPageMax) * PAGE_SHOW_SIZE + (realPageMax * PAGE_SHOW_SIZE - data.length);
-    const fillCount = realPageMax * PAGE_SHOW_SIZE - data.length;
 
     return {
       data: []

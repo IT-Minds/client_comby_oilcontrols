@@ -1,6 +1,4 @@
 import { Box, Container, useColorModeValue, useToast } from "@chakra-ui/react";
-import { PAGE_SHOW_SIZE } from "components/Demo/Demo";
-import { LocationHistory } from "components/LocationHistory/LocationHistory";
 import LocationHistoryComp from "components/LocationHistory/LocationHistoryComp";
 import { Locale } from "i18n/Locale";
 import { GetStaticProps, NextPage } from "next";
