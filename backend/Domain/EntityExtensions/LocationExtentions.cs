@@ -5,12 +5,10 @@ namespace Domain.EntityExtensions
 {
   public static class LocationExtensions
   {
-    const int HEAT_BASE = 21;
+    const double HEAT_BASE = 21;
 
     public static double HeatingIndex(this Location location, DateTime startDate, DateTime endDate)
     {
-      const int HEAT_BASE = 21;
-
       var dailyTemps = location.Region.DailyTemperatures.Where(x => x.Date >= startDate && x.Date <= endDate);
       if (dailyTemps == null || dailyTemps.Count() == 0)
       {
@@ -120,6 +118,12 @@ namespace Domain.EntityExtensions
       }
 
       return location.FuelConsumptionPerDegreeOfHeating() * heatDegreeSum;
+    }
+
+    public static double EstimateMonthlyCost(this Location location, double oilPrice = 10.5)
+    {
+      var totalConsumption = location.EstimatedYearlyFuelConsumption(DateTime.UtcNow.Year);
+      return (totalConsumption * oilPrice) / 12;
     }
   }
 }
