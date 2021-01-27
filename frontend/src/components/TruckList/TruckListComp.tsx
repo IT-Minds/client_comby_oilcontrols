@@ -1,7 +1,7 @@
 import { Button, Container, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import PageIndicator from "components/Demo/components/PageIndicator";
 import { usePagedFetched } from "hooks/usePagedFetched";
-import React, { FC, useMemo, useReducer, useState } from "react";
+import React, { FC, useCallback, useMemo, useReducer, useState } from "react";
 import ListReducer from "react-list-reducer";
 import { genTruckClient } from "services/backend/apiClients";
 import { ITruckInfoIdDto, TruckInfoIdDto } from "services/backend/nswagts";
@@ -13,6 +13,7 @@ type Props = {
   preloadDataNeedle?: string;
   preloadLoadedAll?: boolean;
   preLoadedPageCount?: number;
+  truckId: (id: number) => void;
 };
 
 export const PAGE_SHOW_SIZE = 15;
@@ -20,8 +21,12 @@ export const PAGE_SHOW_SIZE = 15;
 const TruckListComp: FC<Props> = ({
   preLoadedData = [],
   preloadDataNeedle = "0",
-  preloadLoadedAll = false
+  preloadLoadedAll = false,
+  truckId
 }) => {
+  const selectTruck = useCallback((id: number) => {
+    truckId(id);
+  }, []);
   const [data, dataDispatch] = useReducer(ListReducer<ITruckInfoIdDto>("id"), preLoadedData);
   const [pageShowing, setPageShowing] = useState(0);
 
@@ -74,13 +79,16 @@ const TruckListComp: FC<Props> = ({
           <Tr>
             <Th>Truck name</Th>
             <Th>Truck description</Th>
+            <Th>Id</Th>
           </Tr>
         </Thead>
         <Tbody>
-          {dataSplitter.map(data => (
-            <Tr key={data.id}>
+          {dataSplitter.map((data, index) => (
+            //TODO: insert real id and remove index
+            <Tr key={data.id} onClick={() => truckId(index)}>
               <Td>{data.name}</Td>
               <Td>{data.description}</Td>
+              {/* <Td>{data.id}</Td> */}
             </Tr>
           ))}
         </Tbody>
