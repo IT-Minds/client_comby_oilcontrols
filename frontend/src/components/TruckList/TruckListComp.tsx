@@ -83,12 +83,11 @@ const TruckListComp: FC<Props> = ({
           </Tr>
         </Thead>
         <Tbody>
-          {dataSplitter.map((data, index) => (
-            //TODO: insert real id and remove index
-            <Tr key={data.id} onClick={() => truckId(index)}>
+          {dataSplitter.map(data => (
+            <Tr key={data.id} onClick={() => truckId(data.id)}>
               <Td>{data.name}</Td>
               <Td>{data.description}</Td>
-              {/* <Td>{data.id}</Td> */}
+              <Td>{data.id}</Td>
             </Tr>
           ))}
         </Tbody>
