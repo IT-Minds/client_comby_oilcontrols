@@ -117,7 +117,7 @@ namespace Web
         var transaction = context.Database.CurrentTransaction;
         context.Database.Migrate();
         transaction?.Commit();
-        if (env.IsDevelopment() && Configuration.GetSection("SampleData")["SeedSampleData"].ToLower().Equals("true"))
+        if (env.IsDevelopment() && env.IsEnvironment("Test") && Configuration.GetSection("SampleData")["SeedSampleData"].ToLower().Equals("true"))
           new SampleData().SeedSampleData(context);
       }
 
