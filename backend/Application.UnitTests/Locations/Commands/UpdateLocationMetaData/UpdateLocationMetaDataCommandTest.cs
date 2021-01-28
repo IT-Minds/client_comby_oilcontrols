@@ -80,7 +80,12 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
         TankNumber = 443,
         TankCapacity = 4005.1,
         MinimumFuelAmount = 50.5,
-        EstimateConsumption = 10
+        EstimateConsumption = 10,
+        FuelType = FuelType.OTHER,
+        DaysBetweenRefills = 15,
+        DebtorChangeDate = new System.DateTime(DateTime.UtcNow.Year + 1, 1, 1),
+        DebtorType = LocationDebtorType.UPCOMING,
+        DebtorId = 2
       };
 
       var handler = new UpdateLocationMetaDataCommand.UpdateLocationMetaDataCommandHandler(Context);
