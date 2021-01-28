@@ -45,10 +45,15 @@ namespace Application.Locations.Commands.AddDebtorToLocation
           throw new ArgumentException("Not possible to add more debtors to location with ID: " + request.LocationId);
         }
 
+        if (location.Debtors.FirstOrDefault(x => x.Type == request.DebtorType) != null)
+        {
+          throw new ArgumentException("Debtor of type " + request.DebtorType + " is already registered on location.");
+        }
+
         var debtor = await _context.Debtors
           .Include(e => e.Locations)
           .FirstOrDefaultAsync(x => x.Id == request.DebtorId);
-        if (location == null)
+        if (debtor == null)
         {
           throw new ArgumentException("No debtor with ID: " + request.DebtorId);
         }
