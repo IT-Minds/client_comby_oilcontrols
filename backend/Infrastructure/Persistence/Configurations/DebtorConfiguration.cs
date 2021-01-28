@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Persistence.Configurations
 {
-  public class LocationConfigurations : IEntityTypeConfiguration<Location>
+  public class DebtorConfiguration : IEntityTypeConfiguration<Debtor>
   {
-    public void Configure(EntityTypeBuilder<Location> builder)
+    public void Configure(EntityTypeBuilder<Debtor> builder)
     {
-      builder.HasMany(e => e.Debtors)
-        .WithOne(e => e.Location)
+      builder.HasMany(e => e.Locations)
+        .WithOne(e => e.Debtor)
         .IsRequired(false);
     }
   }
