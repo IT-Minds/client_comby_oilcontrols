@@ -29,7 +29,7 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
     truckMetaData ??
       new TruckInfoDto({
         refillNumber: 0,
-        truckIdentifier: 0,
+        truckIdentifier: "0",
         description: "",
         name: "",
         tankCapacity: 0
