@@ -140,6 +140,7 @@ class RoleAction {
 
 class Role {
   id
+  name
 }
 
 class UserRole {
