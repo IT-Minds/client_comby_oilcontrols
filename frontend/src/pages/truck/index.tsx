@@ -1,39 +1,162 @@
-import { Box, Container, useColorModeValue } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Center,
+  Container,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Spinner,
+  useColorModeValue,
+  useDisclosure,
+  useToast
+} from "@chakra-ui/react";
+import AddCouponComp from "components/CouponManagement/AddCoupon/AddCouponComp";
+import { AddCouponForm } from "components/CouponManagement/AddCoupon/AddCouponForm";
+import FillingOverviewComp from "components/FillingOverview/FillingOverviewComp";
 import TruckListComp from "components/TruckList/TruckListComp";
+import AddTruckMetaData from "components/TruckMetaData/AddTruckMetaData";
+import { useEffectAsync } from "hooks/useEffectAsync";
+import { useOffline } from "hooks/useOffline";
 import { Locale } from "i18n/Locale";
 import { GetStaticProps, NextPage } from "next";
-import Link from "next/link";
 import { I18nProps } from "next-rosetta";
-import { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { genTruckClient } from "services/backend/apiClients";
-import { PageResultOfTruckInfoIdDtoAndInteger, TruckInfoIdDto } from "services/backend/nswagts";
+import {
+  CouponDto,
+  CreateTruckCommand,
+  TruckInfoIdDto,
+  UpdateTruckCommand
+} from "services/backend/nswagts";
 
 type Props = {
-  truckEntities: TruckInfoIdDto[];
+  trucksEntities: TruckInfoIdDto[];
   needle: string;
   hasMore: boolean;
   pageCount: number;
 };
 
-const TruckPage: NextPage<Props> = ({ truckEntities, needle, hasMore, pageCount }) => {
+const TruckPage: NextPage<Props> = ({ trucksEntities, needle, hasMore, pageCount }) => {
   const bg = useColorModeValue("gray.100", "gray.700");
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isLoading, setIsLoading] = useState(false);
   const [truckId, setTruckId] = useState(null);
+  const [addCouponForm, setCouponForm] = useState<AddCouponForm>(null);
+  const [truckMetaData, setTruckMetaData] = useState<TruckInfoIdDto>(null);
+  const [couponData, setCouponData] = useState<CouponDto[]>(null);
+
+  const { awaitCallback } = useOffline();
+  const toast = useToast();
+
+  const saveMetaDataForm = useCallback(
+    async metaDataForm => {
+      awaitCallback(async () => {
+        const client = await genTruckClient();
+        await (metaDataForm.id
+          ? client.updateTruck(
+              metaDataForm.id,
+              new UpdateTruckCommand({
+                truckInfo: metaDataForm
+              })
+            )
+          : client.createTruck(
+              new CreateTruckCommand({
+                truckInfo: metaDataForm
+              })
+            ));
+
+        toast({
+          title: "Truck Meta Data Saved",
+          description: "Successful",
+          status: "success",
+          duration: 9000,
+          isClosable: true
+        });
+      }, Date.now().toString());
+    },
+    [awaitCallback]
+  );
+
+  useEffectAsync(async () => {
+    if (truckId) {
+      onOpen();
+      setIsLoading(true);
+
+      const truckMetaClient = await genTruckClient();
+      const couponsData = await truckMetaClient.getTrucksCoupons(truckId);
+      setCouponData(couponsData.results);
+
+      const truckMetaData = await truckMetaClient.getTruck(truckId);
+      setTruckMetaData(truckMetaData);
+
+      setIsLoading(false);
+    }
+  }, [truckId]);
 
   return (
     <Container maxW="xl" centerContent>
       <Box padding="4" bg={bg} maxW="6xl" maxH="4xl" resize="both" overflow="auto">
         <TruckListComp
-          preLoadedData={truckEntities}
+          preLoadedData={trucksEntities}
           preloadDataNeedle={needle}
           preloadLoadedAll={!hasMore}
           preLoadedPageCount={pageCount}
-          truckId={setTruckId}
+          truckId={id => {
+            setTruckId(id);
+          }}
         />
-        <Link href={`truck/${truckId}`}>
-          <a>{truckId}</a>
-        </Link>
-        {truckId}
       </Box>
+
+      <Modal size="2xl" isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Overview of Truck {truckId}</ModalHeader>
+          <ModalCloseButton />
+          <Center>
+            <Spinner
+              hidden={!isLoading}
+              thickness="4px"
+              speed="0.65s"
+              emptyColor="gray.200"
+              color="blue.500"
+              size="xl"
+            />
+          </Center>
+          <ModalBody hidden={isLoading}>
+            <AddCouponComp
+              submitCallback={x => {
+                x.carId = truckId;
+                setCouponForm(x);
+              }}
+              coupons={couponData}></AddCouponComp>
+            <FillingOverviewComp
+              preLoadedData={[]}
+              preloadDataNeedle={needle}
+              preloadLoadedAll={!hasMore}
+              preLoadedPageCount={pageCount}
+            />
+            <AddTruckMetaData
+              submitCallback={x => saveMetaDataForm(x)}
+              truckMetaData={truckMetaData}></AddTruckMetaData>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button
+              colorScheme="blue"
+              onClick={() => {
+                onClose();
+                setTruckId(null);
+              }}>
+              Ok
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Container>
   );
 };
