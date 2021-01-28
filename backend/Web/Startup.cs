@@ -20,6 +20,9 @@ using Web.Hubs;
 using Application.Common.Options;
 using Web.Services;
 using Infrastructure.Options;
+using Domain.Entities;
+using Domain.Enums;
+using System;
 
 namespace Web
 {
@@ -36,7 +39,7 @@ namespace Web
     public IWebHostEnvironment Environment { get; }
     // This method gets called by the runtime. Use this method to add services to the container.
     // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-    public void ConfigureServices(IServiceCollection services )
+    public void ConfigureServices(IServiceCollection services)
     {
 
       services.AddCors(options =>
@@ -114,6 +117,8 @@ namespace Web
         var transaction = context.Database.CurrentTransaction;
         context.Database.Migrate();
         transaction?.Commit();
+        if (env.IsDevelopment() && env.IsEnvironment("Test") && Configuration.GetSection("SampleData")["SeedSampleData"].ToLower().Equals("true"))
+          new SampleData().SeedSampleData(context);
       }
 
       //TODO Handle cors
