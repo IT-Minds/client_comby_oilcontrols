@@ -282,6 +282,11 @@ namespace Application.UnitTests
         new LocationHistory { Address = "old address 3", Comments = "old comment 3", LocationId = 1, RegionId = 1, Schedule = RefillSchedule.MANUAL, LastModified = new DateTimeOffset(new DateTime(1990, 1, 3)), Created = new DateTimeOffset(new DateTime(1990, 1, 3)) }
       );
       //END
+
+      context.Debtors.AddRange(
+        new Debtor { Id = 1 },
+        new Debtor { Id = 2 }
+      );
       context.SaveChanges();
     }
 
