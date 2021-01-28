@@ -282,13 +282,26 @@ namespace Application.UnitTests
         new LocationHistory { Address = "old address 3", Comments = "old comment 3", LocationId = 1, RegionId = 1, Schedule = RefillSchedule.MANUAL, LastModified = new DateTimeOffset(new DateTime(1990, 1, 3)), Created = new DateTimeOffset(new DateTime(1990, 1, 3)) }
       );
       //END
-      
+      //START: Data to test the commands to remove/update/add debtors to location.
+      context.Regions.Add(
+        new Region { Id = 400 }
+      );
+      context.FuelTanks.AddRange(
+        new FuelTank { Id = 400, TankNumber = 400, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 }
+      );
       context.Debtors.AddRange(
         new Debtor { Id = 1 },
         new Debtor { Id = 2 }
       );
+      context.Locations.AddRange(
+        new Location { Id = 400, RegionId = 400, FuelTankId = 400, Address = "Address region 400.", Comments = "Location 400.", EstimateFuelConsumption = 100 }
+      );
+      context.LocationDebtors.AddRange(
+        new LocationDebtor { LocationId = 400, DebtorId = 1, Type = LocationDebtorType.MAIN }
+      );
       context.SaveChanges();
     }
+    //END
 
     public static void Destroy(ApplicationDbContext context)
     {

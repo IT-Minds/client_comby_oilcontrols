@@ -34,7 +34,7 @@ namespace Application.Locations.Commands.RemoveDebtorFromLocation
         var debtor = await _context.Debtors
           .Include(e => e.Locations)
           .FirstOrDefaultAsync(x => x.Id == request.DebtorId);
-        if (location == null)
+        if (debtor == null)
         {
           throw new ArgumentException("No debtor with ID: " + request.DebtorId);
         }
