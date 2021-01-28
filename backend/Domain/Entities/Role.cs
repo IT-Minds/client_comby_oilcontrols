@@ -7,5 +7,6 @@ namespace Domain.Entities
   {
     public int Id { get; set; }
     public ICollection<RoleAction> Actions { get; set; }
+    public ICollection<UserRole> Users { get; set; }
   }
 }
