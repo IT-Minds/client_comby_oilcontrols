@@ -1848,6 +1848,9 @@ export class UpdateLocationMetaDataCommand implements IUpdateLocationMetaDataCom
     estimateConsumption?: number;
     daysBetweenRefills?: number;
     fuelType?: FuelType;
+    debtorType?: LocationDebtorType;
+    debtorId?: number;
+    debtorChangeDate?: Date | null;
 
     constructor(data?: IUpdateLocationMetaDataCommand) {
         if (data) {
@@ -1870,6 +1873,9 @@ export class UpdateLocationMetaDataCommand implements IUpdateLocationMetaDataCom
             this.estimateConsumption = _data["estimateConsumption"] !== undefined ? _data["estimateConsumption"] : <any>null;
             this.daysBetweenRefills = _data["daysBetweenRefills"] !== undefined ? _data["daysBetweenRefills"] : <any>null;
             this.fuelType = _data["fuelType"] !== undefined ? _data["fuelType"] : <any>null;
+            this.debtorType = _data["debtorType"] !== undefined ? _data["debtorType"] : <any>null;
+            this.debtorId = _data["debtorId"] !== undefined ? _data["debtorId"] : <any>null;
+            this.debtorChangeDate = _data["debtorChangeDate"] ? new Date(_data["debtorChangeDate"].toString()) : <any>null;
         }
     }
 
@@ -1892,6 +1898,9 @@ export class UpdateLocationMetaDataCommand implements IUpdateLocationMetaDataCom
         data["estimateConsumption"] = this.estimateConsumption !== undefined ? this.estimateConsumption : <any>null;
         data["daysBetweenRefills"] = this.daysBetweenRefills !== undefined ? this.daysBetweenRefills : <any>null;
         data["fuelType"] = this.fuelType !== undefined ? this.fuelType : <any>null;
+        data["debtorType"] = this.debtorType !== undefined ? this.debtorType : <any>null;
+        data["debtorId"] = this.debtorId !== undefined ? this.debtorId : <any>null;
+        data["debtorChangeDate"] = this.debtorChangeDate ? this.debtorChangeDate.toISOString() : <any>null;
         return data; 
     }
 }
@@ -1907,6 +1916,9 @@ export interface IUpdateLocationMetaDataCommand {
     estimateConsumption?: number;
     daysBetweenRefills?: number;
     fuelType?: FuelType;
+    debtorType?: LocationDebtorType;
+    debtorId?: number;
+    debtorChangeDate?: Date | null;
 }
 
 export enum RefillSchedule {
@@ -1928,6 +1940,12 @@ export enum FuelType {
     OTHER = 3,
 }
 
+export enum LocationDebtorType {
+    MAIN = 0,
+    BASE = 1,
+    UPCOMING = 2,
+}
+
 export class CreateLocationCommand implements ICreateLocationCommand {
     address?: string | null;
     comment?: string | null;
@@ -1940,6 +1958,9 @@ export class CreateLocationCommand implements ICreateLocationCommand {
     estimateConsumption?: number;
     daysBetweenRefills?: number;
     fuelType?: FuelType;
+    debtorType?: LocationDebtorType;
+    debtorId?: number;
+    debtorChangeDate?: Date | null;
 
     constructor(data?: ICreateLocationCommand) {
         if (data) {
@@ -1963,6 +1984,9 @@ export class CreateLocationCommand implements ICreateLocationCommand {
             this.estimateConsumption = _data["estimateConsumption"] !== undefined ? _data["estimateConsumption"] : <any>null;
             this.daysBetweenRefills = _data["daysBetweenRefills"] !== undefined ? _data["daysBetweenRefills"] : <any>null;
             this.fuelType = _data["fuelType"] !== undefined ? _data["fuelType"] : <any>null;
+            this.debtorType = _data["debtorType"] !== undefined ? _data["debtorType"] : <any>null;
+            this.debtorId = _data["debtorId"] !== undefined ? _data["debtorId"] : <any>null;
+            this.debtorChangeDate = _data["debtorChangeDate"] ? new Date(_data["debtorChangeDate"].toString()) : <any>null;
         }
     }
 
@@ -1986,6 +2010,9 @@ export class CreateLocationCommand implements ICreateLocationCommand {
         data["estimateConsumption"] = this.estimateConsumption !== undefined ? this.estimateConsumption : <any>null;
         data["daysBetweenRefills"] = this.daysBetweenRefills !== undefined ? this.daysBetweenRefills : <any>null;
         data["fuelType"] = this.fuelType !== undefined ? this.fuelType : <any>null;
+        data["debtorType"] = this.debtorType !== undefined ? this.debtorType : <any>null;
+        data["debtorId"] = this.debtorId !== undefined ? this.debtorId : <any>null;
+        data["debtorChangeDate"] = this.debtorChangeDate ? this.debtorChangeDate.toISOString() : <any>null;
         return data; 
     }
 }
@@ -2002,6 +2029,9 @@ export interface ICreateLocationCommand {
     estimateConsumption?: number;
     daysBetweenRefills?: number;
     fuelType?: FuelType;
+    debtorType?: LocationDebtorType;
+    debtorId?: number;
+    debtorChangeDate?: Date | null;
 }
 
 export class PageResultOfLocationHistoryDtoAndString implements IPageResultOfLocationHistoryDtoAndString {

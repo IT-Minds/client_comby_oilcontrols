@@ -21,6 +21,7 @@ namespace Application.Common.Interfaces
     DbSet<Street> Streets { get; set; }
     DbSet<LocationHistory> LocationHistories { get; set; }
     DbSet<Debtor> Debtors { get; set; }
+    DbSet<LocationDebtor> LocationDebtors { get; set; }
     DbSet<ExampleEntity> ExampleEntities { get; set; }
     DbSet<ExampleEntityList> ExampleEntityLists { get; set; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
