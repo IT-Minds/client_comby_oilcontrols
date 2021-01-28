@@ -287,17 +287,21 @@ namespace Application.UnitTests
         new Region { Id = 400 }
       );
       context.FuelTanks.AddRange(
-        new FuelTank { Id = 400, TankNumber = 400, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 }
+        new FuelTank { Id = 400, TankNumber = 400, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
+        new FuelTank { Id = 401, TankNumber = 401, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 }
       );
       context.Debtors.AddRange(
         new Debtor { Id = 1 },
         new Debtor { Id = 2 }
       );
       context.Locations.AddRange(
-        new Location { Id = 400, RegionId = 400, FuelTankId = 400, Address = "Address region 400.", Comments = "Location 400.", EstimateFuelConsumption = 100 }
+        new Location { Id = 400, RegionId = 400, FuelTankId = 400, Address = "Address region 400.", Comments = "Location 400.", EstimateFuelConsumption = 100 },
+        new Location { Id = 401, RegionId = 400, FuelTankId = 401, Address = "Address region 400.", Comments = "Location 401.", EstimateFuelConsumption = 100 }
       );
       context.LocationDebtors.AddRange(
-        new LocationDebtor { LocationId = 400, DebtorId = 1, Type = LocationDebtorType.MAIN }
+        new LocationDebtor { LocationId = 400, DebtorId = 1, Type = LocationDebtorType.MAIN },
+        new LocationDebtor { LocationId = 400, DebtorId = 2, Type = LocationDebtorType.BASE },
+        new LocationDebtor { LocationId = 401, DebtorId = 1, Type = LocationDebtorType.MAIN }
       );
       context.SaveChanges();
     }

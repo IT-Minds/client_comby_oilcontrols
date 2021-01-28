@@ -40,6 +40,11 @@ namespace Application.Locations.Commands.UpdateDebtorOnLocation
           throw new ArgumentException("No location with ID: " + request.LocationId);
         }
 
+        if (location.Debtors.FirstOrDefault(x => x.Type == request.DebtorType) != null)
+        {
+          throw new ArgumentException("Debtor of type " + request.DebtorType + " is already registered on location.");
+        }
+
         var locationDebtor = location.Debtors.FirstOrDefault(x => x.Debtor.Id == request.DebtorId);
         if (locationDebtor == null)
         {
