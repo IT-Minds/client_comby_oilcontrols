@@ -15,6 +15,7 @@ namespace Infrastructure.Persistence.Configurations
       builder.HasOne(e => e.Location)
         .WithMany(e => e.Debtors)
         .IsRequired(true);
+      builder.HasIndex(e => new { e.LocationId, e.DebtorId, e.Type }).IsUnique();
     }
   }
 }
