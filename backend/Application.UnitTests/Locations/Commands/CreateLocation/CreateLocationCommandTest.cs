@@ -24,9 +24,7 @@ namespace Application.UnitTests.Locations.Commands.CreateLocations
         MinimumFuelAmount = 50.5,
         EstimateConsumption = 10,
         FuelType = FuelType.GASOLINE,
-        DaysBetweenRefills = 10,
-        DebtorType = LocationDebtorType.BASE,
-        DebtorId = 1
+        DaysBetweenRefills = 10
       };
       var oldLocation = Context.Locations.Find(1);
       var historyNumber = oldLocation.LocationHistories == null ? 0 : oldLocation.LocationHistories.Count();
@@ -54,9 +52,6 @@ namespace Application.UnitTests.Locations.Commands.CreateLocations
       newestHistory.Schedule.Should().Be(entity.Schedule);
       newestHistory.Address.Should().Be(entity.Address);
       newestHistory.Comments.Should().Be(entity.Comments);
-      entity.Debtors.Count().Should().Be(1);
-      entity.Debtors.First().DebtorId.Should().Be(command.DebtorId);
-      entity.Debtors.First().Type.Should().Be(command.DebtorType);
     }
   }
 }

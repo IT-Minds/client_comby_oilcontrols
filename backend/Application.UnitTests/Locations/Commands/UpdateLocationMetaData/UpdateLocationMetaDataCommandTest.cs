@@ -29,10 +29,7 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
         MinimumFuelAmount = 50.5,
         EstimateConsumption = 10,
         FuelType = FuelType.OTHER,
-        DaysBetweenRefills = 15,
-        DebtorChangeDate = new System.DateTime(DateTime.UtcNow.Year + 1, 1, 1),
-        DebtorType = LocationDebtorType.UPCOMING,
-        DebtorId = 2
+        DaysBetweenRefills = 15
       };
       var oldLocation = Context.Locations.Find(1);
       var historyNumber = oldLocation.LocationHistories == null ? 0 : oldLocation.LocationHistories.Count();
@@ -62,9 +59,6 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
       newestHistory.Address.Should().Be(entity.Address);
       newestHistory.Comments.Should().Be(entity.Comments);
       entity.Debtors.Count().Should().Be(1);
-      entity.Debtors.First().DebtorId.Should().Be(command.DebtorId);
-      entity.Debtors.First().Type.Should().Be(command.DebtorType);
-      entity.Debtors.First().DebtorChangeDate.Should().Be(command.DebtorChangeDate);
     }
 
     [Fact]
@@ -82,10 +76,7 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
         MinimumFuelAmount = 50.5,
         EstimateConsumption = 10,
         FuelType = FuelType.OTHER,
-        DaysBetweenRefills = 15,
-        DebtorChangeDate = new System.DateTime(DateTime.UtcNow.Year + 1, 1, 1),
-        DebtorType = LocationDebtorType.UPCOMING,
-        DebtorId = 2
+        DaysBetweenRefills = 15
       };
 
       var handler = new UpdateLocationMetaDataCommand.UpdateLocationMetaDataCommandHandler(Context);

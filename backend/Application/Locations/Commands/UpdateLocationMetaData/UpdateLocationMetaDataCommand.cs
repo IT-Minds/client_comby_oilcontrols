@@ -25,9 +25,6 @@ namespace Application.Locations.Commands.UpdateLocationMetaData
     public double EstimateConsumption { get; set; }
     public int DaysBetweenRefills { get; set; }
     public FuelType FuelType { get; set; }
-    public LocationDebtorType DebtorType { get; set; }
-    public int DebtorId { get; set; }
-    public DateTime? DebtorChangeDate { get; set; }
 
     public class UpdateLocationMetaDataCommandHandler : IRequestHandler<UpdateLocationMetaDataCommand, int>
     {
@@ -52,36 +49,6 @@ namespace Application.Locations.Commands.UpdateLocationMetaData
         if (location.FuelTank == null)
         {
           throw new NotFoundException(nameof(location.FuelTank), request.Id);
-        }
-
-        if (request.DebtorType == LocationDebtorType.UPCOMING
-            && request.DebtorChangeDate == null || DateTime.UtcNow.CompareTo(request.DebtorChangeDate) <= 0)
-        {
-          throw new ArgumentException("Debtor Change date not specified or earlier than: " + DateTime.UtcNow.Date);
-        }
-
-        var debtor = await _context.Debtors.FirstOrDefaultAsync(x => x.Id == request.DebtorId);
-        if (debtor == null)
-        {
-          throw new ArgumentException("No debtor with Id: " + request.DebtorId);
-        }
-
-        var locationDebtor = await _context.LocationDebtors.FirstOrDefaultAsync(x => x.DebtorId == request.DebtorId && x.LocationId == request.Id);
-        if (locationDebtor == null)
-        {
-          locationDebtor = new LocationDebtor
-          {
-            Type = request.DebtorType,
-            Location = location,
-            Debtor = debtor,
-            DebtorChangeDate = request.DebtorChangeDate
-          };
-          _context.LocationDebtors.Add(locationDebtor);
-        }
-        else
-        {
-          locationDebtor.Type = request.DebtorType;
-          locationDebtor.DebtorChangeDate = request.DebtorChangeDate;
         }
 
         location.Address = request.Address;
