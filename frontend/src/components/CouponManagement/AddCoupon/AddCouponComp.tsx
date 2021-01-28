@@ -17,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdAdd, MdCheck } from "react-icons/md";
+import { CouponDto } from "services/backend/nswagts";
 import { CouponInterval } from "types/CouponInterval";
 import DropdownType from "types/DropdownType";
 import { logger } from "utils/logger";
@@ -26,10 +27,10 @@ import { AddCouponForm } from "./AddCouponForm";
 
 type Props = {
   submitCallback: (addCouponForm: AddCouponForm) => void;
-  cars: DropdownType[];
+  coupons: CouponDto[];
 };
 
-const AddCouponComp: FC<Props> = ({ submitCallback, cars = [] }) => {
+const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
   const [from, setFrom] = useState(null);
   const [to, setTo] = useState(null);
   const [interval, setInterval] = useState<CouponInterval[]>([]);
@@ -83,24 +84,6 @@ const AddCouponComp: FC<Props> = ({ submitCallback, cars = [] }) => {
     <Container>
       <form onSubmit={handleSubmit}>
         <VStack align="center" justify="center">
-          <FormControl
-            isInvalid={
-              formSubmitAttempts > 0 && cars.every(cn => localAddCouponForm.carId !== cn.id)
-            }
-            isRequired>
-            <FormLabel>Select car id:</FormLabel>
-            <Select
-              placeholder="Select car"
-              onChange={e => updateLocalForm(e.target.value, "carId")}>
-              {cars.map(car => (
-                <option key={car.id} value={car.id}>
-                  {car.name}
-                </option>
-              ))}
-            </Select>
-            <FormErrorMessage>Please select a car</FormErrorMessage>
-          </FormControl>
-
           <FormControl
             isInvalid={
               (formSubmitAttempts > 0 && (!interval || interval.length < 1)) ||
