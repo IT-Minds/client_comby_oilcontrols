@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { Locale } from "i18n/Locale";
 import { useI18n } from "next-rosetta";
-import React, { FC, FormEvent, useCallback, useState } from "react";
+import React, { FC, FormEvent, useCallback, useEffect, useState } from "react";
 import { MdCheck } from "react-icons/md";
 import { TruckInfoDto, TruckInfoIdDto } from "services/backend/nswagts";
 import { logger } from "utils/logger";
@@ -28,13 +28,19 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
   const [localTruckMetaDataForm, setLocalTruckMetaDataForm] = useState<TruckInfoDto>(
     truckMetaData ??
       new TruckInfoDto({
-        refillNumber: null,
-        truckIdentifier: null,
-        description: null,
-        name: null,
-        tankCapacity: null
+        refillNumber: 0,
+        truckIdentifier: 0,
+        description: "",
+        name: "",
+        tankCapacity: 0
       })
   );
+
+  useEffect(() => {
+    if (truckMetaData) {
+      setLocalTruckMetaDataForm(truckMetaData);
+    }
+  }, [truckMetaData]);
 
   const { t } = useI18n<Locale>();
 
@@ -71,14 +77,11 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
             isRequired
             isInvalid={formSubmitAttempts > 0 && !localTruckMetaDataForm.truckIdentifier}>
             <FormLabel> {t("truckMetaData.carNumber")}:</FormLabel>
-            <NumberInput
-              min={0}
-              max={999}
-              onChange={value => {
-                updateLocalForm(value, "truckIdentifier");
-              }}>
-              <NumberInputField />
-            </NumberInput>
+            <Input
+              value={localTruckMetaDataForm.truckIdentifier}
+              onChange={e => {
+                updateLocalForm(e.target.value, "truckIdentifier");
+              }}></Input>
             <FormErrorMessage>{t("truckMetaData.formError.carNumber")}</FormErrorMessage>
           </FormControl>
 
@@ -87,6 +90,7 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
             isInvalid={formSubmitAttempts > 0 && !localTruckMetaDataForm.name}>
             <FormLabel>{t("truckMetaData.carName")}:</FormLabel>
             <Input
+              value={localTruckMetaDataForm.name}
               onChange={e => {
                 updateLocalForm(e.target.value, "name");
               }}></Input>
@@ -98,6 +102,7 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
             isInvalid={formSubmitAttempts > 0 && !localTruckMetaDataForm.description}>
             <FormLabel>{t("truckMetaData.description")}:</FormLabel>
             <Textarea
+              value={localTruckMetaDataForm.description}
               onChange={e => {
                 updateLocalForm(e.target.value, "description");
               }}></Textarea>
@@ -110,6 +115,7 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
             <FormLabel>{t("truckMetaData.tankSize")}:</FormLabel>
             <InputGroup>
               <NumberInput
+                value={localTruckMetaDataForm.tankCapacity}
                 min={0}
                 onChange={value => {
                   updateLocalForm(value, "tankCapacity");
