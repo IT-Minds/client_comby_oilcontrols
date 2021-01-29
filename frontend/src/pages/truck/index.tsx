@@ -3,6 +3,7 @@ import {
   Button,
   Center,
   Container,
+  Heading,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -128,18 +129,27 @@ const TruckPage: NextPage<Props> = ({ trucksEntities, needle, hasMore, pageCount
             />
           </Center>
           <ModalBody hidden={isLoading}>
+            <Heading size="sm">Coupons</Heading>
             <AddCouponComp
               submitCallback={x => {
                 x.carId = truckId;
                 setCouponForm(x);
               }}
               coupons={couponData}></AddCouponComp>
+
+            <Heading size="sm" mt={8}>
+              Filling overview
+            </Heading>
             <FillingOverviewComp
               preLoadedData={[]}
               preloadDataNeedle={needle}
               preloadLoadedAll={!hasMore}
               preLoadedPageCount={pageCount}
             />
+
+            <Heading size="sm" mt={8}>
+              Meta data
+            </Heading>
             <AddTruckMetaData
               submitCallback={x => saveMetaDataForm(x)}
               truckMetaData={truckMetaData}></AddTruckMetaData>
