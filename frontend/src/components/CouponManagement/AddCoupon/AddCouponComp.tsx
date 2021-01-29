@@ -15,7 +15,7 @@ import {
   Wrap,
   WrapItem
 } from "@chakra-ui/react";
-import React, { FC, FormEvent, useCallback, useState } from "react";
+import React, { FC, FormEvent, useCallback, useEffect, useState } from "react";
 import { MdAdd, MdCheck } from "react-icons/md";
 import { CouponDto } from "services/backend/nswagts";
 import { CouponInterval } from "types/CouponInterval";
@@ -39,6 +39,12 @@ const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
     carId: "",
     couponIntervals: []
   });
+
+  useEffect(() => {
+    if (coupons) {
+      //setLocalTruckMetaDataForm(truckMetaData);
+    }
+  }, [coupons]);
 
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
 
