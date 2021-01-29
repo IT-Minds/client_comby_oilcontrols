@@ -4,6 +4,7 @@ import {
   Table,
   TableCaption,
   Tbody,
+  Td,
   Th,
   Thead,
   Tr,
@@ -146,13 +147,13 @@ const LocationHistoryComp: FC<Props> = ({
         </Thead>
         <Tbody>
           {dataSplitter.data.map(lh => (
-            <tr key={lh.id}>
-              <td>{lh.address}</td>
-              <td>{lh.comments}</td>
-              <td>{lh.regionId}</td>
-              <td>{lh.schedule}</td>
-              <td>{lh.timeOfChange}</td>
-            </tr>
+            <Tr key={lh.id}>
+              <Td>{lh.address}</Td>
+              <Td>{lh.comments}</Td>
+              <Td>{lh.regionId}</Td>
+              <Td>{lh.schedule}</Td>
+              <Td>{lh.timeOfChange}</Td>
+            </Tr>
           ))}
         </Tbody>
       </Table>
