@@ -1,3 +1,5 @@
+//TODO: FIX notation in this diagram.
+
 # Entity Datamodel
 
 ## Diagram
@@ -128,6 +130,27 @@ enum LocationDebtorType {
   UPCOMING
 }
 
+enum Action {
+
+}
+
+class RoleAction {
+
+}
+
+class Role {
+  id
+  name
+}
+
+class UserRole {
+
+}
+
+class User {
+  id
+}
+
 Truck --> "1" Route
 Route --> "0..*" Refill
 Refill --> "1" Location
@@ -149,6 +172,11 @@ Location ..> RefillSchedule
 LocationHistory ..> RefillSchedule
 Location "1" -- "1..*" LocationHistory
 LocationDebtor ..> LocationDebtorType
+
+Action "1" -- "*" RoleAction
+Role "1" -- "*" RoleAction
+Role "1" -- "*" UserRole
+User "1" -- "*" UserRole
 @enduml
 
 ```
