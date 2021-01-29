@@ -29,11 +29,12 @@ namespace Application.Common.Behaviours
 
       if (authorizeAttributes.Any())
       {
+        //TODO: ADD THIS CHECK BACK IN.
         // Must be authenticated user
-        if (_currentUserService.UserId == null)
-        {
-          throw new UnauthorizedAccessException();
-        }
+        // if (_currentUserService.UserId == null)
+        // {
+        //   throw new UnauthorizedAccessException();
+        // }
 
         //Commented out for now.
         // // Role-based authorization
