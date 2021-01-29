@@ -29,46 +29,46 @@ namespace Application.Common.Behaviours
 
       if (authorizeAttributes.Any())
       {
-        // Must be authenticated user
+        // // Must be authenticated user
         if (_currentUserService.UserId == null)
         {
           throw new UnauthorizedAccessException();
         }
 
-        // Role-based authorization
-        var authorizeAttributesWithRoles = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Roles));
+        //Commented out for now.
+        // // Role-based authorization
+        // var authorizeAttributesWithRoles = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Roles));
 
-        if (authorizeAttributesWithRoles.Any())
-        {
-          foreach (var roles in authorizeAttributesWithRoles.Select(a => a.Roles.Split(',')))
-          {
-            var authorized = false;
-            foreach (var role in roles)
-            {
-              var isInRole = _identityService.IsInRole(role.Trim());
-              if (isInRole)
-              {
-                authorized = true;
-                break;
-              }
-            }
+        // if (authorizeAttributesWithRoles.Any())
+        // {
+        //   foreach (var roles in authorizeAttributesWithRoles.Select(a => a.Roles.Split(',')))
+        //   {
+        //     var authorized = false;
+        //     foreach (var role in roles)
+        //     {
+        //       var isInRole = _identityService.IsInRole(role.Trim());
+        //       if (isInRole)
+        //       {
+        //         authorized = true;
+        //         break;
+        //       }
+        //     }
 
-            // Must be a member of at least one role in roles
-            if (!authorized)
-            {
-              throw new ForbiddenAccessException();
-            }
-          }
-        }
+        //     // Must be a member of at least one role in roles
+        //     if (!authorized)
+        //     {
+        //       throw new ForbiddenAccessException();
+        //     }
+        //   }
+        // }
 
         // Policy-based authorization
-        var authorizeAttributesWithPolicies = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Policy));
+        var authorizeAttributesWithPolicies = authorizeAttributes.SelectMany(a => a.Policies).ToList();
         if (authorizeAttributesWithPolicies.Any())
         {
-          foreach (var policy in authorizeAttributesWithPolicies.Select(a => a.Policy))
+          foreach (var policy in authorizeAttributesWithPolicies)
           {
             var authorized = _identityService.HasPolicy(policy);
-
             if (!authorized)
             {
               throw new ForbiddenAccessException();
@@ -76,7 +76,6 @@ namespace Application.Common.Behaviours
           }
         }
       }
-
       // User is authorized / authorization not required
       return await next();
     }
