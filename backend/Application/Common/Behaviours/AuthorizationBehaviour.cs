@@ -29,7 +29,7 @@ namespace Application.Common.Behaviours
 
       if (authorizeAttributes.Any())
       {
-        // // Must be authenticated user
+        // Must be authenticated user
         if (_currentUserService.UserId == null)
         {
           throw new UnauthorizedAccessException();
