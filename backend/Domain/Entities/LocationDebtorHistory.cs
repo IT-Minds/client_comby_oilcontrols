@@ -5,7 +5,7 @@ namespace Domain.Entities
 {
     public class LocationDebtorHistory : AuditableEntity 
     {
-        LocationDebtorType Type { get; set; }
+        public LocationDebtorType Type { get; set; }
         public int LocationId { get; set; }
         public Location Location { get; set; }
         public int DebtorId { get; set; }
