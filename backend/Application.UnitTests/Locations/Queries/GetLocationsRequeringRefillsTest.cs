@@ -24,7 +24,7 @@ namespace Application.UnitTests.Locations.Queries
 
 
     [Fact]
-    public async Task Handle_Something()
+    public async Task Handle_ReturnAwaitRefills()
     {
       var query = new GetLocationRequiringRefill
       {

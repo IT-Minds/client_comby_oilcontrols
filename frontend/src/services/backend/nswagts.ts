@@ -631,6 +631,7 @@ export interface ILocationClient {
     addDebtor(command: AddDebtorToLocationCommand): Promise<number>;
     updateDebtor(command: UpdateDebtorOnLocationCommand): Promise<number>;
     removeDebtor(command: RemoveDebtorFromLocationCommand): Promise<number>;
+    getDebtorHistory(id: number, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationDebtorHistoryDtoAndDateTime>;
 }
 
 export class LocationClient extends ClientBase implements ILocationClient {
@@ -889,6 +890,53 @@ export class LocationClient extends ClientBase implements ILocationClient {
             });
         }
         return Promise.resolve<number>(<any>null);
+    }
+
+    getDebtorHistory(id: number, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationDebtorHistoryDtoAndDateTime> {
+        let url_ = this.baseUrl + "/api/Location/{id}/debtorHistory?";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (needle !== undefined && needle !== null)
+            url_ += "needle=" + encodeURIComponent(needle ? "" + needle.toJSON() : "") + "&";
+        if (size === null)
+            throw new Error("The parameter 'size' cannot be null.");
+        else if (size !== undefined)
+            url_ += "size=" + encodeURIComponent("" + size) + "&";
+        if (skip !== undefined && skip !== null)
+            url_ += "skip=" + encodeURIComponent("" + skip) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetDebtorHistory(_response));
+        });
+    }
+
+    protected processGetDebtorHistory(response: Response): Promise<PageResultOfLocationDebtorHistoryDtoAndDateTime> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PageResultOfLocationDebtorHistoryDtoAndDateTime.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<PageResultOfLocationDebtorHistoryDtoAndDateTime>(<any>null);
     }
 }
 
@@ -2267,6 +2315,117 @@ export class RemoveDebtorFromLocationCommand implements IRemoveDebtorFromLocatio
 export interface IRemoveDebtorFromLocationCommand {
     locationId?: number;
     debtorId?: number;
+}
+
+export class PageResultOfLocationDebtorHistoryDtoAndDateTime implements IPageResultOfLocationDebtorHistoryDtoAndDateTime {
+    newNeedle?: Date;
+    pagesRemaining?: number;
+    results?: LocationDebtorHistoryDto[] | null;
+    hasMore?: boolean;
+
+    constructor(data?: IPageResultOfLocationDebtorHistoryDtoAndDateTime) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            if (data.results) {
+                this.results = [];
+                for (let i = 0; i < data.results.length; i++) {
+                    let item = data.results[i];
+                    this.results[i] = item && !(<any>item).toJSON ? new LocationDebtorHistoryDto(item) : <LocationDebtorHistoryDto>item;
+                }
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.newNeedle = _data["newNeedle"] ? new Date(_data["newNeedle"].toString()) : <any>null;
+            this.pagesRemaining = _data["pagesRemaining"] !== undefined ? _data["pagesRemaining"] : <any>null;
+            if (Array.isArray(_data["results"])) {
+                this.results = [] as any;
+                for (let item of _data["results"])
+                    this.results!.push(LocationDebtorHistoryDto.fromJS(item));
+            }
+            this.hasMore = _data["hasMore"] !== undefined ? _data["hasMore"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): PageResultOfLocationDebtorHistoryDtoAndDateTime {
+        data = typeof data === 'object' ? data : {};
+        let result = new PageResultOfLocationDebtorHistoryDtoAndDateTime();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["newNeedle"] = this.newNeedle ? this.newNeedle.toISOString() : <any>null;
+        data["pagesRemaining"] = this.pagesRemaining !== undefined ? this.pagesRemaining : <any>null;
+        if (Array.isArray(this.results)) {
+            data["results"] = [];
+            for (let item of this.results)
+                data["results"].push(item.toJSON());
+        }
+        data["hasMore"] = this.hasMore !== undefined ? this.hasMore : <any>null;
+        return data; 
+    }
+}
+
+export interface IPageResultOfLocationDebtorHistoryDtoAndDateTime {
+    newNeedle?: Date;
+    pagesRemaining?: number;
+    results?: ILocationDebtorHistoryDto[] | null;
+    hasMore?: boolean;
+}
+
+export class LocationDebtorHistoryDto implements ILocationDebtorHistoryDto {
+    locationId?: number;
+    debtorId?: number;
+    type?: LocationDebtorType;
+    timeOfChange?: Date;
+
+    constructor(data?: ILocationDebtorHistoryDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.locationId = _data["locationId"] !== undefined ? _data["locationId"] : <any>null;
+            this.debtorId = _data["debtorId"] !== undefined ? _data["debtorId"] : <any>null;
+            this.type = _data["type"] !== undefined ? _data["type"] : <any>null;
+            this.timeOfChange = _data["timeOfChange"] ? new Date(_data["timeOfChange"].toString()) : <any>null;
+        }
+    }
+
+    static fromJS(data: any): LocationDebtorHistoryDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new LocationDebtorHistoryDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["locationId"] = this.locationId !== undefined ? this.locationId : <any>null;
+        data["debtorId"] = this.debtorId !== undefined ? this.debtorId : <any>null;
+        data["type"] = this.type !== undefined ? this.type : <any>null;
+        data["timeOfChange"] = this.timeOfChange ? this.timeOfChange.toISOString() : <any>null;
+        return data; 
+    }
+}
+
+export interface ILocationDebtorHistoryDto {
+    locationId?: number;
+    debtorId?: number;
+    type?: LocationDebtorType;
+    timeOfChange?: Date;
 }
 
 export class PageResultOfLocationHistoryDtoAndString implements IPageResultOfLocationHistoryDtoAndString {
