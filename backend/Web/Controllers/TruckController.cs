@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Application.Locations;
 using Application.Locations.Queries;
+using Application.Coupons.Queries.GetCoupons.Truck;
+using System;
+using Application.Coupons.Queries.GetCoupons;
 
 namespace Web.Controllers
 {
@@ -52,6 +55,26 @@ namespace Web.Controllers
     {
       return await Mediator.Send(new GetLocationRequiringRefill
       {
+        TruckId = id
+      });
+    }
+
+
+    [HttpGet("{id}/coupons")]
+    public async Task<ActionResult<PageResult<CouponDto, DateTimeOffset>>> GetTrucksCoupons(
+      [FromRoute] int id, [FromQuery] DateTimeOffset? needle, [FromQuery] int size = 1000, [FromQuery] int? skip = 0
+    )
+    {
+      if (needle == null)
+      {
+        needle = DateTime.MaxValue;
+      }
+
+      return await Mediator.Send(new GetCouponsTruckQuery
+      {
+        Size = size,
+        Needle = (DateTimeOffset)needle,
+        Skip = skip,
         TruckId = id
       });
     }

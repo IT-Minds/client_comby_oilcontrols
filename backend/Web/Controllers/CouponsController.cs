@@ -19,20 +19,6 @@ namespace Web.Controllers
       return await Mediator.Send(command);
     }
 
-    [HttpGet]
-    public async Task<ActionResult<PageResult<CouponDto>>> Get(
-      [FromQuery] int truckId, [FromQuery] string needle, [FromQuery] int size, [FromQuery] int? skip = 0
-    )
-    {
-      return await Mediator.Send(new GetCouponsTruckQuery
-      {
-        Size = size,
-        Needle = new System.DateTimeOffset(Int64.Parse(needle), new TimeSpan()),
-        Skip = skip,
-        TruckId = truckId
-      });
-    }
-
     [HttpPut("{couponNumber}/invalidate")]
     public async Task<ActionResult<int>> InvalidateCoupon([FromRoute] int couponNumber)
     {
