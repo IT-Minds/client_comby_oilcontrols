@@ -42,9 +42,7 @@ const LocationHistoryComp: FC<Props> = ({
   );
   const [pageShowing, setPageShowing] = useState(0);
 
-  const { awaitCallback, isOnline } = useOffline();
-
-  const { done, error, fetchData, needle } = usePagedFetched(
+  const { done, error } = usePagedFetched(
     "0",
     (needle, size, _sortBy, skip) =>
       genLocationHistoryClient().then(client =>

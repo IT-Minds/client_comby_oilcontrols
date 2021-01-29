@@ -1,4 +1,4 @@
-import { Box, Container, useColorModeValue, useToast } from "@chakra-ui/react";
+import { Box, Container, useColorModeValue } from "@chakra-ui/react";
 import LocationHistoryComp from "components/LocationHistory/LocationHistoryComp";
 import { Locale } from "i18n/Locale";
 import { GetStaticProps, NextPage } from "next";
@@ -17,7 +17,6 @@ type Props = {
 };
 
 const DemoPage: NextPage<Props> = ({ exampleEntities, needle, hasMore, pageCount }) => {
-  const toast = useToast();
   const bg = useColorModeValue("gray.100", "gray.700");
 
   return (
