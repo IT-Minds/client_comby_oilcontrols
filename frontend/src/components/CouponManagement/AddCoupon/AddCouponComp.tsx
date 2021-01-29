@@ -34,6 +34,7 @@ const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
   const [from, setFrom] = useState(null);
   const [to, setTo] = useState(null);
   const [interval, setInterval] = useState<CouponInterval[]>([]);
+  const [localCoupons, setLocalCoupons] = useState<CouponDto[]>([]);
 
   const [localAddCouponForm, setLocalAddCouponForm] = useState<AddCouponForm>({
     carId: "",
@@ -43,6 +44,7 @@ const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
   useEffect(() => {
     if (coupons) {
       //setLocalTruckMetaDataForm(truckMetaData);
+      setLocalCoupons(coupons);
     }
   }, [coupons]);
 
@@ -136,9 +138,19 @@ const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
           <FormControl>
             <FormLabel>Selected intervals:</FormLabel>
             <Wrap>
+              {coupons?.map((c, index) => (
+                <WrapItem key={index}>
+                  <Tag size="md" borderRadius="full" variant="solid" colorScheme="blue">
+                    <TagLabel>{c.couponNumber}</TagLabel>
+                    {/* <TagCloseButton onClick={() => removeInterval(c.id)} /> */}
+                  </Tag>
+                </WrapItem>
+              ))}
+            </Wrap>
+            <Wrap>
               {interval?.map(cn => (
                 <WrapItem key={cn.id}>
-                  <Tag size="md" borderRadius="full" variant="solid" colorScheme="blue">
+                  <Tag size="md" borderRadius="full" variant="solid" colorScheme="yellow">
                     <TagLabel>
                       {cn.start} - {cn.end}
                     </TagLabel>
