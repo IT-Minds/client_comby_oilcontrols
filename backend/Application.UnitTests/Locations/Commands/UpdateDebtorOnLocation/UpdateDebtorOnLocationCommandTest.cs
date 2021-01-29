@@ -21,12 +21,16 @@ namespace Application.UnitTests.Locations.Commands.UpdateDebtorOnLocation
         DebtorId = 1,
         DebtorType = LocationDebtorType.BASE
       };
+      var historiesBefore = Context.LocationDebtorHistories.Where(x => x.LocationId == command.LocationId && x.DebtorId == command.DebtorId).ToList().Count();
       var handler = new UpdateDebtorOnLocationCommand.UpdateDebtorOnLocationCommandHandler(Context);
       var result = await handler.Handle(command, CancellationToken.None);
 
       var entity = Context.LocationDebtors.FirstOrDefault(x => x.LocationId == command.LocationId && x.DebtorId == command.DebtorId && x.Type == command.DebtorType);
-
       entity.Should().NotBeNull();
+      
+      var locationDebtorHistories = Context.LocationDebtorHistories.Where(x => x.LocationId == command.LocationId && x.DebtorId == command.DebtorId);
+      locationDebtorHistories.Count().Should().Be(historiesBefore+1);
+      locationDebtorHistories.FirstOrDefault(x => x.LocationId == command.LocationId && x.DebtorId == command.DebtorId && x.Type == command.DebtorType).Should().NotBeNull();
     }
 
     [Fact]
