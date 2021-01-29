@@ -28,7 +28,6 @@ class Location {
   estimateFuelConsumption
   currentDebtorId
   upcomingDebtorId
-  debtorChangeDate
 }
 
 class LocationHistory {

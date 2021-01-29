@@ -42,6 +42,7 @@ namespace Infrastructure.Persistence
     public DbSet<Street> Streets { get; set; }
     public DbSet<LocationHistory> LocationHistories { get; set; }
     public DbSet<Debtor> Debtors { get; set; }
+    public DbSet<LocationDebtor> LocationDebtors { get; set; }
 
     public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {

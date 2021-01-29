@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Application.Common.Exceptions;
 using Domain.Entities;
 using Newtonsoft.Json;
+using System;
 
 namespace Application.Locations.Commands.UpdateLocationMetaData
 {
