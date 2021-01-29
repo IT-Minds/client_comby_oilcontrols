@@ -7,5 +7,6 @@ namespace Domain.Entities
   {
     public int Id { get; set; }
     public ICollection<LocationDebtor> Locations { get; set; }
+    public ICollection<LocationDebtorHistory> LocationsHistory { get; set; }
   }
 }

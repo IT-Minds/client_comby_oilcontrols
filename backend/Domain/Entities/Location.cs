@@ -22,5 +22,6 @@ namespace Domain.Entities
     //Estiamte consumption is assumed to be fuel cosumed / opvarmningsgrad.
     public double EstimateFuelConsumption { get; set; }
     public ICollection<LocationDebtor> Debtors { get; set; }
+    public ICollection<LocationDebtorHistory> DebtorsHistory { get; set; }
   }
 }
