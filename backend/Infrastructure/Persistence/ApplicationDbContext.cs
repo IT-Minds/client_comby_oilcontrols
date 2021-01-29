@@ -116,7 +116,12 @@ namespace Infrastructure.Persistence
           {
             LocationId = (entity.Entity as LocationDebtor).LocationId,
             DebtorId = (entity.Entity as LocationDebtor).DebtorId,
-            Type = (entity.Entity as LocationDebtor).Type
+            Type = (entity.Entity as LocationDebtor).Type,
+            Created = _dateTimeOffsetService.Now,
+            LastModified = _dateTimeOffsetService.Now,
+            CreatedBy = _currentUserService.UserId,
+            LastModifiedBy = _currentUserService.UserId,
+            ModifiedCount = 0
           };
           
           this.LocationDebtorHistories.Add(locationDebtorHist);
