@@ -11,7 +11,6 @@ import {
   useToast
 } from "@chakra-ui/react";
 import PageIndicator from "components/Demo/components/PageIndicator";
-import { useOffline } from "hooks/useOffline";
 import { usePagedFetched } from "hooks/usePagedFetched";
 import React, { FC, useEffect, useMemo, useReducer, useState } from "react";
 import ListReducer from "react-list-reducer";
