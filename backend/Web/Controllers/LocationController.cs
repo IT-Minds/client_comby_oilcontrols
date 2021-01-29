@@ -1,5 +1,8 @@
+using Application.Locations.Commands.AddDebtorToLocation;
 using Application.Locations.Commands.AddLocationImage;
 using Application.Locations.Commands.CreateLocation;
+using Application.Locations.Commands.RemoveDebtorFromLocation;
+using Application.Locations.Commands.UpdateDebtorOnLocation;
 using Application.Locations.Commands.UpdateLocationMetaData;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +31,24 @@ namespace Web.Controllers
     }
     [HttpPost]
     public async Task<ActionResult<int>> AddNewLocation(CreateLocationCommand command)
+    {
+      return await Mediator.Send(command);
+    }
+
+    [HttpPost("addDebtor")]
+    public async Task<ActionResult<int>> AddDebtor(AddDebtorToLocationCommand command)
+    {
+      return await Mediator.Send(command);
+    }
+
+    [HttpPut("updateDebtor")]
+    public async Task<ActionResult<int>> UpdateDebtor(UpdateDebtorOnLocationCommand command)
+    {
+      return await Mediator.Send(command);
+    }
+
+    [HttpPut("removeDebtor")]
+    public async Task<ActionResult<int>> RemoveDebtor(RemoveDebtorFromLocationCommand command)
     {
       return await Mediator.Send(command);
     }

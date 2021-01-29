@@ -628,6 +628,9 @@ export interface ILocationClient {
     updateMetaData(id: number, command: UpdateLocationMetaDataCommand): Promise<number>;
     saveLocationImage(id: number, file?: FileParameter | null | undefined): Promise<string>;
     addNewLocation(command: CreateLocationCommand): Promise<number>;
+    addDebtor(command: AddDebtorToLocationCommand): Promise<number>;
+    updateDebtor(command: UpdateDebtorOnLocationCommand): Promise<number>;
+    removeDebtor(command: RemoveDebtorFromLocationCommand): Promise<number>;
 }
 
 export class LocationClient extends ClientBase implements ILocationClient {
@@ -751,6 +754,126 @@ export class LocationClient extends ClientBase implements ILocationClient {
     }
 
     protected processAddNewLocation(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(<any>null);
+    }
+
+    addDebtor(command: AddDebtorToLocationCommand): Promise<number> {
+        let url_ = this.baseUrl + "/api/Location/addDebtor";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processAddDebtor(_response));
+        });
+    }
+
+    protected processAddDebtor(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(<any>null);
+    }
+
+    updateDebtor(command: UpdateDebtorOnLocationCommand): Promise<number> {
+        let url_ = this.baseUrl + "/api/Location/updateDebtor";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processUpdateDebtor(_response));
+        });
+    }
+
+    protected processUpdateDebtor(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(<any>null);
+    }
+
+    removeDebtor(command: RemoveDebtorFromLocationCommand): Promise<number> {
+        let url_ = this.baseUrl + "/api/Location/removeDebtor";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processRemoveDebtor(_response));
+        });
+    }
+
+    protected processRemoveDebtor(response: Response): Promise<number> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -2002,6 +2125,148 @@ export interface ICreateLocationCommand {
     estimateConsumption?: number;
     daysBetweenRefills?: number;
     fuelType?: FuelType;
+}
+
+export class AddDebtorToLocationCommand implements IAddDebtorToLocationCommand {
+    locationId?: number;
+    debtorId?: number;
+    debtorType?: LocationDebtorType;
+    changeDate?: Date | null;
+
+    constructor(data?: IAddDebtorToLocationCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.locationId = _data["locationId"] !== undefined ? _data["locationId"] : <any>null;
+            this.debtorId = _data["debtorId"] !== undefined ? _data["debtorId"] : <any>null;
+            this.debtorType = _data["debtorType"] !== undefined ? _data["debtorType"] : <any>null;
+            this.changeDate = _data["changeDate"] ? new Date(_data["changeDate"].toString()) : <any>null;
+        }
+    }
+
+    static fromJS(data: any): AddDebtorToLocationCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddDebtorToLocationCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["locationId"] = this.locationId !== undefined ? this.locationId : <any>null;
+        data["debtorId"] = this.debtorId !== undefined ? this.debtorId : <any>null;
+        data["debtorType"] = this.debtorType !== undefined ? this.debtorType : <any>null;
+        data["changeDate"] = this.changeDate ? this.changeDate.toISOString() : <any>null;
+        return data; 
+    }
+}
+
+export interface IAddDebtorToLocationCommand {
+    locationId?: number;
+    debtorId?: number;
+    debtorType?: LocationDebtorType;
+    changeDate?: Date | null;
+}
+
+export enum LocationDebtorType {
+    MAIN = 0,
+    BASE = 1,
+    UPCOMING = 2,
+}
+
+export class UpdateDebtorOnLocationCommand implements IUpdateDebtorOnLocationCommand {
+    locationId?: number;
+    debtorId?: number;
+    debtorType?: LocationDebtorType;
+    changeDate?: Date | null;
+
+    constructor(data?: IUpdateDebtorOnLocationCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.locationId = _data["locationId"] !== undefined ? _data["locationId"] : <any>null;
+            this.debtorId = _data["debtorId"] !== undefined ? _data["debtorId"] : <any>null;
+            this.debtorType = _data["debtorType"] !== undefined ? _data["debtorType"] : <any>null;
+            this.changeDate = _data["changeDate"] ? new Date(_data["changeDate"].toString()) : <any>null;
+        }
+    }
+
+    static fromJS(data: any): UpdateDebtorOnLocationCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateDebtorOnLocationCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["locationId"] = this.locationId !== undefined ? this.locationId : <any>null;
+        data["debtorId"] = this.debtorId !== undefined ? this.debtorId : <any>null;
+        data["debtorType"] = this.debtorType !== undefined ? this.debtorType : <any>null;
+        data["changeDate"] = this.changeDate ? this.changeDate.toISOString() : <any>null;
+        return data; 
+    }
+}
+
+export interface IUpdateDebtorOnLocationCommand {
+    locationId?: number;
+    debtorId?: number;
+    debtorType?: LocationDebtorType;
+    changeDate?: Date | null;
+}
+
+export class RemoveDebtorFromLocationCommand implements IRemoveDebtorFromLocationCommand {
+    locationId?: number;
+    debtorId?: number;
+
+    constructor(data?: IRemoveDebtorFromLocationCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.locationId = _data["locationId"] !== undefined ? _data["locationId"] : <any>null;
+            this.debtorId = _data["debtorId"] !== undefined ? _data["debtorId"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): RemoveDebtorFromLocationCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new RemoveDebtorFromLocationCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["locationId"] = this.locationId !== undefined ? this.locationId : <any>null;
+        data["debtorId"] = this.debtorId !== undefined ? this.debtorId : <any>null;
+        return data; 
+    }
+}
+
+export interface IRemoveDebtorFromLocationCommand {
+    locationId?: number;
+    debtorId?: number;
 }
 
 export class PageResultOfLocationHistoryDtoAndString implements IPageResultOfLocationHistoryDtoAndString {
