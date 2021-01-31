@@ -12,15 +12,38 @@ using Application.Locations.Queries;
 using Application.Coupons.Queries.GetCoupons.Truck;
 using System;
 using Application.Coupons.Queries.GetCoupons;
+using Application.TruckRefills.Commands.CreateTruckRefill;
+using Application.Coupons.Queries.GetCoupons;
+using Application.Coupons.Queries.GetCoupons.Truck;
+using System;
 
 namespace Web.Controllers
 {
   public class TruckController : ApiControllerBase
   {
     [HttpGet("{id}")]
-    public async Task<ActionResult<TruckInfoIdDto>> GetTruck([FromRoute] int id)
+    public async Task<ActionResult<TruckInfoDetailsDto>> GetTruck([FromRoute] int id)
     {
       return await Mediator.Send(new GetTruckInfoQuery { Id = id });
+    }
+
+    [HttpGet("{id}/coupons")]
+    public async Task<ActionResult<PageResult<CouponDto, DateTimeOffset>>> GetTrucksCoupons(
+      [FromRoute] int id, [FromQuery] DateTimeOffset? needle, [FromQuery] int size = 1000, [FromQuery] int? skip = 0
+    )
+    {
+      if (needle == null)
+      {
+        needle = DateTime.MaxValue;
+      }
+
+      return await Mediator.Send(new GetCouponsTruckQuery
+      {
+        Size = size,
+        Needle = (DateTimeOffset)needle,
+        Skip = skip,
+        TruckId = id
+      });
     }
 
     [HttpGet]
@@ -39,7 +62,7 @@ namespace Web.Controllers
     [HttpPut("{id}")]
     public async Task<ActionResult<TruckInfoIdDto>> UpdateTruck([FromRoute] int id, UpdateTruckCommand command)
     {
-      command.TruckInfo.Id = id;
+      command.Id = id;
       return await Mediator.Send(command);
     }
 
@@ -59,24 +82,11 @@ namespace Web.Controllers
       });
     }
 
-
-    [HttpGet("{id}/coupons")]
-    public async Task<ActionResult<PageResult<CouponDto, DateTimeOffset>>> GetTrucksCoupons(
-      [FromRoute] int id, [FromQuery] DateTimeOffset? needle, [FromQuery] int size = 1000, [FromQuery] int? skip = 0
-    )
+    [HttpPost("{id}/refuel")]
+    public async Task<ActionResult<int>> CreateTruckRefuel([FromRoute] int id, [FromBody] CreateTruckRefillCommand command)
     {
-      if (needle == null)
-      {
-        needle = DateTime.MaxValue;
-      }
-
-      return await Mediator.Send(new GetCouponsTruckQuery
-      {
-        Size = size,
-        Needle = (DateTimeOffset)needle,
-        Skip = skip,
-        TruckId = id
-      });
+      command.TruckId = id;
+      return await Mediator.Send(command);
     }
   }
 }

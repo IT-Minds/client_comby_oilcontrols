@@ -10,7 +10,7 @@ const eolPattern = /(\/?\?.*)?$/;
 const matchWithLocale = (route: string) =>
   new RegExp(localePattern.source + route + eolPattern.source);
 
-const matchMyTruck = matchWithLocale("/mytruck");
+const matchMyTruck = matchWithLocale("/mytruck" + /(\/\[id\])?/.source);
 
 const RouteProtector: FC = () => {
   const { isType } = useContext(UserTypeContext);
@@ -32,6 +32,8 @@ const RouteProtector: FC = () => {
 
     const isMyTruck = matchMyTruck.test(router.pathname);
     if (isType(UserType.DRIVER) && !isMyTruck) {
+      console.log("ROUTER TURKCN OT SAFE", router.pathname);
+
       router.push("/mytruck");
     } else if (isType(UserType.OFFICE_WORKER) && isMyTruck) {
       router.push("/");

@@ -63,7 +63,9 @@ namespace Application.Coupons.Queries.GetCoupons.Truck
 
         var page = new PageResult<CouponDto, DateTimeOffset>();
 
-        var baseQuery = _context.Coupons.Where(x => x.TruckId == request.TruckId);
+        var baseQuery = _context.Coupons
+          .Where(x => x.TruckId == request.TruckId);
+
         var query = request.PreparePage(baseQuery);
         var pagesRemaining = await request.PagesRemaining(query);
         var needle = request.GetNewNeedle(query);
