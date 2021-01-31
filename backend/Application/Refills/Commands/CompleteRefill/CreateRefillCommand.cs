@@ -22,8 +22,6 @@ namespace Application.Refills.Commands.CompleteRefill
     public DateTime ActualDeliveryDate { get; set; }
     public TankState TankState { get; set; }
 
-    public int RefillNumber { get; set; }
-
     public class CompleteRefillCommandHandler : IRequestHandler<CompleteRefillCommand, int>
     {
       private readonly IApplicationDbContext _context;
@@ -46,6 +44,7 @@ namespace Application.Refills.Commands.CompleteRefill
         var truck = await _context.Trucks
           .Include(t => t.Route)
             .ThenInclude(r => r.Refills)
+          .Include(x => x.DailyStates.Where(x => x.Date.DayOfYear == request.ActualDeliveryDate.DayOfYear && x.Date.Year == request.ActualDeliveryDate.Year))
           .Where(t => t.Route.Refills.Any(r => r.Id == refill.Id))
           .FirstOrDefaultAsync();
 
@@ -71,14 +70,18 @@ namespace Application.Refills.Commands.CompleteRefill
 
         refill.StartAmount = request.StartAmount;
         refill.EndAmount = request.EndAmount;
-        refill.CouponId = coupon.Id;
         refill.ActualDeliveryDate = request.ActualDeliveryDate;
         refill.TankState = request.TankState;
-        refill.RefillNumber = request.RefillNumber;
+
+        refill.CouponId = coupon.Id;
+
+        refill.RefillNumber = truck.RefillNumber++;
         // refill.RouteId = null; //TODO should properly detach the entity from the route
 
         coupon.Status = CouponStatus.USED;
 
+
+        _context.Trucks.Update(truck);
         _context.Coupons.Update(coupon);
         _context.Refills.Update(refill);
 

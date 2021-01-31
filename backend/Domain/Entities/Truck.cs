@@ -13,5 +13,6 @@ namespace Domain.Entities
     public string Name { get; set; }
     public string Description { get; set; }
     public double TankCapacity { get; set; }
+    public int RefillNumber { get; set; }
   }
 }

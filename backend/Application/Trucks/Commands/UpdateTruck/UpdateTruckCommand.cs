@@ -12,7 +12,9 @@ namespace Application.Trucks.Commands.UpdateTruck
 {
   public class UpdateTruckCommand : IRequest<TruckInfoIdDto>
   {
-    public TruckInfoIdDto TruckInfo { get; set; }
+    [JsonIgnore]
+    public int Id { get; set; }
+    public TruckInfoDto TruckInfo { get; set; }
 
     public class UpdateTruckCommandHandler : IRequestHandler<UpdateTruckCommand, TruckInfoIdDto>
     {
@@ -28,26 +30,17 @@ namespace Application.Trucks.Commands.UpdateTruck
 
       public async Task<TruckInfoIdDto> Handle(UpdateTruckCommand request, CancellationToken cancellationToken)
       {
-        var truck = await _context.Trucks.FirstOrDefaultAsync(x => x.Id == request.TruckInfo.Id);
+        var truck = await _context.Trucks.FirstOrDefaultAsync(x => x.Id == request.Id);
         if (truck == null)
         {
-          throw new ArgumentException("No truck with Truck Id: " + request.TruckInfo.Id + ".");
-        }
-
-        var dailyState = await _context.TruckDailyStates
-          .Where(x => x.TruckId == truck.Id).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
-
-        if (dailyState == null)
-        {
-          throw new ArgumentException("Currently no daily state registered for truck " + request.TruckInfo.Id + ", and therefor not possible to update the Starting refill-number.");
+          throw new ArgumentException("No truck with Truck Id: " + request.Id + ".");
         }
 
         truck.TruckIdentifier = request.TruckInfo.TruckIdentifier;
         truck.Description = request.TruckInfo.Description;
         truck.TankCapacity = request.TruckInfo.TankCapacity;
         truck.Name = request.TruckInfo.Name;
-
-        dailyState.StartRefillNumber = request.TruckInfo.RefillNumber;
+        truck.RefillNumber = request.TruckInfo.RefillNumber;
 
         await _context.SaveChangesAsync(cancellationToken);
         return _mapper.Map<TruckInfoIdDto>(truck);
