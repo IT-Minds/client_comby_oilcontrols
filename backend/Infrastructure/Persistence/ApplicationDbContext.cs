@@ -41,6 +41,9 @@ namespace Infrastructure.Persistence
     public DbSet<FuelTank> FuelTanks { get; set; }
     public DbSet<Street> Streets { get; set; }
     public DbSet<LocationHistory> LocationHistories { get; set; }
+    public DbSet<Debtor> Debtors { get; set; }
+    public DbSet<LocationDebtor> LocationDebtors { get; set; }
+    public DbSet<LocationDebtorHistory> LocationDebtorHistories { get; set; }
 
     public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
@@ -65,7 +68,7 @@ namespace Infrastructure.Persistence
       }
 
       OnLocationsChange(entities.Where(x => x.Entity.GetType().Equals(typeof(Location))), cancellationToken);
-
+      OnLocationDebtorRelationChange(entities.Where(x => x.Entity.GetType().Equals(typeof(LocationDebtor))), cancellationToken);
       var result = await base.SaveChangesAsync(cancellationToken);
 
       return result;
@@ -99,6 +102,29 @@ namespace Infrastructure.Persistence
           };
 
           this.LocationHistories.Add(locationHistory);
+        }
+      }
+    }
+
+    private void OnLocationDebtorRelationChange(IEnumerable<EntityEntry<AuditableEntity>> entities, CancellationToken cancellationToken)
+    {
+      foreach(EntityEntry<AuditableEntity> entity in entities.ToList())
+      {
+        if(entity.State == EntityState.Added || entity.State == EntityState.Modified)
+        {
+          var locationDebtorHist = new LocationDebtorHistory
+          {
+            LocationId = (entity.Entity as LocationDebtor).LocationId,
+            DebtorId = (entity.Entity as LocationDebtor).DebtorId,
+            Type = (entity.Entity as LocationDebtor).Type,
+            Created = _dateTimeOffsetService.Now,
+            LastModified = _dateTimeOffsetService.Now,
+            CreatedBy = _currentUserService.UserId,
+            LastModifiedBy = _currentUserService.UserId,
+            ModifiedCount = 0
+          };
+          
+          this.LocationDebtorHistories.Add(locationDebtorHist);
         }
       }
     }

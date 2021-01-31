@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Domain.Common;
 using Domain.Enums;
@@ -20,5 +21,7 @@ namespace Domain.Entities
     public int DaysBetweenRefills { get; set; }
     //Estiamte consumption is assumed to be fuel cosumed / opvarmningsgrad.
     public double EstimateFuelConsumption { get; set; }
+    public ICollection<LocationDebtor> Debtors { get; set; }
+    public ICollection<LocationDebtorHistory> DebtorsHistory { get; set; }
   }
 }

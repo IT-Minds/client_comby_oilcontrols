@@ -123,5 +123,18 @@ namespace Application.UnitTests.EntityExtentions.LocationExtensions
       date.Year.Should().Be(DateTime.UtcNow.Year);
       date.DayOfYear.Should().Be(DateTime.UtcNow.DayOfYear);
     }
+
+    [Fact]
+    public async Task Handle_CalculateMonthlyRate()
+    {
+      var location = await Context.Locations
+        .Include(x => x.FuelTank)
+        .Include(x => x.Refills)
+        .Include(x => x.Region)
+        .ThenInclude(x => x.DailyTemperatures)
+        .FirstOrDefaultAsync(x => x.Id == 301);
+      var rate = location.EstimateMonthlyCost();
+      rate.Should().Be(32850 * 10.5 / 12);
+    }
   }
 }

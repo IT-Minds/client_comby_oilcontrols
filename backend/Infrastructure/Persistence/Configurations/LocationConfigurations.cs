@@ -8,8 +8,8 @@ namespace Infrastructure.Persistence.Configurations
   {
     public void Configure(EntityTypeBuilder<Location> builder)
     {
-      builder.HasOne<Region>(e => e.Region)
-        .WithMany(e => e.Locations)
+      builder.HasMany(e => e.Debtors)
+        .WithOne(e => e.Location)
         .IsRequired(false);
     }
   }
