@@ -1,6 +1,6 @@
 import { GetStaticProps, NextPage } from "next";
-import { I18nProps } from "next-rosetta";
 import { useRouter } from "next/router";
+import { I18nProps } from "next-rosetta";
 import { useEffect } from "react";
 
 const LocalePage: NextPage = () => {
