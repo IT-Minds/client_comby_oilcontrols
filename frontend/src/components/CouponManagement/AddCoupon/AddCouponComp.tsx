@@ -47,27 +47,32 @@ const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
 
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
 
-  const updateLocalForm = useCallback((value: unknown, key: keyof AddCouponForm) => {
-    dispatchLocalCoupons(form => {
-      (form[key] as unknown) = value;
-      return form;
-    });
-  }, []);
+  // const updateLocalForm = useCallback((value: unknown, key: keyof AddCouponForm) => {
+  //   dispatchLocalCoupons(form => {
+  //     (form[key] as unknown) = value;
+  //     return form;
+  //   });
+  // }, []);
 
   const addCoupons = useCallback(() => {
     if (from > 0 && to > 0) {
       const length = to - from + 1;
 
-      const newArr = [...new Array(length)].map((_, i) => {
-        return new CouponDto({
-          couponNumber: i + from,
-          status: CouponStatus.AVAILABLE,
-          truckId: null //Null as it is not relevant in this component
-        })
-      })
+      const newArr = [...new Array(length)]
+        .map((_, i) => i + from)
+        .filter(couponNumber => !coupons.some(c => c.couponNumber === couponNumber))
+        .map(couponNumber => {
+          if (!coupons.some(c => c.couponNumber === couponNumber)) {
+            return new CouponDto({
+              couponNumber: couponNumber,
+              status: CouponStatus.AVAILABLE,
+              truckId: null //Null as it is not relevant in this component
+            });
+          }
+        });
 
       dispatchLocalCoupons({
-        type: ListReducerActionType.AddOrUpdate,
+        type: ListReducerActionType.Add,
         data: newArr
       });
 
