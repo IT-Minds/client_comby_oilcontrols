@@ -27,8 +27,9 @@ import { Locale } from "i18n/Locale";
 import { GetStaticProps, NextPage } from "next";
 import { I18nProps } from "next-rosetta";
 import React, { useCallback, useState } from "react";
-import { genTruckClient } from "services/backend/apiClients";
+import { genCouponsClient, genTruckClient } from "services/backend/apiClients";
 import {
+  AssignCouponsCommand,
   CouponDto,
   CreateTruckCommand,
   TruckInfoIdDto,
@@ -47,12 +48,34 @@ const TruckPage: NextPage<Props> = ({ trucksEntities, needle, hasMore, pageCount
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isLoading, setIsLoading] = useState(false);
   const [truckId, setTruckId] = useState(null);
-  const [addCouponForm, setCouponForm] = useState<AddCouponForm>(null);
   const [truckMetaData, setTruckMetaData] = useState<TruckInfoIdDto>(null);
   const [couponData, setCouponData] = useState<CouponDto[]>(null);
 
   const { awaitCallback } = useOffline();
   const toast = useToast();
+
+  const saveCoupons = useCallback(
+    async (couponNumbers: number[]) => {
+      awaitCallback(async () => {
+        const client = await genCouponsClient();
+        await client.create(
+         new AssignCouponsCommand({
+            truckId,
+            couponNumbers
+          })
+            );
+        toast({
+          title: "Coupons Saved",
+          description: "Successful",
+          status: "success",
+          duration: 9000,
+          isClosable: true
+        });
+      }, Date.now().toString());
+    },
+    [awaitCallback, truckId]
+  );
+
 
   const saveMetaDataForm = useCallback(
     async metaDataForm => {
@@ -132,8 +155,7 @@ const TruckPage: NextPage<Props> = ({ trucksEntities, needle, hasMore, pageCount
             <Heading size="sm">Coupons</Heading>
             <AddCouponComp
               submitCallback={x => {
-                x.carId = truckId;
-                setCouponForm(x);
+                saveCoupons(x);
               }}
               coupons={couponData}></AddCouponComp>
 
