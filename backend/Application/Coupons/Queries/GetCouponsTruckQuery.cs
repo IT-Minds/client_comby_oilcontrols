@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Application.Coupons.Queries.GetCoupons.Truck
 {
-  public class GetCouponsTruckQuery : IPageRequest<CouponDto, DateTimeOffset>, IPageBody<Coupon, DateTimeOffset>
+  public class GetCouponsTruckQuery : IPageRequest<CouponIdDto, DateTimeOffset>, IPageBody<Coupon, DateTimeOffset>
   {
     public int Size { get ; set ; }
     public DateTimeOffset Needle { get; set; }
@@ -47,7 +47,7 @@ namespace Application.Coupons.Queries.GetCoupons.Truck
       return pagesLeft;
     }
 
-    public class GetCouponsTruckQueryHandler : IPageRequestHandler<GetCouponsTruckQuery, CouponDto, DateTimeOffset>
+    public class GetCouponsTruckQueryHandler : IPageRequestHandler<GetCouponsTruckQuery, CouponIdDto, DateTimeOffset>
     {
       private readonly IApplicationDbContext _context;
       private readonly IMapper _mapper;
@@ -58,10 +58,10 @@ namespace Application.Coupons.Queries.GetCoupons.Truck
         _mapper = mapper;
       }
 
-      public async Task<PageResult<CouponDto, DateTimeOffset>> Handle(GetCouponsTruckQuery request, CancellationToken cancellationToken)
+      public async Task<PageResult<CouponIdDto, DateTimeOffset>> Handle(GetCouponsTruckQuery request, CancellationToken cancellationToken)
       {
 
-        var page = new PageResult<CouponDto, DateTimeOffset>();
+        var page = new PageResult<CouponIdDto, DateTimeOffset>();
 
         var baseQuery = _context.Coupons
           .Where(x => x.TruckId == request.TruckId);
@@ -74,7 +74,7 @@ namespace Application.Coupons.Queries.GetCoupons.Truck
         page.PagesRemaining = pagesRemaining;
         page.Results = await query
                 .Take(request.Size)
-                .ProjectTo<CouponDto>(_mapper.ConfigurationProvider)
+                .ProjectTo<CouponIdDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
         page.NewNeedle = needle;
 

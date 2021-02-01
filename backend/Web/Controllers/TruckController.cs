@@ -28,7 +28,7 @@ namespace Web.Controllers
     }
 
     [HttpGet("{id}/coupons")]
-    public async Task<ActionResult<PageResult<CouponDto, DateTimeOffset>>> GetTrucksCoupons(
+    public async Task<ActionResult<PageResult<CouponIdDto, DateTimeOffset>>> GetTrucksCoupons(
       [FromRoute] int id, [FromQuery] DateTimeOffset? needle, [FromQuery] int size = 1000, [FromQuery] int? skip = 0
     )
     {

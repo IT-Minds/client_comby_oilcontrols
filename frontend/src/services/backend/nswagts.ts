@@ -1305,7 +1305,7 @@ export class StreetClient extends ClientBase implements IStreetClient {
 export interface ITruckClient {
     getTruck(id: number): Promise<TruckInfoDetailsDto>;
     updateTruck(id: number, command: UpdateTruckCommand): Promise<TruckInfoIdDto>;
-    getTrucksCoupons(id: number, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfCouponDtoAndDateTimeOffset>;
+    getTrucksCoupons(id: number, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfCouponIdDtoAndDateTimeOffset>;
     getTrucks(needle?: number | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfTruckInfoIdDtoAndInteger>;
     createTruck(command: CreateTruckCommand): Promise<TruckInfoIdDto>;
     getTrucksRefills(id: number): Promise<LocationRefillDto[]>;
@@ -1405,7 +1405,7 @@ export class TruckClient extends ClientBase implements ITruckClient {
         return Promise.resolve<TruckInfoIdDto>(<any>null);
     }
 
-    getTrucksCoupons(id: number, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfCouponDtoAndDateTimeOffset> {
+    getTrucksCoupons(id: number, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfCouponIdDtoAndDateTimeOffset> {
         let url_ = this.baseUrl + "/api/Truck/{id}/coupons?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -1434,14 +1434,14 @@ export class TruckClient extends ClientBase implements ITruckClient {
         });
     }
 
-    protected processGetTrucksCoupons(response: Response): Promise<PageResultOfCouponDtoAndDateTimeOffset> {
+    protected processGetTrucksCoupons(response: Response): Promise<PageResultOfCouponIdDtoAndDateTimeOffset> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PageResultOfCouponDtoAndDateTimeOffset.fromJS(resultData200);
+            result200 = PageResultOfCouponIdDtoAndDateTimeOffset.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -1449,7 +1449,7 @@ export class TruckClient extends ClientBase implements ITruckClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<PageResultOfCouponDtoAndDateTimeOffset>(<any>null);
+        return Promise.resolve<PageResultOfCouponIdDtoAndDateTimeOffset>(<any>null);
     }
 
     getTrucks(needle?: number | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfTruckInfoIdDtoAndInteger> {
@@ -3092,13 +3092,13 @@ export interface ITruckInfoDetailsDto extends ITruckInfoIdDto {
     currentTankLevel?: number;
 }
 
-export class PageResultOfCouponDtoAndDateTimeOffset implements IPageResultOfCouponDtoAndDateTimeOffset {
+export class PageResultOfCouponIdDtoAndDateTimeOffset implements IPageResultOfCouponIdDtoAndDateTimeOffset {
     newNeedle?: Date;
     pagesRemaining?: number;
-    results?: CouponDto[] | null;
+    results?: CouponIdDto[] | null;
     hasMore?: boolean;
 
-    constructor(data?: IPageResultOfCouponDtoAndDateTimeOffset) {
+    constructor(data?: IPageResultOfCouponIdDtoAndDateTimeOffset) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -3108,7 +3108,7 @@ export class PageResultOfCouponDtoAndDateTimeOffset implements IPageResultOfCoup
                 this.results = [];
                 for (let i = 0; i < data.results.length; i++) {
                     let item = data.results[i];
-                    this.results[i] = item && !(<any>item).toJSON ? new CouponDto(item) : <CouponDto>item;
+                    this.results[i] = item && !(<any>item).toJSON ? new CouponIdDto(item) : <CouponIdDto>item;
                 }
             }
         }
@@ -3121,15 +3121,15 @@ export class PageResultOfCouponDtoAndDateTimeOffset implements IPageResultOfCoup
             if (Array.isArray(_data["results"])) {
                 this.results = [] as any;
                 for (let item of _data["results"])
-                    this.results!.push(CouponDto.fromJS(item));
+                    this.results!.push(CouponIdDto.fromJS(item));
             }
             this.hasMore = _data["hasMore"] !== undefined ? _data["hasMore"] : <any>null;
         }
     }
 
-    static fromJS(data: any): PageResultOfCouponDtoAndDateTimeOffset {
+    static fromJS(data: any): PageResultOfCouponIdDtoAndDateTimeOffset {
         data = typeof data === 'object' ? data : {};
-        let result = new PageResultOfCouponDtoAndDateTimeOffset();
+        let result = new PageResultOfCouponIdDtoAndDateTimeOffset();
         result.init(data);
         return result;
     }
@@ -3148,19 +3148,17 @@ export class PageResultOfCouponDtoAndDateTimeOffset implements IPageResultOfCoup
     }
 }
 
-export interface IPageResultOfCouponDtoAndDateTimeOffset {
+export interface IPageResultOfCouponIdDtoAndDateTimeOffset {
     newNeedle?: Date;
     pagesRemaining?: number;
-    results?: ICouponDto[] | null;
+    results?: ICouponIdDto[] | null;
     hasMore?: boolean;
 }
 
-export class CouponDto implements ICouponDto {
-    couponNumber?: number;
-    truckId?: number;
-    status?: CouponStatus;
+export class CouponIdDto implements ICouponIdDto {
+    id?: number;
 
-    constructor(data?: ICouponDto) {
+    constructor(data?: ICouponIdDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -3171,38 +3169,26 @@ export class CouponDto implements ICouponDto {
 
     init(_data?: any) {
         if (_data) {
-            this.couponNumber = _data["couponNumber"] !== undefined ? _data["couponNumber"] : <any>null;
-            this.truckId = _data["truckId"] !== undefined ? _data["truckId"] : <any>null;
-            this.status = _data["status"] !== undefined ? _data["status"] : <any>null;
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
         }
     }
 
-    static fromJS(data: any): CouponDto {
+    static fromJS(data: any): CouponIdDto {
         data = typeof data === 'object' ? data : {};
-        let result = new CouponDto();
+        let result = new CouponIdDto();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["couponNumber"] = this.couponNumber !== undefined ? this.couponNumber : <any>null;
-        data["truckId"] = this.truckId !== undefined ? this.truckId : <any>null;
-        data["status"] = this.status !== undefined ? this.status : <any>null;
+        data["id"] = this.id !== undefined ? this.id : <any>null;
         return data; 
     }
 }
 
-export interface ICouponDto {
-    couponNumber?: number;
-    truckId?: number;
-    status?: CouponStatus;
-}
-
-export enum CouponStatus {
-    AVAILABLE = 0,
-    USED = 1,
-    DESTROYED = 2,
+export interface ICouponIdDto {
+    id?: number;
 }
 
 export class PageResultOfTruckInfoIdDtoAndInteger implements IPageResultOfTruckInfoIdDtoAndInteger {
