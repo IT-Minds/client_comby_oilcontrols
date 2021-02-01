@@ -175,9 +175,8 @@ namespace Web
 
       app.UseRouting();
 
-      //TODO add auth.
-      // app.UseAuthentication();
-      // app.UseAuthorization();
+      app.UseAuthentication();
+      app.UseAuthorization();
 
       app.UseEndpoints(endpoints =>
       {
