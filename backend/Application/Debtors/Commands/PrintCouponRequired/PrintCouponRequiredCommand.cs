@@ -29,7 +29,9 @@ namespace Application.Debtors.PrintCouponRequired
           throw new ArgumentException("Debtor with ID: " + request.DebtorId + "doesn't exist.");
         }
         debtor.CouponRequired = request.PrintCouponRequired;
-        return await _context.SaveChangesAsync(cancellationToken);
+        _context.Debtors.Update(debtor);
+        await _context.SaveChangesAsync(cancellationToken);
+        return debtor.Id;
       }
     }
   }
