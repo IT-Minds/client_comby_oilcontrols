@@ -20,8 +20,6 @@ import ListReduce, { ListReducerActionType } from "react-list-reducer";
 import { CouponDto, CouponIdDto, CouponStatus } from "services/backend/nswagts";
 import { logger } from "utils/logger";
 
-import { AddCouponForm } from "./AddCouponForm";
-
 type Props = {
   submitCallback: (couponNumbers: number[]) => void;
   coupons: CouponIdDto[];
@@ -46,13 +44,6 @@ const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
   }, [coupons]);
 
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
-
-  // const updateLocalForm = useCallback((value: unknown, key: keyof AddCouponForm) => {
-  //   dispatchLocalCoupons(form => {
-  //     (form[key] as unknown) = value;
-  //     return form;
-  //   });
-  // }, []);
 
   const addCoupons = useCallback(() => {
     if (from > 0 && to > 0) {
