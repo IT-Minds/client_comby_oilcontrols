@@ -120,8 +120,7 @@ const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
             <HStack>
               <FormControl
                 isInvalid={
-                  (formSubmitAttempts > 0 &&
-                    (!localCoupons || localCoupons.length < 1)) ||
+                  (formSubmitAttempts > 0 && (!localCoupons || localCoupons.length < 1)) ||
                   from > to
                 }
                 isRequired={!localCoupons || localCoupons.length < 1}>
@@ -136,8 +135,7 @@ const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
               </FormControl>
               <FormControl
                 isInvalid={
-                  (formSubmitAttempts > 0 &&
-                    (!localCoupons || localCoupons.length < 1)) ||
+                  (formSubmitAttempts > 0 && (!localCoupons || localCoupons.length < 1)) ||
                   to < from
                 }
                 isRequired={!localCoupons || localCoupons.length < 1}>
@@ -162,16 +160,16 @@ const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
             <Wrap>
               {localCoupons?.map((c, index) => (
                 <WrapItem key={index}>
-                  { (c as CouponIdDto).id ?
+                  {(c as CouponIdDto).id ? (
                     <Tag size="md" borderRadius="full" variant="solid" colorScheme="blue">
-                  <TagLabel>{c.couponNumber}</TagLabel>
-                </Tag>
-                  : 
-                  <Tag size="md" borderRadius="full" variant="solid" colorScheme="yellow">
-                  <TagLabel>{c.couponNumber}</TagLabel>
-                  <TagCloseButton onClick={() => removeCoupon(c.couponNumber)} />
-                </Tag> 
-                  }
+                      <TagLabel>{c.couponNumber}</TagLabel>
+                    </Tag>
+                  ) : (
+                    <Tag size="md" borderRadius="full" variant="solid" colorScheme="yellow">
+                      <TagLabel>{c.couponNumber}</TagLabel>
+                      <TagCloseButton onClick={() => removeCoupon(c.couponNumber)} />
+                    </Tag>
+                  )}
                 </WrapItem>
               ))}
             </Wrap>
