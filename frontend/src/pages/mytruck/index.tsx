@@ -1,4 +1,5 @@
-import { NextPage } from "next";
+import { GetStaticProps, NextPage } from "next";
+import { I18nProps } from "next-rosetta";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
@@ -9,6 +10,14 @@ const LocalePage: NextPage = () => {
   }, []);
 
   return <h1>Rest of the page</h1>;
+};
+
+export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context => {
+  const locale = context.locale || context.defaultLocale;
+
+  const { table = {} } = await import(`../../i18n/${locale}`);
+
+  return { props: { table } };
 };
 
 export default LocalePage;
