@@ -6,7 +6,7 @@ using Domain.Enums;
 
 namespace Application.Coupons.Queries.GetCoupons
 {
-  public class CouponIdDto : IAutoMap<Coupon>
+  public class CouponIdDto : CouponDto, IAutoMap<Coupon>
   {
     public int Id { get; set; }
 

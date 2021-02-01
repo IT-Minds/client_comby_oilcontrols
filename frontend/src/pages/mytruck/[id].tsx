@@ -25,7 +25,7 @@ import { MdArrowBack } from "react-icons/md";
 import { genRefillClient, genTruckClient } from "services/backend/apiClients";
 import {
   CompleteRefillCommand,
-  CouponDto,
+  CouponIdDto,
   CreateTruckRefillCommand,
   ILocationRefillDto,
   TankState,
@@ -39,7 +39,7 @@ import styles from "./index.module.css";
 
 type Props = {
   truckInfo: TruckInfoDetailsDto;
-  coupons: CouponDto[];
+  coupons: CouponIdDto[];
 };
 
 const LocalePage: NextPage<Props> = ({ truckInfo, coupons }) => {
@@ -147,7 +147,7 @@ const LocalePage: NextPage<Props> = ({ truckInfo, coupons }) => {
           <FillOutRefillForm
             submitCallback={completeLocationRefill}
             couponNumbers={coupons.map<DropdownType>(x => ({
-              id: x.couponNumber + "",
+              id: x.id + "",
               name: x.couponNumber + ""
             }))}
           />
@@ -178,7 +178,7 @@ const LocalePage: NextPage<Props> = ({ truckInfo, coupons }) => {
       <HStack position="absolute" bottom={4} left={0} w="100%" justifyContent="space-between">
         <InvalidateCouponBtn
           coupons={coupons.map<DropdownType>(x => ({
-            id: x.couponNumber + "",
+            id: x.id + "",
             name: x.couponNumber + ""
           }))}
         />

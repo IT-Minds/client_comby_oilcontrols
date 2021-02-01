@@ -3104,13 +3104,6 @@ export class PageResultOfCouponIdDtoAndDateTimeOffset implements IPageResultOfCo
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
-            if (data.results) {
-                this.results = [];
-                for (let i = 0; i < data.results.length; i++) {
-                    let item = data.results[i];
-                    this.results[i] = item && !(<any>item).toJSON ? new CouponIdDto(item) : <CouponIdDto>item;
-                }
-            }
         }
     }
 
@@ -3151,14 +3144,16 @@ export class PageResultOfCouponIdDtoAndDateTimeOffset implements IPageResultOfCo
 export interface IPageResultOfCouponIdDtoAndDateTimeOffset {
     newNeedle?: Date;
     pagesRemaining?: number;
-    results?: ICouponIdDto[] | null;
+    results?: CouponIdDto[] | null;
     hasMore?: boolean;
 }
 
-export class CouponIdDto implements ICouponIdDto {
-    id?: number;
+export class CouponDto implements ICouponDto {
+    couponNumber?: number;
+    truckId?: number;
+    status?: CouponStatus;
 
-    constructor(data?: ICouponIdDto) {
+    constructor(data?: ICouponDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -3168,6 +3163,44 @@ export class CouponIdDto implements ICouponIdDto {
     }
 
     init(_data?: any) {
+        if (_data) {
+            this.couponNumber = _data["couponNumber"] !== undefined ? _data["couponNumber"] : <any>null;
+            this.truckId = _data["truckId"] !== undefined ? _data["truckId"] : <any>null;
+            this.status = _data["status"] !== undefined ? _data["status"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): CouponDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CouponDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["couponNumber"] = this.couponNumber !== undefined ? this.couponNumber : <any>null;
+        data["truckId"] = this.truckId !== undefined ? this.truckId : <any>null;
+        data["status"] = this.status !== undefined ? this.status : <any>null;
+        return data; 
+    }
+}
+
+export interface ICouponDto {
+    couponNumber?: number;
+    truckId?: number;
+    status?: CouponStatus;
+}
+
+export class CouponIdDto extends CouponDto implements ICouponIdDto {
+    id?: number;
+
+    constructor(data?: ICouponIdDto) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
         if (_data) {
             this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
         }
@@ -3183,12 +3216,19 @@ export class CouponIdDto implements ICouponIdDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id !== undefined ? this.id : <any>null;
+        super.toJSON(data);
         return data; 
     }
 }
 
-export interface ICouponIdDto {
+export interface ICouponIdDto extends ICouponDto {
     id?: number;
+}
+
+export enum CouponStatus {
+    AVAILABLE = 0,
+    USED = 1,
+    DESTROYED = 2,
 }
 
 export class PageResultOfTruckInfoIdDtoAndInteger implements IPageResultOfTruckInfoIdDtoAndInteger {
