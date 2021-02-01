@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,6 +25,10 @@ namespace Application.Users.Commands.AssignToken
       public async Task<UserTokenDto> Handle(AssignTokenCommand request, CancellationToken cancellationToken)
       {
         var user = await _context.Users.FirstOrDefaultAsync(x => x.Username.Equals(request.UserDto.Username));
+        if (user == null)
+        {
+          throw new ArgumentException("Invalid credentials.");
+        }
         var token = _tokenService.CreateToken(user);
         return new UserTokenDto
         {
