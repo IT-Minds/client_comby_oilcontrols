@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Application.Users.CreateUserCommand.cs;
+using Application.Users.Commands.CreateUser;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers

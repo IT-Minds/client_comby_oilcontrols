@@ -8,7 +8,7 @@ namespace Infrastructure.Persistence.Configurations
   {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-      builder.HasIndex(e => e.UserName).IsUnique();
+      builder.HasIndex(e => e.Username).IsUnique();
     }
   }
 }

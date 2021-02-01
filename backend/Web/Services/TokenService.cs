@@ -2,13 +2,14 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Application.Common.Interfaces;
 using Application.Common.Options;
 using Domain.Entities;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Web.Services
 {
-  public class TokenService
+  public class TokenService : ITokenService
   {
     private const double EXPIRE_HOURS = 4.0;
     private readonly TokenOptions _options;
@@ -26,7 +27,7 @@ namespace Web.Services
       {
         Subject = new ClaimsIdentity(new Claim[]
         {
-          new Claim(ClaimTypes.Name, user.UserName.ToString())
+          new Claim(ClaimTypes.Name, user.Username)
         }),
         Expires = DateTime.UtcNow.AddHours(EXPIRE_HOURS),
         SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
