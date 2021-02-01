@@ -5,6 +5,7 @@ using System.Text;
 using Application.Common.Interfaces;
 using Application.Common.Options;
 using Domain.Entities;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Web.Services
@@ -14,9 +15,9 @@ namespace Web.Services
     private const double EXPIRE_HOURS = 4.0;
     private readonly TokenOptions _options;
 
-    public TokenService(TokenOptions options)
+    public TokenService(IOptions<TokenOptions> options)
     {
-      _options = options;
+      _options = options.Value;
     }
 
     public string CreateToken(User user)

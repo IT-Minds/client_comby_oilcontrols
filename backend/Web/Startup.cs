@@ -20,9 +20,6 @@ using Web.Hubs;
 using Application.Common.Options;
 using Web.Services;
 using Infrastructure.Options;
-using Domain.Entities;
-using Domain.Enums;
-using System;
 using Web.Options;
 using Microsoft.Extensions.Options;
 
@@ -59,6 +56,7 @@ namespace Web
       services.Configure<UniContaOptions>(Configuration.GetSection(UniContaOptions.UniConta));
       services.Configure<SeedOptions>(Configuration.GetSection(SeedOptions.SampleData));
 
+      services.Configure<TokenOptions>(Configuration.GetSection(TokenOptions.Tokens));
       services.AddApplication();
       services.AddInfrastructure(Configuration, Environment);
 
@@ -97,8 +95,8 @@ namespace Web
       services.AddScoped<ICurrentUserService, CurrentUserService>();
       services.AddScoped<IAuthorizationService, AuthorizationService>();
       services.AddScoped<IExampleHubService, ExampleHubService>();
-      services.AddSignalR();
       services.AddScoped<ITokenService, TokenService>();
+      services.AddSignalR();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -131,6 +129,10 @@ namespace Web
         transaction?.CreateSavepoint("POST_MIGRATION");
         if (env.IsDevelopment() && !env.IsEnvironment("Test") && seedOptions.Value.SeedSampleData)
         {
+        transaction = context.Database.CurrentTransaction;
+        context.Database.Migrate();
+        transaction?.Commit();
+        if (env.IsDevelopment() && !env.IsEnvironment("Test") && seedOptions.Value.SeedSampleData)
           new SampleData().SeedSampleData(context);
         }
         transaction?.Commit();

@@ -22,22 +22,23 @@ namespace Web.Services
 
     public bool HasPolicy(Domain.Enums.Action policy)
     {
+      //TODO: Remove all the writelines when I have figures out how this is supposed to work.
       var headers = _httpContextAccessor.HttpContext.Request.Headers.ToList();
       Console.WriteLine("############## HEADERS");
-      foreach(var header in headers)
+      foreach (var header in headers)
       {
         Console.WriteLine(header);
       }
       var items = _httpContextAccessor.HttpContext.Items.ToList();
       Console.WriteLine("############## ITEMS");
-      foreach(var item in items)
+      foreach (var item in items)
       {
         Console.WriteLine("{0} : {1}", item.Key, item.Value);
       }
-      Console.WriteLine("############# USER: {0}",  _httpContextAccessor.HttpContext.User.ToString() );
+      Console.WriteLine("############# USER: {0}", _httpContextAccessor.HttpContext.User.ToString());
       var allclaims = _httpContextAccessor.HttpContext?.User?.Claims.ToList();
       Console.WriteLine("############## ALL CLAIMS {0}", allclaims.Count());
-      foreach(var claim in allclaims)
+      foreach (var claim in allclaims)
       {
         Console.WriteLine(claim);
       }
