@@ -98,6 +98,7 @@ namespace Web
       services.AddScoped<IAuthorizationService, AuthorizationService>();
       services.AddScoped<IExampleHubService, ExampleHubService>();
       services.AddSignalR();
+      services.AddScoped<TokenService>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
