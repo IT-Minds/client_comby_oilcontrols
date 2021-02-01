@@ -24,7 +24,7 @@ namespace Application.Users.Commands.AssignToken
       }
       public async Task<UserTokenDto> Handle(AssignTokenCommand request, CancellationToken cancellationToken)
       {
-        var user = await _context.Users.FirstOrDefaultAsync(x => x.Username.Equals(request.UserDto.Username));
+        var user = await _context.Users.FirstOrDefaultAsync(x => x.Username.Equals(request.UserDto.Username) && x.Password.Equals(request.UserDto.Password));
         if (user == null)
         {
           throw new ArgumentException("Invalid credentials.");

@@ -10,7 +10,7 @@ namespace Web.Controllers
     [HttpPost]
     public async Task<ActionResult<int>> CreateUser(CreateUserCommand command)
     {
-      throw new NotImplementedException();
+      return await Mediator.Send(command);
     }
   }
 }

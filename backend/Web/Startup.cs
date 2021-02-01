@@ -132,7 +132,7 @@ namespace Web
         transaction = context.Database.CurrentTransaction;
         context.Database.Migrate();
         transaction?.Commit();
-        if (env.IsDevelopment() && !env.IsEnvironment("Test") && seedOptions.Value.SeedSampleData)
+        if (env.IsDevelopment() && env.IsEnvironment("Test") && seedOptions.Value.SeedSampleData)
           new SampleData().SeedSampleData(context);
         }
         transaction?.Commit();

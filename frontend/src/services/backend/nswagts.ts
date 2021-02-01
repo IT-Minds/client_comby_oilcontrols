@@ -125,11 +125,11 @@ export class ClientBase {
   }
 }
 
-export interface IActionClient {
-    getAllActions(): Promise<string[]>;
+export interface IAuthenticationClient {
+    login(command: AssignTokenCommand): Promise<UserTokenDto>;
 }
 
-export class ActionClient extends ClientBase implements IActionClient {
+export class AuthenticationClient extends ClientBase implements IAuthenticationClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -140,13 +140,17 @@ export class ActionClient extends ClientBase implements IActionClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getAllActions(): Promise<string[]> {
-        let url_ = this.baseUrl + "/api/Action";
+    login(command: AssignTokenCommand): Promise<UserTokenDto> {
+        let url_ = this.baseUrl + "/api/Authentication";
         url_ = url_.replace(/[?&]$/, "");
 
+        const content_ = JSON.stringify(command);
+
         let options_ = <RequestInit>{
-            method: "GET",
+            body: content_,
+            method: "POST",
             headers: {
+                "Content-Type": "application/json",
                 "Accept": "application/json"
             }
         };
@@ -154,22 +158,18 @@ export class ActionClient extends ClientBase implements IActionClient {
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.http.fetch(url_, transformedOptions_);
         }).then((_response: Response) => {
-            return this.transformResult(url_, _response, (_response: Response) => this.processGetAllActions(_response));
+            return this.transformResult(url_, _response, (_response: Response) => this.processLogin(_response));
         });
     }
 
-    protected processGetAllActions(response: Response): Promise<string[]> {
+    protected processLogin(response: Response): Promise<UserTokenDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(item);
-            }
+            result200 = UserTokenDto.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -177,7 +177,7 @@ export class ActionClient extends ClientBase implements IActionClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<string[]>(<any>null);
+        return Promise.resolve<UserTokenDto>(<any>null);
     }
 }
 
@@ -1781,6 +1781,124 @@ export class UserClient extends ClientBase implements IUserClient {
         }
         return Promise.resolve<number>(<any>null);
     }
+}
+
+export class UserTokenDto implements IUserTokenDto {
+    userDto?: UserDto | null;
+    token?: string | null;
+
+    constructor(data?: IUserTokenDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            this.userDto = data.userDto && !(<any>data.userDto).toJSON ? new UserDto(data.userDto) : <UserDto>this.userDto; 
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userDto = _data["userDto"] ? UserDto.fromJS(_data["userDto"]) : <any>null;
+            this.token = _data["token"] !== undefined ? _data["token"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): UserTokenDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserTokenDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userDto"] = this.userDto ? this.userDto.toJSON() : <any>null;
+        data["token"] = this.token !== undefined ? this.token : <any>null;
+        return data; 
+    }
+}
+
+export interface IUserTokenDto {
+    userDto?: IUserDto | null;
+    token?: string | null;
+}
+
+export class UserDto implements IUserDto {
+    username?: string | null;
+    password?: string | null;
+
+    constructor(data?: IUserDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.username = _data["username"] !== undefined ? _data["username"] : <any>null;
+            this.password = _data["password"] !== undefined ? _data["password"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): UserDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["username"] = this.username !== undefined ? this.username : <any>null;
+        data["password"] = this.password !== undefined ? this.password : <any>null;
+        return data; 
+    }
+}
+
+export interface IUserDto {
+    username?: string | null;
+    password?: string | null;
+}
+
+export class AssignTokenCommand implements IAssignTokenCommand {
+    userDto?: UserDto | null;
+
+    constructor(data?: IAssignTokenCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            this.userDto = data.userDto && !(<any>data.userDto).toJSON ? new UserDto(data.userDto) : <UserDto>this.userDto; 
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userDto = _data["userDto"] ? UserDto.fromJS(_data["userDto"]) : <any>null;
+        }
+    }
+
+    static fromJS(data: any): AssignTokenCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new AssignTokenCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userDto"] = this.userDto ? this.userDto.toJSON() : <any>null;
+        return data; 
+    }
+}
+
+export interface IAssignTokenCommand {
+    userDto?: IUserDto | null;
 }
 
 export class AssignCouponsCommand implements IAssignCouponsCommand {
