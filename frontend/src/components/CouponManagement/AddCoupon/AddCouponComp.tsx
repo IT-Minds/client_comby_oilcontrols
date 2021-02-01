@@ -91,12 +91,16 @@ const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
       logger.debug("Submitting form AddCouponComp");
-      const couponNumbers = localCoupons.filter(c => !(c as CouponIdDto).id).map(c =>
-        {
+      const couponNumbers = localCoupons
+        .filter(c => !(c as CouponIdDto).id)
+        .map(c => {
           return c.couponNumber;
         });
-      submitCallback(couponNumbers);
-      setFormSubmitAttempts(0);
+
+      if (couponNumbers.length > 0) {
+        submitCallback(couponNumbers);
+        setFormSubmitAttempts(0);
+      }
       event.preventDefault();
     },
     [localCoupons]
