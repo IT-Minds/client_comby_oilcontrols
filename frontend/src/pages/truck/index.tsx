@@ -17,7 +17,6 @@ import {
   useToast
 } from "@chakra-ui/react";
 import AddCouponComp from "components/CouponManagement/AddCoupon/AddCouponComp";
-import { AddCouponForm } from "components/CouponManagement/AddCoupon/AddCouponForm";
 import FillingOverviewComp from "components/FillingOverview/FillingOverviewComp";
 import TruckListComp from "components/TruckList/TruckListComp";
 import AddTruckMetaData from "components/TruckMetaData/AddTruckMetaData";
@@ -136,7 +135,7 @@ const TruckPage: NextPage<Props> = ({ trucksEntities, needle, hasMore, pageCount
         />
       </Box>
 
-      <Modal size="2xl" isOpen={isOpen} onClose={onClose}>
+      <Modal size="2xl" isOpen={isOpen} onClose={() => {onClose(); setTruckId(null);}}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Overview of Truck {truckId}</ModalHeader>
@@ -184,7 +183,7 @@ const TruckPage: NextPage<Props> = ({ trucksEntities, needle, hasMore, pageCount
                 onClose();
                 setTruckId(null);
               }}>
-              Ok
+              Done
             </Button>
           </ModalFooter>
         </ModalContent>
