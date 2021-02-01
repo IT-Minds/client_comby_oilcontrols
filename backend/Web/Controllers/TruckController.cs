@@ -13,9 +13,6 @@ using Application.Coupons.Queries.GetCoupons.Truck;
 using System;
 using Application.Coupons.Queries.GetCoupons;
 using Application.TruckRefills.Commands.CreateTruckRefill;
-using Application.Coupons.Queries.GetCoupons;
-using Application.Coupons.Queries.GetCoupons.Truck;
-using System;
 
 namespace Web.Controllers
 {

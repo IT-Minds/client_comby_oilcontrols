@@ -12,11 +12,11 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Trucks.Queries.GetTruckInfo
 {
   [AuthorizeAttribute(Domain.Enums.Action.GET_TRUCK)]
-  public class GetTruckInfoQuery : IRequest<TruckInfoIdDto>
+  public class GetTruckInfoQuery : IRequest<TruckInfoDetailsDto>
   {
     public int Id { get; set; }
 
-    public class GetTruckInfoQueryHandler : IRequestHandler<GetTruckInfoQuery, TruckInfoIdDto>
+    public class GetTruckInfoQueryHandler : IRequestHandler<GetTruckInfoQuery, TruckInfoDetailsDto>
     {
       private readonly IApplicationDbContext _context;
       private readonly IMapper _mapper;
@@ -26,7 +26,7 @@ namespace Application.Trucks.Queries.GetTruckInfo
         _context = context;
         _mapper = mapper;
       }
-      public async Task<TruckInfoIdDto> Handle(GetTruckInfoQuery request, CancellationToken cancellationToken)
+      public async Task<TruckInfoDetailsDto> Handle(GetTruckInfoQuery request, CancellationToken cancellationToken)
       {
         var truck = await _context.Trucks
           .Include(x => x.DailyStates)
