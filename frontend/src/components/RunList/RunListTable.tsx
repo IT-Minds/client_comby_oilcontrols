@@ -18,14 +18,13 @@ type SelectRowCb = (obj: ILocationRefillDto) => void;
 type Props = {
   truckId: number;
   refillCb: SelectRowCb;
-  fuelTypeHighlight?: FuelType;
 };
 
 const defaultSort = (a: ILocationRefillDto, b: ILocationRefillDto) =>
   a.refillId > b.refillId ? 1 : -1;
 
 // TODO i18n;
-const RunListTable: FC<Props> = ({ truckId, refillCb, fuelTypeHighlight }) => {
+const RunListTable: FC<Props> = ({ truckId, refillCb }) => {
   const [refills, setRefills] = useState<ILocationRefillDto[]>([]);
   const cols = useBreakpointValue({
     base: 1,
@@ -67,6 +66,7 @@ const RunListTable: FC<Props> = ({ truckId, refillCb, fuelTypeHighlight }) => {
   const componentRef = useRef<HTMLTableElement>();
   const handlePrint = useReactToPrint({
     onBeforeGetContent: () => setIsPrinting(true),
+    onBeforePrint: () => setIsPrinting(true),
     onAfterPrint: () => setIsPrinting(false),
 
     content: () => componentRef.current
@@ -119,6 +119,7 @@ const RunListTable: FC<Props> = ({ truckId, refillCb, fuelTypeHighlight }) => {
               aria-label="Print Table Button"
               size={"sm"}
               onClick={() => {
+                setIsPrinting(true);
                 handlePrint();
               }}
               icon={<MdPrint />}
@@ -128,11 +129,7 @@ const RunListTable: FC<Props> = ({ truckId, refillCb, fuelTypeHighlight }) => {
       </Thead>
       <Tbody>
         {refills.sort(sort).map(row => (
-          <Tr
-            key={row.refillId}
-            opacity={
-              fuelTypeHighlight !== undefined && fuelTypeHighlight === row.fuelType ? 1 : 0.3
-            }>
+          <Tr key={row.refillId}>
             <Td hidden={!isPrinting && cols < 4}>{capitalize(TankType[row.locationType])}</Td>
             <Td>{row.address}</Td>
             <Td hidden={!isPrinting && cols < 3}>{capitalize(RefillSchedule[row.schedule])}</Td>

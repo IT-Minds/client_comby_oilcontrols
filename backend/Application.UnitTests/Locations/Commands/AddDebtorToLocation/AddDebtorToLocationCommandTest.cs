@@ -35,6 +35,8 @@ namespace Application.UnitTests.Locations.Commands.AddDebtorToLocation
       location.Debtors.Count().Should().Be(1);
       location.Debtors.First().LocationId.Should().Be(command.LocationId);
       location.Debtors.First().Type.Should().Be(command.DebtorType);
+      var locationDebtorHist = Context.LocationDebtorHistories.FirstOrDefault(x => x.DebtorId == debtor.Id && x.LocationId == location.Id);
+      locationDebtorHist.Should().NotBeNull();
     }
 
     [Fact]

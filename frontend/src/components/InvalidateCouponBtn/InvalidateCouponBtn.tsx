@@ -27,15 +27,11 @@ const InvalidateCouponBtn: FC<Props> = ({ coupons, triggered = false }) => {
 
   const { t } = useI18n<Locale>();
 
-  const [isLoading, setLoading] = useState(false);
   const [chosenCoupon, setChosenCoupon] = useState(coupons[0]?.id ?? "0");
   const invalidateActions = useCallback(async () => {
-    setLoading(true);
     onClose();
     const client = await genCouponsClient();
     await client.invalidateCoupon(Number.parseInt(chosenCoupon));
-
-    setLoading(false);
   }, [chosenCoupon]);
 
   useEffect(() => {
@@ -51,7 +47,6 @@ const InvalidateCouponBtn: FC<Props> = ({ coupons, triggered = false }) => {
       <Button
         colorScheme="red"
         onClick={onOpen}
-        isLoading={isLoading}
         rightIcon={<RiFileShredLine />}
         // leftIcon={<GiGasPump />}>
       >

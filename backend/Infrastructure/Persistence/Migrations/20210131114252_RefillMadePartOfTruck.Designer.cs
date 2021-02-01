@@ -4,14 +4,16 @@ using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210131114252_RefillMadePartOfTruck")]
+    partial class RefillMadePartOfTruck
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,33 +60,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasIndex("TruckId");
 
                     b.ToTable("Coupons");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Debtor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("LastModified")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ModifiedCount")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Debtors");
                 });
 
             modelBuilder.Entity("Domain.Entities.ExampleEntity", b =>
@@ -236,76 +211,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasIndex("RegionId");
 
                     b.ToTable("Locations");
-                });
-
-            modelBuilder.Entity("Domain.Entities.LocationDebtor", b =>
-                {
-                    b.Property<int>("DebtorId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LocationId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("DebtorChangeDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTimeOffset>("LastModified")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ModifiedCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.HasKey("DebtorId", "LocationId");
-
-                    b.HasIndex("LocationId", "DebtorId", "Type")
-                        .IsUnique();
-
-                    b.ToTable("LocationDebtors");
-                });
-
-            modelBuilder.Entity("Domain.Entities.LocationDebtorHistory", b =>
-                {
-                    b.Property<int>("LocationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DebtorId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("LastModified")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ModifiedCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.HasKey("LocationId", "DebtorId");
-
-                    b.HasIndex("DebtorId");
-
-                    b.ToTable("LocationDebtorHistories");
                 });
 
             modelBuilder.Entity("Domain.Entities.LocationHistory", b =>
@@ -483,68 +388,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasIndex("RegionId");
 
                     b.ToTable("RegionDailyTemps");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Role", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("LastModified")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ModifiedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique()
-                        .HasFilter("[Name] IS NOT NULL");
-
-                    b.ToTable("Role");
-                });
-
-            modelBuilder.Entity("Domain.Entities.RoleAction", b =>
-                {
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Action")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("LastModified")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ModifiedCount")
-                        .HasColumnType("int");
-
-                    b.HasKey("RoleId", "Action");
-
-                    b.ToTable("RoleAction");
                 });
 
             modelBuilder.Entity("Domain.Entities.Route", b =>
@@ -741,63 +584,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("TruckRefills");
                 });
 
-            modelBuilder.Entity("Domain.Entities.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("LastModified")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ModifiedCount")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("User");
-                });
-
-            modelBuilder.Entity("Domain.Entities.UserRole", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("LastModified")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ModifiedCount")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("UserRole");
-                });
-
             modelBuilder.Entity("Domain.Entities.Coupon", b =>
                 {
                     b.HasOne("Domain.Entities.Truck", "Truck")
@@ -833,44 +619,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("FuelTank");
 
                     b.Navigation("Region");
-                });
-
-            modelBuilder.Entity("Domain.Entities.LocationDebtor", b =>
-                {
-                    b.HasOne("Domain.Entities.Debtor", "Debtor")
-                        .WithMany("Locations")
-                        .HasForeignKey("DebtorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Location", "Location")
-                        .WithMany("Debtors")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Debtor");
-
-                    b.Navigation("Location");
-                });
-
-            modelBuilder.Entity("Domain.Entities.LocationDebtorHistory", b =>
-                {
-                    b.HasOne("Domain.Entities.Debtor", "Debtor")
-                        .WithMany("LocationsHistory")
-                        .HasForeignKey("DebtorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Location", "Location")
-                        .WithMany("DebtorsHistory")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Debtor");
-
-                    b.Navigation("Location");
                 });
 
             modelBuilder.Entity("Domain.Entities.LocationHistory", b =>
@@ -924,17 +672,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Region");
                 });
 
-            modelBuilder.Entity("Domain.Entities.RoleAction", b =>
-                {
-                    b.HasOne("Domain.Entities.Role", "Role")
-                        .WithMany("Actions")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
-                });
-
             modelBuilder.Entity("Domain.Entities.Street", b =>
                 {
                     b.HasOne("Domain.Entities.Region", "Region")
@@ -977,30 +714,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("TruckDailyState");
                 });
 
-            modelBuilder.Entity("Domain.Entities.UserRole", b =>
-                {
-                    b.HasOne("Domain.Entities.Role", "Role")
-                        .WithMany("Users")
-                        .HasForeignKey("RoleId");
-
-                    b.HasOne("Domain.Entities.User", "User")
-                        .WithMany("Roles")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Debtor", b =>
-                {
-                    b.Navigation("Locations");
-
-                    b.Navigation("LocationsHistory");
-                });
-
             modelBuilder.Entity("Domain.Entities.ExampleEntityList", b =>
                 {
                     b.Navigation("ExampleEntities");
@@ -1008,10 +721,6 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Location", b =>
                 {
-                    b.Navigation("Debtors");
-
-                    b.Navigation("DebtorsHistory");
-
                     b.Navigation("LocationHistories");
 
                     b.Navigation("Refills");
@@ -1024,13 +733,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Locations");
 
                     b.Navigation("Streets");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Role", b =>
-                {
-                    b.Navigation("Actions");
-
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Domain.Entities.Route", b =>
@@ -1046,11 +748,6 @@ namespace Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Domain.Entities.TruckDailyState", b =>
                 {
                     b.Navigation("TruckRefills");
-                });
-
-            modelBuilder.Entity("Domain.Entities.User", b =>
-                {
-                    b.Navigation("Roles");
                 });
 #pragma warning restore 612, 618
         }

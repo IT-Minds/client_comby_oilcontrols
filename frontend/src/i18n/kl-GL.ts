@@ -83,7 +83,11 @@ export const table: Locale = {
       liters: "{{liters}} liter",
       of: " af "
     },
-    tankLevel: ""
+    tankLevel: "",
+    refuel: {
+      trigger: "Påfyld tank",
+      complete: "Indsend påfyldning"
+    }
   },
   enums: {
     fuelType: {

@@ -88,6 +88,10 @@ export interface Locale {
       liters: string;
       of: string;
     };
+    refuel: {
+      trigger: string;
+      complete: string;
+    };
   };
 
   enums: {

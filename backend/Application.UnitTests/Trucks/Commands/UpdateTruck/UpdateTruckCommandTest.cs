@@ -16,6 +16,7 @@ namespace Application.UnitTests.Trucks.Commands.UpdateTruck
     {
       var command = new UpdateTruckCommand
       {
+        Id = 100,
         TruckInfo = new TruckInfoIdDto
         {
           Name = "McTruck",
@@ -34,11 +35,11 @@ namespace Application.UnitTests.Trucks.Commands.UpdateTruck
       var entity = await Context.Trucks.FindAsync(result.Id);
 
       entity.Should().NotBeNull();
-      entity.Id.Should().Be(command.TruckInfo.Id);
+      entity.Id.Should().Be(command.Id);
       entity.Name.Should().Be(command.TruckInfo.Name);
       entity.Description.Should().Be(command.TruckInfo.Description);
       entity.TankCapacity.Should().Be(command.TruckInfo.TankCapacity);
-      entity.DailyStates.OrderByDescending(x => x.Date).FirstOrDefault().StartRefillNumber.Should().Be(command.TruckInfo.RefillNumber);
+      entity.RefillNumber.Should().Be(command.TruckInfo.RefillNumber);
       entity.TruckIdentifier.Should().Be(command.TruckInfo.TruckIdentifier);
     }
 

@@ -34,8 +34,7 @@ const DemoPage: NextPage = () => {
             actualDeliveryDate: new Date(),
             startAmount: 2,
             endAmount: 20,
-            tankState: TankState.FULL,
-            refillNumber: 123
+            tankState: TankState.FULL
           })
         );
 

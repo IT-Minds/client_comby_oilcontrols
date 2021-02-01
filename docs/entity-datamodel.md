@@ -150,27 +150,34 @@ class User {
   id
 }
 
-Truck --> "1" Route
-Route --> "0..*" Refill
-Refill --> "1" Location
-Refill --> Coupon
+class LocationDebtorHistory {
+
+}
+
+Truck "1" -- "1" Route
+Route "1" -- "0..*" Refill
+Refill "*" -- "1" Location
+Refill "1" -- "1" Coupon
 Refill ..> FuelType
 FuelTank ..> TankType
 Refill ..> TankState
-Truck "1" <-- Coupon
-Region --> "0..*" Location
-Region --> "0..*" RegionDailyTemp
-Truck --> "0..*" TruckDailyState
-TruckDailyState --> "0..*" TruckRefill
+Truck "1" -- "*" Coupon
+Region "1" -- "0..*" Location
+Region "1" -- "0..*" RegionDailyTemp
+Truck "1" -- "0..*" TruckDailyState
+TruckDailyState "1" -- "0..*" TruckRefill
 TruckRefill ..> FuelType
-Region --> "0..*" Street
+Region "1" -- "0..*" Street
 Debtor "1" -- "*" LocationDebtor
-Location "1" -- "*" LocationDebtor
-Location --> "1" FuelTank
+Location "1" -- "0..3" LocationDebtor
+Location "1" -- "1" FuelTank
 Location ..> RefillSchedule
 LocationHistory ..> RefillSchedule
 Location "1" -- "1..*" LocationHistory
 LocationDebtor ..> LocationDebtorType
+Location "1" -- "0..*" LocationDebtorHistory
+LocationDebtorHistory "*" -- "1" Debtor
+LocationDebtorHistory ..> LocationDebtorType
 
 Action "1" -- "*" RoleAction
 Role "1" -- "*" RoleAction

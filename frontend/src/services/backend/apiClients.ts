@@ -7,6 +7,7 @@ import {
   ExampleEntityClient,
   HealthClient,
   LocationClient,
+  LocationHistoryClient,
   RefillClient,
   StreetClient,
   TruckClient
@@ -21,3 +22,5 @@ export const genDailyTemperatureClient = (): Promise<DailyTemperatureClient> =>
   api(DailyTemperatureClient);
 export const genLocationClient = (): Promise<LocationClient> => api(LocationClient);
 export const genTruckClient = (): Promise<TruckClient> => api(TruckClient);
+export const genLocationHistoryClient = (): Promise<LocationHistoryClient> =>
+  api(LocationHistoryClient);

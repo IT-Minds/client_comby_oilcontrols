@@ -15,9 +15,7 @@ namespace Application.Trucks
 
     public void Mapping(Profile profile)
     {
-      profile.CreateMap<Truck, TruckInfoDto>()
-        .ForMember(dest => dest.RefillNumber,
-          map => map.MapFrom(from => from.CurrentRefillNumber()));
+      profile.CreateMap<Truck, TruckInfoDto>();
     }
   }
 }
