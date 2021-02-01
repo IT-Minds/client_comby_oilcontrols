@@ -21,7 +21,7 @@
   "keywords": [],
   "license": "MPL-2.0",
   "dependencies": {
-    "@chakra-ui/react": "^1.1.6",
+    "@chakra-ui/react": "^1.2.1",
     "@emotion/react": "^11.1.4",
     "@emotion/styled": "^11.0.0",
     "@microsoft/signalr": "^5.0.2",
