@@ -7,7 +7,6 @@ import {
   HStack,
   NumberInput,
   NumberInputField,
-  Select,
   Tag,
   TagCloseButton,
   TagLabel,
@@ -15,77 +14,87 @@ import {
   Wrap,
   WrapItem
 } from "@chakra-ui/react";
-import React, { FC, FormEvent, useCallback, useEffect, useState } from "react";
+import React, { FC, FormEvent, useCallback, useEffect, useReducer, useState } from "react";
 import { MdAdd, MdCheck } from "react-icons/md";
-import { CouponDto } from "services/backend/nswagts";
-import { CouponInterval } from "types/CouponInterval";
-import DropdownType from "types/DropdownType";
+import ListReduce, { ListReducerActionType } from "react-list-reducer";
+import { CouponDto, CouponIdDto, CouponStatus } from "services/backend/nswagts";
 import { logger } from "utils/logger";
-import { mergeArrayRanges } from "utils/mergeArrayRanges";
 
 import { AddCouponForm } from "./AddCouponForm";
 
 type Props = {
-  submitCallback: (addCouponForm: AddCouponForm) => void;
-  coupons: CouponDto[];
+  submitCallback: (couponNumbers: number[]) => void;
+  coupons: CouponIdDto[];
 };
 
 const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
   const [from, setFrom] = useState(null);
   const [to, setTo] = useState(null);
-  const [interval, setInterval] = useState<CouponInterval[]>([]);
-  const [localCoupons, setLocalCoupons] = useState<CouponDto[]>([]);
 
-  const [localAddCouponForm, setLocalAddCouponForm] = useState<AddCouponForm>({
-    carId: "",
-    couponIntervals: []
-  });
+  const [localCoupons, dispatchLocalCoupons] = useReducer(
+    ListReduce<CouponIdDto | CouponDto>("couponNumber"),
+    coupons ?? []
+  );
 
   useEffect(() => {
     if (coupons) {
-      //setLocalTruckMetaDataForm(truckMetaData);
-      setLocalCoupons(coupons);
+      dispatchLocalCoupons({
+        type: ListReducerActionType.Reset,
+        data: coupons
+      });
     }
   }, [coupons]);
 
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
 
   const updateLocalForm = useCallback((value: unknown, key: keyof AddCouponForm) => {
-    setLocalAddCouponForm(form => {
+    dispatchLocalCoupons(form => {
       (form[key] as unknown) = value;
       return form;
     });
   }, []);
 
-  const addInterval = useCallback(() => {
+  const addCoupons = useCallback(() => {
     if (from > 0 && to > 0) {
-      const mergedArr = mergeArrayRanges(interval, {
-        start: from,
-        end: to,
-        id: Date.now().toString(16)
-      });
+      const length = to - from + 1;
 
-      setInterval(mergedArr);
+      const newArr = [...new Array(length)].map((_, i) => {
+        return new CouponDto({
+          couponNumber: i + from,
+          status: CouponStatus.AVAILABLE,
+          truckId: null //Null as it is not relevant in this component
+        })
+      })
+
+      dispatchLocalCoupons({
+        type: ListReducerActionType.AddOrUpdate,
+        data: newArr
+      });
 
       setFrom(null);
       setTo(null);
     }
-  }, [from, to, interval]);
+  }, [from, to, coupons]);
 
-  const removeInterval = useCallback((id: string) => {
-    setInterval(oldArray => oldArray.filter(oa => oa.id !== id));
+  const removeCoupon = useCallback((couponNumber: number) => {
+    dispatchLocalCoupons({
+      type: ListReducerActionType.Remove,
+      data: couponNumber
+    });
   }, []);
 
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
       logger.debug("Submitting form AddCouponComp");
-      localAddCouponForm.couponIntervals = interval;
-
-      submitCallback(localAddCouponForm);
+      const couponNumbers = localCoupons.filter(c => !(c as CouponIdDto).id).map(c =>
+        {
+          return c.couponNumber;
+        });
+      submitCallback(couponNumbers);
       setFormSubmitAttempts(0);
       event.preventDefault();
     },
-    [interval, localAddCouponForm]
+    [localCoupons]
   );
 
   return (
@@ -94,7 +103,7 @@ const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
         <VStack align="center" justify="center">
           <FormControl
             isInvalid={
-              (formSubmitAttempts > 0 && (!interval || interval.length < 1)) ||
+              (formSubmitAttempts > 0 && (!localCoupons || localCoupons.length < 1)) ||
               from > to ||
               to < from
             }>
@@ -102,9 +111,11 @@ const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
             <HStack>
               <FormControl
                 isInvalid={
-                  (formSubmitAttempts > 0 && (!interval || interval.length < 1)) || from > to
+                  (formSubmitAttempts > 0 &&
+                    (!localCoupons || localCoupons.length < 1)) ||
+                  from > to
                 }
-                isRequired={!interval || interval.length < 1}>
+                isRequired={!localCoupons || localCoupons.length < 1}>
                 <NumberInput
                   placeholder="From"
                   onChange={value => {
@@ -116,9 +127,11 @@ const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
               </FormControl>
               <FormControl
                 isInvalid={
-                  (formSubmitAttempts > 0 && (!interval || interval.length < 1)) || to < from
+                  (formSubmitAttempts > 0 &&
+                    (!localCoupons || localCoupons.length < 1)) ||
+                  to < from
                 }
-                isRequired={!interval || interval.length < 1}>
+                isRequired={!localCoupons || localCoupons.length < 1}>
                 <NumberInput
                   placeholder="To"
                   onChange={value => {
@@ -130,7 +143,7 @@ const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
               </FormControl>
             </HStack>
             <FormErrorMessage>Please enter a valid interval</FormErrorMessage>
-            <Button mt={4} colorScheme="blue" rightIcon={<MdAdd />} onClick={() => addInterval()}>
+            <Button mt={4} colorScheme="blue" rightIcon={<MdAdd />} onClick={() => addCoupons()}>
               Add interval
             </Button>
           </FormControl>
@@ -138,24 +151,18 @@ const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
           <FormControl>
             <FormLabel>Selected intervals:</FormLabel>
             <Wrap>
-              {coupons?.map((c, index) => (
+              {localCoupons?.map((c, index) => (
                 <WrapItem key={index}>
-                  <Tag size="md" borderRadius="full" variant="solid" colorScheme="blue">
-                    <TagLabel>{c.couponNumber}</TagLabel>
-                    {/* <TagCloseButton onClick={() => removeInterval(c.id)} /> */}
-                  </Tag>
-                </WrapItem>
-              ))}
-            </Wrap>
-            <Wrap>
-              {interval?.map(cn => (
-                <WrapItem key={cn.id}>
+                  { (c as CouponIdDto).id ?
+                    <Tag size="md" borderRadius="full" variant="solid" colorScheme="blue">
+                  <TagLabel>{c.couponNumber}</TagLabel>
+                </Tag>
+                  : 
                   <Tag size="md" borderRadius="full" variant="solid" colorScheme="yellow">
-                    <TagLabel>
-                      {cn.start} - {cn.end}
-                    </TagLabel>
-                    <TagCloseButton onClick={() => removeInterval(cn.id)} />
-                  </Tag>
+                  <TagLabel>{c.couponNumber}</TagLabel>
+                  <TagCloseButton onClick={() => removeCoupon(c.couponNumber)} />
+                </Tag> 
+                  }
                 </WrapItem>
               ))}
             </Wrap>
