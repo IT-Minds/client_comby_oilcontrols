@@ -31,12 +31,12 @@ namespace Application.Roles.Commands.CreateRole
         };
         _context.Roles.Add(role);
 
-        // foreach (Action act in request.Role.Actions)
-        // {
-        //   _context.RoleActions.Add(new RoleAction { Action = act, RoleId = role.Id });
-        // }
-        await _context.SaveChangesAsync(cancellationToken);
-        return _mapper.Map<RoleIdDto>(role);
+        foreach (Action act in request.Role.Actions)
+        {
+          _context.RoleActions.Add(new RoleAction { Action = act, RoleId = role.Id });
+        }
+        var id = await _context.SaveChangesAsync(cancellationToken);
+        return new RoleIdDto { Name = request.Role.Name, Actions = request.Role.Actions, Id = id };
       }
     }
   }
