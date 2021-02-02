@@ -11,11 +11,11 @@ import {
   useBreakpointValue,
   useDisclosure
 } from "@chakra-ui/react";
-import Image from "next/image";
 import MyUserSnippet from "components/Menu/components/MyUserSnippet";
 import Menu from "components/Menu/Menu";
 import { testLinks } from "components/Menu/MenuLink";
 import { UserTypeContext } from "contexts/UserTypeContext";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { FC, useContext, useEffect } from "react";
 import { MdSort } from "react-icons/md";

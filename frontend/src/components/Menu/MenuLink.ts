@@ -26,7 +26,7 @@ export const testLinks: MenuLink[] = [
       {
         id: "trucks-list",
         title: "menu.trucks.overview",
-        href: "/demo"
+        href: "/trucks/overview"
       },
       {
         id: "trucks-create",

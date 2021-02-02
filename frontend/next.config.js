@@ -11,7 +11,7 @@ const locales = readdirSync(startPath)
     return /^([a-z]{2}-[A-Z]{2})\.ts$/.exec(x)[1];
   });
 
-defaultLocale = "da-DK";
+const defaultLocale = "da-DK";
 
 if (!locales.includes(defaultLocale)) {
   throw Error("Default Locale not part of other locales: " + locales.join(","));

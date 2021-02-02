@@ -14,10 +14,10 @@ import {
 import PageIndicator from "components/Demo/components/PageIndicator";
 import QuerySingleSelectBtn from "components/SortFilter/QuerySingleSelectBtn";
 import { usePagedFetched } from "hooks/usePagedFetched";
-import React, { FC, useCallback, useMemo, useReducer, useState } from "react";
-import ListReducer from "react-list-reducer";
+import React, { FC, useCallback, useEffect, useMemo, useReducer, useState } from "react";
+import ListReducer, { ListReducerActionType } from "react-list-reducer";
 import { genRefillClient } from "services/backend/apiClients";
-import { RefillDto, TankType } from "services/backend/nswagts";
+import { LocationRefillDto, TankType } from "services/backend/nswagts";
 import { capitalize } from "utils/capitalizeAnyString";
 
 import QueryMultiSelectBtn from "../SortFilter/QueryMultiSelectBtn";
@@ -25,7 +25,7 @@ import QuerySortBtn, { Direction } from "../SortFilter/QuerySortBtn";
 import styles from "./styles.module.css";
 
 type Props = {
-  preLoadedData?: RefillDto[];
+  preLoadedData?: LocationRefillDto[];
   preloadDataNeedle?: string;
   preloadLoadedAll?: boolean;
   preLoadedPageCount?: number;
@@ -33,14 +33,18 @@ type Props = {
 
 export const PAGE_SHOW_SIZE = 15;
 
-const defaultSort = (a: RefillDto, b: RefillDto) => (a.id > b.id ? 1 : -1);
+const defaultSort = (a: LocationRefillDto, b: LocationRefillDto) =>
+  a.refillId > b.refillId ? 1 : -1;
 
 const FillingOverviewComp: FC<Props> = ({
   preLoadedData = [],
   preloadDataNeedle = "0",
   preloadLoadedAll = false
 }) => {
-  const [data, dataDispatch] = useReducer(ListReducer<RefillDto>("id"), preLoadedData);
+  const [data, dataDispatch] = useReducer(
+    ListReducer<LocationRefillDto>("refillId"),
+    preLoadedData ?? []
+  );
   const [pageShowing, setPageShowing] = useState(0);
 
   const { done } = usePagedFetched(
@@ -54,6 +58,15 @@ const FillingOverviewComp: FC<Props> = ({
     }
   );
 
+  useEffect(() => {
+    if (preLoadedData) {
+      dataDispatch({
+        type: ListReducerActionType.Reset,
+        data: preLoadedData
+      });
+    }
+  }, [preLoadedData]);
+
   const pages = useMemo(() => {
     const maxDataLength = data.length;
     const allPageMax = maxDataLength > 0 ? Math.ceil(maxDataLength / PAGE_SHOW_SIZE) : 0;
@@ -64,7 +77,7 @@ const FillingOverviewComp: FC<Props> = ({
   /**
    * Splits the data into table pages.
    */
-  const dataSplitter = useMemo<RefillDto[]>(() => {
+  const dataSplitter = useMemo<LocationRefillDto[]>(() => {
     const realPageMax = data.length > 0 ? Math.ceil(data.length / PAGE_SHOW_SIZE) : 0;
 
     if (realPageMax === 0) {
@@ -83,16 +96,20 @@ const FillingOverviewComp: FC<Props> = ({
     return elements.length;
   }, [pages, data]);
 
-  const [sort, setSort] = useState<(a: RefillDto, b: RefillDto) => number>(() => defaultSort);
+  const [sort, setSort] = useState<(a: LocationRefillDto, b: LocationRefillDto) => number>(
+    () => defaultSort
+  );
 
-  const sortCb = useCallback((key: keyof RefillDto, direction: Direction) => {
+  const sortCb = useCallback((key: keyof LocationRefillDto, direction: Direction) => {
     if (direction === null) {
       setSort(() => defaultSort);
       return;
     }
 
     const sortVal = direction === "ASC" ? 1 : -1;
-    setSort(() => (a: RefillDto, b: RefillDto) => (a[key] > b[key] ? sortVal : -sortVal));
+    setSort(() => (a: LocationRefillDto, b: LocationRefillDto) =>
+      a[key] > b[key] ? sortVal : -sortVal
+    );
   }, []);
 
   return (
@@ -158,13 +175,13 @@ const FillingOverviewComp: FC<Props> = ({
         <Tbody>
           {dataSplitter.sort(sort).map(data => {
             return (
-              <Tr key={data.id}>
+              <Tr key={data.refillId}>
                 <Td>{capitalize(TankType[data.locationType])}</Td>
-                <Td>{new Date(data.actualDeliveryDate).toLocaleDateString()}</Td>
-                <Td>{data.truckId}</Td>
-                <Td isNumeric>{data.startAmount}</Td>
-                <Td isNumeric>{data.endAmount}</Td>
-                <Td>{data.couponId}</Td>
+                <Td>{new Date(data.expectedDeliveryDate).toLocaleDateString()}</Td>
+                <Td>{data.regionId}</Td>
+                <Td isNumeric>{data.locationId}</Td>
+                <Td isNumeric>{data.schedule}</Td>
+                <Td>{data.debtorBlocked}</Td>
               </Tr>
             );
           })}

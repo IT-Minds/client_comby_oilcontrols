@@ -1,7 +1,9 @@
 import { GetStaticProps, NextPage } from "next";
-import { I18nProps } from "next-rosetta";
 import Link from "next/link";
+import { I18nProps } from "next-rosetta";
 import { genTruckClient } from "services/backend/apiClients";
+import { emptyPageResult } from "services/backend/ext/IPageResult";
+import { TruckInfoIdDto } from "services/backend/nswagts";
 
 type Props = {
   truckIds: number[];
@@ -29,10 +31,10 @@ export const getStaticProps: GetStaticProps<Props & I18nProps<Locale>> = async c
   const { table = {} } = await import(`../../i18n/${locale}`);
 
   const client = await genTruckClient();
-  const trucks = await client.getTrucks();
-  const truckIds = trucks.results.map(x => x.id);
+  const trucks = await client.getTrucks().catch(() => emptyPageResult<TruckInfoIdDto>());
+  const truckIds = trucks.results?.map(x => x.id);
 
-  return { props: { table, truckIds } };
+  return { props: { table, truckIds }, revalidate: 600 };
 };
 
 export default LocalePage;
