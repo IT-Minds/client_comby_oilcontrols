@@ -1306,7 +1306,7 @@ export interface ITruckClient {
     getTruck(id: number): Promise<TruckInfoDetailsDto>;
     updateTruck(id: number, command: UpdateTruckCommand): Promise<TruckInfoIdDto>;
     getTrucksCoupons(id: number, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfCouponIdDtoAndDateTimeOffset>;
-    getTrucks(needle?: number | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfTruckInfoIdDtoAndInteger>;
+    getTrucks(needle?: number | undefined, size?: number | undefined, skip?: number | undefined): Promise<PageResultOfTruckInfoIdDtoAndInteger>;
     createTruck(command: CreateTruckCommand): Promise<TruckInfoIdDto>;
     getTrucksRefills(id: number): Promise<LocationRefillDto[]>;
     createTruckRefuel(id: number, command: CreateTruckRefillCommand): Promise<number>;
@@ -1452,7 +1452,7 @@ export class TruckClient extends ClientBase implements ITruckClient {
         return Promise.resolve<PageResultOfCouponIdDtoAndDateTimeOffset>(<any>null);
     }
 
-    getTrucks(needle?: number | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfTruckInfoIdDtoAndInteger> {
+    getTrucks(needle?: number | undefined, size?: number | undefined, skip?: number | undefined): Promise<PageResultOfTruckInfoIdDtoAndInteger> {
         let url_ = this.baseUrl + "/api/Truck?";
         if (needle === null)
             throw new Error("The parameter 'needle' cannot be null.");
@@ -1462,7 +1462,9 @@ export class TruckClient extends ClientBase implements ITruckClient {
             throw new Error("The parameter 'size' cannot be null.");
         else if (size !== undefined)
             url_ += "size=" + encodeURIComponent("" + size) + "&";
-        if (skip !== undefined && skip !== null)
+        if (skip === null)
+            throw new Error("The parameter 'skip' cannot be null.");
+        else if (skip !== undefined)
             url_ += "skip=" + encodeURIComponent("" + skip) + "&";
         url_ = url_.replace(/[?&]$/, "");
 

@@ -34,7 +34,12 @@ export const useLoadProgress = (router: NextRouter): number => {
   }, []);
 
   useEffect(() => {
-    const genEvent = (cb: () => void) => (_url: unknown, { shallow = true }) => !shallow && cb();
+    const genEvent = (cb: () => void) => (_url: unknown, obj: any) => {
+      if (!obj) return;
+      const { shallow = true } = obj;
+
+      !shallow && cb();
+    };
 
     router?.events?.on("routeChangeStart", genEvent(incrementLoadVal));
     router?.events?.on("routeChangeComplete", genEvent(finishLoading));

@@ -16,7 +16,7 @@ import { RefillForm } from "components/FillOutRefillForm/RefillForm";
 import InvalidateCouponBtn from "components/InvalidateCouponBtn/InvalidateCouponBtn";
 import RunListTable from "components/RunList/RunListTable";
 import { useOffline } from "hooks/useOffline";
-import { GetServerSideProps, NextPage } from "next";
+import { GetServerSideProps, GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { I18nProps, useI18n } from "next-rosetta";
@@ -175,7 +175,7 @@ const LocalePage: NextPage<Props> = ({ truckInfo, coupons }) => {
         </Collapse>
       </Box>
 
-      <VStack position="absolute" bottom={2} right={0} alignItems="left">
+      <HStack position="absolute" bottom={2} right={0}>
         <RefuelForm fillData={completeTruckRefuel} />
         <InvalidateCouponBtn
           coupons={coupons.map<DropdownType>(x => ({
@@ -183,27 +183,12 @@ const LocalePage: NextPage<Props> = ({ truckInfo, coupons }) => {
             name: x.couponNumber + ""
           }))}
         />
-      </VStack>
+      </HStack>
     </VStack>
   );
 };
 
 // export const getStaticProps: GetStaticProps<I18nProps<Locale> & Props> = async context => {
-//   const locale = context.locale || context.defaultLocale;
-
-//   const { table = {} } = await import(`../../i18n/${locale}`);
-
-//   const truckClient = await genTruckClient();
-
-//   const truckInfo = await truckClient.getTruck(1);
-//   const coupons = await truckClient.getCouponsPaged(1).then(
-//     x => x.results,
-//     () => []
-//   );
-
-//   return { props: { table, truckInfo, coupons }, revalidate: 5 * 60 };
-// };
-
 export const getServerSideProps: GetServerSideProps<Props & I18nProps<Locale>> = async context => {
   const locale = context.locale || context.defaultLocale;
 
@@ -219,7 +204,7 @@ export const getServerSideProps: GetServerSideProps<Props & I18nProps<Locale>> =
 
   const { table = {} } = await import(`../../i18n/${locale}`);
 
-  context.res.setHeader("Cache-Control", "max-age=600");
+  // return { props: { table, truckInfo, coupons }, revalidate: 5 };
   return { props: { table, truckInfo, coupons } };
 };
 
