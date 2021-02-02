@@ -52,8 +52,9 @@ const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
       const newArr = [...new Array(length)]
         .map((_, i) => i + from)
         .filter(couponNumber => !coupons.some(c => c.couponNumber === couponNumber))
+        .filter(couponNumber => !localCoupons.some(c => c.couponNumber === couponNumber))
         .map(couponNumber => {
-          if (!coupons.some(c => c.couponNumber === couponNumber)) {
+          if (!coupons.some(c => c.couponNumber === couponNumber) && !localCoupons.some(c => c.couponNumber === couponNumber)) {
             return new CouponDto({
               couponNumber: couponNumber,
               status: CouponStatus.AVAILABLE,
