@@ -14,7 +14,8 @@ import {
   Spinner,
   useColorModeValue,
   useDisclosure,
-  useToast
+  useToast,
+  VStack
 } from "@chakra-ui/react";
 import AddCouponComp from "components/CouponManagement/AddCoupon/AddCouponComp";
 import FillingOverviewComp from "components/FillingOverview/FillingOverviewComp";
@@ -36,8 +37,7 @@ import {
   UpdateTruckCommand
 } from "services/backend/nswagts";
 
-type Props = {
-};
+type Props = {};
 
 const TruckPage: NextPage<Props> = () => {
   const bg = useColorModeValue("gray.100", "gray.700");
@@ -103,7 +103,7 @@ const TruckPage: NextPage<Props> = () => {
     [awaitCallback]
   );
 
-  useEffectAsync(async () => {    
+  useEffectAsync(async () => {
     const truckEntityData = await genTruckClient().then(client => client.getTrucks(0));
     setTruckEntities(truckEntityData.results);
 
@@ -123,29 +123,28 @@ const TruckPage: NextPage<Props> = () => {
 
       setIsLoading(false);
     }
-      
   }, [truckId]);
 
   return (
-    <Container maxW="xl" centerContent>
-      <Box padding="4" bg={bg} maxW="6xl" maxH="4xl" resize="both" overflow="auto">
-        <TruckListComp
-          preLoadedData={truckEntities}
-          truckId={id => {
-            setTruckId(id);
-          }}
-        />
-      </Box>
+    <VStack position="relative" overflow="visible" h="95vh" w="100%">
+      <Heading>Truck Overview</Heading>
+
+      <TruckListComp
+        preLoadedData={truckEntities}
+        truckId={id => {
+          setTruckId(id);
+        }}
+      />
 
       <Modal
-        size="2xl"
+        size="5xl"
         isOpen={isOpen}
         onClose={() => {
           onClose();
           setTruckId(null);
         }}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent height="90vh">
           <ModalHeader>Overview of Truck {truckId}</ModalHeader>
           <ModalCloseButton />
           <Center>
@@ -158,7 +157,7 @@ const TruckPage: NextPage<Props> = () => {
               size="xl"
             />
           </Center>
-          <ModalBody hidden={isLoading}>
+          <ModalBody hidden={isLoading} overflowY="auto">
             <Heading size="sm">Coupons</Heading>
             <AddCouponComp
               submitCallback={x => {
@@ -167,33 +166,20 @@ const TruckPage: NextPage<Props> = () => {
               coupons={couponData}></AddCouponComp>
 
             <Heading size="sm" mt={8}>
-              Filling overview
-            </Heading>
-            <FillingOverviewComp
-              preLoadedData={truckRefillData}
-            />
-
-            <Heading size="sm" mt={8}>
               Meta data
             </Heading>
             <AddTruckMetaData
               submitCallback={x => saveMetaDataForm(x)}
               truckMetaData={truckMetaData}></AddTruckMetaData>
-          </ModalBody>
 
-          <ModalFooter>
-            <Button
-              colorScheme="blue"
-              onClick={() => {
-                onClose();
-                setTruckId(null);
-              }}>
-              Done
-            </Button>
-          </ModalFooter>
+            <Heading size="sm" mt={8}>
+              Filling overview
+            </Heading>
+            <FillingOverviewComp preLoadedData={truckRefillData} />
+          </ModalBody>
         </ModalContent>
       </Modal>
-    </Container>
+    </VStack>
   );
 };
 
