@@ -37,9 +37,7 @@ import {
   UpdateTruckCommand
 } from "services/backend/nswagts";
 
-type Props = {};
-
-const TruckPage: NextPage<Props> = () => {
+const TruckPage: NextPage = () => {
   const bg = useColorModeValue("gray.100", "gray.700");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isLoading, setIsLoading] = useState(false);
