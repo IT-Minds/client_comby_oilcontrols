@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using global::Application.Common.Interfaces;
 using Application.Common.Exceptions;
 using Domain.Entities;
+using System;
 
 namespace Application.Locations.Commands.CreateLocation
 {

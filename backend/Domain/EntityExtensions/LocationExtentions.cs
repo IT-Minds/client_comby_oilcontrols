@@ -5,12 +5,10 @@ namespace Domain.EntityExtensions
 {
   public static class LocationExtensions
   {
-    const int HEAT_BASE = 21;
+    const double HEAT_BASE = 21;
 
     public static double HeatingIndex(this Location location, DateTime startDate, DateTime endDate)
     {
-      const int HEAT_BASE = 21;
-
       var dailyTemps = location.Region.DailyTemperatures.Where(x => x.Date >= startDate && x.Date <= endDate);
       if (dailyTemps == null || dailyTemps.Count() == 0)
       {
@@ -25,11 +23,11 @@ namespace Domain.EntityExtensions
     {
       if (location.Refills == null)
       {
-        throw new ArgumentException("No past refills for location: " + location.Id);
+        return location.EstimateFuelConsumption;
       }
 
       var pastRefills = location.Refills.Where(x => x.ActualDeliveryDate != null).OrderByDescending(x => x.ActualDeliveryDate);
-      if (pastRefills == null || pastRefills.Count() == 0)
+      if (pastRefills == null || pastRefills.Count() < 3)
       {
         return location.EstimateFuelConsumption;
       }
@@ -40,7 +38,7 @@ namespace Domain.EntityExtensions
       var dailyTemps = location.Region.DailyTemperatures.Where(x => x.Date >= startDate && x.Date <= endDate);
       if (dailyTemps == null || dailyTemps.Count() == 0)
       {
-        throw new ArgumentException("No temperatures found for location " + location.Id + " in the period " + startDate + " " + endDate);
+        return location.EstimateFuelConsumption;
       }
 
       var heatIndex = location.HeatingIndex(startDate, endDate);
@@ -120,6 +118,26 @@ namespace Domain.EntityExtensions
       }
 
       return location.FuelConsumptionPerDegreeOfHeating() * heatDegreeSum;
+    }
+
+    public static double EstimateMonthlyCost(this Location location, double oilPrice = 10.5)
+    {
+      var totalConsumption = location.EstimatedYearlyFuelConsumption(DateTime.UtcNow.Year);
+      return (totalConsumption * oilPrice) / 12;
+    }
+    public static Debtor MainDebtor(this Location location)
+    {
+      return location.Debtors.First(x => x.Type == Enums.LocationDebtorType.MAIN).Debtor;
+    }
+
+    public static Debtor BaseDebtor(this Location location)
+    {
+      return location.Debtors.FirstOrDefault(x => x.Type == Enums.LocationDebtorType.BASE).Debtor;
+    }
+
+    public static Debtor UpcomingDebtor(this Location location)
+    {
+      return location.Debtors.FirstOrDefault(x => x.Type == Enums.LocationDebtorType.UPCOMING).Debtor;
     }
   }
 }

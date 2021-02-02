@@ -15,7 +15,7 @@ namespace Application.UnitTests.EntityExtentions.LocationExtensions
       var location = await Context.Locations.Include(x => x.Refills).FirstOrDefaultAsync(x => x.Id == 5);
       var fuelConsumption = location.FuelConsumptionPerDegreeOfHeating();
 
-      fuelConsumption.Should().Be(800.0 / 315.0);
+      fuelConsumption.Should().Be(1600.0 / 315.0);
     }
 
     [Fact]
@@ -24,17 +24,22 @@ namespace Application.UnitTests.EntityExtentions.LocationExtensions
       var location = await Context.Locations.Include(x => x.Refills).FirstOrDefaultAsync(x => x.Id == 6);
       var fuelConsumption = location.FuelConsumptionPerDegreeOfHeating();
       fuelConsumption.Should().Be(location.EstimateFuelConsumption);
-
     }
 
     [Fact]
     public async Task Handle_NoTemperatureForLocation()
     {
       var location = await Context.Locations.Include(x => x.Refills).FirstOrDefaultAsync(x => x.Id == 7);
+      var fuelConsumption = location.FuelConsumptionPerDegreeOfHeating();
+      fuelConsumption.Should().Be(location.EstimateFuelConsumption);
+    }
 
-      Assert.Throws<ArgumentException>(
-        () => { var fuelConsumption = location.FuelConsumptionPerDegreeOfHeating(); }
-      );
+    [Fact]
+    public async Task Handle_LessThanThreeRefillsForLocation()
+    {
+      var location = await Context.Locations.Include(x => x.Refills).FirstOrDefaultAsync(x => x.Id == 2);
+      var fuelConsumption = location.FuelConsumptionPerDegreeOfHeating();
+      fuelConsumption.Should().Be(location.EstimateFuelConsumption);
     }
 
     [Fact]
@@ -101,7 +106,7 @@ namespace Application.UnitTests.EntityExtentions.LocationExtensions
         .FirstOrDefaultAsync(x => x.Id == 201);
 
       var date = location.PredictDayReachingMinimumFuelLevel();
-      date.Should().Be(new DateTime(1990, 5, 8));
+      date.Should().Be(new DateTime(1990, 5, 4));
     }
 
     [Fact]
@@ -117,6 +122,19 @@ namespace Application.UnitTests.EntityExtentions.LocationExtensions
       var date = location.PredictDayReachingMinimumFuelLevel();
       date.Year.Should().Be(DateTime.UtcNow.Year);
       date.DayOfYear.Should().Be(DateTime.UtcNow.DayOfYear);
+    }
+
+    [Fact]
+    public async Task Handle_CalculateMonthlyRate()
+    {
+      var location = await Context.Locations
+        .Include(x => x.FuelTank)
+        .Include(x => x.Refills)
+        .Include(x => x.Region)
+        .ThenInclude(x => x.DailyTemperatures)
+        .FirstOrDefaultAsync(x => x.Id == 301);
+      var rate = location.EstimateMonthlyCost();
+      rate.Should().Be(32850 * 10.5 / 12);
     }
   }
 }

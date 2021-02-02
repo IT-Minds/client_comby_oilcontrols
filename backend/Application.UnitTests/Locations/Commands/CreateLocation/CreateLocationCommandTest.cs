@@ -24,7 +24,7 @@ namespace Application.UnitTests.Locations.Commands.CreateLocations
         MinimumFuelAmount = 50.5,
         EstimateConsumption = 10,
         FuelType = FuelType.GASOLINE,
-        DaysBetweenRefills = 10,
+        DaysBetweenRefills = 10
       };
       var oldLocation = Context.Locations.Find(1);
       var historyNumber = oldLocation.LocationHistories == null ? 0 : oldLocation.LocationHistories.Count();

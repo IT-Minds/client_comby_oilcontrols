@@ -37,7 +37,7 @@ namespace Application.LocationHistories.Queries.GetAllLocationHistories
       var partial = query
         .Where(x => x.LocationId == LocationId)
         .OrderByDescending(x => x.Created)
-        .Where(x => x.Created.DateTime.CompareTo(Needle) < 0);
+        .Where(x => x.Created < Needle);
 
       if (Skip.HasValue)
       {

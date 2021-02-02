@@ -1,3 +1,5 @@
+//TODO: FIX notation in this diagram.
+
 # Entity Datamodel
 
 ## Diagram
@@ -24,6 +26,8 @@ class Location {
   refillSchedule
   daysBetweenRefills
   estimateFuelConsumption
+  currentDebtorId
+  upcomingDebtorId
 }
 
 class LocationHistory {
@@ -82,6 +86,14 @@ class Street {
   name
 }
 
+class Debtor {
+  id
+}
+
+class LocationDebtor {
+
+}
+
 enum FuelType {
   OIL
   PETROLEUM
@@ -111,25 +123,66 @@ class Coupon {
   couponNumber
 }
 
-Truck --> "1" Route
-Route --> "0..*" Refill
-Refill --> "1" Location
-Refill --> Coupon
+enum LocationDebtorType {
+  MAIN
+  BASE
+  UPCOMING
+}
+
+enum Action {
+
+}
+
+class RoleAction {
+
+}
+
+class Role {
+  id
+  name
+}
+
+class UserRole {
+
+}
+
+class User {
+  id
+}
+
+class LocationDebtorHistory {
+
+}
+
+Truck "1" -- "1" Route
+Route "1" -- "0..*" Refill
+Refill "*" -- "1" Location
+Refill "1" -- "1" Coupon
 Refill ..> FuelType
 FuelTank ..> TankType
 Refill ..> TankState
-Truck "1" <-- Coupon
-Region --> "0..*" Location
-Region --> "0..*" RegionDailyTemp
-Truck --> "0..*" TruckDailyState
-TruckDailyState --> "0..*" TruckRefill
+Truck "1" -- "*" Coupon
+Region "1" -- "0..*" Location
+Region "1" -- "0..*" RegionDailyTemp
+Truck "1" -- "0..*" TruckDailyState
+TruckDailyState "1" -- "0..*" TruckRefill
 TruckRefill ..> FuelType
-Region --> "0..*" Street
-
-Location --> "1" FuelTank
+Region "1" -- "0..*" Street
+Debtor "1" -- "*" LocationDebtor
+Location "1" -- "0..3" LocationDebtor
+Location "1" -- "1" FuelTank
 Location ..> RefillSchedule
 LocationHistory ..> RefillSchedule
 Location "1" -- "1..*" LocationHistory
+LocationDebtor ..> LocationDebtorType
+Location "1" -- "0..*" LocationDebtorHistory
+LocationDebtorHistory "*" -- "1" Debtor
+LocationDebtorHistory ..> LocationDebtorType
+
+Action "1" -- "*" RoleAction
+Role "1" -- "*" RoleAction
+Role "1" -- "*" UserRole
+User "1" -- "*" UserRole
 @enduml
 
 ```

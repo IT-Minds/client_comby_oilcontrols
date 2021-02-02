@@ -20,6 +20,11 @@ using Web.Hubs;
 using Application.Common.Options;
 using Web.Services;
 using Infrastructure.Options;
+using Domain.Entities;
+using Domain.Enums;
+using System;
+using Web.Options;
+using Microsoft.Extensions.Options;
 
 namespace Web
 {
@@ -36,7 +41,7 @@ namespace Web
     public IWebHostEnvironment Environment { get; }
     // This method gets called by the runtime. Use this method to add services to the container.
     // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-    public void ConfigureServices(IServiceCollection services )
+    public void ConfigureServices(IServiceCollection services)
     {
 
       services.AddCors(options =>
@@ -52,6 +57,7 @@ namespace Web
 
       services.Configure<FileDriveOptions>(Configuration.GetSection(FileDriveOptions.FileDrive));
       services.Configure<UniContaOptions>(Configuration.GetSection(UniContaOptions.UniConta));
+      services.Configure<SeedOptions>(Configuration.GetSection(SeedOptions.SampleData));
 
       services.AddApplication();
       services.AddInfrastructure(Configuration, Environment);
@@ -95,7 +101,7 @@ namespace Web
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationDbContext context)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationDbContext context, IOptions<SeedOptions> seedOptions)
     {
       if (env.IsDevelopment())
       {
@@ -114,6 +120,8 @@ namespace Web
         var transaction = context.Database.CurrentTransaction;
         context.Database.Migrate();
         transaction?.Commit();
+        if (env.IsDevelopment() && !env.IsEnvironment("Test") && seedOptions.Value.SeedSampleData )
+          new SampleData().SeedSampleData(context);
       }
 
       //TODO Handle cors

@@ -13,7 +13,13 @@ namespace Application.UnitTests.EntityExtensions.TruckExtension
     [Fact]
     public async Task Handle_CalculateEveningAmountNoFuelChange()
     {
-      var truck = await Context.Trucks.Where(x => x.Id == 100).Include(x => x.DailyStates).ThenInclude(x => x.TruckRefills).Include(x => x.Route).ThenInclude(x => x.Refills).FirstOrDefaultAsync();
+      var truck = await Context.Trucks
+        .Where(x => x.Id == 100)
+        .Include(x => x.DailyStates)
+          .ThenInclude(x => x.TruckRefills)
+        .Include(x => x.Route)
+          .ThenInclude(x => x.Refills)
+        .FirstOrDefaultAsync();
 
       var eveningQuantity = truck.EveningQuantity(new System.DateTime(2020, 1, 1));
       eveningQuantity.Should().Be(700);
@@ -22,19 +28,31 @@ namespace Application.UnitTests.EntityExtensions.TruckExtension
     [Fact]
     public async Task Handle_CalculateEveningAmountFuelChange()
     {
-      var truck = await Context.Trucks.Where(x => x.Id == 100).Include(x => x.DailyStates).ThenInclude(x => x.TruckRefills).Include(x => x.Route).ThenInclude(x => x.Refills).FirstOrDefaultAsync();
+      var truck = await Context.Trucks
+        .Where(x => x.Id == 100)
+        .Include(x => x.DailyStates)
+          .ThenInclude(x => x.TruckRefills)
+        .Include(x => x.Route)
+          .ThenInclude(x => x.Refills)
+        .FirstOrDefaultAsync();
 
       var eveningQuantity = truck.EveningQuantity(new System.DateTime(2020, 1, 2));
-      eveningQuantity.Should().Be(1000);
+      eveningQuantity.Should().Be(2000);
     }
 
     [Fact]
     public async Task Handle_CalculateEveningAmountFuelChangeBackAndForth()
     {
-      var truck = await Context.Trucks.Where(x => x.Id == 100).Include(x => x.DailyStates).ThenInclude(x => x.TruckRefills).Include(x => x.Route).ThenInclude(x => x.Refills).FirstOrDefaultAsync();
+      var truck = await Context.Trucks
+        .Where(x => x.Id == 100)
+        .Include(x => x.DailyStates)
+          .ThenInclude(x => x.TruckRefills)
+        .Include(x => x.Route)
+          .ThenInclude(x => x.Refills)
+        .FirstOrDefaultAsync();
 
       var eveningQuantity = truck.EveningQuantity(new System.DateTime(2020, 1, 3));
-      eveningQuantity.Should().Be(500);
+      eveningQuantity.Should().Be(2500);
     }
 
     [Fact]

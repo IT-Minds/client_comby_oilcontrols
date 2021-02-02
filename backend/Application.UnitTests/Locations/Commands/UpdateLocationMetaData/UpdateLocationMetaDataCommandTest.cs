@@ -4,6 +4,7 @@ using Application.ExampleEntities.Commands.CreateExampleEntity;
 using Application.Locations.Commands.UpdateLocationMetaData;
 using Domain.Enums;
 using FluentAssertions;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
     {
       var command = new UpdateLocationMetaDataCommand
       {
-        LocationId = 1,
+        Id = 1,
         Address = "This is address 23",
         Comment = "This is comment.",
         Refillschedule = RefillSchedule.AUTOMATIC,
@@ -28,7 +29,7 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
         MinimumFuelAmount = 50.5,
         EstimateConsumption = 10,
         FuelType = FuelType.OTHER,
-        DaysBetweenRefills = 15,
+        DaysBetweenRefills = 15
       };
       var oldLocation = Context.Locations.Find(1);
       var historyNumber = oldLocation.LocationHistories == null ? 0 : oldLocation.LocationHistories.Count();
@@ -57,6 +58,7 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
       newestHistory.Schedule.Should().Be(entity.Schedule);
       newestHistory.Address.Should().Be(entity.Address);
       newestHistory.Comments.Should().Be(entity.Comments);
+      entity.Debtors.Count().Should().Be(1);
     }
 
     [Fact]
@@ -64,7 +66,7 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
     {
       var command = new UpdateLocationMetaDataCommand
       {
-        LocationId = -1,
+        Id = -1,
         Address = "This is address 23",
         Comment = "This is comment.",
         Refillschedule = RefillSchedule.AUTOMATIC,
@@ -72,7 +74,9 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
         TankNumber = 443,
         TankCapacity = 4005.1,
         MinimumFuelAmount = 50.5,
-        EstimateConsumption = 10
+        EstimateConsumption = 10,
+        FuelType = FuelType.OTHER,
+        DaysBetweenRefills = 15
       };
 
       var handler = new UpdateLocationMetaDataCommand.UpdateLocationMetaDataCommandHandler(Context);
@@ -87,7 +91,7 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
     {
       var command = new UpdateLocationMetaDataCommand
       {
-        LocationId = 1,
+        Id = 1,
         Address = "This is address 23",
         Comment = "This is comment.",
         Refillschedule = RefillSchedule.AUTOMATIC,

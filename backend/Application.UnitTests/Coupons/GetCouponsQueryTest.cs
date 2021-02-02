@@ -5,6 +5,7 @@ using AutoMapper;
 using Domain.Enums;
 using FluentAssertions;
 using Infrastructure.Persistence;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -34,7 +35,7 @@ namespace Application.UnitTests.Coupons.Queries.GetCoupons
       };
       var handler = new GetCouponsTruckQuery.GetCouponsTruckQueryHandler(_context, _mapper);
       var result = await handler.Handle(query, CancellationToken.None);
-      result.Should().BeOfType<PageResult<CouponDto>>();
+      result.Should().BeOfType<PageResult<CouponIdDto, DateTimeOffset>>();
       result.Results.Count.Should().Be(2);
     }
   }
