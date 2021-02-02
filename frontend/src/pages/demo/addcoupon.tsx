@@ -7,7 +7,7 @@ import { I18nProps } from "next-rosetta";
 import { useEffect, useState } from "react";
 
 const DemoPage: NextPage = () => {
-  const [addCouponForm, setCouponForm] = useState<AddCouponForm>(null);
+  const [addCouponForm, setCouponForm] = useState<number[]>(null);
   const toast = useToast();
   const bg = useColorModeValue("gray.100", "gray.700");
 
@@ -26,7 +26,7 @@ const DemoPage: NextPage = () => {
   return (
     <Container maxW="xl" centerContent>
       <Box padding="4" bg={bg} maxW="6xl" maxH="4xl" resize="both" overflow="auto">
-        <AddCouponComp submitCallback={x => setCouponForm(x)}></AddCouponComp>
+        <AddCouponComp coupons={[]} submitCallback={x => setCouponForm(x)}></AddCouponComp>
       </Box>
     </Container>
   );
