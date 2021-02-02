@@ -48,7 +48,7 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
   const updateLocalForm = useCallback((value: unknown, key: keyof TruckInfoDto) => {
     setLocalTruckMetaDataForm(form => {
       (form[key] as unknown) = value;
-      return { ...form };
+      return new TruckInfoDto(form);
     });
   }, []);
 
