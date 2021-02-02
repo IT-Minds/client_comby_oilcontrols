@@ -38,7 +38,6 @@ module.exports = withBundleAnalyzer(
       locales,
       defaultLocale
     },
-    future: { webpack5: true },
     env: {
       locales
     }
