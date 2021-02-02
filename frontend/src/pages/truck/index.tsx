@@ -1,14 +1,10 @@
 import {
-  Box,
-  Button,
   Center,
-  Container,
   Heading,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Spinner,
@@ -38,7 +34,6 @@ import {
 } from "services/backend/nswagts";
 
 const TruckPage: NextPage = () => {
-  const bg = useColorModeValue("gray.100", "gray.700");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isLoading, setIsLoading] = useState(false);
   const [truckId, setTruckId] = useState(null);

@@ -1,9 +1,7 @@
 import { Container, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
-import React, { FC, useCallback, useEffect, useReducer, useState } from "react";
+import React, { FC, useEffect, useReducer, useState } from "react";
 import ListReducer, { ListReducerActionType } from "react-list-reducer";
 import { TruckInfoIdDto } from "services/backend/nswagts";
-
-import styles from "./styles.module.css";
 
 type Props = {
   preLoadedData?: TruckInfoIdDto[];

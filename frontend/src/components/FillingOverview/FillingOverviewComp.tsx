@@ -17,7 +17,7 @@ import { usePagedFetched } from "hooks/usePagedFetched";
 import React, { FC, useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import ListReducer, { ListReducerActionType } from "react-list-reducer";
 import { genRefillClient } from "services/backend/apiClients";
-import { LocationRefillDto, RefillDto, TankType } from "services/backend/nswagts";
+import { LocationRefillDto, TankType } from "services/backend/nswagts";
 import { capitalize } from "utils/capitalizeAnyString";
 
 import QueryMultiSelectBtn from "../SortFilter/QueryMultiSelectBtn";
