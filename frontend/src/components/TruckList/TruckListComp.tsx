@@ -15,10 +15,7 @@ type Props = {
 
 export const PAGE_SHOW_SIZE = 15;
 
-const TruckListComp: FC<Props> = ({
-  preLoadedData = [],
-  truckId
-}) => {
+const TruckListComp: FC<Props> = ({ preLoadedData = [], truckId }) => {
   const [data, dataDispatch] = useReducer(ListReducer<TruckInfoIdDto>("id"), preLoadedData ?? []);
 
   useEffect(() => {
@@ -27,8 +24,8 @@ const TruckListComp: FC<Props> = ({
         type: ListReducerActionType.Reset,
         data: preLoadedData
       });
-    }}
-  );
+    }
+  });
 
   return (
     <Container maxW="4xl">
@@ -42,7 +39,7 @@ const TruckListComp: FC<Props> = ({
         </Thead>
         <Tbody>
           {data.map(data => (
-            <Tr key={data.id} onClick={() => truckId(data.id)}>
+            <Tr key={data.id} _hover={{ cursor: "pointer" }} onClick={() => truckId(data.id)}>
               <Td>{data.name}</Td>
               <Td>{data.description}</Td>
               <Td>{data.id}</Td>
