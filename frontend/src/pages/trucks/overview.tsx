@@ -33,13 +33,16 @@ import {
 } from "services/backend/nswagts";
 
 const TruckPage: NextPage = () => {
+  const [truckEntities, setTruckEntities] = useState<TruckInfoIdDto[]>(null);
+
+  // For modal >>>
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [isLoading, setIsLoading] = useState(false);
   const [truckId, setTruckId] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [truckMetaData, setTruckMetaData] = useState<TruckInfoIdDto>(null);
   const [couponData, setCouponData] = useState<CouponDto[]>(null);
   const [truckRefillData, setTruckRefillData] = useState<LocationRefillDto[]>(null);
-  const [truckEntities, setTruckEntities] = useState<TruckInfoIdDto[]>(null);
+  // <<<
 
   const { awaitCallback } = useOffline();
   const toast = useToast();
@@ -96,24 +99,24 @@ const TruckPage: NextPage = () => {
   );
 
   useEffectAsync(async () => {
-    const truckEntityData = await genTruckClient().then(client => client.getTrucks(0));
-    setTruckEntities(truckEntityData.results);
+    const client = await genTruckClient();
 
     if (truckId) {
       onOpen();
       setIsLoading(true);
 
-      const truckMetaClient = await genTruckClient();
-      const couponsData = await truckMetaClient.getTrucksCoupons(truckId);
+      const couponsData = await client.getTrucksCoupons(truckId);
+      const truckMetaData = await client.getTruck(truckId);
+      const truckRefillData = await client.getTrucksRefills(truckId);
+
       setCouponData(couponsData.results);
-
-      const truckMetaData = await truckMetaClient.getTruck(truckId);
       setTruckMetaData(truckMetaData);
-
-      const truckRefillData = await truckMetaClient.getTrucksRefills(truckId);
       setTruckRefillData(truckRefillData);
 
       setIsLoading(false);
+    } else {
+      const truckEntityData = await client.getTrucks();
+      setTruckEntities(truckEntityData.results);
     }
   }, [truckId]);
 
@@ -129,7 +132,7 @@ const TruckPage: NextPage = () => {
       />
 
       <Modal
-        size="5xl"
+        size="4xl"
         isOpen={isOpen}
         onClose={() => {
           onClose();
@@ -150,22 +153,24 @@ const TruckPage: NextPage = () => {
             />
           </Center>
           <ModalBody hidden={isLoading} overflowY="auto">
-            <Heading size="sm">Coupons</Heading>
+            <Heading size="sm">Meta data</Heading>
+            <AddTruckMetaData
+              submitCallback={x => saveMetaDataForm(x)}
+              truckMetaData={truckMetaData}
+            />
+
+            <Heading size="sm" mt={8}>
+              Coupons
+            </Heading>
             <AddCouponComp
               submitCallback={x => {
                 saveCoupons(x);
               }}
-              coupons={couponData}></AddCouponComp>
+              coupons={couponData}
+            />
 
             <Heading size="sm" mt={8}>
-              Meta data
-            </Heading>
-            <AddTruckMetaData
-              submitCallback={x => saveMetaDataForm(x)}
-              truckMetaData={truckMetaData}></AddTruckMetaData>
-
-            <Heading size="sm" mt={8}>
-              Filling overview
+              Fueling history
             </Heading>
             <FillingOverviewComp preLoadedData={truckRefillData} />
           </ModalBody>
@@ -183,8 +188,7 @@ export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context =
   return {
     props: {
       table
-    },
-    revalidate: 60
+    }
   };
 };
 

@@ -102,84 +102,80 @@ const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
   );
 
   return (
-    <Container>
-      <form onSubmit={handleSubmit}>
-        <VStack align="center" justify="center">
-          <FormControl
-            isInvalid={
-              (formSubmitAttempts > 0 && (!localCoupons || localCoupons.length < 1)) ||
-              from > to ||
-              to < from
-            }>
-            <FormLabel>Enter coupon interval:</FormLabel>
-            <HStack>
-              <FormControl
-                isInvalid={
-                  (formSubmitAttempts > 0 && (!localCoupons || localCoupons.length < 1)) ||
-                  from > to
-                }
-                isRequired={!localCoupons || localCoupons.length < 1}>
-                <NumberInput
-                  placeholder="From"
-                  onChange={value => {
-                    setFrom(parseFloat(value));
-                  }}
-                  value={from ?? ""}>
-                  <NumberInputField />
-                </NumberInput>
-              </FormControl>
-              <FormControl
-                isInvalid={
-                  (formSubmitAttempts > 0 && (!localCoupons || localCoupons.length < 1)) ||
-                  to < from
-                }
-                isRequired={!localCoupons || localCoupons.length < 1}>
-                <NumberInput
-                  placeholder="To"
-                  onChange={value => {
-                    setTo(parseFloat(value));
-                  }}
-                  value={to ?? ""}>
-                  <NumberInputField />
-                </NumberInput>
-              </FormControl>
-            </HStack>
-            <FormErrorMessage>Please enter a valid interval</FormErrorMessage>
-            <Button mt={4} colorScheme="blue" rightIcon={<MdAdd />} onClick={() => addCoupons()}>
-              Add interval
-            </Button>
-          </FormControl>
-
-          <FormControl>
-            <FormLabel>Selected intervals:</FormLabel>
-            <Wrap>
-              {localCoupons?.map((c, index) => (
-                <WrapItem key={index}>
-                  {(c as CouponIdDto).id ? (
-                    <Tag size="md" borderRadius="full" variant="solid" colorScheme="blue">
-                      <TagLabel>{c.couponNumber}</TagLabel>
-                    </Tag>
-                  ) : (
-                    <Tag size="md" borderRadius="full" variant="solid" colorScheme="yellow">
-                      <TagLabel>{c.couponNumber}</TagLabel>
-                      <TagCloseButton onClick={() => removeCoupon(c.couponNumber)} />
-                    </Tag>
-                  )}
-                </WrapItem>
-              ))}
-            </Wrap>
-          </FormControl>
-
-          <Button
-            colorScheme="green"
-            type="submit"
-            rightIcon={<MdCheck />}
-            onClick={() => setFormSubmitAttempts(x => x + 1)}>
-            Submit
+    <form onSubmit={handleSubmit}>
+      <VStack align="center" justify="center">
+        <FormControl
+          isInvalid={
+            (formSubmitAttempts > 0 && (!localCoupons || localCoupons.length < 1)) ||
+            from > to ||
+            to < from
+          }>
+          <FormLabel>Enter coupon interval:</FormLabel>
+          <HStack>
+            <FormControl
+              isInvalid={
+                (formSubmitAttempts > 0 && (!localCoupons || localCoupons.length < 1)) || from > to
+              }
+              isRequired={!localCoupons || localCoupons.length < 1}>
+              <NumberInput
+                placeholder="From"
+                onChange={value => {
+                  setFrom(parseFloat(value));
+                }}
+                value={from ?? ""}>
+                <NumberInputField />
+              </NumberInput>
+            </FormControl>
+            <FormControl
+              isInvalid={
+                (formSubmitAttempts > 0 && (!localCoupons || localCoupons.length < 1)) || to < from
+              }
+              isRequired={!localCoupons || localCoupons.length < 1}>
+              <NumberInput
+                placeholder="To"
+                onChange={value => {
+                  setTo(parseFloat(value));
+                }}
+                value={to ?? ""}>
+                <NumberInputField />
+              </NumberInput>
+            </FormControl>
+          </HStack>
+          <FormErrorMessage>Please enter a valid interval</FormErrorMessage>
+          <Button mt={4} colorScheme="blue" rightIcon={<MdAdd />} onClick={() => addCoupons()}>
+            Add pending coupons
           </Button>
-        </VStack>
-      </form>
-    </Container>
+        </FormControl>
+
+        <FormControl>
+          <FormLabel>Available Coupons:</FormLabel>
+          <Wrap>
+            {localCoupons?.map((c, index) => (
+              <WrapItem key={index}>
+                {(c as CouponIdDto).id ? (
+                  <Tag size="md" borderRadius="full" variant="solid" colorScheme="blue">
+                    <TagLabel>{c.couponNumber}</TagLabel>
+                  </Tag>
+                ) : (
+                  <Tag size="md" borderRadius="full" variant="solid" colorScheme="yellow">
+                    <TagLabel>{c.couponNumber}</TagLabel>
+                    <TagCloseButton onClick={() => removeCoupon(c.couponNumber)} />
+                  </Tag>
+                )}
+              </WrapItem>
+            ))}
+          </Wrap>
+        </FormControl>
+
+        <Button
+          colorScheme="green"
+          type="submit"
+          rightIcon={<MdCheck />}
+          onClick={() => setFormSubmitAttempts(x => x + 1)}>
+          Submit Coupons
+        </Button>
+      </VStack>
+    </form>
   );
 };
 

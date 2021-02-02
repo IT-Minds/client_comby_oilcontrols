@@ -64,82 +64,78 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
   );
 
   return (
-    <Container>
-      <form onSubmit={handleSubmit}>
-        <VStack align="center" justify="center">
-          <FormControl>
-            <FormLabel>{t("truckMetaData.startNumber")}</FormLabel>
-            <Input
-              value={localTruckMetaDataForm.refillNumber}
-              onChange={e => updateLocalForm(e.target.value, "refillNumber")}
-            />
-          </FormControl>
+    <form onSubmit={handleSubmit}>
+      <VStack align="center" justify="center">
+        <FormControl>
+          <FormLabel>{t("truckMetaData.startNumber")}</FormLabel>
+          <Input
+            value={localTruckMetaDataForm.refillNumber}
+            onChange={e => updateLocalForm(e.target.value, "refillNumber")}
+          />
+        </FormControl>
 
-          <FormControl
-            isRequired
-            isInvalid={formSubmitAttempts > 0 && !localTruckMetaDataForm.truckIdentifier}>
-            <FormLabel>{t("truckMetaData.carNumber")}</FormLabel>
-            <Input
-              value={localTruckMetaDataForm.truckIdentifier}
-              onChange={e => updateLocalForm(e.target.value, "truckIdentifier")}
-            />
-            <FormErrorMessage>{t("truckMetaData.formError.carNumber")}</FormErrorMessage>
-          </FormControl>
+        <FormControl
+          isRequired
+          isInvalid={formSubmitAttempts > 0 && !localTruckMetaDataForm.truckIdentifier}>
+          <FormLabel>{t("truckMetaData.carNumber")}</FormLabel>
+          <Input
+            value={localTruckMetaDataForm.truckIdentifier}
+            onChange={e => updateLocalForm(e.target.value, "truckIdentifier")}
+          />
+          <FormErrorMessage>{t("truckMetaData.formError.carNumber")}</FormErrorMessage>
+        </FormControl>
 
-          <FormControl
-            isRequired
-            isInvalid={formSubmitAttempts > 0 && !localTruckMetaDataForm.name}>
-            <FormLabel>{t("truckMetaData.carName")}</FormLabel>
-            <Input
-              value={localTruckMetaDataForm.name}
-              onChange={e => {
-                updateLocalForm(e.target.value, "name");
-              }}
-            />
-            <FormErrorMessage>{t("truckMetaData.formError.carName")}</FormErrorMessage>
-          </FormControl>
+        <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localTruckMetaDataForm.name}>
+          <FormLabel>{t("truckMetaData.carName")}</FormLabel>
+          <Input
+            value={localTruckMetaDataForm.name}
+            onChange={e => {
+              updateLocalForm(e.target.value, "name");
+            }}
+          />
+          <FormErrorMessage>{t("truckMetaData.formError.carName")}</FormErrorMessage>
+        </FormControl>
 
-          <FormControl
-            isRequired
-            isInvalid={formSubmitAttempts > 0 && !localTruckMetaDataForm.description}>
-            <FormLabel>{t("truckMetaData.description")}</FormLabel>
-            <Textarea
-              value={localTruckMetaDataForm.description}
-              onChange={e => {
-                updateLocalForm(e.target.value, "description");
-              }}></Textarea>
-            <FormErrorMessage>{t("truckMetaData.formError.description")}</FormErrorMessage>
-          </FormControl>
+        <FormControl
+          isRequired
+          isInvalid={formSubmitAttempts > 0 && !localTruckMetaDataForm.description}>
+          <FormLabel>{t("truckMetaData.description")}</FormLabel>
+          <Textarea
+            value={localTruckMetaDataForm.description}
+            onChange={e => {
+              updateLocalForm(e.target.value, "description");
+            }}></Textarea>
+          <FormErrorMessage>{t("truckMetaData.formError.description")}</FormErrorMessage>
+        </FormControl>
 
-          <FormControl
-            isRequired
-            isInvalid={formSubmitAttempts > 0 && !localTruckMetaDataForm.tankCapacity}>
-            <FormLabel>{t("truckMetaData.tankSize")}</FormLabel>
-            <InputGroup>
-              <NumberInput
-                value={localTruckMetaDataForm.tankCapacity}
-                min={0}
-                onChange={value => {
-                  updateLocalForm(value, "tankCapacity");
-                }}>
-                <NumberInputField />
-              </NumberInput>
+        <FormControl
+          isRequired
+          isInvalid={formSubmitAttempts > 0 && !localTruckMetaDataForm.tankCapacity}>
+          <FormLabel>{t("truckMetaData.tankSize")}</FormLabel>
+          <InputGroup>
+            <NumberInput
+              value={localTruckMetaDataForm.tankCapacity}
+              min={0}
+              onChange={value => {
+                updateLocalForm(value, "tankCapacity");
+              }}>
+              <NumberInputField />
+            </NumberInput>
 
-              <InputRightAddon>liters</InputRightAddon>
-            </InputGroup>
-            <FormErrorMessage>{t("truckMetaData.formError.tankSize")}</FormErrorMessage>
-          </FormControl>
+            <InputRightAddon>liters</InputRightAddon>
+          </InputGroup>
+          <FormErrorMessage>{t("truckMetaData.formError.tankSize")}</FormErrorMessage>
+        </FormControl>
 
-          <Button
-            colorScheme="green"
-            type="submit"
-            rightIcon={<MdCheck />}
-            onClick={() => setFormSubmitAttempts(x => x + 1)}>
-            Submit
-          </Button>
-        </VStack>
-      </form>
-    </Container>
+        <Button
+          colorScheme="green"
+          type="submit"
+          rightIcon={<MdCheck />}
+          onClick={() => setFormSubmitAttempts(x => x + 1)}>
+          Submit
+        </Button>
+      </VStack>
+    </form>
   );
 };
 
