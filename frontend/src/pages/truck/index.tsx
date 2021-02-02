@@ -31,6 +31,7 @@ import {
   AssignCouponsCommand,
   CouponDto,
   CreateTruckCommand,
+  LocationRefillDto,
   TruckInfoIdDto,
   UpdateTruckCommand
 } from "services/backend/nswagts";
@@ -49,6 +50,7 @@ const TruckPage: NextPage<Props> = ({ trucksEntities, needle, hasMore, pageCount
   const [truckId, setTruckId] = useState(null);
   const [truckMetaData, setTruckMetaData] = useState<TruckInfoIdDto>(null);
   const [couponData, setCouponData] = useState<CouponDto[]>(null);
+  const [truckRefillData, setTruckRefillData] = useState<LocationRefillDto[]>(null);
 
   const { awaitCallback } = useOffline();
   const toast = useToast();
@@ -58,11 +60,11 @@ const TruckPage: NextPage<Props> = ({ trucksEntities, needle, hasMore, pageCount
       awaitCallback(async () => {
         const client = await genCouponsClient();
         await client.create(
-         new AssignCouponsCommand({
+          new AssignCouponsCommand({
             truckId,
             couponNumbers
           })
-            );
+        );
         toast({
           title: "Coupons Saved",
           description: "Successful",
@@ -74,7 +76,6 @@ const TruckPage: NextPage<Props> = ({ trucksEntities, needle, hasMore, pageCount
     },
     [awaitCallback, truckId]
   );
-
 
   const saveMetaDataForm = useCallback(
     async metaDataForm => {
@@ -117,6 +118,9 @@ const TruckPage: NextPage<Props> = ({ trucksEntities, needle, hasMore, pageCount
       const truckMetaData = await truckMetaClient.getTruck(truckId);
       setTruckMetaData(truckMetaData);
 
+      const truckRefillData = await truckMetaClient.getTrucksRefills(truckId);
+      setTruckRefillData(truckRefillData);
+
       setIsLoading(false);
     }
   }, [truckId]);
@@ -135,7 +139,13 @@ const TruckPage: NextPage<Props> = ({ trucksEntities, needle, hasMore, pageCount
         />
       </Box>
 
-      <Modal size="2xl" isOpen={isOpen} onClose={() => {onClose(); setTruckId(null);}}>
+      <Modal
+        size="2xl"
+        isOpen={isOpen}
+        onClose={() => {
+          onClose();
+          setTruckId(null);
+        }}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Overview of Truck {truckId}</ModalHeader>
@@ -162,7 +172,7 @@ const TruckPage: NextPage<Props> = ({ trucksEntities, needle, hasMore, pageCount
               Filling overview
             </Heading>
             <FillingOverviewComp
-              preLoadedData={[]}
+              preLoadedData={truckRefillData}
               preloadDataNeedle={needle}
               preloadLoadedAll={!hasMore}
               preLoadedPageCount={pageCount}
