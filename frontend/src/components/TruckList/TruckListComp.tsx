@@ -1,8 +1,8 @@
 import { Button, Container, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import PageIndicator from "components/Demo/components/PageIndicator";
 import { usePagedFetched } from "hooks/usePagedFetched";
-import React, { FC, useCallback, useMemo, useReducer, useState } from "react";
-import ListReducer from "react-list-reducer";
+import React, { FC, useCallback, useEffect, useMemo, useReducer, useState } from "react";
+import ListReducer, { ListReducerActionType } from "react-list-reducer";
 import { genTruckClient } from "services/backend/apiClients";
 import { ITruckInfoIdDto, TruckInfoIdDto } from "services/backend/nswagts";
 
@@ -27,7 +27,7 @@ const TruckListComp: FC<Props> = ({
   const selectTruck = useCallback((id: number) => {
     truckId(id);
   }, []);
-  const [data, dataDispatch] = useReducer(ListReducer<ITruckInfoIdDto>("id"), preLoadedData);
+  const [data, dataDispatch] = useReducer(ListReducer<TruckInfoIdDto>("id"), preLoadedData ?? []);
   const [pageShowing, setPageShowing] = useState(0);
 
   const { done, error, fetchData, needle } = usePagedFetched(
@@ -40,7 +40,15 @@ const TruckListComp: FC<Props> = ({
       autoStart: !preloadLoadedAll,
       initialNeedle: preloadDataNeedle,
       pageSize: PAGE_SHOW_SIZE
-    }
+    })
+
+  useEffect(() => {
+    if (preLoadedData) {
+      dataDispatch({
+        type: ListReducerActionType.Reset,
+        data: preLoadedData
+      });
+    }}
   );
 
   const pages = useMemo(() => {

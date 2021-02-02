@@ -37,13 +37,12 @@ import {
 } from "services/backend/nswagts";
 
 type Props = {
-  trucksEntities: TruckInfoIdDto[];
   needle: string;
   hasMore: boolean;
   pageCount: number;
 };
 
-const TruckPage: NextPage<Props> = ({ trucksEntities, needle, hasMore, pageCount }) => {
+const TruckPage: NextPage<Props> = ({ needle, hasMore, pageCount }) => {
   const bg = useColorModeValue("gray.100", "gray.700");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isLoading, setIsLoading] = useState(false);
@@ -51,6 +50,7 @@ const TruckPage: NextPage<Props> = ({ trucksEntities, needle, hasMore, pageCount
   const [truckMetaData, setTruckMetaData] = useState<TruckInfoIdDto>(null);
   const [couponData, setCouponData] = useState<CouponDto[]>(null);
   const [truckRefillData, setTruckRefillData] = useState<LocationRefillDto[]>(null);
+  const [truckEntities, setTruckEntities] = useState<TruckInfoIdDto[]>(null);
 
   const { awaitCallback } = useOffline();
   const toast = useToast();
@@ -106,7 +106,13 @@ const TruckPage: NextPage<Props> = ({ trucksEntities, needle, hasMore, pageCount
     [awaitCallback]
   );
 
-  useEffectAsync(async () => {
+  useEffectAsync(async () => {    
+    const truckEntityData = await genTruckClient().then(client => client.getTrucks(0));
+    needle = truckEntityData.newNeedle.toString() ?? "0";
+    hasMore = truckEntityData.hasMore;
+    pageCount = truckEntityData.pagesRemaining + 1;
+    setTruckEntities(truckEntityData.results);
+
     if (truckId) {
       onOpen();
       setIsLoading(true);
@@ -123,13 +129,14 @@ const TruckPage: NextPage<Props> = ({ trucksEntities, needle, hasMore, pageCount
 
       setIsLoading(false);
     }
+      
   }, [truckId]);
 
   return (
     <Container maxW="xl" centerContent>
       <Box padding="4" bg={bg} maxW="6xl" maxH="4xl" resize="both" overflow="auto">
         <TruckListComp
-          preLoadedData={trucksEntities}
+          preLoadedData={truckEntities}
           preloadDataNeedle={needle}
           preloadLoadedAll={!hasMore}
           preLoadedPageCount={pageCount}
