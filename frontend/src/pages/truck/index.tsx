@@ -8,7 +8,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Spinner,
-  useColorModeValue,
   useDisclosure,
   useToast,
   VStack
