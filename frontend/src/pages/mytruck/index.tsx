@@ -1,6 +1,6 @@
 import { GetStaticProps, NextPage } from "next";
-import { I18nProps } from "next-rosetta";
 import Link from "next/link";
+import { I18nProps } from "next-rosetta";
 import { genTruckClient } from "services/backend/apiClients";
 
 type Props = {
