@@ -26,13 +26,13 @@ type Props = {
 
 const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
   const [localTruckMetaDataForm, setLocalTruckMetaDataForm] = useState<TruckInfoDto>(
-      new TruckInfoDto({
-        refillNumber: 0,
-        truckIdentifier: "0",
-        description: "",
-        name: "",
-        tankCapacity: 0
-      })
+    new TruckInfoDto({
+      refillNumber: 0,
+      truckIdentifier: "0",
+      description: "",
+      name: "",
+      tankCapacity: 0
+    })
   );
 
   useEffect(() => {
@@ -48,7 +48,7 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
   const updateLocalForm = useCallback((value: unknown, key: keyof TruckInfoDto) => {
     setLocalTruckMetaDataForm(form => {
       (form[key] as unknown) = value;
-      return {...form};
+      return { ...form };
     });
   }, []);
 
@@ -69,8 +69,9 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
         <VStack align="center" justify="center">
           <FormControl>
             <FormLabel>{t("truckMetaData.startNumber")}</FormLabel>
-            <Input value={localTruckMetaDataForm.refillNumber}
-             onChange={e => updateLocalForm(e.target.value, "refillNumber")}
+            <Input
+              value={localTruckMetaDataForm.refillNumber}
+              onChange={e => updateLocalForm(e.target.value, "refillNumber")}
             />
           </FormControl>
 
@@ -80,8 +81,7 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
             <FormLabel>{t("truckMetaData.carNumber")}</FormLabel>
             <Input
               value={localTruckMetaDataForm.truckIdentifier}
-              onChange={e => updateLocalForm(e.target.value, "truckIdentifier")
-            }
+              onChange={e => updateLocalForm(e.target.value, "truckIdentifier")}
             />
             <FormErrorMessage>{t("truckMetaData.formError.carNumber")}</FormErrorMessage>
           </FormControl>
@@ -94,7 +94,8 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
               value={localTruckMetaDataForm.name}
               onChange={e => {
                 updateLocalForm(e.target.value, "name");
-              }}/>
+              }}
+            />
             <FormErrorMessage>{t("truckMetaData.formError.carName")}</FormErrorMessage>
           </FormControl>
 
