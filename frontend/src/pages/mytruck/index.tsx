@@ -1,8 +1,6 @@
 import { GetStaticProps, NextPage } from "next";
 import { I18nProps } from "next-rosetta";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
 import { genTruckClient } from "services/backend/apiClients";
 
 type Props = {
