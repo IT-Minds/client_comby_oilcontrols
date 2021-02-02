@@ -37,12 +37,9 @@ import {
 } from "services/backend/nswagts";
 
 type Props = {
-  needle: string;
-  hasMore: boolean;
-  pageCount: number;
 };
 
-const TruckPage: NextPage<Props> = ({ needle, hasMore, pageCount }) => {
+const TruckPage: NextPage<Props> = () => {
   const bg = useColorModeValue("gray.100", "gray.700");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isLoading, setIsLoading] = useState(false);
@@ -108,9 +105,6 @@ const TruckPage: NextPage<Props> = ({ needle, hasMore, pageCount }) => {
 
   useEffectAsync(async () => {    
     const truckEntityData = await genTruckClient().then(client => client.getTrucks(0));
-    needle = truckEntityData.newNeedle.toString() ?? "0";
-    hasMore = truckEntityData.hasMore;
-    pageCount = truckEntityData.pagesRemaining + 1;
     setTruckEntities(truckEntityData.results);
 
     if (truckId) {
@@ -137,9 +131,6 @@ const TruckPage: NextPage<Props> = ({ needle, hasMore, pageCount }) => {
       <Box padding="4" bg={bg} maxW="6xl" maxH="4xl" resize="both" overflow="auto">
         <TruckListComp
           preLoadedData={truckEntities}
-          preloadDataNeedle={needle}
-          preloadLoadedAll={!hasMore}
-          preLoadedPageCount={pageCount}
           truckId={id => {
             setTruckId(id);
           }}
@@ -180,9 +171,6 @@ const TruckPage: NextPage<Props> = ({ needle, hasMore, pageCount }) => {
             </Heading>
             <FillingOverviewComp
               preLoadedData={truckRefillData}
-              preloadDataNeedle={needle}
-              preloadLoadedAll={!hasMore}
-              preLoadedPageCount={pageCount}
             />
 
             <Heading size="sm" mt={8}>
@@ -214,16 +202,9 @@ export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context =
 
   const { table = {} } = await import(`../../i18n/${locale}`);
 
-  const data = await genTruckClient().then(client => client.getTrucks(0));
-
   return {
     props: {
-      table,
-      // !This is a hack to get around undefined values in dataset
-      trucksEntities: JSON.parse(JSON.stringify(data.results)),
-      needle: data.newNeedle ?? "0",
-      hasMore: data.hasMore,
-      pageCount: data.pagesRemaining + 1
+      table
     },
     revalidate: 60
   };
