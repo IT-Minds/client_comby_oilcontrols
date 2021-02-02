@@ -44,6 +44,8 @@ namespace Infrastructure.Persistence
     public DbSet<Debtor> Debtors { get; set; }
     public DbSet<LocationDebtor> LocationDebtors { get; set; }
     public DbSet<LocationDebtorHistory> LocationDebtorHistories { get; set; }
+    public DbSet<Role> Roles { get; set; }
+    public DbSet<RoleAction> RoleActions { get; set; }
 
     public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
@@ -108,9 +110,9 @@ namespace Infrastructure.Persistence
 
     private void OnLocationDebtorRelationChange(IEnumerable<EntityEntry<AuditableEntity>> entities, CancellationToken cancellationToken)
     {
-      foreach(EntityEntry<AuditableEntity> entity in entities.ToList())
+      foreach (EntityEntry<AuditableEntity> entity in entities.ToList())
       {
-        if(entity.State == EntityState.Added || entity.State == EntityState.Modified)
+        if (entity.State == EntityState.Added || entity.State == EntityState.Modified)
         {
           var locationDebtorHist = new LocationDebtorHistory
           {
@@ -123,7 +125,7 @@ namespace Infrastructure.Persistence
             LastModifiedBy = _currentUserService.UserId,
             ModifiedCount = 0
           };
-          
+
           this.LocationDebtorHistories.Add(locationDebtorHist);
         }
       }
