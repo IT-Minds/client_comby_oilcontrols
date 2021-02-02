@@ -23,20 +23,24 @@ import AppVersion from "./AppVersion";
 import LanguageSelector from "./LanguageSelector";
 import UserTypeSwitcher from "./UserTypeSwitcher";
 
-const MyUserSnippet: FC = () => {
+type Props = {
+  forceOpen?: boolean;
+};
+
+const MyUserSnippet: FC<Props> = ({ forceOpen = false }) => {
   const bg = useColorModeValue("gray.200", "gray.900");
   const { hoverBg } = useColors();
   const borderColor = useColorModeValue("gray.400", "gray.700");
   const nameLength = useBreakpointValue({ base: 150, lg: 200 });
   const { t } = useI18n<Locale>();
 
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(forceOpen);
 
   return (
     <VStack alignItems="left" bg={bg} spacing={0}>
       <HStack
         padding={4}
-        onClick={() => setIsActive(!isActive)}
+        onClick={() => setIsActive(forceOpen || !isActive)}
         _hover={{
           background: hoverBg
         }}

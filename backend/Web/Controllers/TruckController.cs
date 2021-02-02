@@ -48,7 +48,7 @@ namespace Web.Controllers
 
     [HttpGet]
     public async Task<ActionResult<PageResult<TruckInfoIdDto, int>>> GetTrucks(
-      [FromQuery] int needle, [FromQuery] int size = 1000, [FromQuery] int? skip = 0
+      [FromQuery] int needle = 0, [FromQuery] int size = 1000, [FromQuery] int skip = 0
     )
     {
       return await Mediator.Send(new GetTrucksPageQuery

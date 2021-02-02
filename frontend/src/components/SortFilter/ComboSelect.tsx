@@ -112,6 +112,7 @@ const ComboSelect: FC<Props> = ({
               isReadOnly={!active}
               placeholder={placeholder}
               value={active ? searchValue : activeItem?.name ?? ""}
+              // TODO check value from props and see if the component displays a selected value BEFORE render.
               onChange={e => setSeachValue(e.target.value)}
               onKeyDown={e => focusElement(e, null)}
               ref={inputRef}

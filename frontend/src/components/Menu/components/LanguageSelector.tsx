@@ -29,6 +29,13 @@ const LanguageSelector: FC = () => {
   const disclosure = useDisclosure();
 
   useEffect(() => {
+    if (
+      process.env.locales.length !== Object.keys(localeMap).length ||
+      ((process.env.locales as unknown) as string[]).some(l => !Object.keys(localeMap).includes(l))
+    ) {
+      throw Error("Locale Map not aligned with I18N locales");
+    }
+
     events.on("routeChangeStart", () => {
       disclosure.onClose();
     });

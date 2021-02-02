@@ -10,7 +10,7 @@ const eolPattern = /(\/?\?.*)?$/;
 const matchWithLocale = (route: string) =>
   new RegExp(localePattern.source + route + eolPattern.source);
 
-const matchMyTruck = matchWithLocale("/mytruck" + /(\/\[id\])?/.source);
+const matchMyTruck = matchWithLocale("/mytruck" + /(\/(\[id\]|\d+))?/.source);
 
 const RouteProtector: FC = () => {
   const { isType } = useContext(UserTypeContext);

@@ -28,9 +28,9 @@ namespace Application.Trucks.Queries.GetTruckInfo
       {
         var truck = await _context.Trucks
           .Include(x => x.DailyStates)
-          //   .ThenInclude(x => x.TruckRefills)
-          // .Include(t => t.Route)
-          //   .ThenInclude(r => r.Refills)
+            .ThenInclude(x => x.TruckRefills)
+          .Include(t => t.Route)
+            .ThenInclude(r => r.Refills)
           .Where(x => x.Id == request.Id)
           .ProjectTo<TruckInfoDetailsDto>(_mapper.ConfigurationProvider)
           .FirstOrDefaultAsync();
