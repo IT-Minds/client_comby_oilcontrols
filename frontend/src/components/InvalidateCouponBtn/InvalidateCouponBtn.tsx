@@ -47,7 +47,7 @@ const InvalidateCouponBtn: FC<Props> = ({ coupons, triggered = false }) => {
       <Button
         colorScheme="red"
         onClick={onOpen}
-        rightIcon={<RiFileShredLine />}
+        leftIcon={<RiFileShredLine />}
         // leftIcon={<GiGasPump />}>
       >
         {t("coupons.invalidate.invalidate")}

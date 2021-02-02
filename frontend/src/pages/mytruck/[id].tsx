@@ -175,16 +175,15 @@ const LocalePage: NextPage<Props> = ({ truckInfo, coupons }) => {
         </Collapse>
       </Box>
 
-      <HStack position="absolute" bottom={4} left={0} w="100%" justifyContent="space-between">
+      <VStack position="absolute" bottom={2} right={0} alignItems="left">
+        <RefuelForm fillData={completeTruckRefuel} />
         <InvalidateCouponBtn
           coupons={coupons.map<DropdownType>(x => ({
             id: x.id + "",
             name: x.couponNumber + ""
           }))}
         />
-
-        <RefuelForm fillData={completeTruckRefuel} />
-      </HStack>
+      </VStack>
     </VStack>
   );
 };

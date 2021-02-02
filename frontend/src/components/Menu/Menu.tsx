@@ -12,9 +12,10 @@ import { MenuLink } from "./MenuLink";
 
 type Props = {
   links: MenuLink[];
+  userForceOpen?: boolean;
 };
 
-const Menu: FC<Props> = ({ links }) => {
+const Menu: FC<Props> = ({ links, userForceOpen = false }) => {
   const { hoverBg, menuBg } = useColors();
 
   const { isType } = useContext(UserTypeContext);
@@ -45,9 +46,9 @@ const Menu: FC<Props> = ({ links }) => {
         </Center>
       </Box>
       <Box flexGrow={1} minH={0}>
-        {isType(UserType.OFFICE_WORKER) ? <Navigator links={links} /> : <Text>DRIVER</Text>}
+        {isType(UserType.OFFICE_WORKER) ? <Navigator links={links} /> : <Text></Text>}
       </Box>
-      <MyUserSnippet />
+      <MyUserSnippet forceOpen={userForceOpen} />
     </Flex>
   );
 };
