@@ -21,8 +21,8 @@ import DatePicker from "components/DatePicker/DatePicker";
 import StreetSelector from "components/StreetSelector/StreetSelector";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
-import { RefillScheduleRecord } from "services/backend/ext/enumConvertor";
-import { RefillSchedule, TankType } from "services/backend/nswagts";
+import { FuelTypeRecord, RefillScheduleRecord } from "services/backend/ext/enumConvertor";
+import { FuelType, RefillSchedule, TankType } from "services/backend/nswagts";
 import { capitalize } from "utils/capitalizeAnyString";
 import { logger } from "utils/logger";
 
@@ -264,6 +264,49 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
               //TODO: translation
             }
             <FormErrorMessage>Please enter the estimated fuel consumption</FormErrorMessage>
+          </FormControl>
+
+          <FormControl
+            isRequired
+            isInvalid={formSubmitAttempts > 0 && !localForm.daysBetweenRefills}>
+            {
+              //TODO: translation
+            }
+            <FormLabel>Days between refills: </FormLabel>
+            <InputGroup>
+              <NumberInput
+                placeholder="Days between refills"
+                onChange={value => {
+                  updateLocalForm(parseInt(value), "daysBetweenRefills");
+                }}>
+                <NumberInputField />
+              </NumberInput>
+            </InputGroup>
+            {
+              //TODO: translation
+            }
+            <FormErrorMessage>Please enter days between refills</FormErrorMessage>
+          </FormControl>
+
+          <FormControl
+            isInvalid={
+              formSubmitAttempts > 0 &&
+              Object.values(FuelTypeRecord).every(
+                key => localForm.fuelType !== (FuelType[key] as unknown)
+              )
+            }
+            isRequired>
+            <FormLabel id="fuel-type">Select fuel type:</FormLabel>
+            <Select
+              onChange={e => updateLocalForm(FuelType[Number(e.target.value)], "fuelType")}
+              placeholder="Select option">
+              {Object.entries(FuelTypeRecord).map(([a, b]) => (
+                <option key={b} value={b}>
+                  {capitalize(a)}
+                </option>
+              ))}
+            </Select>
+            <FormErrorMessage>Please select one of the allowed fuel types</FormErrorMessage>
           </FormControl>
         </Box>
         <Spacer />
