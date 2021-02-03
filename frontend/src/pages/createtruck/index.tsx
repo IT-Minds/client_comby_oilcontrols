@@ -17,10 +17,10 @@ const CreateTruckPage: NextPage = () => {
       awaitCallback(async () => {
         const client = await genTruckClient();
         await client.createTruck(
-              new CreateTruckCommand({
-                truckInfo: form
-              })
-            );
+          new CreateTruckCommand({
+            truckInfo: form
+          })
+        );
 
         toast({
           title: "Truck successfully created",
@@ -36,12 +36,14 @@ const CreateTruckPage: NextPage = () => {
 
   return (
     <VStack position="relative" overflow="visible" h="95vh" w="100%">
-        {
-            //TODO: translation
-        }
-        <Heading>Create Truck</Heading>
+      {
+        //TODO: translation
+      }
+      <Heading>Create Truck</Heading>
 
-        <AddTruckMetaData submitCallback={x => createTruck(x)} truckMetaData={null}></AddTruckMetaData>
+      <AddTruckMetaData
+        submitCallback={x => createTruck(x)}
+        truckMetaData={null}></AddTruckMetaData>
     </VStack>
   );
 };
