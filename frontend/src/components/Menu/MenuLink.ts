@@ -59,7 +59,7 @@ export const testLinks: MenuLink[] = [
       {
         id: "location-create",
         title: "menu.locations.create",
-        href: "/demo"
+        href: "/createlocation"
       }
     ],
 
