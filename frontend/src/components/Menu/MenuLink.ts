@@ -31,7 +31,7 @@ export const testLinks: MenuLink[] = [
       {
         id: "trucks-create",
         title: "menu.trucks.create",
-        href: "/demo"
+        href: "/createtruck"
       }
     ],
 
