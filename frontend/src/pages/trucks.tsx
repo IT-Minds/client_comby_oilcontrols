@@ -180,7 +180,7 @@ const TruckPage: NextPage = () => {
 export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context => {
   const locale = context.locale || context.defaultLocale;
 
-  const { table = {} } = await import(`../../i18n/${locale}`);
+  const { table = {} } = await import(`../i18n/${locale}`);
 
   return {
     props: {
