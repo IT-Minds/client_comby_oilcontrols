@@ -1,11 +1,12 @@
-import { CouponStatus, FuelType, RefillSchedule, TankState, TankType } from "../nswagts";
+import { CouponStatus, FuelType, RefillSchedule, TankState, TankType, LocationDebtorType } from "../nswagts";
 
 type AllEnums =
   | typeof CouponStatus
   | typeof RefillSchedule
   | typeof TankType
   | typeof FuelType
-  | typeof TankState;
+  | typeof TankState
+  | typeof LocationDebtorType;
 
 const enumConvertor = <U extends AllEnums>(enumType: U): Record<keyof U, U[keyof U]> => {
   const filterAmount = Object.values(enumType).length / 2;
@@ -24,3 +25,4 @@ export const RefillScheduleRecord = enumConvertor(RefillSchedule);
 export const TankTypeRecord = enumConvertor(TankType);
 export const FuelTypeRecord = enumConvertor(FuelType);
 export const TankStateRecord = enumConvertor(TankState);
+export const LocationDebtorTypeRecord = enumConvertor(LocationDebtorType);
