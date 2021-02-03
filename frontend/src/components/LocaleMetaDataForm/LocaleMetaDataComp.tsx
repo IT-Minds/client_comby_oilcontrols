@@ -110,7 +110,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
 
             <StreetSelector
               cb={x => {
-                updateLocalForm(x.name, "address");
+                updateLocalForm(x.id, "address");
                 updateLocalForm(x.regionId, "regionId" as keyof typeof localForm);
               }}></StreetSelector>
             {
