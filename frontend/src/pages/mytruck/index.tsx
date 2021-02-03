@@ -1,23 +1,40 @@
 import { GetStaticProps, NextPage } from "next";
+import Link from "next/link";
 import { I18nProps } from "next-rosetta";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { genTruckClient } from "services/backend/apiClients";
+import { emptyPageResult } from "services/backend/ext/IPageResult";
+import { TruckInfoIdDto } from "services/backend/nswagts";
 
-const LocalePage: NextPage = () => {
-  const router = useRouter();
-  useEffect(() => {
-    router.push("/mytruck/[id]", "/mytruck/1");
-  }, []);
-
-  return <h1>Rest of the page</h1>;
+type Props = {
+  truckIds: number[];
 };
 
-export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context => {
-  const locale = context.locale || context.defaultLocale;
+const LocalePage: NextPage<Props> = ({ truckIds }) => {
+  return (
+    <div>
+      Click the Truck ID to get to that truck page.
+      <br />
+      (This is temporary until the trucker user redirect is done)
+      {truckIds.map(id => (
+        <div key={id}>
+          <Link href="/mytruck/[id]" as={"/mytruck/" + id}>
+            <a>{id}</a>
+          </Link>
+        </div>
+      ))}
+    </div>
+  );
+};
 
+export const getStaticProps: GetStaticProps<Props & I18nProps<Locale>> = async context => {
+  const locale = context.locale || context.defaultLocale;
   const { table = {} } = await import(`../../i18n/${locale}`);
 
-  return { props: { table } };
+  const client = await genTruckClient();
+  const trucks = await client.getTrucks().catch(() => emptyPageResult<TruckInfoIdDto>());
+  const truckIds = trucks.results?.map(x => x.id);
+
+  return { props: { table, truckIds }, revalidate: 600 };
 };
 
 export default LocalePage;
