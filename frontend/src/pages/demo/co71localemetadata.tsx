@@ -5,7 +5,7 @@ import { useOffline } from "hooks/useOffline";
 import { NextPage } from "next";
 import React, { useCallback } from "react";
 import { genLocationClient } from "services/backend/apiClients";
-import { CreateLocationCommand, UpdateLocationMetaDataCommand } from "services/backend/nswagts";
+import { AddDebtorToLocationCommand, CreateLocationCommand, UpdateLocationMetaDataCommand } from "services/backend/nswagts";
 
 const DemoPage: NextPage = () => {
   const toast = useToast();
@@ -23,6 +23,9 @@ const DemoPage: NextPage = () => {
           : client.addNewLocation(new CreateLocationCommand(form)));
 
         await client.saveLocationImage(newId, { data: form.image, fileName: form.image.name });
+        await client.addDebtor(new AddDebtorToLocationCommand({
+          locationId: newId
+        }))
 
         toast({
           title: "Filldata created/updated",
