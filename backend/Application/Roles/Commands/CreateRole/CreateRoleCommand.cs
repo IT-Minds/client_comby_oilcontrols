@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
@@ -31,17 +32,18 @@ namespace Application.Roles.Commands.CreateRole
         {
           request.Role.Actions = new List<Domain.Enums.Action>();
         }
+
         var role = new Role
         {
           Name = request.Role.Name,
         };
-        _context.Roles.Add(role);
 
-        foreach (Domain.Enums.Action act in request.Role.Actions)
-        {
-          _context.RoleActions.Add(new RoleAction { Action = act, RoleId = role.Id });
-        }
-         await _context.SaveChangesAsync(cancellationToken);
+        var roleActions = request.Role.Actions.Select(act => new RoleAction { Action = act, Role = role });
+
+        _context.Roles.Add(role);
+        _context.RoleActions.AddRange(roleActions);
+        await _context.SaveChangesAsync(cancellationToken);
+
         return new RoleIdDto { Name = request.Role.Name, Actions = request.Role.Actions, Id = role.Id };
       }
     }

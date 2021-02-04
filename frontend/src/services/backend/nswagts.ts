@@ -19,7 +19,7 @@ export class AuthClient {
         "Bearer " + this.accessToken;
       return Promise.resolve(options);
     }
-    return Promise.resolve(null);
+    return Promise.resolve(options);
   }
 }
 
@@ -3423,7 +3423,7 @@ export enum Action {
     GET_COUPONS = 3,
     SET_TEMPERATURE = 4,
     GET_DEBTOR = 5,
-    GET_LOCATION_HITORIES = 6,
+    GET_LOCATION_HISTORIES = 6,
     CREATE_LOCATION = 7,
     UPDATE_LOCATION = 8,
     GET_LOCATION = 9,

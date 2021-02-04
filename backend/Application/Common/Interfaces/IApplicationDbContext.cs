@@ -29,8 +29,6 @@ namespace Application.Common.Interfaces
     DbSet<UserRole> UserRoles { get; set; }
     DbSet<ExampleEntity> ExampleEntities { get; set; }
     DbSet<ExampleEntityList> ExampleEntityLists { get; set; }
-    DbSet<Role> Roles { get; set; }
-    DbSet<RoleAction> RoleActions { get; set; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
   }
 }
