@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { useCallback, useState } from "react";
 import { genAuthenticationClient } from "services/backend/apiClients";
 import { AssignTokenCommand, IUserDto, UserTokenDto } from "services/backend/nswagts";
