@@ -20,10 +20,7 @@ import DatePicker from "components/DatePicker/DatePicker";
 import StreetSelector from "components/StreetSelector/StreetSelector";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
-import {
-  FuelTypeRecord,
-  RefillScheduleRecord
-} from "services/backend/ext/enumConvertor";
+import { FuelTypeRecord, RefillScheduleRecord } from "services/backend/ext/enumConvertor";
 import {
   AddDebtorToLocationCommand,
   FuelType,
