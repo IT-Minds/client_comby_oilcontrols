@@ -28,7 +28,7 @@ namespace Web.Services
       {
         Subject = new ClaimsIdentity(new Claim[]
         {
-          new Claim(ClaimTypes.Name, user.Username)
+          new Claim(ClaimTypes.NameIdentifier, user.Username)
         }),
         Expires = DateTime.UtcNow.AddHours(EXPIRE_HOURS),
         SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
