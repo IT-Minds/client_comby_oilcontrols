@@ -1,5 +1,6 @@
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
+using Application.Common.Security;
 using Domain.Entities;
 using Domain.Enums;
 using MediatR;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace Application.Refills.Commands.OrderRefill
 {
+  [AuthorizeAttribute(Domain.Enums.Action.ORDER_REFILL)]
   public class OrderRefillCommand : IRequest<int>
   {
     public DateTime ExpectedDeliveryDate { get; set; }
@@ -37,31 +39,32 @@ namespace Application.Refills.Commands.OrderRefill
           .Where(t => t.Id == request.TruckId)
           .FirstOrDefaultAsync();
 
-        if (truck==null)
+        if (truck == null)
         {
-          throw new NotFoundException(nameof(Truck), request.TruckId );
+          throw new NotFoundException(nameof(Truck), request.TruckId);
         }
         var location = await _context.Locations
           .FirstOrDefaultAsync(location => location.Id == request.LocationId);
 
-        if(location == null)
+        if (location == null)
         {
           throw new NotFoundException(nameof(Location), request.LocationId);
         }
 
-        if(truck.Route == null)
+        if (truck.Route == null)
         {
           truck.Route = new Route { Refills = new List<Refill>() };
         }
 
         var refill = truck.Route.Refills
           .FirstOrDefault(refill => refill.ActualDeliveryDate == null && refill.LocationId == request.LocationId);
-        if(refill != null)
+        if (refill != null)
         {
           truck.Route.Refills.Remove(refill);
         }
 
-        var newRefill = new Refill {
+        var newRefill = new Refill
+        {
 
           ExpectedDeliveryDate = request.ExpectedDeliveryDate,
           LocationId = request.LocationId

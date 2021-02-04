@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
 using Application.Common.Interfaces.Pagination;
+using Application.Common.Security;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Entities;
@@ -11,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Trucks.Queries.GetTrucksPage
 {
+  [AuthorizeAttribute(Domain.Enums.Action.GET_TRUCK)]
   public class GetTrucksPageQuery : IPageRequest<TruckInfoIdDto, int>, IPageBody<Truck, int>
   {
     public int Size { get; set; }

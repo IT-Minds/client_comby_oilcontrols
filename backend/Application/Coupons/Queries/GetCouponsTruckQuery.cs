@@ -1,5 +1,6 @@
 using Application.Common.Interfaces;
 using Application.Common.Interfaces.Pagination;
+using Application.Common.Security;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Entities;
@@ -12,9 +13,10 @@ using System.Threading.Tasks;
 
 namespace Application.Coupons.Queries.GetCoupons.Truck
 {
+  [AuthorizeAttribute(Domain.Enums.Action.GET_COUPONS)]
   public class GetCouponsTruckQuery : IPageRequest<CouponIdDto, DateTimeOffset>, IPageBody<Coupon, DateTimeOffset>
   {
-    public int Size { get ; set ; }
+    public int Size { get; set; }
     public DateTimeOffset Needle { get; set; }
     public int? Skip { get; set; }
     public int TruckId { get; set; }

@@ -2,12 +2,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
+using Application.Common.Security;
 using AutoMapper;
 using MediatR;
 using UniContaDomain.Entities;
 
 namespace Application.Trucks.Queries.GetTruckInfo
 {
+  [AuthorizeAttribute(Domain.Enums.Action.GET_DEBTOR)]
   public class GetDebtorQuery : IRequest<bool>
   {
     public class GetDebtorQueryHandler : IRequestHandler<GetDebtorQuery, bool>

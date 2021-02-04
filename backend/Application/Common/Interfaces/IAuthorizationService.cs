@@ -5,6 +5,6 @@ namespace Application.Common.Interfaces
 
     bool IsInRole(string role);
 
-    bool HasPolicy(string policyName);
+    bool HasPolicy(Domain.Enums.Action policy);
   }
 }
