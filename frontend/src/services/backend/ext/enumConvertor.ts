@@ -1,4 +1,11 @@
-import { CouponStatus, FuelType, RefillSchedule, TankState, TankType, LocationDebtorType } from "../nswagts";
+import {
+  CouponStatus,
+  FuelType,
+  LocationDebtorType,
+  RefillSchedule,
+  TankState,
+  TankType
+} from "../nswagts";
 
 type AllEnums =
   | typeof CouponStatus
