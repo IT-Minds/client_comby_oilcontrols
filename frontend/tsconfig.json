@@ -16,12 +16,6 @@
     "baseUrl": "src",
     "noImplicitAny": true
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "src/services/backend/api.test.ts.old",
-    "src/hooks/usePWA.tss"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }

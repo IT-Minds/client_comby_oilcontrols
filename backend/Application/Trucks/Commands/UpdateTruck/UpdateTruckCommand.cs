@@ -7,9 +7,11 @@ using Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using Application.Common.Security;
 
 namespace Application.Trucks.Commands.UpdateTruck
 {
+  [AuthorizeAttribute(Domain.Enums.Action.UPDATE_TRUCK)]
   public class UpdateTruckCommand : IRequest<TruckInfoIdDto>
   {
     [JsonIgnore]

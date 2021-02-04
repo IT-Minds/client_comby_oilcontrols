@@ -181,6 +181,62 @@ export class ActionClient extends ClientBase implements IActionClient {
     }
 }
 
+export interface IAuthenticationClient {
+    login(command: AssignTokenCommand): Promise<UserTokenDto>;
+}
+
+export class AuthenticationClient extends ClientBase implements IAuthenticationClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(configuration: AuthClient, baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super(configuration);
+        this.http = http ? http : <any>window;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    login(command: AssignTokenCommand): Promise<UserTokenDto> {
+        let url_ = this.baseUrl + "/api/Authentication";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processLogin(_response));
+        });
+    }
+
+    protected processLogin(response: Response): Promise<UserTokenDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserTokenDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<UserTokenDto>(<any>null);
+    }
+}
+
 export interface ICouponsClient {
     create(command: AssignCouponsCommand): Promise<number[]>;
     invalidateCoupon(couponNumber: number): Promise<number>;
@@ -339,6 +395,7 @@ export class DailyTemperatureClient extends ClientBase implements IDailyTemperat
 
 export interface IDebtorClient {
     get(): Promise<boolean>;
+    printCouponRequired(id: number, command: PrintCouponRequiredCommand): Promise<number>;
 }
 
 export class DebtorClient extends ClientBase implements IDebtorClient {
@@ -386,6 +443,49 @@ export class DebtorClient extends ClientBase implements IDebtorClient {
             });
         }
         return Promise.resolve<boolean>(<any>null);
+    }
+
+    printCouponRequired(id: number, command: PrintCouponRequiredCommand): Promise<number> {
+        let url_ = this.baseUrl + "/api/Debtor/{id}/CouponRequired";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processPrintCouponRequired(_response));
+        });
+    }
+
+    protected processPrintCouponRequired(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(<any>null);
     }
 }
 
@@ -1683,6 +1783,180 @@ export class TruckClient extends ClientBase implements ITruckClient {
     }
 }
 
+export interface IUserClient {
+    createUser(command: CreateUserCommand): Promise<number>;
+}
+
+export class UserClient extends ClientBase implements IUserClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(configuration: AuthClient, baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super(configuration);
+        this.http = http ? http : <any>window;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    createUser(command: CreateUserCommand): Promise<number> {
+        let url_ = this.baseUrl + "/api/User";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processCreateUser(_response));
+        });
+    }
+
+    protected processCreateUser(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(<any>null);
+    }
+}
+
+export class UserTokenDto implements IUserTokenDto {
+    userDto?: UserDto | null;
+    token?: string | null;
+
+    constructor(data?: IUserTokenDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            this.userDto = data.userDto && !(<any>data.userDto).toJSON ? new UserDto(data.userDto) : <UserDto>this.userDto; 
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userDto = _data["userDto"] ? UserDto.fromJS(_data["userDto"]) : <any>null;
+            this.token = _data["token"] !== undefined ? _data["token"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): UserTokenDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserTokenDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userDto"] = this.userDto ? this.userDto.toJSON() : <any>null;
+        data["token"] = this.token !== undefined ? this.token : <any>null;
+        return data; 
+    }
+}
+
+export interface IUserTokenDto {
+    userDto?: IUserDto | null;
+    token?: string | null;
+}
+
+export class UserDto implements IUserDto {
+    username?: string | null;
+    password?: string | null;
+
+    constructor(data?: IUserDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.username = _data["username"] !== undefined ? _data["username"] : <any>null;
+            this.password = _data["password"] !== undefined ? _data["password"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): UserDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["username"] = this.username !== undefined ? this.username : <any>null;
+        data["password"] = this.password !== undefined ? this.password : <any>null;
+        return data; 
+    }
+}
+
+export interface IUserDto {
+    username?: string | null;
+    password?: string | null;
+}
+
+export class AssignTokenCommand implements IAssignTokenCommand {
+    userDto?: UserDto | null;
+
+    constructor(data?: IAssignTokenCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            this.userDto = data.userDto && !(<any>data.userDto).toJSON ? new UserDto(data.userDto) : <UserDto>this.userDto; 
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userDto = _data["userDto"] ? UserDto.fromJS(_data["userDto"]) : <any>null;
+        }
+    }
+
+    static fromJS(data: any): AssignTokenCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new AssignTokenCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userDto"] = this.userDto ? this.userDto.toJSON() : <any>null;
+        return data; 
+    }
+}
+
+export interface IAssignTokenCommand {
+    userDto?: IUserDto | null;
+}
+
 export class AssignCouponsCommand implements IAssignCouponsCommand {
     truckId?: number;
     couponNumbers?: number[] | null;
@@ -1773,6 +2047,46 @@ export interface ICreateDailyTemperatureCommand {
     regionId?: number;
     date?: Date;
     temperature?: number;
+}
+
+export class PrintCouponRequiredCommand implements IPrintCouponRequiredCommand {
+    debtorId?: number;
+    printCouponRequired?: boolean;
+
+    constructor(data?: IPrintCouponRequiredCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.debtorId = _data["debtorId"] !== undefined ? _data["debtorId"] : <any>null;
+            this.printCouponRequired = _data["printCouponRequired"] !== undefined ? _data["printCouponRequired"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): PrintCouponRequiredCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new PrintCouponRequiredCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["debtorId"] = this.debtorId !== undefined ? this.debtorId : <any>null;
+        data["printCouponRequired"] = this.printCouponRequired !== undefined ? this.printCouponRequired : <any>null;
+        return data; 
+    }
+}
+
+export interface IPrintCouponRequiredCommand {
+    debtorId?: number;
+    printCouponRequired?: boolean;
 }
 
 export class CreateExampleEntityCommand implements ICreateExampleEntityCommand {
@@ -3533,6 +3847,46 @@ export interface ICreateTruckRefillCommand {
     fuelCardNumber?: number;
     amount?: number;
     fuelType?: FuelType;
+}
+
+export class CreateUserCommand implements ICreateUserCommand {
+    userName?: string | null;
+    password?: string | null;
+
+    constructor(data?: ICreateUserCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userName = _data["userName"] !== undefined ? _data["userName"] : <any>null;
+            this.password = _data["password"] !== undefined ? _data["password"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): CreateUserCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateUserCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userName"] = this.userName !== undefined ? this.userName : <any>null;
+        data["password"] = this.password !== undefined ? this.password : <any>null;
+        return data; 
+    }
+}
+
+export interface ICreateUserCommand {
+    userName?: string | null;
+    password?: string | null;
 }
 
 export interface FileParameter {
