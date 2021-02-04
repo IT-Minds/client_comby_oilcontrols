@@ -14,26 +14,39 @@ import {
   NumberInputField,
   Select,
   Spacer,
-  Textarea,
   VStack
 } from "@chakra-ui/react";
 import DatePicker from "components/DatePicker/DatePicker";
 import StreetSelector from "components/StreetSelector/StreetSelector";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
-import { FuelTypeRecord, RefillScheduleRecord } from "services/backend/ext/enumConvertor";
-import { FuelType, RefillSchedule, TankType } from "services/backend/nswagts";
+import {
+  FuelTypeRecord,
+  RefillScheduleRecord
+} from "services/backend/ext/enumConvertor";
+import {
+  AddDebtorToLocationCommand,
+  FuelType,
+  LocationDebtorType,
+  RefillSchedule,
+  TankType
+} from "services/backend/nswagts";
 import { capitalize } from "utils/capitalizeAnyString";
 import { logger } from "utils/logger";
 
 import { LocaleMetaDataForm } from "./LocaleMetaDataCompForm";
 
 type Props = {
-  submitCallback: (reportForm: LocaleMetaDataForm) => void;
+  submitCallback: (reportForm: LocaleMetaDataForm, debtors: AddDebtorToLocationCommand[]) => void;
   localeMetaData: LocaleMetaDataForm;
 };
 
 const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
+  const [mainDebtorId, setMainDebtorId] = useState(null);
+  const [baseDebtorId, setBaseDebtorId] = useState(null);
+  const [upcomingDebtorId, setUpcomingDebtorId] = useState(null);
+  const [debtorDate, setDebtorDate] = useState(new Date());
+
   const [localForm, setLocalForm] = useState<LocaleMetaDataForm>(
     localeMetaData ?? {
       address: "",
