@@ -5,6 +5,7 @@ import { Locale } from "i18n/Locale";
 import { GetStaticProps, NextPage } from "next";
 import { I18nProps } from "next-rosetta";
 import { useCallback } from "react";
+import { genAuthenticationClient } from "services/backend/apiClients";
 
 const DemoPage: NextPage = () => {
   const toast = useToast();
@@ -13,22 +14,18 @@ const DemoPage: NextPage = () => {
 
   const login = useCallback(
     async form => {
-    //   awaitCallback(async () => {
-    //     const client = await genTruckClient();
-    //     await client.updateTruck(
-    //           form.id,
-    //           new UpdateTruckCommand({
-    //             truckInfo: form
-    //           }));
+      awaitCallback(async () => {
+        const client = await genAuthenticationClient();
+        await client.login(form);
 
-    //     toast({
-    //       title: "Login successful",
-    //       description: "Successful",
-    //       status: "success",
-    //       duration: 9000,
-    //       isClosable: true
-    //     });
-    //   }, Date.now().toString());
+        toast({
+          title: "Login successful",
+          description: "Successful",
+          status: "success",
+          duration: 9000,
+          isClosable: true
+        });
+      }, Date.now().toString());
     },
     [awaitCallback]
   );
