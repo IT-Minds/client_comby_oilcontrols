@@ -1,5 +1,6 @@
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
+using Application.Common.Security;
 using Domain.Entities;
 using Domain.EntityExtensions;
 using Domain.Enums;
@@ -13,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace Application.TruckRefills.Commands.CreateTruckRefill
 {
+  [AuthorizeAttribute(Domain.Enums.Action.CREATE_TRUCK_REFILL)]
   public class CreateTruckRefillCommand : IRequest<int>
   {
     [JsonIgnore]

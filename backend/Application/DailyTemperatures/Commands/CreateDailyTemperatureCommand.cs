@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Application.Common.Security;
 
 namespace Application.DailyTemperatures.Commands.CreateDailyTemperature
 {
+  [AuthorizeAttribute(Domain.Enums.Action.SET_TEMPERATURE)]
   public class CreateDailyTemperatureCommand : IRequest<int>
   {
     public int RegionId { get; set; }
@@ -36,9 +38,9 @@ namespace Application.DailyTemperatures.Commands.CreateDailyTemperature
         }
 
         var temp = region.DailyTemperatures.FirstOrDefault(x => x.Date == request.Date);
-        if(temp != null)
+        if (temp != null)
         {
-          throw new ArgumentException("Temperature allready registered for the: " + request.Date );
+          throw new ArgumentException("Temperature allready registered for the: " + request.Date);
         }
 
         var dailyTemp = new RegionDailyTemp

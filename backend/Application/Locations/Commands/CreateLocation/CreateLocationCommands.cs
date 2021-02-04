@@ -2,14 +2,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Domain.Enums;
-using Microsoft.EntityFrameworkCore;
 using global::Application.Common.Interfaces;
-using Application.Common.Exceptions;
 using Domain.Entities;
-using System;
+using Application.Common.Security;
 
 namespace Application.Locations.Commands.CreateLocation
 {
+  [AuthorizeAttribute(Domain.Enums.Action.CREATE_LOCATION)]
   public class CreateLocationCommand : IRequest<int>
   {
     public string Address { get; set; }

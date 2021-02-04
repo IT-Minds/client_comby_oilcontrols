@@ -1,5 +1,6 @@
 using Application.Common.Interfaces;
 using Application.Common.Interfaces.Pagination;
+using Application.Common.Security;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Entities;
@@ -12,9 +13,10 @@ using System.Threading.Tasks;
 
 namespace Application.Refills.Queries.GetRefills.Location
 {
+  [AuthorizeAttribute(Domain.Enums.Action.GET_REFILLS)]
   public class GetRefillsLocationQuery : IPageRequest<RefillDto>, IPageBody<Refill, DateTimeOffset>
   {
-    public int Size { get ; set ; }
+    public int Size { get; set; }
     public DateTimeOffset Needle { get; set; }
     public int? Skip { get; set; }
 
@@ -82,7 +84,7 @@ namespace Application.Refills.Queries.GetRefills.Location
                 .Take(request.Size)
                 .ProjectTo<RefillDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
-        page.NewNeedle = needle+"";
+        page.NewNeedle = needle + "";
 
         return page;
       }
