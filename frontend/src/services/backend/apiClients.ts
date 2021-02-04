@@ -2,6 +2,7 @@
 
 import { api } from "./api";
 import {
+  AuthenticationClient,
   CouponsClient,
   DailyTemperatureClient,
   ExampleEntityClient,
@@ -24,3 +25,5 @@ export const genLocationClient = (): Promise<LocationClient> => api(LocationClie
 export const genTruckClient = (): Promise<TruckClient> => api(TruckClient);
 export const genLocationHistoryClient = (): Promise<LocationHistoryClient> =>
   api(LocationHistoryClient);
+export const genAuthenticationClient = (): Promise<AuthenticationClient> =>
+  api(AuthenticationClient);
