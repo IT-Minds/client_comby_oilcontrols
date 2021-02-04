@@ -1298,6 +1298,103 @@ export class RefillClient extends ClientBase implements IRefillClient {
     }
 }
 
+export interface IRoleClient {
+    createRole(command: CreateRoleCommand): Promise<RoleIdDto>;
+    updateRole(command: UpdateRoleCommand): Promise<RoleIdDto>;
+}
+
+export class RoleClient extends ClientBase implements IRoleClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(configuration: AuthClient, baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super(configuration);
+        this.http = http ? http : <any>window;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    createRole(command: CreateRoleCommand): Promise<RoleIdDto> {
+        let url_ = this.baseUrl + "/api/Role";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processCreateRole(_response));
+        });
+    }
+
+    protected processCreateRole(response: Response): Promise<RoleIdDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = RoleIdDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<RoleIdDto>(<any>null);
+    }
+
+    updateRole(command: UpdateRoleCommand): Promise<RoleIdDto> {
+        let url_ = this.baseUrl + "/api/Role";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processUpdateRole(_response));
+        });
+    }
+
+    protected processUpdateRole(response: Response): Promise<RoleIdDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = RoleIdDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<RoleIdDto>(<any>null);
+    }
+}
+
 export interface IStreetClient {
     get(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfStreetDto>;
 }
@@ -2890,6 +2987,182 @@ export interface IOrderRefillCommand {
     expectedDeliveryDate?: Date;
     locationId?: number;
     truckId?: number;
+}
+
+export class RoleDto implements IRoleDto {
+    name?: string | null;
+    actions?: Action[] | null;
+
+    constructor(data?: IRoleDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
+            if (Array.isArray(_data["actions"])) {
+                this.actions = [] as any;
+                for (let item of _data["actions"])
+                    this.actions!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): RoleDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new RoleDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name !== undefined ? this.name : <any>null;
+        if (Array.isArray(this.actions)) {
+            data["actions"] = [];
+            for (let item of this.actions)
+                data["actions"].push(item);
+        }
+        return data; 
+    }
+}
+
+export interface IRoleDto {
+    name?: string | null;
+    actions?: Action[] | null;
+}
+
+export class RoleIdDto extends RoleDto implements IRoleIdDto {
+    id?: number;
+
+    constructor(data?: IRoleIdDto) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): RoleIdDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new RoleIdDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IRoleIdDto extends IRoleDto {
+    id?: number;
+}
+
+export enum Action {
+    ASSIGN_COUPON = 0,
+    SAVE_COUPON_IMAGE = 1,
+    UPDATE_COUPON_STATUS = 2,
+    GET_COUPONS = 3,
+    SET_TEMPERATURE = 4,
+    GET_DEBTOR = 5,
+    GET_LOCATION_HITORIES = 6,
+    CREATE_LOCATION = 7,
+    UPDATE_LOCATION = 8,
+    GET_LOCATION = 9,
+    CREATE_REFILL = 10,
+    ORDER_REFILL = 11,
+    GET_REFILLS = 12,
+    GET_STREETS = 13,
+    CREATE_TRUCK_REFILL = 14,
+    CREATE_TRUCK = 15,
+    UPDATE_TRUCK = 16,
+    GET_TRUCK = 17,
+}
+
+export class CreateRoleCommand implements ICreateRoleCommand {
+    role?: RoleDto | null;
+
+    constructor(data?: ICreateRoleCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            this.role = data.role && !(<any>data.role).toJSON ? new RoleDto(data.role) : <RoleDto>this.role; 
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.role = _data["role"] ? RoleDto.fromJS(_data["role"]) : <any>null;
+        }
+    }
+
+    static fromJS(data: any): CreateRoleCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateRoleCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["role"] = this.role ? this.role.toJSON() : <any>null;
+        return data; 
+    }
+}
+
+export interface ICreateRoleCommand {
+    role?: IRoleDto | null;
+}
+
+export class UpdateRoleCommand implements IUpdateRoleCommand {
+    role?: RoleDto | null;
+
+    constructor(data?: IUpdateRoleCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            this.role = data.role && !(<any>data.role).toJSON ? new RoleDto(data.role) : <RoleDto>this.role; 
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.role = _data["role"] ? RoleDto.fromJS(_data["role"]) : <any>null;
+        }
+    }
+
+    static fromJS(data: any): UpdateRoleCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateRoleCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["role"] = this.role ? this.role.toJSON() : <any>null;
+        return data; 
+    }
+}
+
+export interface IUpdateRoleCommand {
+    role?: IRoleDto | null;
 }
 
 export class PageResultOfStreetDtoAndString implements IPageResultOfStreetDtoAndString {
