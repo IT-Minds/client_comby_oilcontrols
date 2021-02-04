@@ -5,7 +5,11 @@ import { useOffline } from "hooks/useOffline";
 import { NextPage } from "next";
 import React, { useCallback } from "react";
 import { genLocationClient } from "services/backend/apiClients";
-import { AddDebtorToLocationCommand, CreateLocationCommand, UpdateLocationMetaDataCommand } from "services/backend/nswagts";
+import {
+  AddDebtorToLocationCommand,
+  CreateLocationCommand,
+  UpdateLocationMetaDataCommand
+} from "services/backend/nswagts";
 
 const DemoPage: NextPage = () => {
   const toast = useToast();
@@ -15,7 +19,7 @@ const DemoPage: NextPage = () => {
   const bg = useColorModeValue("gray.100", "gray.700");
 
   const saveForm = useCallback(
-    async (form: LocaleMetaDataForm) => {
+    async (form: LocaleMetaDataForm, debtors: AddDebtorToLocationCommand[]) => {
       awaitCallback(async () => {
         const client = await genLocationClient();
         const newId = await (form.id
@@ -23,9 +27,10 @@ const DemoPage: NextPage = () => {
           : client.addNewLocation(new CreateLocationCommand(form)));
 
         await client.saveLocationImage(newId, { data: form.image, fileName: form.image.name });
-        await client.addDebtor(new AddDebtorToLocationCommand({
-          locationId: newId
-        }))
+        debtors.map(async d => {
+          d.locationId = newId;
+          await client.addDebtor(d);
+        });
 
         toast({
           title: "Filldata created/updated",
@@ -42,7 +47,7 @@ const DemoPage: NextPage = () => {
   return (
     <Container maxW="xl" centerContent>
       <Box padding="4" bg={bg} maxW="6xl" maxH="4xl" resize="both" overflow="auto">
-        <LocaleMetaDataComp submitCallback={x => saveForm(x)} localeMetaData={null} />
+        <LocaleMetaDataComp submitCallback={(x, y) => saveForm(x, y)} localeMetaData={null} />
       </Box>
     </Container>
   );
