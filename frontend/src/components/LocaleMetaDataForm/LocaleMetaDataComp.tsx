@@ -180,7 +180,6 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
           </FormControl>
 
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.comment}>
-            <VStack>
               {
                 //TODO: translation
               }
@@ -191,7 +190,6 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
                   updateLocalForm(e.target.value, "comment");
                 }}
               />
-            </VStack>
             {
               //TODO: translation
             }
@@ -199,7 +197,6 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
           </FormControl>
 
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.image}>
-            <VStack>
               {
                 //TODO: translation
               }
@@ -207,7 +204,6 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
               <Button colorScheme="blue" onClick={saveImage}>
                 {localForm.image ? "Re-select image" : "Select image"}
               </Button>
-            </VStack>
             {
               //TODO: translation
             }
@@ -310,7 +306,6 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
               //TODO: translation
             }
             <FormLabel>Days between refills: </FormLabel>
-            <InputGroup>
               <NumberInput
                 placeholder="Days between refills"
                 onChange={value => {
@@ -318,7 +313,6 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
                 }}>
                 <NumberInputField />
               </NumberInput>
-            </InputGroup>
             {
               //TODO: translation
             }
