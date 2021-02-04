@@ -35,7 +35,7 @@ const CreateLocationPage: NextPage = () => {
   return (
     <VStack position="relative" overflow="visible" h="95vh" w="100%">
       <Heading>Create Location</Heading>
-        <LocaleMetaDataComp submitCallback={x => createLocation(x)} localeMetaData={null} />
+      <LocaleMetaDataComp submitCallback={x => createLocation(x)} localeMetaData={null} />
     </VStack>
   );
 };
