@@ -339,6 +339,7 @@ export class DailyTemperatureClient extends ClientBase implements IDailyTemperat
 
 export interface IDebtorClient {
     get(): Promise<boolean>;
+    printCouponRequired(id: number, command: PrintCouponRequiredCommand): Promise<number>;
 }
 
 export class DebtorClient extends ClientBase implements IDebtorClient {
@@ -386,6 +387,49 @@ export class DebtorClient extends ClientBase implements IDebtorClient {
             });
         }
         return Promise.resolve<boolean>(<any>null);
+    }
+
+    printCouponRequired(id: number, command: PrintCouponRequiredCommand): Promise<number> {
+        let url_ = this.baseUrl + "/api/Debtor/{id}/CouponRequired";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processPrintCouponRequired(_response));
+        });
+    }
+
+    protected processPrintCouponRequired(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(<any>null);
     }
 }
 
@@ -1773,6 +1817,46 @@ export interface ICreateDailyTemperatureCommand {
     regionId?: number;
     date?: Date;
     temperature?: number;
+}
+
+export class PrintCouponRequiredCommand implements IPrintCouponRequiredCommand {
+    debtorId?: number;
+    printCouponRequired?: boolean;
+
+    constructor(data?: IPrintCouponRequiredCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.debtorId = _data["debtorId"] !== undefined ? _data["debtorId"] : <any>null;
+            this.printCouponRequired = _data["printCouponRequired"] !== undefined ? _data["printCouponRequired"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): PrintCouponRequiredCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new PrintCouponRequiredCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["debtorId"] = this.debtorId !== undefined ? this.debtorId : <any>null;
+        data["printCouponRequired"] = this.printCouponRequired !== undefined ? this.printCouponRequired : <any>null;
+        return data; 
+    }
+}
+
+export interface IPrintCouponRequiredCommand {
+    debtorId?: number;
+    printCouponRequired?: boolean;
 }
 
 export class CreateExampleEntityCommand implements ICreateExampleEntityCommand {

@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Application.Debtors.PrintCouponRequired;
 using Application.Trucks.Queries.GetTruckInfo;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
@@ -20,5 +21,13 @@ namespace Web.Controllers
     {
       return await Mediator.Send(new GetDebtorQuery());
     }
+
+    [HttpPut("{id}/CouponRequired")]
+    public async Task<ActionResult<int>> PrintCouponRequired([FromRoute] int id, PrintCouponRequiredCommand command)
+    {
+      command.DebtorId = id;
+      return await Mediator.Send(command);
+    }
+
   }
 }
