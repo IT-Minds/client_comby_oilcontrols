@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Center,
+  Container,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -112,6 +113,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
   );
 
   return (
+    <Container maxW="4xl">
     <form onSubmit={handleSubmit}>
       <Flex>
         <Box>
@@ -393,6 +395,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
         </Button>
       </Center>
     </form>
+    </Container>
   );
 };
 
