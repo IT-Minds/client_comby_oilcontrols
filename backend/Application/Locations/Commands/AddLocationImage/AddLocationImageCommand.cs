@@ -11,9 +11,11 @@ using System.Text.RegularExpressions;
 using System.IO;
 using Application.Common.Options;
 using Microsoft.Extensions.Options;
+using Application.Common.Security;
 
 namespace Application.Locations.Commands.AddLocationImage
 {
+  [AuthorizeAttribute(Domain.Enums.Action.CREATE_LOCATION)]
   public class AddLocationImageCommand : IRequest<string>
   {
     public int LocationId { get; set; }

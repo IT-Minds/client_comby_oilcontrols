@@ -67,6 +67,9 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
+                    b.Property<bool>("CouponRequired")
+                        .HasColumnType("bit");
+
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetimeoffset");
 
@@ -516,7 +519,7 @@ namespace Infrastructure.Persistence.Migrations
                         .IsUnique()
                         .HasFilter("[Name] IS NOT NULL");
 
-                    b.ToTable("Role");
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("Domain.Entities.RoleAction", b =>
@@ -544,7 +547,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("RoleId", "Action");
 
-                    b.ToTable("RoleAction");
+                    b.ToTable("RoleActions");
                 });
 
             modelBuilder.Entity("Domain.Entities.Route", b =>
@@ -763,9 +766,19 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("ModifiedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.HasIndex("Username")
+                        .IsUnique()
+                        .HasFilter("[Username] IS NOT NULL");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Domain.Entities.UserRole", b =>
@@ -795,7 +808,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("UserRole");
+                    b.ToTable("UserRoles");
                 });
 
             modelBuilder.Entity("Domain.Entities.Coupon", b =>

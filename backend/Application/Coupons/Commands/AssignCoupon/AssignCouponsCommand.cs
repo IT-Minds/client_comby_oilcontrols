@@ -7,13 +7,15 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Application.Common.Exceptions;
 using System.Linq;
+using Application.Common.Security;
 
 namespace Application.Coupons.Commands.AssignCoupons
 {
   // The command assumes that all coupon numbers are handed out sequentially.
+  [AuthorizeAttribute(Action.ASSIGN_COUPON)]
   public class AssignCouponsCommand : IRequest<List<int>>
   {
-    public int TruckId {get; set; }
+    public int TruckId { get; set; }
     public List<int> CouponNumbers { get; set; }
 
     public class AssignCouponsCommandCommandHandler : IRequestHandler<AssignCouponsCommand, List<int>>
@@ -29,12 +31,15 @@ namespace Application.Coupons.Commands.AssignCoupons
       {
         var Truck = await _context.Trucks.FindAsync(request.TruckId);
 
-        if(Truck == null){
+        if (Truck == null)
+        {
           throw new NotFoundException(nameof(Truck), request.TruckId);
         }
 
-        foreach( int numb in request.CouponNumbers){
-          _context.Coupons.Add(new Coupon{
+        foreach (int numb in request.CouponNumbers)
+        {
+          _context.Coupons.Add(new Coupon
+          {
             CouponNumber = numb,
             Truck = Truck
           });

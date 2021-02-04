@@ -1,6 +1,7 @@
 using Application.Common.Interfaces;
 using Microsoft.AspNetCore.Http;
-using System;
+using System.Linq;
+using System.Security.Claims;
 
 namespace Web.Services
 {
@@ -13,14 +14,13 @@ namespace Web.Services
       _httpContextAccessor = httpContextAccessor;
     }
 
-    public bool IsInRole(string role)
+    public bool HasPolicy(Domain.Enums.Action policy)
     {
-      throw new NotImplementedException();
-    }
+      var policies = _httpContextAccessor.HttpContext
+        .User?.Claims?.Where(x => x.Type == ClaimTypes.Role)
+        .Where(x => x.Value.Equals(policy.ToString()));
 
-    public bool HasPolicy(string policyName)
-    {
-      throw new NotImplementedException();
+      return policies != null && policies.Count() > 0;
     }
   }
 }

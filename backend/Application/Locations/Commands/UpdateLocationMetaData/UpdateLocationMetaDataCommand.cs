@@ -5,12 +5,12 @@ using MediatR;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Application.Common.Exceptions;
-using Domain.Entities;
 using Newtonsoft.Json;
-using System;
+using Application.Common.Security;
 
 namespace Application.Locations.Commands.UpdateLocationMetaData
 {
+  [AuthorizeAttribute(Domain.Enums.Action.UPDATE_LOCATION)]
   public class UpdateLocationMetaDataCommand : IRequest<int>
   {
     [JsonIgnore]

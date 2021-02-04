@@ -8,6 +8,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.2" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="5.0.0" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.8.1" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="4.8.1" />
     <PackageReference Include="Uniconta.WindowsAPI" Version="1.1.86.4" />
   </ItemGroup>
 

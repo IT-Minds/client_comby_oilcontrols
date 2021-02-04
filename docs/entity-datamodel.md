@@ -1,5 +1,3 @@
-//TODO: FIX notation in this diagram.
-
 # Entity Datamodel
 
 ## Diagram
@@ -88,6 +86,7 @@ class Street {
 
 class Debtor {
   id
+  couponRequired
 }
 
 class LocationDebtor {

@@ -314,8 +314,8 @@ namespace Application.UnitTests
         new FuelTank { Id = 501, TankNumber = 501, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 }
       );
       context.Debtors.AddRange(
-        new Debtor { Id = 500 },
-        new Debtor { Id = 501 }
+        new Debtor { Id = 500, CouponRequired = false },
+        new Debtor { Id = 501, CouponRequired = false }
       );
       context.Locations.AddRange(
         new Location { Id = 500, RegionId = 500, FuelTankId = 500, Address = "Address region 400.", Comments = "Location 400.", EstimateFuelConsumption = 100 },

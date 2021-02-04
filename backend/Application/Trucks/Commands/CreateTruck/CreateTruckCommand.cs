@@ -1,5 +1,6 @@
 
 using Application.Common.Interfaces;
+using Application.Common.Security;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.Trucks.Commands.CreateTruck
 {
+  [AuthorizeAttribute(Domain.Enums.Action.CREATE_TRUCK)]
   public class CreateTruckCommand : IRequest<TruckInfoIdDto>
   {
     public TruckInfoDto TruckInfo { get; set; }
