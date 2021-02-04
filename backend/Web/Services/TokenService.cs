@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -22,14 +23,20 @@ namespace Web.Services
 
     public string CreateToken(User user)
     {
+      var claims = new List<Claim>();
+      claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Username));
+      foreach(var role in user.Roles)
+      {
+        foreach(RoleAction action in role.Role.Actions)
+        {
+          claims.Add(new Claim(ClaimTypes.Role, System.Enum.GetName(action.Action)));
+        }
+      }
       var key = Encoding.ASCII.GetBytes(_options.Secret);
       var tokenHandler = new JwtSecurityTokenHandler();
       var descriptor = new SecurityTokenDescriptor
       {
-        Subject = new ClaimsIdentity(new Claim[]
-        {
-          new Claim(ClaimTypes.NameIdentifier, user.Username)
-        }),
+        Subject = new ClaimsIdentity(claims),
         Expires = DateTime.UtcNow.AddHours(EXPIRE_HOURS),
         SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
       };

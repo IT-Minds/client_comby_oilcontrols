@@ -24,6 +24,9 @@ namespace Application.Common.Interfaces
     DbSet<LocationDebtor> LocationDebtors { get; set; }
     DbSet<LocationDebtorHistory> LocationDebtorHistories { get; set; }
     DbSet<User> Users { get; set; }
+    DbSet<Role> Roles { get; set; }
+    DbSet<RoleAction> RoleActions { get; set; }
+    DbSet<UserRole> UserRoles { get; set; }
     DbSet<ExampleEntity> ExampleEntities { get; set; }
     DbSet<ExampleEntityList> ExampleEntityLists { get; set; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
