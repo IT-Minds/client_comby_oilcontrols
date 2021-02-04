@@ -137,27 +137,13 @@ namespace Web
 
       using (context)
       {
-        context.Database.EnsureCreated();
+        context.Database.AutoTransactionsEnabled = false;
+        context.Database.Migrate();
 
-        context.Database.AutoTransactionsEnabled = true;
-        var transaction = context.Database.CurrentTransaction ?? context.Database.BeginTransaction();
-        transaction.CreateSavepoint("PRE_MIGRATION");
-        try
-        {
-          context.Database.Migrate();
-        }
-        catch
-        {
-          transaction.RollbackToSavepoint("PRE_MIGRATION");
-          System.Console.WriteLine("Error during migration - rolling back and terminating");
-          System.Environment.Exit(1);
-        }
-        transaction.CreateSavepoint("POST_MIGRATION");
         if (env.IsDevelopment() && !env.IsEnvironment("Test") && seedOptions.Value.SeedSampleData)
         {
           SampleData.SeedSampleData(context);
         }
-        transaction.Commit();
       }
 
       //TODO Handle cors
