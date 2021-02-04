@@ -1,17 +1,15 @@
 using System;
-using System.Collections.Generic;
 using Domain.Entities;
 using Domain.Enums;
 using Infrastructure.Persistence;
 
 namespace Web
 {
-  public class SampleData
+  public static class SampleData
   {
-    public void SeedSampleData(ApplicationDbContext context)
+    public static void SeedSampleData(ApplicationDbContext context)
     {
       //Clear all the existing data from db before adding new sample data.
-      context.Database.EnsureCreated();
       context.Locations.RemoveRange(context.Locations);
       context.Coupons.RemoveRange(context.Coupons);
       context.Refills.RemoveRange(context.Refills);
@@ -28,7 +26,6 @@ namespace Web
       context.UserRoles.RemoveRange(context.UserRoles);
       context.Roles.RemoveRange(context.Roles);
       context.Users.RemoveRange(context.Users);
-      
 
       var region1 = new Region { };
       context.Regions.Add(region1);
