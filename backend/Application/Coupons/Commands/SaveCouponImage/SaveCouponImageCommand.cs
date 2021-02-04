@@ -9,9 +9,11 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Exceptions;
+using Application.Common.Security;
 
 namespace Application.Coupons.Commands.SaveCouponImage
 {
+  [AuthorizeAttribute(Domain.Enums.Action.SAVE_COUPON_IMAGE)]
   public class SaveCouponImageCommand : IRequest<string>
   {
     public int RefillId { get; set; }

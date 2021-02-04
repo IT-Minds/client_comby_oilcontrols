@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Domain.Entities;
 using Domain.Enums;
 using Infrastructure.Persistence;
@@ -23,6 +24,11 @@ namespace Web
       context.FuelTanks.RemoveRange(context.FuelTanks);
       context.Streets.RemoveRange(context.Streets);
       context.LocationHistories.RemoveRange(context.LocationHistories);
+      context.RoleActions.RemoveRange(context.RoleActions);
+      context.UserRoles.RemoveRange(context.UserRoles);
+      context.Roles.RemoveRange(context.Roles);
+      context.Users.RemoveRange(context.Users);
+      
 
       var region1 = new Region { };
       context.Regions.Add(region1);
@@ -163,6 +169,20 @@ namespace Web
         street2,
         street3
       );
+
+      var user1 = new User{Username = "Test User", Password = "Password"};
+      context.Users.Add( user1 );
+      var role1 =  new Role{Name = "Test Role"};
+      context.Roles.Add(role1);
+      context.SaveChanges();
+      context.RoleActions.AddRange(
+        new RoleAction{RoleId = role1.Id, Action = Domain.Enums.Action.ASSIGN_COUPON}
+      );
+      context.UserRoles.AddRange(
+        new UserRole{RoleId = role1.Id, UserId = user1.Id}
+      );
+
+
 
       context.SaveChanges();
     }

@@ -22,18 +22,7 @@ export const testLinks: MenuLink[] = [
   {
     id: "trucks",
     title: "menu.trucks.trucks",
-    children: [
-      {
-        id: "trucks-list",
-        title: "menu.trucks.overview",
-        href: "/trucks/overview"
-      },
-      {
-        id: "trucks-create",
-        title: "menu.trucks.create",
-        href: "/demo"
-      }
-    ],
+    href: "/trucks",
 
     logo: MdDirectionsBus
   },

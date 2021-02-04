@@ -9,9 +9,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Application.Common.Security;
 
 namespace Application.Refills.Commands.CompleteRefill
 {
+  [AuthorizeAttribute(Domain.Enums.Action.CREATE_REFILL)]
   public class CompleteRefillCommand : IRequest<int>
   {
     [JsonIgnore]
@@ -36,9 +38,9 @@ namespace Application.Refills.Commands.CompleteRefill
 
         var refill = await _context.Refills.FindAsync(request.Id);
 
-        if (refill==null)
+        if (refill == null)
         {
-          throw new NotFoundException(nameof(Refill), request.Id );
+          throw new NotFoundException(nameof(Refill), request.Id);
         }
 
         var truck = await _context.Trucks
@@ -48,9 +50,9 @@ namespace Application.Refills.Commands.CompleteRefill
           .Where(t => t.Route.Refills.Any(r => r.Id == refill.Id))
           .FirstOrDefaultAsync();
 
-        if (truck==null)
+        if (truck == null)
         {
-          throw new NotFoundException(nameof(Truck), request.Id );
+          throw new NotFoundException(nameof(Truck), request.Id);
         }
 
         var coupon = await _context.Coupons
@@ -65,7 +67,7 @@ namespace Application.Refills.Commands.CompleteRefill
 
         if (request.CouponNumber != coupon.CouponNumber)
         {
-          throw new ArgumentException("Invalid Coupon Number: " + request.CouponNumber + ". Should have been: " + coupon.CouponNumber );
+          throw new ArgumentException("Invalid Coupon Number: " + request.CouponNumber + ". Should have been: " + coupon.CouponNumber);
         }
 
         refill.StartAmount = request.StartAmount;
