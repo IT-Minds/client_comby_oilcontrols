@@ -39,32 +39,31 @@ namespace Infrastructure.Services
       return true;
     }
 
-    public async Task<List<UniContaDomain.Entities.UniContaDebtor>> GetDebtors()
+    public async Task<IEnumerable<UniContaDebtor>> GetDebtors()
     {
       var api = new CrudAPI(session, defaultCompany);
-
       var debtors = await api.Query<Uniconta.DataModel.Debtor>(); // this is it!??
 
+      var list = debtors.ToList().Select(x => x as UniContaDebtor);
       foreach (var item in debtors)
       {
         System.Console.WriteLine("Debtor "+ item.CompanyId);
       }
-      var list = debtors.ToList();
 
-      return null;
+      return list;
     }
 
     private async Task InitializeCompany()
     {
-        // If Session has a default company, use DefaultCompany as CurrentCompany
-        if (session.DefaultCompany != null)
-        {
-            defaultCompany = session.DefaultCompany;
-            return;
-        }
+      // If Session has a default company, use DefaultCompany as CurrentCompany
+      if (session.DefaultCompany != null)
+      {
+          defaultCompany = session.DefaultCompany;
+          return;
+      }
 
-        //todo makes into config option
-        defaultCompany = await session.OpenCompany(45182, true);
+      //todo makes into config option
+      defaultCompany = await session.OpenCompany(45182, true);
     }
 
     public async Task CreateOrder()

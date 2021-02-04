@@ -9,7 +9,7 @@ using UniContaDomain.Entities;
 
 namespace Application.Trucks.Queries.GetTruckInfo
 {
-  [AuthorizeAttribute(Domain.Enums.Action.GET_DEBTOR)]
+  // [AuthorizeAttribute(Domain.Enums.Action.GET_DEBTOR)]
   public class GetDebtorQuery : IRequest<bool>
   {
     public class GetDebtorQueryHandler : IRequestHandler<GetDebtorQuery, bool>
