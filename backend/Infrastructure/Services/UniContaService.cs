@@ -10,6 +10,7 @@ using Infrastructure.Options;
 using Microsoft.Extensions.Options;
 using Application.Common.Interfaces;
 using Uniconta.DataModel;
+using UniContaDomain.Entities;
 
 namespace Infrastructure.Services
 {
