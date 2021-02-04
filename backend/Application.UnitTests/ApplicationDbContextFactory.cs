@@ -332,6 +332,17 @@ namespace Application.UnitTests
         new LocationDebtorHistory { LocationId = 501, DebtorId = 500, Type = LocationDebtorType.MAIN, LastModified = new DateTime(1990, 1, 1), Created = new DateTime(1990, 1, 1) }
       );
       //END
+
+      //START: TEST ROLE UPDATE COMMAND
+      context.Roles.Add(
+        new Role{Id = 100, Name = "Test Role"}
+      );
+      context.RoleActions.AddRange(
+        new RoleAction{Action=Domain.Enums.Action.ASSIGN_COUPON, RoleId=100},
+        new RoleAction{Action=Domain.Enums.Action.CREATE_LOCATION, RoleId=100},
+        new RoleAction{Action=Domain.Enums.Action.CREATE_REFILL, RoleId=100}
+      );
+      //END
       context.SaveChanges();
     }
 
