@@ -6,6 +6,7 @@ import { GetStaticProps, NextPage } from "next";
 import { I18nProps } from "next-rosetta";
 import { useCallback } from "react";
 import { genAuthenticationClient } from "services/backend/apiClients";
+import { AssignTokenCommand, IUserDto } from "services/backend/nswagts";
 
 const DemoPage: NextPage = () => {
   const toast = useToast();
@@ -13,10 +14,17 @@ const DemoPage: NextPage = () => {
   const bg = useColorModeValue("gray.100", "gray.700");
 
   const login = useCallback(
-    async form => {
+    async (form: IUserDto) => {
       awaitCallback(async () => {
         const client = await genAuthenticationClient();
-        await client.login(form);
+        await client.login(
+          new AssignTokenCommand({
+            userDto: {
+              username: form.username,
+              password: form.password
+            }
+          })
+        );
 
         toast({
           title: "Login successful",
