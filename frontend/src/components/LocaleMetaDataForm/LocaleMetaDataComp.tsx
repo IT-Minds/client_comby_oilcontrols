@@ -354,32 +354,38 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
           <Heading size="md" mb={4}>
             Debtor
           </Heading>
-          <FormControl isRequired isInvalid={formSubmitAttempts > 0}>
-            {
-              //TODO: translation
-            }
-            <FormLabel>Debtor:</FormLabel>
-            {
-              //TODO: Bind to model
-            }
-            <Textarea></Textarea>
-            {
-              //TODO: translation
-            }
-            <FormErrorMessage>Please enter the estimated fuel consumption</FormErrorMessage>
-          </FormControl>
-          <FormControl isRequired>
-            <FormLabel>Select date:</FormLabel>
-            {
-              //TODO: Bind to model
-            }
-            <DatePicker
-              selectedDate={new Date()}
-              onChange={(x: Date) => {
-                console.log(x);
+          {
+            //TODO: translation
+          }
+          <FormControl isRequired isInvalid={!mainDebtorId && !baseDebtorId && !upcomingDebtorId}>
+            <FormLabel>Main</FormLabel>
+            <Input
+              onChange={e => {
+                setMainDebtorId(e.target.value);
               }}
+              placeholder="Debtor ID"
+            />
+            <FormLabel>Base</FormLabel>
+            <Input
+              onChange={e => {
+                setBaseDebtorId(e.target.value);
+              }}
+              placeholder="Debtor ID"
+            />
+            <FormLabel>Upcoming</FormLabel>
+            <Input
+              onChange={e => {
+                setUpcomingDebtorId(e.target.value);
+              }}
+              placeholder="Debtor ID"
+            />
+            <FormLabel>Select date:</FormLabel>
+            <DatePicker
+              selectedDate={debtorDate}
+              onChange={(date: Date) => setDebtorDate(date)}
               showPopperArrow={false}
             />
+            <FormErrorMessage>Please add at least one Debtor ID</FormErrorMessage>
           </FormControl>
         </Box>
       </Flex>
