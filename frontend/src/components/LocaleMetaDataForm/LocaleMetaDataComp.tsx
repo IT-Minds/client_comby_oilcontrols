@@ -348,7 +348,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
           {
             //TODO: translation
           }
-          <FormControl isRequired isInvalid={!mainDebtorId && !baseDebtorId && !upcomingDebtorId}>
+          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !mainDebtorId && !baseDebtorId && !upcomingDebtorId}>
             <FormLabel>Main</FormLabel>
             <Input
               onChange={e => {
