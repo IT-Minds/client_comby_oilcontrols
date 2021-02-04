@@ -117,11 +117,22 @@ namespace Web
       using (context)
       {
         context.Database.AutoTransactionsEnabled = true;
-        var transaction = context.Database.CurrentTransaction;
-        context.Database.Migrate();
-        transaction?.Commit();
-        if (env.IsDevelopment() && !env.IsEnvironment("Test") && seedOptions.Value.SeedSampleData )
+        var transaction = context.Database.BeginTransaction();
+        transaction?.CreateSavepoint("PRE_MIGRATION");
+        try
+        {
+          context.Database.Migrate();
+        }
+        catch
+        {
+          transaction?.RollbackToSavepoint("PRE_MIGRATION");
+        }
+        transaction?.CreateSavepoint("POST_MIGRATION");
+        if (env.IsDevelopment() && !env.IsEnvironment("Test") && seedOptions.Value.SeedSampleData)
+        {
           new SampleData().SeedSampleData(context);
+        }
+        transaction?.Commit();
       }
 
       //TODO Handle cors
@@ -140,8 +151,8 @@ namespace Web
       app.UseRouting();
 
       //TODO add auth.
-      //app.UseAuthentication();
-      //app.UseAuthorization();
+      // app.UseAuthentication();
+      // app.UseAuthorization();
 
       app.UseEndpoints(endpoints =>
       {

@@ -29,7 +29,7 @@ namespace Application.Trucks.Queries.GetTruckInfo
 
         var result = await _uniContaService.GetDebtors();
 
-        return result.FirstOrDefault().Blocked;
+        return result.FirstOrDefault()._Blocked;
       }
     }
   }
