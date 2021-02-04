@@ -180,16 +180,16 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
           </FormControl>
 
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.comment}>
-              {
-                //TODO: translation
-              }
-              <FormLabel>Comments</FormLabel>
-              <Input
-                placeholder="Comment"
-                onChange={e => {
-                  updateLocalForm(e.target.value, "comment");
-                }}
-              />
+            {
+              //TODO: translation
+            }
+            <FormLabel>Comments</FormLabel>
+            <Input
+              placeholder="Comment"
+              onChange={e => {
+                updateLocalForm(e.target.value, "comment");
+              }}
+            />
             {
               //TODO: translation
             }
@@ -197,13 +197,13 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
           </FormControl>
 
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.image}>
-              {
-                //TODO: translation
-              }
-              <FormLabel>Select an image to upload</FormLabel>
-              <Button colorScheme="blue" onClick={saveImage}>
-                {localForm.image ? "Re-select image" : "Select image"}
-              </Button>
+            {
+              //TODO: translation
+            }
+            <FormLabel>Select an image to upload</FormLabel>
+            <Button colorScheme="blue" onClick={saveImage}>
+              {localForm.image ? "Re-select image" : "Select image"}
+            </Button>
             {
               //TODO: translation
             }
@@ -306,13 +306,13 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
               //TODO: translation
             }
             <FormLabel>Days between refills: </FormLabel>
-              <NumberInput
-                placeholder="Days between refills"
-                onChange={value => {
-                  updateLocalForm(parseInt(value), "daysBetweenRefills");
-                }}>
-                <NumberInputField />
-              </NumberInput>
+            <NumberInput
+              placeholder="Days between refills"
+              onChange={value => {
+                updateLocalForm(parseInt(value), "daysBetweenRefills");
+              }}>
+              <NumberInputField />
+            </NumberInput>
             {
               //TODO: translation
             }
