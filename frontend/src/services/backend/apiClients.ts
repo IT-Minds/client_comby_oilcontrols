@@ -11,7 +11,8 @@ import {
   LocationHistoryClient,
   RefillClient,
   StreetClient,
-  TruckClient
+  TruckClient,
+  UserClient
 } from "./nswagts";
 
 export const genExampleClient = (): Promise<ExampleEntityClient> => api(ExampleEntityClient);
@@ -25,5 +26,6 @@ export const genLocationClient = (): Promise<LocationClient> => api(LocationClie
 export const genTruckClient = (): Promise<TruckClient> => api(TruckClient);
 export const genLocationHistoryClient = (): Promise<LocationHistoryClient> =>
   api(LocationHistoryClient);
+export const genUserClient = (): Promise<UserClient> => api(UserClient);
 export const genAuthenticationClient = (): Promise<AuthenticationClient> =>
   api(AuthenticationClient);
