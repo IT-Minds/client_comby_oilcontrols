@@ -16,6 +16,7 @@ import AddCouponComp from "components/CouponManagement/AddCoupon/AddCouponComp";
 import FillingOverviewComp from "components/FillingOverview/FillingOverviewComp";
 import TruckListComp from "components/TruckList/TruckListComp";
 import AddTruckMetaData from "components/TruckMetaData/AddTruckMetaData";
+import AddTruckTriggerBtn from "components/TruckMetaData/AddTruckTriggerBtn";
 import { useEffectAsync } from "hooks/useEffectAsync";
 import { useOffline } from "hooks/useOffline";
 import { Locale } from "i18n/Locale";
@@ -121,16 +122,12 @@ const TruckPage: NextPage = () => {
   }, [truckId]);
 
   return (
-    <VStack position="relative" overflow="visible" h="95vh" w="100%">
+    <VStack h="95vh" w="100%">
       <Heading>Truck Overview</Heading>
+      <AddTruckTriggerBtn />
+      <TruckListComp preLoadedData={truckEntities} truckId={setTruckId} />
 
-      <TruckListComp
-        preLoadedData={truckEntities}
-        truckId={id => {
-          setTruckId(id);
-        }}
-      />
-
+      {/* // TODO move modal into own component */}
       <Modal
         size="4xl"
         isOpen={isOpen}
@@ -183,7 +180,7 @@ const TruckPage: NextPage = () => {
 export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context => {
   const locale = context.locale || context.defaultLocale;
 
-  const { table = {} } = await import(`../../i18n/${locale}`);
+  const { table = {} } = await import(`../i18n/${locale}`);
 
   return {
     props: {
