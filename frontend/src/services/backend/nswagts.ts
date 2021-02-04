@@ -14,7 +14,7 @@ export class AuthClient {
   }
 
   transformHttpRequestOptions(options: RequestInit): Promise<RequestInit> {
-    if (options.headers && this.accessToken) {
+    if (options.headers && this.accessToken !== null) {
       (<Record<string, string>>options.headers).Authorization =
         "Bearer " + this.accessToken;
       return Promise.resolve(options);
@@ -183,6 +183,7 @@ export class ActionClient extends ClientBase implements IActionClient {
 
 export interface IAuthenticationClient {
     login(command: AssignTokenCommand): Promise<UserTokenDto>;
+    checkAuth(): Promise<UserDto>;
 }
 
 export class AuthenticationClient extends ClientBase implements IAuthenticationClient {
@@ -234,6 +235,42 @@ export class AuthenticationClient extends ClientBase implements IAuthenticationC
             });
         }
         return Promise.resolve<UserTokenDto>(<any>null);
+    }
+
+    checkAuth(): Promise<UserDto> {
+        let url_ = this.baseUrl + "/api/Authentication/checkauth";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "POST",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processCheckAuth(_response));
+        });
+    }
+
+    protected processCheckAuth(response: Response): Promise<UserDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<UserDto>(<any>null);
     }
 }
 
@@ -1840,7 +1877,6 @@ export class UserClient extends ClientBase implements IUserClient {
 }
 
 export class UserTokenDto implements IUserTokenDto {
-    userDto?: UserDto | null;
     token?: string | null;
 
     constructor(data?: IUserTokenDto) {
@@ -1849,13 +1885,11 @@ export class UserTokenDto implements IUserTokenDto {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
-            this.userDto = data.userDto && !(<any>data.userDto).toJSON ? new UserDto(data.userDto) : <UserDto>this.userDto; 
         }
     }
 
     init(_data?: any) {
         if (_data) {
-            this.userDto = _data["userDto"] ? UserDto.fromJS(_data["userDto"]) : <any>null;
             this.token = _data["token"] !== undefined ? _data["token"] : <any>null;
         }
     }
@@ -1869,15 +1903,50 @@ export class UserTokenDto implements IUserTokenDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["userDto"] = this.userDto ? this.userDto.toJSON() : <any>null;
         data["token"] = this.token !== undefined ? this.token : <any>null;
         return data; 
     }
 }
 
 export interface IUserTokenDto {
-    userDto?: IUserDto | null;
     token?: string | null;
+}
+
+export class AssignTokenCommand implements IAssignTokenCommand {
+    userDto?: UserDto | null;
+
+    constructor(data?: IAssignTokenCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            this.userDto = data.userDto && !(<any>data.userDto).toJSON ? new UserDto(data.userDto) : <UserDto>this.userDto; 
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userDto = _data["userDto"] ? UserDto.fromJS(_data["userDto"]) : <any>null;
+        }
+    }
+
+    static fromJS(data: any): AssignTokenCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new AssignTokenCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userDto"] = this.userDto ? this.userDto.toJSON() : <any>null;
+        return data; 
+    }
+}
+
+export interface IAssignTokenCommand {
+    userDto?: IUserDto | null;
 }
 
 export class UserDto implements IUserDto {
@@ -1918,43 +1987,6 @@ export class UserDto implements IUserDto {
 export interface IUserDto {
     username?: string | null;
     password?: string | null;
-}
-
-export class AssignTokenCommand implements IAssignTokenCommand {
-    userDto?: UserDto | null;
-
-    constructor(data?: IAssignTokenCommand) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-            this.userDto = data.userDto && !(<any>data.userDto).toJSON ? new UserDto(data.userDto) : <UserDto>this.userDto; 
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.userDto = _data["userDto"] ? UserDto.fromJS(_data["userDto"]) : <any>null;
-        }
-    }
-
-    static fromJS(data: any): AssignTokenCommand {
-        data = typeof data === 'object' ? data : {};
-        let result = new AssignTokenCommand();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["userDto"] = this.userDto ? this.userDto.toJSON() : <any>null;
-        return data; 
-    }
-}
-
-export interface IAssignTokenCommand {
-    userDto?: IUserDto | null;
 }
 
 export class AssignCouponsCommand implements IAssignCouponsCommand {

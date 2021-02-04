@@ -1,4 +1,13 @@
-import { Button, FormControl, FormErrorMessage, FormLabel, Input, VStack } from "@chakra-ui/react";
+import {
+  Button,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Input,
+  InputGroup,
+  InputRightElement,
+  VStack
+} from "@chakra-ui/react";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
 import { IUserDto } from "services/backend/nswagts";
@@ -9,6 +18,7 @@ type Props = {
 };
 
 const LoginComp: FC<Props> = ({ submitCallback }) => {
+  const [show, setShow] = React.useState(false);
   const [localForm, setLocalForm] = useState<IUserDto>({
     username: "",
     password: ""
@@ -45,7 +55,22 @@ const LoginComp: FC<Props> = ({ submitCallback }) => {
 
         <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.password}>
           <FormLabel>Password</FormLabel>
-          <Input type="password" onChange={e => updateLocalForm(e.target.value, "password")} />
+          <InputGroup size="md">
+            <Input
+              type={show ? "text" : "password"}
+              onChange={e => updateLocalForm(e.target.value, "password")}
+            />
+            <InputRightElement width="4.5rem">
+              <Button
+                h="1.75rem"
+                size="sm"
+                onMouseDown={() => setShow(true)}
+                onMouseLeave={() => setShow(false)}
+                onMouseUp={() => setShow(false)}>
+                {show ? "Hide" : "Show"}
+              </Button>
+            </InputRightElement>
+          </InputGroup>
           <FormErrorMessage>Please enter a password</FormErrorMessage>
         </FormControl>
 

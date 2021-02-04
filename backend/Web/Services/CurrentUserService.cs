@@ -13,7 +13,6 @@ namespace Web.Services
       _httpContextAccessor = httpContextAccessor;
     }
 
-    //TODO: The ClaimTypes can vary, please ensure the correct one is used for the given project.
     public string UserId => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
   }
 }

@@ -25,43 +25,23 @@ namespace Application.Common.Behaviours
 
     public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
     {
-      var authorizeAttributes = request.GetType().GetCustomAttributes<AuthorizeAttribute>();
+      var authenticatedAttribute = request.GetType().GetCustomAttributes<AuthenticatedAttribute>();
+      if (authenticatedAttribute.Any()) {
+        if (_currentUserService.UserId == null)
+        {
+           throw new UnauthorizedAccessException();
+        }
+      }
 
+      var authorizeAttributes = request.GetType().GetCustomAttributes<AuthorizeAttribute>();
       if (authorizeAttributes.Any())
       {
 
         // Must be authenticated user
         if (_currentUserService.UserId == null)
         {
-           throw new UnauthorizedAccessException();
+          throw new UnauthorizedAccessException();
         }
-
-        //Commented out for now.
-        // // Role-based authorization
-        // var authorizeAttributesWithRoles = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Roles));
-
-        // if (authorizeAttributesWithRoles.Any())
-        // {
-        //   foreach (var roles in authorizeAttributesWithRoles.Select(a => a.Roles.Split(',')))
-        //   {
-        //     var authorized = false;
-        //     foreach (var role in roles)
-        //     {
-        //       var isInRole = _identityService.IsInRole(role.Trim());
-        //       if (isInRole)
-        //       {
-        //         authorized = true;
-        //         break;
-        //       }
-        //     }
-
-        //     // Must be a member of at least one role in roles
-        //     if (!authorized)
-        //     {
-        //       throw new ForbiddenAccessException();
-        //     }
-        //   }
-        // }
 
         // Policy-based authorization
         var authorizeAttributesWithPolicies = authorizeAttributes.SelectMany(a => a.Policies).ToList();

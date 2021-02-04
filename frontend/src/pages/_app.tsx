@@ -2,10 +2,12 @@ import "../styles.global.css";
 import "../reactdatepicker.global.css";
 import "isomorphic-unfetch";
 
-import { ChakraProvider, Progress } from "@chakra-ui/react";
+import { ChakraProvider, CircularProgress, Container, Progress } from "@chakra-ui/react";
 import LayoutDesktop from "components/Layout/LayoutDesktop";
+import LoginComp from "components/Login/LoginComp";
 import RouteProtector from "components/RouteProtector/RouteProtector";
 import UserTypeContextProvider from "contexts/providers/UserTypeContextProvider";
+import { AuthStage, useAuth } from "hooks/useAuth";
 import { useLoadProgress } from "hooks/useLoadProgress";
 import { usePWA } from "hooks/usePWA";
 import { AppPropsType } from "next/dist/next-server/lib/utils";
@@ -26,6 +28,8 @@ const MyApp = ({ Component, pageProps, __N_SSG, router }: AppPropsType & Props):
   usePWA();
 
   const progressVal = useLoadProgress(router);
+
+  const { authStage, login } = useAuth();
 
   useEffect(() => {
     if (!__N_SSG) {
@@ -67,21 +71,31 @@ const MyApp = ({ Component, pageProps, __N_SSG, router }: AppPropsType & Props):
       </noscript>
       <I18nProvider table={pageProps.table}>
         <ChakraProvider theme={theme}>
-          <Progress
-            hasStripe
-            isAnimated
-            size="xs"
-            value={progressVal}
-            marginBottom={-1}
-            zIndex={99}
-            hidden={progressVal < 10}
-          />
-          <UserTypeContextProvider>
-            <RouteProtector />
-            <LayoutDesktop>
-              <Component {...pageProps} />
-            </LayoutDesktop>
-          </UserTypeContextProvider>
+          {authStage == AuthStage.CHECKING ? (
+            <CircularProgress isIndeterminate />
+          ) : authStage == AuthStage.UNAUTHENTICATED ? (
+            <Container>
+              <LoginComp submitCallback={login} />
+            </Container>
+          ) : (
+            <>
+              <Progress
+                hasStripe
+                isAnimated
+                size="xs"
+                value={progressVal}
+                marginBottom={-1}
+                zIndex={99}
+                hidden={progressVal < 10}
+              />
+              <UserTypeContextProvider>
+                <RouteProtector />
+                <LayoutDesktop>
+                  <Component {...pageProps} />
+                </LayoutDesktop>
+              </UserTypeContextProvider>
+            </>
+          )}
         </ChakraProvider>
       </I18nProvider>
     </main>

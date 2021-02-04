@@ -101,7 +101,9 @@ namespace Web
       services.AddScoped<ITokenService, TokenService>();
       services.AddSignalR();
 
-      var key = Encoding.ASCII.GetBytes(Configuration.GetSection(TokenOptions.Tokens).GetChildren().FirstOrDefault(x => x.Key.Equals("Secret")).Value);
+      var key = Encoding.ASCII.GetBytes(Configuration.GetSection(TokenOptions.Tokens)
+        .GetChildren().FirstOrDefault(x => x.Key.Equals("Secret")).Value);
+
       services.AddAuthentication(x =>
       {
         x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

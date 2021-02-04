@@ -14,18 +14,23 @@ namespace Application.Users.Commands.CreateUser
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, int>
     {
       private readonly IApplicationDbContext _context;
+      private readonly IPasswordHasher _passwordHasher;
 
-      public CreateUserCommandHandler(IApplicationDbContext context)
+
+      public CreateUserCommandHandler(IApplicationDbContext context, IPasswordHasher passwordHasher)
       {
         _context = context;
+        _passwordHasher = passwordHasher;
+
       }
 
       public async Task<int> Handle(CreateUserCommand request, CancellationToken cancellationToken)
       {
+        var hash = _passwordHasher.Hash(request.Password);
         var user = new User
         {
           Username = request.UserName,
-          Password = request.Password
+          Password = hash
         };
 
         _context.Users.Add(user);
