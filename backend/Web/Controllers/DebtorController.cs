@@ -22,9 +22,10 @@ namespace Web.Controllers
       return await Mediator.Send(new GetDebtorQuery());
     }
 
-    [HttpPut("/CouponRequired")]
-    public async Task<ActionResult<int>> PrintCouponRequired(PrintCouponRequiredCommand command)
+    [HttpPut("{id}/CouponRequired")]
+    public async Task<ActionResult<int>> PrintCouponRequired([FromRoute] int id, PrintCouponRequiredCommand command)
     {
+      command.DebtorId = id;
       return await Mediator.Send(command);
     }
 

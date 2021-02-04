@@ -339,7 +339,7 @@ export class DailyTemperatureClient extends ClientBase implements IDailyTemperat
 
 export interface IDebtorClient {
     get(): Promise<boolean>;
-    printCouponRequired(command: PrintCouponRequiredCommand): Promise<number>;
+    printCouponRequired(id: number, command: PrintCouponRequiredCommand): Promise<number>;
 }
 
 export class DebtorClient extends ClientBase implements IDebtorClient {
@@ -389,8 +389,11 @@ export class DebtorClient extends ClientBase implements IDebtorClient {
         return Promise.resolve<boolean>(<any>null);
     }
 
-    printCouponRequired(command: PrintCouponRequiredCommand): Promise<number> {
-        let url_ = this.baseUrl + "/CouponRequired";
+    printCouponRequired(id: number, command: PrintCouponRequiredCommand): Promise<number> {
+        let url_ = this.baseUrl + "/api/Debtor/{id}/CouponRequired";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(command);

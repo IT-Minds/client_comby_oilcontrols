@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
@@ -9,6 +10,7 @@ namespace Application.Debtors.PrintCouponRequired
 {
   public class PrintCouponRequiredCommand : IRequest<int>
   {
+    [JsonIgnore]
     public int DebtorId { get; set; }
     public bool PrintCouponRequired { get; set; }
 
