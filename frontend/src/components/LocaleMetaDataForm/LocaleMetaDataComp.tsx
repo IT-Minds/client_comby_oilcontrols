@@ -71,21 +71,48 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
     });
   }, []);
 
-  const handleSubmit = useCallback(
-    (event: FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      logger.debug("Submitting form ReportingComp");
-      submitCallback(localForm);
-      setFormSubmitAttempts(0);
-    },
-    [localForm]
-  );
-
   const saveImage = useCallback(async () => {
     const [handle] = await window.showOpenFilePicker();
     const file = await handle.getFile();
     updateLocalForm(file, "image");
   }, []);
+
+  const handleSubmit = useCallback(
+    (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      logger.debug("Submitting form ReportingComp");
+      const debtors: AddDebtorToLocationCommand[] = [];
+      if (mainDebtorId) {
+        debtors.push(
+          new AddDebtorToLocationCommand({
+            debtorId: mainDebtorId,
+            debtorType: LocationDebtorType.MAIN
+          })
+        );
+      }
+      if (baseDebtorId) {
+        debtors.push(
+          new AddDebtorToLocationCommand({
+            debtorId: baseDebtorId,
+            debtorType: LocationDebtorType.BASE
+          })
+        );
+      }
+      if (upcomingDebtorId) {
+        debtors.push(
+          new AddDebtorToLocationCommand({
+            debtorId: upcomingDebtorId,
+            debtorType: LocationDebtorType.UPCOMING,
+            changeDate: debtorDate
+          })
+        );
+      }
+
+      submitCallback(localForm, debtors);
+      setFormSubmitAttempts(0);
+    },
+    [localForm, mainDebtorId, baseDebtorId, upcomingDebtorId, debtorDate]
+  );
 
   return (
     <form onSubmit={handleSubmit}>
