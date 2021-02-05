@@ -13,7 +13,7 @@ namespace Application.Roles.Queries.GetRole
   [AuthorizeAttribute(Domain.Enums.Action.GET_ROLES)]
   public class GetRoleQuery : IRequest<RoleDto>
   {
-    public string Name { get; set; }
+    public int Id { get; set; }
 
     public class GetRoleQueryHandler : IRequestHandler<GetRoleQuery, RoleDto>
     {
@@ -30,16 +30,16 @@ namespace Application.Roles.Queries.GetRole
       {
         var role = await _context.Roles
           .Include(x => x.Actions)
-          .Where(x => x.Name.Equals(request.Name))
+          .Where(x => x.Id == request.Id)
           .FirstOrDefaultAsync(cancellationToken);
 
         if (role == null)
         {
-          throw new ArgumentException("No role named: " + request.Name);
+          throw new ArgumentException("No role named: " + request.Id);
         }
         return new RoleDto
         {
-          Name = request.Name,
+          Name = role.Name,
           Actions = role.Actions.Select(act => act.Action).ToList()
         };
       }

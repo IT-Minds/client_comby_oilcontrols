@@ -167,16 +167,40 @@ namespace Web
         street3
       );
 
-      var user1 = new User{Username = "Test User", Password = "Password"};
-      context.Users.Add( user1 );
-      var role1 =  new Role{Name = "Test Role"};
-      context.Roles.Add(role1);
+      var user1 = new User { Username = "Test User", Password = "Password" };
+      context.Users.Add(user1);
+      var role1 = new Role { Name = "Test Role" };
+      var role2 = new Role { Name = "Test Role1" };
+      var role3 = new Role { Name = "Test Role2" };
+      var role4 = new Role { Name = "Test Role3" };
+      var role5 = new Role { Name = "Test Role4" };
+      var role6 = new Role { Name = "Test Role5" };
+      var role7 = new Role { Name = "Test Role6" };
+      var role8 = new Role { Name = "Test Role7" };
+      var role9 = new Role { Name = "Test Role8" };
+      var role0 = new Role { Name = "Test Role9" };
+      var role11 = new Role { Name = "Test Role0" };
+      var role12 = new Role { Name = "Test Role11" };
+      context.Roles.AddRange(
+        role1,
+        role2,
+        role3,
+        role4,
+        role5,
+        role6,
+        role7,
+        role8,
+        role9,
+        role0,
+        role11,
+        role12
+      );
       context.SaveChanges();
       context.RoleActions.AddRange(
-        new RoleAction{RoleId = role1.Id, Action = Domain.Enums.Action.ASSIGN_COUPON}
+        new RoleAction { RoleId = role1.Id, Action = Domain.Enums.Action.ASSIGN_COUPON }
       );
       context.UserRoles.AddRange(
-        new UserRole{RoleId = role1.Id, UserId = user1.Id}
+        new UserRole { RoleId = role1.Id, UserId = user1.Id }
       );
 
 

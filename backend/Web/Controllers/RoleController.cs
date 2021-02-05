@@ -23,15 +23,15 @@ namespace Web.Controllers
       return await Mediator.Send(command);
     }
 
-    [HttpGet("{name}")]
-    public async Task<ActionResult<RoleDto>> GetRole([FromRoute] string name)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<RoleDto>> GetRole([FromRoute] int id)
     {
-      return await Mediator.Send(new GetRoleQuery { Name = name });
+      return await Mediator.Send(new GetRoleQuery { Id = id });
     }
 
     [HttpGet("AllRoles")]
     public async Task<ActionResult<PageResult<RoleDto, string>>> GetAllRole(
-      [FromQuery] string? needle, [FromQuery] int size = 1000, [FromQuery] int? skip = 0
+      [FromQuery] string? needle = "", [FromQuery] int size = 1000, [FromQuery] int? skip = 0
     )
     {
       return await Mediator.Send(new GetAllRolesQuery

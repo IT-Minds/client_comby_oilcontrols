@@ -26,7 +26,7 @@ namespace Application.UnitTests.Roles.Queryies.GetRole
     {
       var query = new GetRoleQuery
       {
-        Name = "Test Role 1"
+        Id = 200
       };
       var handler = new GetRoleQuery.GetRoleQueryHandler(_context, _mapper);
       var result = await handler.Handle(query, CancellationToken.None);
@@ -40,7 +40,7 @@ namespace Application.UnitTests.Roles.Queryies.GetRole
     {
       var query = new GetRoleQuery
       {
-        Name = "I DO NOT EXIST"
+        Id = -200
       };
       var handler = new GetRoleQuery.GetRoleQueryHandler(_context, _mapper);
 

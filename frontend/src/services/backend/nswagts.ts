@@ -1438,7 +1438,7 @@ export class RefillClient extends ClientBase implements IRefillClient {
 export interface IRoleClient {
     createRole(command: CreateRoleCommand): Promise<RoleIdDto>;
     updateRole(command: UpdateRoleCommand): Promise<RoleIdDto>;
-    getRole(name: string | null): Promise<RoleDto>;
+    getRole(id: number): Promise<RoleDto>;
     getAllRole(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfRoleDtoAndString>;
 }
 
@@ -1533,11 +1533,11 @@ export class RoleClient extends ClientBase implements IRoleClient {
         return Promise.resolve<RoleIdDto>(<any>null);
     }
 
-    getRole(name: string | null): Promise<RoleDto> {
-        let url_ = this.baseUrl + "/api/Role/{name}";
-        if (name === undefined || name === null)
-            throw new Error("The parameter 'name' must be defined.");
-        url_ = url_.replace("{name}", encodeURIComponent("" + name));
+    getRole(id: number): Promise<RoleDto> {
+        let url_ = this.baseUrl + "/api/Role/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{

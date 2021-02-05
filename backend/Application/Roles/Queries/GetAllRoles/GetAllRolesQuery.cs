@@ -27,6 +27,7 @@ namespace Application.Roles.Queries.GetAllRoles
     public async Task<int> PagesRemaining(IQueryable<Role> query)
     {
       var count = await query.CountAsync();
+      if (count == 0) return 0;
       var pagesLeft = (int)(Math.Ceiling((float)count / (float)Size)) - 1;
 
       return pagesLeft;
