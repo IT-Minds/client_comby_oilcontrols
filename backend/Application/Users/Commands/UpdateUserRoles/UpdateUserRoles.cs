@@ -50,20 +50,22 @@ namespace Application.Users.Commands.UpdateUserRole
 
         if (userRole != null)
         {
-          _context.UserRoles.Remove(userRole);
-          await _context.SaveChangesAsync(cancellationToken);
+          userRole.Role = roleEntity;
+          _context.UserRoles.Update(userRole);
         }
-        userRole = new UserRole
+        else
         {
-          User = userEntity,
-          Role = roleEntity
-        };
+          userRole = new UserRole
+          {
+            User = userEntity,
+            Role = roleEntity
+          };
+          _context.UserRoles.Add(userRole);
+        }
 
-        _context.UserRoles.Update(userRole);
         await _context.SaveChangesAsync(cancellationToken);
         return request.User;
       }
-
     }
   }
 }
