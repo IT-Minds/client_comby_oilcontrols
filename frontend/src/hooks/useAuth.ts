@@ -6,7 +6,7 @@ import { AssignTokenCommand, IUserDto, UserTokenDto } from "services/backend/nsw
 
 import { useEffectAsync } from "./useEffectAsync";
 
-const TOKEN_STORAGE_KEY = "CombyStorageKey";
+export const TOKEN_STORAGE_KEY = "CombyStorageKey";
 
 export enum AuthStage {
   CHECKING,
@@ -18,6 +18,17 @@ export const useAuth = () => {
   const [authStage, setAuthStage] = useState(AuthStage.CHECKING);
   const [authCounter, setAuthCounter] = useState(0);
   const router = useRouter();
+
+  const setCookie = useCallback((token: string) => {
+    const d = new Date();
+    d.setTime(d.getTime() + 14 * 24 * 60 * 60 * 1000);
+
+    document.cookie = `${TOKEN_STORAGE_KEY}=${token}; expires=${d.toUTCString()}; path=/`;
+  }, []);
+
+  const deleteCookie = useCallback(() => {
+    document.cookie = `${TOKEN_STORAGE_KEY}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+  }, []);
 
   useEffectAsync(async () => {
     const client = await genAuthenticationClient();
@@ -42,6 +53,7 @@ export const useAuth = () => {
       return false;
     }
     setAuthStage(AuthStage.CHECKING);
+    setCookie(user.token);
     setAuthToken(user.token);
     setAuthCounter(c => c + 1);
     return true;
@@ -49,6 +61,7 @@ export const useAuth = () => {
 
   const logout = useCallback(() => {
     setAuthStage(AuthStage.CHECKING);
+    deleteCookie();
     setAuthToken("");
     setAuthCounter(c => c + 1);
     router.push("/");
