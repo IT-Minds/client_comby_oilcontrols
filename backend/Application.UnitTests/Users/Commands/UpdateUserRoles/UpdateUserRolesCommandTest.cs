@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Users.Commands.UpdateUser;
-using Application.Users.UpdateUser;
+using Application.Users.Commands.UpdateUserRole;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;

@@ -3,13 +3,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
-using Application.Users.UpdateUser;
+using Application.Common.Security;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Users.Commands.UpdateUser
+namespace Application.Users.Commands.UpdateUserRole
 {
+  [AuthorizeAttribute(Domain.Enums.Action.UPDATE_USER)]
   public class UpdateUserRolesCommand : IRequest<UserRoleDto>
   {
     public UserRoleDto User { get; set; }

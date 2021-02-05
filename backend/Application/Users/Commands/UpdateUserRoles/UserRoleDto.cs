@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Application.Users.UpdateUser
+namespace Application.Users.Commands.UpdateUserRole
 {
   public class UserRoleDto
   {
