@@ -2,21 +2,15 @@ import ComboSelect from "components/SortFilter/ComboSelect";
 import { usePagedFetched } from "hooks/usePagedFetched";
 import { FC, useReducer } from "react";
 import ListReducer from "react-list-reducer";
-import { genStreetClient } from "services/backend/apiClients";
-import { StreetDto } from "services/backend/nswagts";
+import { genRoleClient } from "services/backend/apiClients";
+import { RoleDto } from "services/backend/nswagts";
 
-{
-  //TODO: set UserDto
-}
 type Props = {
-  cb: (s: StreetDto) => void;
+  cb: (s: RoleDto) => void;
 };
 
 const UserRoleSelector: FC<Props> = ({ cb }) => {
-  {
-    //TODO: set UserDto
-  }
-  const [userRoles, dispatchUserRoles] = useReducer(ListReducer<StreetDto>("id"), []);
+  const [userRoles, dispatchUserRoles] = useReducer(ListReducer<RoleDto>("name"), []);
 
   {
     //TODO: use genUserClient
@@ -24,7 +18,7 @@ const UserRoleSelector: FC<Props> = ({ cb }) => {
   const { done } = usePagedFetched(
     "NOT_USED",
     (needle, size, _sortBy, skip) =>
-      genStreetClient().then(client => client.get(needle, size, skip)),
+      genRoleClient().then(client => client.getRoles()),
     dispatchUserRoles,
     {
       pageSize: 1000
@@ -35,12 +29,12 @@ const UserRoleSelector: FC<Props> = ({ cb }) => {
     <ComboSelect
       options={userRoles.map(s => ({
         ...s,
-        id: s.id.toString(),
+        id: s.name.toString(),
         name: s.name
       }))}
       isLoading={!done}
       placeholder="Select User Role"
-      onSelect={x => cb(userRoles.find(s => s.id === Number.parseInt(x.id)))}
+      onSelect={x => cb(userRoles.find(s => s.name === x.name)}
     />
   );
 };
