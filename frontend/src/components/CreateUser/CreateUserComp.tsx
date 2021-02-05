@@ -1,4 +1,5 @@
 import { Button, FormControl, FormErrorMessage, FormLabel, Input, VStack } from "@chakra-ui/react";
+import UserRoleSelector from "components/UserRoleSelector/UserRoleSelector";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
 import { CreateUserCommand } from "services/backend/nswagts";
@@ -71,6 +72,28 @@ const CreateUserComp: FC<Props> = ({ submitCallback }) => {
             //TODO: translation
           }
           <FormErrorMessage>Please enter a password</FormErrorMessage>
+        </FormControl>
+
+        {
+          //TODO: use role property when BE is ready
+        }
+        <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.userName}>
+          {
+            //TODO: translation
+          }
+          <FormLabel>Role</FormLabel>
+
+          {
+            //TODO: use role property when BE is ready
+          }
+          <UserRoleSelector
+            cb={x => {
+              updateLocalForm(x.name, "userName");
+            }}></UserRoleSelector>
+          {
+            //TODO: translation
+          }
+          <FormErrorMessage>Please choose a role</FormErrorMessage>
         </FormControl>
 
         {
