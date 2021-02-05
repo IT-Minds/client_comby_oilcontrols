@@ -19,6 +19,7 @@ namespace Domain.Enums
     CREATE_TRUCK_REFILL = 14,
     CREATE_TRUCK = 15,
     UPDATE_TRUCK = 16,
-    GET_TRUCK = 17
+    GET_TRUCK = 17,
+    GET_ROLES = 18
   }
 }

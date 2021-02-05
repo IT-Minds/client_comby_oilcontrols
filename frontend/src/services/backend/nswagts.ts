@@ -1442,6 +1442,8 @@ export class RefillClient extends ClientBase implements IRefillClient {
 export interface IRoleClient {
     createRole(command: CreateRoleCommand): Promise<RoleIdDto>;
     updateRole(command: UpdateRoleCommand): Promise<RoleIdDto>;
+    getRole(id: number): Promise<RoleDto>;
+    getAllRole(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfRoleDtoAndString>;
 }
 
 export class RoleClient extends ClientBase implements IRoleClient {
@@ -1533,6 +1535,89 @@ export class RoleClient extends ClientBase implements IRoleClient {
             });
         }
         return Promise.resolve<RoleIdDto>(<any>null);
+    }
+
+    getRole(id: number): Promise<RoleDto> {
+        let url_ = this.baseUrl + "/api/Role/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetRole(_response));
+        });
+    }
+
+    protected processGetRole(response: Response): Promise<RoleDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = RoleDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<RoleDto>(<any>null);
+    }
+
+    getAllRole(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfRoleDtoAndString> {
+        let url_ = this.baseUrl + "/api/Role/AllRoles?";
+        if (needle !== undefined && needle !== null)
+            url_ += "needle=" + encodeURIComponent("" + needle) + "&";
+        if (size === null)
+            throw new Error("The parameter 'size' cannot be null.");
+        else if (size !== undefined)
+            url_ += "size=" + encodeURIComponent("" + size) + "&";
+        if (skip !== undefined && skip !== null)
+            url_ += "skip=" + encodeURIComponent("" + skip) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetAllRole(_response));
+        });
+    }
+
+    protected processGetAllRole(response: Response): Promise<PageResultOfRoleDtoAndString> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PageResultOfRoleDtoAndString.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<PageResultOfRoleDtoAndString>(<any>null);
     }
 }
 
@@ -3499,6 +3584,7 @@ export enum Action {
     CREATE_TRUCK = 15,
     UPDATE_TRUCK = 16,
     GET_TRUCK = 17,
+    GET_ROLES = 18,
 }
 
 export class CreateRoleCommand implements ICreateRoleCommand {
@@ -3573,6 +3659,69 @@ export class UpdateRoleCommand implements IUpdateRoleCommand {
 
 export interface IUpdateRoleCommand {
     role?: IRoleDto | null;
+}
+
+export class PageResultOfRoleDtoAndString implements IPageResultOfRoleDtoAndString {
+    newNeedle?: string | null;
+    pagesRemaining?: number;
+    results?: RoleDto[] | null;
+    hasMore?: boolean;
+
+    constructor(data?: IPageResultOfRoleDtoAndString) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            if (data.results) {
+                this.results = [];
+                for (let i = 0; i < data.results.length; i++) {
+                    let item = data.results[i];
+                    this.results[i] = item && !(<any>item).toJSON ? new RoleDto(item) : <RoleDto>item;
+                }
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.newNeedle = _data["newNeedle"] !== undefined ? _data["newNeedle"] : <any>null;
+            this.pagesRemaining = _data["pagesRemaining"] !== undefined ? _data["pagesRemaining"] : <any>null;
+            if (Array.isArray(_data["results"])) {
+                this.results = [] as any;
+                for (let item of _data["results"])
+                    this.results!.push(RoleDto.fromJS(item));
+            }
+            this.hasMore = _data["hasMore"] !== undefined ? _data["hasMore"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): PageResultOfRoleDtoAndString {
+        data = typeof data === 'object' ? data : {};
+        let result = new PageResultOfRoleDtoAndString();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["newNeedle"] = this.newNeedle !== undefined ? this.newNeedle : <any>null;
+        data["pagesRemaining"] = this.pagesRemaining !== undefined ? this.pagesRemaining : <any>null;
+        if (Array.isArray(this.results)) {
+            data["results"] = [];
+            for (let item of this.results)
+                data["results"].push(item.toJSON());
+        }
+        data["hasMore"] = this.hasMore !== undefined ? this.hasMore : <any>null;
+        return data; 
+    }
+}
+
+export interface IPageResultOfRoleDtoAndString {
+    newNeedle?: string | null;
+    pagesRemaining?: number;
+    results?: IRoleDto[] | null;
+    hasMore?: boolean;
 }
 
 export class PageResultOfStreetDtoAndString implements IPageResultOfStreetDtoAndString {
