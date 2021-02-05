@@ -25,6 +25,8 @@ using Microsoft.Extensions.Options;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Domain.Entities;
+using Application.Security;
 
 namespace Web
 {
@@ -58,8 +60,9 @@ namespace Web
       services.Configure<FileDriveOptions>(Configuration.GetSection(FileDriveOptions.FileDrive));
       services.Configure<UniContaOptions>(Configuration.GetSection(UniContaOptions.UniConta));
       services.Configure<SeedOptions>(Configuration.GetSection(SeedOptions.SampleData));
-
+      services.Configure<HashingOptions>(Configuration.GetSection(HashingOptions.Hashing));
       services.Configure<TokenOptions>(Configuration.GetSection(TokenOptions.Tokens));
+      services.Configure<SuperUserOptions>(Configuration.GetSection(SuperUserOptions.SuperUser));
       services.AddApplication();
       services.AddInfrastructure(Configuration, Environment);
 
@@ -124,7 +127,7 @@ namespace Web
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationDbContext context, IOptions<SeedOptions> seedOptions)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationDbContext context, IOptions<SeedOptions> seedOptions, IOptions<HashingOptions> hashingOptions, IOptions<SuperUserOptions> superUserOptions)
     {
       if (env.IsDevelopment())
       {
@@ -146,6 +149,8 @@ namespace Web
         {
           SampleData.SeedSampleData(context);
         }
+
+        SuperUser.SetupSuperUser(context, superUserOptions, hashingOptions);
       }
 
       //TODO Handle cors
