@@ -98,6 +98,7 @@ namespace Web
         configure.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
       });
 
+      services.AddScoped<SuperAdminService>();
       services.AddScoped<ICurrentUserService, CurrentUserService>();
       services.AddScoped<IAuthorizationService, AuthorizationService>();
       services.AddScoped<IExampleHubService, ExampleHubService>();
@@ -127,7 +128,7 @@ namespace Web
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationDbContext context, IOptions<SeedOptions> seedOptions, IOptions<HashingOptions> hashingOptions, IOptions<SuperUserOptions> superUserOptions)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationDbContext context, IOptions<SeedOptions> seedOptions,  SuperAdminService superAdminService)
     {
       if (env.IsDevelopment())
       {
@@ -150,7 +151,7 @@ namespace Web
           SampleData.SeedSampleData(context);
         }
 
-        SuperUser.SetupSuperUser(context, superUserOptions, hashingOptions);
+        superAdminService.SetupSuperUser();
       }
 
       //TODO Handle cors
