@@ -5,12 +5,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
 using Application.Common.Interfaces.Pagination;
+using Application.Common.Security;
 using AutoMapper;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Roles.Queries.GetAllRoles
 {
+  [AuthorizeAttribute(Domain.Enums.Action.GET_ROLES)]
   public class GetAllRolesQuery : IPageRequest<RoleDto>, IPageBody<Role, string>
   {
     public int Size { get; set; }
@@ -71,8 +73,11 @@ namespace Application.Roles.Queries.GetAllRoles
         var pageResult = new List<RoleDto>();
         foreach (var role in queryResult)
         {
-          var acts = role.Actions.Select(act => act.Action).ToList();
-          pageResult.Add(new RoleDto { Name = role.Name, Actions = acts });
+          pageResult.Add(new RoleDto
+          {
+            Name = role.Name,
+            Actions = role.Actions.Select(act => act.Action).ToList()
+          });
         }
 
         page.Results = pageResult;

@@ -3,12 +3,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
+using Application.Common.Security;
 using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Roles.Queries.GetRole
 {
+  [AuthorizeAttribute(Domain.Enums.Action.GET_ROLES)]
   public class GetRoleQuery : IRequest<RoleDto>
   {
     public string Name { get; set; }
@@ -35,8 +37,11 @@ namespace Application.Roles.Queries.GetRole
         {
           throw new ArgumentException("No role named: " + request.Name);
         }
-        var acts = role.Actions.Select(act => act.Action).ToList();
-        return new RoleDto { Name = request.Name, Actions = acts };
+        return new RoleDto
+        {
+          Name = request.Name,
+          Actions = role.Actions.Select(act => act.Action).ToList()
+        };
       }
     }
   }

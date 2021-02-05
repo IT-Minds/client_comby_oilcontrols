@@ -1,7 +1,10 @@
 using System.Threading.Tasks;
+using Application.Common.Interfaces.Pagination;
 using Application.Roles;
 using Application.Roles.Commands.CreateRole;
 using Application.Roles.Commands.UpdateRole;
+using Application.Roles.Queries.GetAllRoles;
+using Application.Roles.Queries.GetRole;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
@@ -18,6 +21,25 @@ namespace Web.Controllers
     public async Task<ActionResult<RoleIdDto>> UpdateRole(UpdateRoleCommand command)
     {
       return await Mediator.Send(command);
+    }
+
+    [HttpGet("{name}")]
+    public async Task<ActionResult<RoleDto>> GetRole([FromRoute] string name)
+    {
+      return await Mediator.Send(new GetRoleQuery { Name = name });
+    }
+
+    [HttpGet("AllRoles")]
+    public async Task<ActionResult<PageResult<RoleDto, string>>> GetAllRole(
+      [FromQuery] string? needle, [FromQuery] int size = 1000, [FromQuery] int? skip = 0
+    )
+    {
+      return await Mediator.Send(new GetAllRolesQuery
+      {
+        Needle = needle,
+        Size = size,
+        Skip = skip
+      });
     }
   }
 }
