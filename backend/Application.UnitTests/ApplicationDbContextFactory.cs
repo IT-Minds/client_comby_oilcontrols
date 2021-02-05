@@ -352,6 +352,23 @@ namespace Application.UnitTests
         new Role { Id = 203, Name = "Test Role 4" }
       );
       //END
+
+      //START: TEST USER ROLE UPDATE COMMAND
+      var role1 = new Role { Id = 300, Name = "VeryImportant" };
+      var role2 = new Role { Id = 301, Name = "LittleLessImportant" };
+      var role3 = new Role { Id = 302, Name = "WhoAreYou?" };
+      context.Roles.AddRange(role1, role2, role3);
+
+      var user1 = new User { Username = "LegitUser64", Password = "Password" };
+      context.Users.AddRange(
+        user1
+      );
+
+      context.UserRoles.AddRange(
+        new UserRole { User = user1, Role = role1 }
+      );
+
+      //END
       context.SaveChanges();
     }
 

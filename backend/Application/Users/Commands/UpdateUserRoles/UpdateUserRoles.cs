@@ -25,29 +25,40 @@ namespace Application.Users.Commands.UpdateUser
 
       public async Task<UserRoleDto> Handle(UpdateUserRolesCommand request, CancellationToken cancellationToken)
       {
-        var entity = await _context.Users
+        var userEntity = await _context.Users
           .Include(x => x.Roles)
           .ThenInclude(x => x.Role)
           .Where(x => x.Username.Equals(request.User.Username))
           .FirstOrDefaultAsync(cancellationToken);
-
-        if (entity == null)
+        if (userEntity == null)
         {
           throw new ArgumentException("Username doesn't exist");
         }
 
-        _context.UserRoles.RemoveRange(_context.UserRoles.Where(x => x.UserId == entity.Id));
-
-        foreach (var role in request.User.Roles)
+        var roleEntity = await _context.Roles
+          .Where(x => x.Name.Equals(request.User.Role))
+          .FirstOrDefaultAsync(cancellationToken);
+        if (roleEntity == null)
         {
-          var roleEntity = await _context.Roles.Where(x => x.Name.Equals(role)).FirstOrDefaultAsync(cancellationToken);
-          if (roleEntity == null)
-          {
-            throw new ArgumentException("Role: " + role + " doesn't exist.");
-          }
-
-          _context.UserRoles.Add(new UserRole { UserId = entity.Id, RoleId = roleEntity.Id });
+          throw new ArgumentException("No such role.");
         }
+
+        var userRole = await _context.UserRoles
+          .Where(x => x.UserId == userEntity.Id)
+          .FirstOrDefaultAsync(cancellationToken);
+
+        if (userRole != null)
+        {
+          _context.UserRoles.Remove(userRole);
+          await _context.SaveChangesAsync(cancellationToken);
+        }
+        userRole = new UserRole
+        {
+          User = userEntity,
+          Role = roleEntity
+        };
+
+        _context.UserRoles.Update(userRole);
         await _context.SaveChangesAsync(cancellationToken);
         return request.User;
       }
