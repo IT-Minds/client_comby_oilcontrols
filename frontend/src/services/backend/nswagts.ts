@@ -3561,11 +3561,8 @@ export enum Action {
     CREATE_TRUCK = 15,
     UPDATE_TRUCK = 16,
     GET_TRUCK = 17,
-<<<<<<< HEAD
     GET_ROLES = 18,
-=======
     UPDATE_USER = 19,
->>>>>>> created controller method and refactored namespace for the command.
 }
 
 export class CreateRoleCommand implements ICreateRoleCommand {
