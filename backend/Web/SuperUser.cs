@@ -43,18 +43,22 @@ namespace Web
         Username = username,
         Password = pass
       };
+      context.Users.Add(superUser);
 
       superUserRole = new Role
       {
         Name = username
       };
+      context.Roles.Add(superUserRole);
+
+      context.UserRoles.Add(new UserRole { User = superUser, Role = superUserRole });
 
       var allActions = System.Enum.GetValues<Domain.Enums.Action>().ToList();
       foreach (var action in allActions)
       {
         context.Add(new RoleAction { Role = superUserRole, Action = action });
       }
-      context.UserRoles.Add(new UserRole { User = superUser, Role = superUserRole });
+
       context.SaveChanges();
     }
   }
