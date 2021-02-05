@@ -14,11 +14,12 @@ import { IUserDto } from "services/backend/nswagts";
 import { logger } from "utils/logger";
 
 type Props = {
-  submitCallback: (loginForm: IUserDto) => void;
+  submitCallback: (loginForm: IUserDto) => Promise<unknown>;
 };
 
 const LoginComp: FC<Props> = ({ submitCallback }) => {
   const [show, setShow] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const [localForm, setLocalForm] = useState<IUserDto>({
     username: "",
     password: ""
@@ -34,12 +35,14 @@ const LoginComp: FC<Props> = ({ submitCallback }) => {
   }, []);
 
   const handleSubmit = useCallback(
-    (event: FormEvent<HTMLFormElement>) => {
+    async (event: FormEvent<HTMLFormElement>) => {
       logger.debug("Submitting form LoginForm");
-
-      submitCallback(localForm);
+      setLoading(true);
       setFormSubmitAttempts(0);
       event.preventDefault();
+
+      await submitCallback(localForm);
+      setLoading(false);
     },
     [localForm]
   );
@@ -62,9 +65,11 @@ const LoginComp: FC<Props> = ({ submitCallback }) => {
             />
             <InputRightElement width="4.5rem">
               <Button
-                h="1.75rem"
                 size="sm"
                 onMouseDown={() => setShow(true)}
+                onTouchStart={() => setShow(true)}
+                onTouchEnd={() => setShow(false)}
+                onTouchCancel={() => setShow(false)}
                 onMouseLeave={() => setShow(false)}
                 onMouseUp={() => setShow(false)}>
                 {show ? "Hide" : "Show"}
@@ -78,7 +83,8 @@ const LoginComp: FC<Props> = ({ submitCallback }) => {
           colorScheme="green"
           type="submit"
           rightIcon={<MdCheck />}
-          onClick={() => setFormSubmitAttempts(x => x + 1)}>
+          onClick={() => setFormSubmitAttempts(x => x + 1)}
+          isLoading={loading}>
           Login
         </Button>
       </VStack>

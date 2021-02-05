@@ -1,4 +1,5 @@
 /* istanbul ignore file */
+import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
 import { genAuthenticationClient } from "services/backend/apiClients";
 import { AssignTokenCommand, IUserDto, UserTokenDto } from "services/backend/nswagts";
@@ -15,11 +16,10 @@ export enum AuthStage {
 
 export const useAuth = () => {
   const [authStage, setAuthStage] = useState(AuthStage.CHECKING);
-
   const [authCounter, setAuthCounter] = useState(0);
+  const router = useRouter();
 
   useEffectAsync(async () => {
-    //
     const client = await genAuthenticationClient();
     const user = await client.checkAuth().catch(() => null);
     setAuthStage(user ? AuthStage.AUTHENTICATED : AuthStage.UNAUTHENTICATED);
@@ -38,14 +38,23 @@ export const useAuth = () => {
       )
       .catch(() => null);
 
-    if (user) {
-      setAuthStage(AuthStage.CHECKING);
-      setAuthToken(user.token);
-      setAuthCounter(c => c + 1);
+    if (!user) {
+      return false;
     }
+    setAuthStage(AuthStage.CHECKING);
+    setAuthToken(user.token);
+    setAuthCounter(c => c + 1);
+    return true;
   }, []);
 
-  return { authStage, login };
+  const logout = useCallback(() => {
+    setAuthStage(AuthStage.CHECKING);
+    setAuthToken("");
+    setAuthCounter(c => c + 1);
+    router.push("/");
+  }, []);
+
+  return { authStage, login, logout };
 };
 
 export const getAuthToken = (): string => {

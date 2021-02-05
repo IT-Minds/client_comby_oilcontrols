@@ -32,9 +32,7 @@ namespace Infrastructure.Services
       session = new Session(connection);
       var loginResult = await session.LoginAsync(_options.ApiUser, _options.ApiPass, LoginType.API, new Guid(_options.ApiGuid));
 
-      System.Console.WriteLine("Login " + loginResult);
       if (loginResult != ErrorCodes.Succes) return false;
-      System.Console.WriteLine("Login successful");
 
       await InitializeCompany();
       return true;
@@ -43,15 +41,8 @@ namespace Infrastructure.Services
     public async Task<IEnumerable<UniContaDebtor>> GetDebtors()
     {
       var api = new CrudAPI(session, defaultCompany);
-      var debtors = await api.Query<Uniconta.DataModel.Debtor>(); // this is it!??
-
-      var list = debtors.ToList().Select(x => x as UniContaDebtor);
-      foreach (var item in debtors)
-      {
-        System.Console.WriteLine("Debtor "+ item.CompanyId);
-      }
-
-      return list;
+      var debtors = await api.Query<Uniconta.DataModel.Debtor>();
+      return debtors.Select(x => new UniContaDebtor(x) );
     }
 
     private async Task InitializeCompany()

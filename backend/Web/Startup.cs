@@ -63,8 +63,6 @@ namespace Web
       services.AddApplication();
       services.AddInfrastructure(Configuration, Environment);
 
-
-
       services.AddHttpContextAccessor();
 
       services.AddHealthChecks()
@@ -89,7 +87,7 @@ namespace Web
           Type = OpenApiSecuritySchemeType.ApiKey,
           Name = "Authorization",
           In = OpenApiSecurityApiKeyLocation.Header,
-          Description = "Bearer {your JWT token}."
+          Description = "In the value box below write: \"Bearer {your JWT token}\"."
         });
 
         configure.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));

@@ -49,7 +49,7 @@ namespace Infrastructure.Persistence
     public DbSet<User> Users { get; set; }
     public DbSet<UserRole> UserRoles { get; set; }
 
-    public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    private void PrepareEntitiesForSave()
     {
       var entities = ChangeTracker.Entries<AuditableEntity>();
       foreach (var entry in entities)
@@ -71,10 +71,21 @@ namespace Infrastructure.Persistence
         }
       }
 
-      OnLocationsChange(entities.Where(x => x.Entity.GetType().Equals(typeof(Location))), cancellationToken);
-      OnLocationDebtorRelationChange(entities.Where(x => x.Entity.GetType().Equals(typeof(LocationDebtor))), cancellationToken);
-      var result = await base.SaveChangesAsync(cancellationToken);
+      OnLocationsChange(entities.Where(x => x.Entity.GetType().Equals(typeof(Location))));
+      OnLocationDebtorRelationChange(entities.Where(x => x.Entity.GetType().Equals(typeof(LocationDebtor))));
+    }
 
+    public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    {
+      PrepareEntitiesForSave();
+      var result = await base.SaveChangesAsync(cancellationToken);
+      return result;
+    }
+
+    public override int SaveChanges()
+    {
+      PrepareEntitiesForSave();
+      var result = base.SaveChanges();
       return result;
     }
 
@@ -85,7 +96,7 @@ namespace Infrastructure.Persistence
       base.OnModelCreating(builder);
     }
 
-    private void OnLocationsChange(IEnumerable<EntityEntry<AuditableEntity>> entities, CancellationToken cancellationToken)
+    private void OnLocationsChange(IEnumerable<EntityEntry<AuditableEntity>> entities)
     {
       foreach (EntityEntry<AuditableEntity> entity in entities.ToList())
       {
@@ -110,7 +121,7 @@ namespace Infrastructure.Persistence
       }
     }
 
-    private void OnLocationDebtorRelationChange(IEnumerable<EntityEntry<AuditableEntity>> entities, CancellationToken cancellationToken)
+    private void OnLocationDebtorRelationChange(IEnumerable<EntityEntry<AuditableEntity>> entities)
     {
       foreach (EntityEntry<AuditableEntity> entity in entities.ToList())
       {

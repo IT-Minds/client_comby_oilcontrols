@@ -431,7 +431,7 @@ export class DailyTemperatureClient extends ClientBase implements IDailyTemperat
 }
 
 export interface IDebtorClient {
-    get(): Promise<boolean>;
+    get(): Promise<DebtorDto[]>;
     printCouponRequired(id: number, command: PrintCouponRequiredCommand): Promise<number>;
 }
 
@@ -446,7 +446,7 @@ export class DebtorClient extends ClientBase implements IDebtorClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    get(): Promise<boolean> {
+    get(): Promise<DebtorDto[]> {
         let url_ = this.baseUrl + "/api/Debtor";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -464,14 +464,18 @@ export class DebtorClient extends ClientBase implements IDebtorClient {
         });
     }
 
-    protected processGet(response: Response): Promise<boolean> {
+    protected processGet(response: Response): Promise<DebtorDto[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(DebtorDto.fromJS(item));
+            }
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -479,7 +483,7 @@ export class DebtorClient extends ClientBase implements IDebtorClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<boolean>(<any>null);
+        return Promise.resolve<DebtorDto[]>(<any>null);
     }
 
     printCouponRequired(id: number, command: PrintCouponRequiredCommand): Promise<number> {
@@ -2176,6 +2180,66 @@ export interface ICreateDailyTemperatureCommand {
     regionId?: number;
     date?: Date;
     temperature?: number;
+}
+
+export class DebtorDto implements IDebtorDto {
+    dbId?: number;
+    unicontaId?: number;
+    blocked?: boolean;
+    accountNumber?: string | null;
+    name?: string | null;
+    gln?: string | null;
+    couponRequired?: boolean;
+
+    constructor(data?: IDebtorDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.dbId = _data["dbId"] !== undefined ? _data["dbId"] : <any>null;
+            this.unicontaId = _data["unicontaId"] !== undefined ? _data["unicontaId"] : <any>null;
+            this.blocked = _data["blocked"] !== undefined ? _data["blocked"] : <any>null;
+            this.accountNumber = _data["accountNumber"] !== undefined ? _data["accountNumber"] : <any>null;
+            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
+            this.gln = _data["gln"] !== undefined ? _data["gln"] : <any>null;
+            this.couponRequired = _data["couponRequired"] !== undefined ? _data["couponRequired"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): DebtorDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new DebtorDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["dbId"] = this.dbId !== undefined ? this.dbId : <any>null;
+        data["unicontaId"] = this.unicontaId !== undefined ? this.unicontaId : <any>null;
+        data["blocked"] = this.blocked !== undefined ? this.blocked : <any>null;
+        data["accountNumber"] = this.accountNumber !== undefined ? this.accountNumber : <any>null;
+        data["name"] = this.name !== undefined ? this.name : <any>null;
+        data["gln"] = this.gln !== undefined ? this.gln : <any>null;
+        data["couponRequired"] = this.couponRequired !== undefined ? this.couponRequired : <any>null;
+        return data; 
+    }
+}
+
+export interface IDebtorDto {
+    dbId?: number;
+    unicontaId?: number;
+    blocked?: boolean;
+    accountNumber?: string | null;
+    name?: string | null;
+    gln?: string | null;
+    couponRequired?: boolean;
 }
 
 export class PrintCouponRequiredCommand implements IPrintCouponRequiredCommand {
