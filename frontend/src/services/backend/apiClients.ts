@@ -10,6 +10,7 @@ import {
   LocationClient,
   LocationHistoryClient,
   RefillClient,
+  RoleClient,
   StreetClient,
   TruckClient,
   UserClient
@@ -29,3 +30,4 @@ export const genLocationHistoryClient = (): Promise<LocationHistoryClient> =>
 export const genUserClient = (): Promise<UserClient> => api(UserClient);
 export const genAuthenticationClient = (): Promise<AuthenticationClient> =>
   api(AuthenticationClient);
+export const genRoleClient = (): Promise<RoleClient> => api(RoleClient);
