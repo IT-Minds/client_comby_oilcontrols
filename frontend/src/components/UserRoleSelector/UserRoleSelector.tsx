@@ -12,13 +12,10 @@ type Props = {
 const UserRoleSelector: FC<Props> = ({ cb }) => {
   const [userRoles, dispatchUserRoles] = useReducer(ListReducer<RoleDto>("name"), []);
 
-  {
-    //TODO: use genUserClient
-  }
   const { done } = usePagedFetched(
     "NOT_USED",
     (needle, size, _sortBy, skip) =>
-      genRoleClient().then(client => client.getRoles()),
+      genRoleClient().then(client => client.getAllRole(needle, size, skip)),
     dispatchUserRoles,
     {
       pageSize: 1000
@@ -34,7 +31,7 @@ const UserRoleSelector: FC<Props> = ({ cb }) => {
       }))}
       isLoading={!done}
       placeholder="Select User Role"
-      onSelect={x => cb(userRoles.find(s => s.name === x.name)}
+      onSelect={x => cb(userRoles.find(s => s.name === x.name))}
     />
   );
 };
