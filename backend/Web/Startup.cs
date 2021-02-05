@@ -20,11 +20,11 @@ using Web.Hubs;
 using Application.Common.Options;
 using Web.Services;
 using Infrastructure.Options;
-using Domain.Entities;
-using Domain.Enums;
-using System;
 using Web.Options;
 using Microsoft.Extensions.Options;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Web
 {
@@ -59,6 +59,7 @@ namespace Web
       services.Configure<UniContaOptions>(Configuration.GetSection(UniContaOptions.UniConta));
       services.Configure<SeedOptions>(Configuration.GetSection(SeedOptions.SampleData));
 
+      services.Configure<TokenOptions>(Configuration.GetSection(TokenOptions.Tokens));
       services.AddApplication();
       services.AddInfrastructure(Configuration, Environment);
 
@@ -97,7 +98,29 @@ namespace Web
       services.AddScoped<ICurrentUserService, CurrentUserService>();
       services.AddScoped<IAuthorizationService, AuthorizationService>();
       services.AddScoped<IExampleHubService, ExampleHubService>();
+      services.AddScoped<ITokenService, TokenService>();
       services.AddSignalR();
+
+      var key = Encoding.ASCII.GetBytes(Configuration.GetSection(TokenOptions.Tokens)
+        .GetChildren().FirstOrDefault(x => x.Key.Equals("Secret")).Value);
+
+      services.AddAuthentication(x =>
+      {
+        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+      })
+      .AddJwtBearer(x =>
+      {
+        x.RequireHttpsMetadata = false;
+        x.SaveToken = true;
+        x.TokenValidationParameters = new TokenValidationParameters
+        {
+          ValidateIssuerSigningKey = true,
+          IssuerSigningKey = new SymmetricSecurityKey(key),
+          ValidateIssuer = false,
+          ValidateAudience = false
+        };
+      });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -116,12 +139,13 @@ namespace Web
 
       using (context)
       {
-        context.Database.AutoTransactionsEnabled = true;
-        var transaction = context.Database.CurrentTransaction;
+        context.Database.AutoTransactionsEnabled = false;
         context.Database.Migrate();
-        transaction?.Commit();
-        if (env.IsDevelopment() && !env.IsEnvironment("Test") && seedOptions.Value.SeedSampleData )
-          new SampleData().SeedSampleData(context);
+
+        if (env.IsDevelopment() && !env.IsEnvironment("Test") && seedOptions.Value.SeedSampleData)
+        {
+          SampleData.SeedSampleData(context);
+        }
       }
 
       //TODO Handle cors
@@ -139,9 +163,8 @@ namespace Web
 
       app.UseRouting();
 
-      //TODO add auth.
-      //app.UseAuthentication();
-      //app.UseAuthorization();
+      app.UseAuthentication();
+      app.UseAuthorization();
 
       app.UseEndpoints(endpoints =>
       {

@@ -7,6 +7,6 @@ namespace Application.Common.Interfaces
   public interface IUniContaService
   {
     Task<bool> Login();
-    Task<List<UniContaDebtor>> GetDebtors();
+    Task<IEnumerable<UniContaDebtor>> GetDebtors();
   }
 }

@@ -6,12 +6,12 @@ export class AuthClient {
   }
 
   transformHttpRequestOptions(options: RequestInit): Promise<RequestInit> {
-    if (options.headers && this.accessToken) {
+    if (options.headers && this.accessToken !== null) {
       (<Record<string, string>>options.headers).Authorization =
         "Bearer " + this.accessToken;
       return Promise.resolve(options);
     }
-    return Promise.resolve(null);
+    return Promise.resolve(options);
   }
 }
 

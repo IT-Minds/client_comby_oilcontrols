@@ -9,6 +9,8 @@ using System.Linq;
 using Infrastructure.Options;
 using Microsoft.Extensions.Options;
 using Application.Common.Interfaces;
+using Uniconta.DataModel;
+using UniContaDomain.Entities;
 
 namespace Infrastructure.Services
 {
@@ -16,30 +18,65 @@ namespace Infrastructure.Services
   {
     private UnicontaConnection connection { get; set; }
     private Session session { get; set; }
-
+    private Company defaultCompany { get; set; }
     private readonly UniContaOptions _options;
 
     public UniContaService(IOptions<UniContaOptions> options)
     {
       _options = options.Value;
     }
+
     public async Task<bool> Login()
     {
-      connection = new UnicontaConnection(APITarget.Demo);
+      connection = new UnicontaConnection(APITarget.Live);
       session = new Session(connection);
       var loginResult = await session.LoginAsync(_options.ApiUser, _options.ApiPass, LoginType.API, new Guid(_options.ApiGuid));
+
+      System.Console.WriteLine("Login " + loginResult);
       if (loginResult != ErrorCodes.Succes) return false;
+      System.Console.WriteLine("Login successful");
+
+      await InitializeCompany();
       return true;
     }
 
-
-    public async Task<List<UniContaDomain.Entities.UniContaDebtor>> GetDebtors()
+    public async Task<IEnumerable<UniContaDebtor>> GetDebtors()
     {
-      var api = new CrudAPI(session, session.DefaultCompany);
+      var api = new CrudAPI(session, defaultCompany);
+      var debtors = await api.Query<Uniconta.DataModel.Debtor>(); // this is it!??
 
-      var debtors = await api.Query<UniContaDomain.Entities.UniContaDebtor>(); // this is it!??
+      var list = debtors.ToList().Select(x => x as UniContaDebtor);
+      foreach (var item in debtors)
+      {
+        System.Console.WriteLine("Debtor "+ item.CompanyId);
+      }
 
-      return debtors.ToList();
+      return list;
+    }
+
+    private async Task InitializeCompany()
+    {
+      // If Session has a default company, use DefaultCompany as CurrentCompany
+      if (session.DefaultCompany != null)
+      {
+          defaultCompany = session.DefaultCompany;
+          return;
+      }
+
+      //todo makes into config option
+      defaultCompany = await session.OpenCompany(45182, true);
+    }
+
+    public async Task CreateOrder()
+    {
+      var api = new CrudAPI(session, defaultCompany);
+
+      var result = await api.Insert(
+        new Uniconta.DataModel.DebtorOrder
+        {
+
+        }
+      );
     }
   }
 }

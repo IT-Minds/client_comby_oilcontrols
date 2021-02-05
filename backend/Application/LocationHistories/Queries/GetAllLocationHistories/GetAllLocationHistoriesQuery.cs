@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
 using Application.Common.Interfaces.Pagination;
+using Application.Common.Security;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Entities;
@@ -11,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.LocationHistories.Queries.GetAllLocationHistories
 {
+  [AuthorizeAttribute(Domain.Enums.Action.GET_LOCATION_HISTORIES)]
   public class GetAllLocationHistoriesQuery : IPageRequest<LocationHistoryDto>, IPageBody<LocationHistory, int>
   {
     public int Size { get; set; }
@@ -25,7 +27,7 @@ namespace Application.LocationHistories.Queries.GetAllLocationHistories
     public async Task<int> PagesRemaining(IQueryable<LocationHistory> query)
     {
       var count = await query.CountAsync();
-      if (count == 0 ) return 0;
+      if (count == 0) return 0;
       var pagesLeft = (int)(Math.Ceiling((float)count / (float)Size)) - 1;
 
       return pagesLeft;

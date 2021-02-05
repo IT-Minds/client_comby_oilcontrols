@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
 using Application.Common.Interfaces.Pagination;
+using Application.Common.Security;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Entities;
@@ -12,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Streets.Queries.GetStreets
 {
+  [AuthorizeAttribute(Domain.Enums.Action.GET_STREETS)]
   public class GetStreetsQuery : IPageRequest<StreetDto>, IPageBody<Street, string>
   {
     public int Size { get; set; }

@@ -11,16 +11,16 @@ namespace Application.Common.Security
     /// <summary>
     /// Initializes a new instance of the <see cref="AuthorizeAttribute"/> class. 
     /// </summary>
-    public AuthorizeAttribute() { }
+    public AuthorizeAttribute(params Domain.Enums.Action[] policies) => Policies = policies;
 
-    /// <summary>
-    /// Gets or sets a comma delimited list of roles that are allowed to access the resource.
-    /// </summary>
-    public string Roles { get; set; }
+    // /// <summary>
+    // /// Gets or sets a comma delimited list of roles that are allowed to access the resource.
+    // /// </summary>
+    // public string Roles { get; set; }
 
     /// <summary>
     /// Gets or sets the policy name that determines access to the resource.
     /// </summary>
-    public string Policy { get; set; }
+    public Domain.Enums.Action[] Policies { get; set; }
   }
 }
