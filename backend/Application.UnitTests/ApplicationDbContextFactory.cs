@@ -335,12 +335,21 @@ namespace Application.UnitTests
 
       //START: TEST ROLE UPDATE COMMAND
       context.Roles.Add(
-        new Role{Id = 100, Name = "Test Role"}
+        new Role { Id = 100, Name = "Test Role" }
       );
       context.RoleActions.AddRange(
-        new RoleAction{Action=Domain.Enums.Action.ASSIGN_COUPON, RoleId=100},
-        new RoleAction{Action=Domain.Enums.Action.CREATE_LOCATION, RoleId=100},
-        new RoleAction{Action=Domain.Enums.Action.CREATE_REFILL, RoleId=100}
+        new RoleAction { Action = Domain.Enums.Action.ASSIGN_COUPON, RoleId = 100 },
+        new RoleAction { Action = Domain.Enums.Action.CREATE_LOCATION, RoleId = 100 },
+        new RoleAction { Action = Domain.Enums.Action.CREATE_REFILL, RoleId = 100 }
+      );
+      //END
+
+      //START: MORE DATA FOR THE QUERY TEST
+      context.Roles.AddRange(
+        new Role { Id = 200, Name = "Test Role 1" },
+        new Role { Id = 201, Name = "Test Role 2" },
+        new Role { Id = 202, Name = "Test Role 3" },
+        new Role { Id = 203, Name = "Test Role 4" }
       );
       //END
       context.SaveChanges();
