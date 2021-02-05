@@ -22,8 +22,13 @@ import { useRouter } from "next/router";
 import { I18nProps, useI18n } from "next-rosetta";
 import { useCallback, useState } from "react";
 import { MdArrowBack } from "react-icons/md";
-import { genRefillClient, genTruckClient } from "services/backend/apiClients";
 import {
+  genAuthenticationClient,
+  genRefillClient,
+  genTruckClient
+} from "services/backend/apiClients";
+import {
+  AssignTokenCommand,
   CompleteRefillCommand,
   CouponIdDto,
   CreateTruckRefillCommand,
@@ -191,8 +196,18 @@ const LocalePage: NextPage<Props> = ({ truckInfo, coupons }) => {
 // export const getStaticProps: GetStaticProps<I18nProps<Locale> & Props> = async context => {
 export const getServerSideProps: GetServerSideProps<Props & I18nProps<Locale>> = async context => {
   const locale = context.locale || context.defaultLocale;
-
   const id = Number.parseInt(context.query.id as string);
+
+  const auth = await genAuthenticationClient();
+  const { token } = await auth.login(
+    new AssignTokenCommand({
+      userDto: {
+        username: "Admin",
+        password: "Admin"
+      }
+    })
+  );
+  process.env.AUTH_TOKEN = token;
 
   const truckClient = await genTruckClient();
 

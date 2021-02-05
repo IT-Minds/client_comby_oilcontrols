@@ -58,7 +58,7 @@ export const useAuth = () => {
 };
 
 export const getAuthToken = (): string => {
-  if (!process.browser) return null; // TODO Maybe use cookie with context read??
+  if (!process.browser) return process.env.AUTH_TOKEN; // TODO Maybe use cookie with context read??
   return localStorage.getItem(TOKEN_STORAGE_KEY);
 };
 

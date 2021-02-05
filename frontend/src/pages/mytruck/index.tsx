@@ -1,9 +1,9 @@
 import { GetStaticProps, NextPage } from "next";
 import Link from "next/link";
 import { I18nProps } from "next-rosetta";
-import { genTruckClient } from "services/backend/apiClients";
+import { genAuthenticationClient, genTruckClient } from "services/backend/apiClients";
 import { emptyPageResult } from "services/backend/ext/IPageResult";
-import { TruckInfoIdDto } from "services/backend/nswagts";
+import { AssignTokenCommand, TruckInfoIdDto } from "services/backend/nswagts";
 
 type Props = {
   truckIds: number[];
@@ -29,6 +29,17 @@ const LocalePage: NextPage<Props> = ({ truckIds }) => {
 export const getStaticProps: GetStaticProps<Props & I18nProps<Locale>> = async context => {
   const locale = context.locale || context.defaultLocale;
   const { table = {} } = await import(`../../i18n/${locale}`);
+
+  const auth = await genAuthenticationClient();
+  const { token } = await auth.login(
+    new AssignTokenCommand({
+      userDto: {
+        username: "Admin",
+        password: "Admin"
+      }
+    })
+  );
+  process.env.AUTH_TOKEN = token;
 
   const client = await genTruckClient();
   const trucks = await client.getTrucks().catch(() => emptyPageResult<TruckInfoIdDto>());
