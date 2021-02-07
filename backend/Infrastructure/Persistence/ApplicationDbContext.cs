@@ -129,6 +129,7 @@ namespace Infrastructure.Persistence
         {
           var locationDebtorHist = new LocationDebtorHistory
           {
+            LocationDebtorId = (entity.Entity as LocationDebtor).Id,
             LocationId = (entity.Entity as LocationDebtor).LocationId,
             DebtorId = (entity.Entity as LocationDebtor).DebtorId,
             Type = (entity.Entity as LocationDebtor).Type,

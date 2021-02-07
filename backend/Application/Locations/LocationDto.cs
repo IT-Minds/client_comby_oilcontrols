@@ -1,11 +1,8 @@
-using Application.Common.Mappings;
-using AutoMapper;
-using Domain.Entities;
 using Domain.Enums;
 
 namespace Application.Locations
 {
-  public class LocationDto : IAutoMap<Location>
+  public class LocationDto
   {
     public string Address { get; set; }
     public string Comment { get; set; }
@@ -18,9 +15,6 @@ namespace Application.Locations
     public double EstimateConsumption { get; set; }
     public int DaysBetweenRefills { get; set; }
     public FuelType FuelType { get; set; }
-    public void Mapping(Profile profile)
-    {
-      profile.CreateMap<Truck, LocationDto>();
-    }
+
   }
 }
