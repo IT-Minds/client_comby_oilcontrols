@@ -5,10 +5,10 @@ import {
   AuthenticationClient,
   CouponsClient,
   DailyTemperatureClient,
+  DebtorClient,
   ExampleEntityClient,
   HealthClient,
   LocationClient,
-  LocationHistoryClient,
   RefillClient,
   RoleClient,
   StreetClient,
@@ -25,9 +25,9 @@ export const genDailyTemperatureClient = (): Promise<DailyTemperatureClient> =>
   api(DailyTemperatureClient);
 export const genLocationClient = (): Promise<LocationClient> => api(LocationClient);
 export const genTruckClient = (): Promise<TruckClient> => api(TruckClient);
-export const genLocationHistoryClient = (): Promise<LocationHistoryClient> =>
-  api(LocationHistoryClient);
+
 export const genUserClient = (): Promise<UserClient> => api(UserClient);
 export const genAuthenticationClient = (): Promise<AuthenticationClient> =>
   api(AuthenticationClient);
 export const genRoleClient = (): Promise<RoleClient> => api(RoleClient);
+export const genDebtorClient = (): Promise<DebtorClient> => api(DebtorClient);

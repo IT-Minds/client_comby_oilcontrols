@@ -21,15 +21,15 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
       var command = new UpdateLocationMetaDataCommand
       {
         Id = 1,
-        Data= new LocationDto {
+        Data= new LocationDetailsDto {
           Address = "This is address 23",
-          Comment = "This is comment.",
-          Refillschedule = RefillSchedule.AUTOMATIC,
+          Comments = "This is comment.",
+          Schedule = RefillSchedule.AUTOMATIC,
           TankType = TankType.BUILDING,
           TankNumber = 443,
           TankCapacity = 4005.1,
           MinimumFuelAmount = 50.5,
-          EstimateConsumption = 10,
+          EstimateFuelConsumption = 10,
           FuelType = FuelType.OTHER,
           DaysBetweenRefills = 15
         }
@@ -44,16 +44,16 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
 
       entity.Should().NotBeNull();
       entity.Address.Should().Be(command.Data.Address);
-      entity.Comments.Should().Be(command.Data.Comment);
-      entity.Schedule.Should().Be(command.Data.Refillschedule);
+      entity.Comments.Should().Be(command.Data.Comments);
+      entity.Schedule.Should().Be(command.Data.Schedule);
       entity.DaysBetweenRefills.Should().Be(command.Data.DaysBetweenRefills);
-      entity.EstimateFuelConsumption.Should().Be(command.Data.EstimateConsumption);
+      entity.EstimateFuelConsumption.Should().Be(command.Data.EstimateFuelConsumption);
       entity.FuelTank.TankType.Should().Be(command.Data.TankType);
       entity.FuelTank.TankNumber.Should().Be(command.Data.TankNumber);
       entity.FuelTank.TankCapacity.Should().Be(command.Data.TankCapacity);
       entity.FuelTank.MinimumFuelAmount.Should().Be(command.Data.MinimumFuelAmount);
       entity.FuelTank.FuelType.Should().Be(command.Data.FuelType);
-      entity.EstimateFuelConsumption.Should().Be(command.Data.EstimateConsumption);
+      entity.EstimateFuelConsumption.Should().Be(command.Data.EstimateFuelConsumption);
       entity.LocationHistories.Count().Should().Be(historyNumber + 1);
       newestHistory.Should().NotBeNull();
       newestHistory.LocationId.Should().Be(entity.Id);
@@ -70,15 +70,15 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
       var command = new UpdateLocationMetaDataCommand
       {
         Id = -1,
-        Data= new LocationDto {
+        Data= new LocationDetailsDto {
           Address = "This is address 23",
-          Comment = "This is comment.",
-          Refillschedule = RefillSchedule.AUTOMATIC,
+          Comments = "This is comment.",
+          Schedule = RefillSchedule.AUTOMATIC,
           TankType = TankType.BUILDING,
           TankNumber = 443,
           TankCapacity = 4005.1,
           MinimumFuelAmount = 50.5,
-          EstimateConsumption = 10,
+          EstimateFuelConsumption = 10,
           FuelType = FuelType.OTHER,
           DaysBetweenRefills = 15
         }
@@ -97,15 +97,15 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
       var command = new UpdateLocationMetaDataCommand
       {
         Id = 1,
-        Data= new LocationDto {
+        Data= new LocationDetailsDto {
           Address = "This is address 23",
-          Comment = "This is comment.",
-          Refillschedule = RefillSchedule.AUTOMATIC,
+          Comments = "This is comment.",
+          Schedule = RefillSchedule.AUTOMATIC,
           TankType = TankType.BUILDING,
           TankNumber = 443,
           TankCapacity = 4005.1,
           MinimumFuelAmount = 50.5,
-          EstimateConsumption = 10
+          EstimateFuelConsumption = 10
         }
       };
 

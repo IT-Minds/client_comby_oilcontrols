@@ -2,8 +2,6 @@ import {
   Box,
   Button,
   Center,
-  Container,
-  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -15,18 +13,17 @@ import {
   NumberInput,
   NumberInputField,
   Select,
-  Spacer,
-  VStack
+  Spacer
 } from "@chakra-ui/react";
 import DatePicker from "components/DatePicker/DatePicker";
+import DebtorSelector from "components/DebtorSelector/DebtorSelector";
 import StreetSelector from "components/StreetSelector/StreetSelector";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
 import { FuelTypeRecord, RefillScheduleRecord } from "services/backend/ext/enumConvertor";
 import {
   AddDebtorToLocationCommand,
-  FuelType,
-  ILocationDto,
+  ILocationDetailsDto,
   LocationDebtorType,
   RefillSchedule,
   TankType
@@ -36,31 +33,31 @@ import { logger } from "utils/logger";
 
 type Props = {
   submitCallback: (
-    reportForm: ILocationDto,
+    reportForm: ILocationDetailsDto,
     debtors: AddDebtorToLocationCommand[],
     image?: File
   ) => void;
-  localeMetaData: ILocationDto;
+  localeMetaData?: ILocationDetailsDto;
 };
 
-const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
+const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }) => {
   const [mainDebtorId, setMainDebtorId] = useState(null);
   const [baseDebtorId, setBaseDebtorId] = useState(null);
   const [upcomingDebtorId, setUpcomingDebtorId] = useState(null);
   const [debtorDate, setDebtorDate] = useState(new Date());
   const [image, setImage] = useState<File>(null);
 
-  const [localForm, setLocalForm] = useState<ILocationDto>({
+  const [localForm, setLocalForm] = useState<ILocationDetailsDto>({
     address: "",
-    comment: "",
-    estimateConsumption: null,
+    comments: "",
+    estimateFuelConsumption: 0,
     regionId: null,
-    minimumFuelAmount: null,
-    refillschedule: null,
-    tankCapacity: null,
-    tankNumber: null,
-    tankType: null,
-    fuelType: null,
+    minimumFuelAmount: 0,
+    schedule: -1,
+    tankCapacity: 0,
+    tankNumber: 0,
+    tankType: -1,
+    fuelType: -1,
     daysBetweenRefills: 0,
     ...localeMetaData
   });
@@ -114,7 +111,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
       submitCallback(localForm, debtors, image);
       setFormSubmitAttempts(0);
     },
-    [localForm, mainDebtorId, baseDebtorId, upcomingDebtorId, debtorDate, image]
+    [submitCallback, localForm, mainDebtorId, baseDebtorId, upcomingDebtorId, debtorDate, image]
   );
 
   return (
@@ -124,7 +121,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
           <Heading size="md" mb={4}>
             Location
           </Heading>
-          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.tankType}>
+          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && localForm.tankType <= -1}>
             {
               //TODO: translation
             }
@@ -157,6 +154,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
                 updateLocalForm(x.id, "address");
                 updateLocalForm(x.regionId, "regionId" as keyof typeof localForm);
               }}
+              value={localForm.address}
             />
             {
               //TODO: translation
@@ -164,14 +162,15 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
             <FormErrorMessage>Please enter an address</FormErrorMessage>
           </FormControl>
 
-          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.refillschedule}>
+          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.schedule}>
             {
               //TODO: translation
             }
             <FormLabel>Refill Schedule:</FormLabel>
             <Select
               placeholder="Refill Schedule"
-              onChange={e => updateLocalForm(e.target.value, "refillschedule")}>
+              onChange={e => updateLocalForm(e.target.value, "schedule")}
+              value={localForm.schedule}>
               {
                 //TODO: translation
               }
@@ -188,11 +187,11 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
           </FormControl>
 
           <FormControl
-            isRequired={localForm.refillschedule == RefillSchedule.INTERVAL}
-            isDisabled={localForm.refillschedule != RefillSchedule.INTERVAL}
+            isRequired={localForm.schedule == RefillSchedule.INTERVAL}
+            isDisabled={localForm.schedule != RefillSchedule.INTERVAL}
             isInvalid={
               formSubmitAttempts > 0 &&
-              localForm.refillschedule == RefillSchedule.INTERVAL &&
+              localForm.schedule == RefillSchedule.INTERVAL &&
               !localForm.daysBetweenRefills
             }>
             {
@@ -205,6 +204,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
               onChange={e => {
                 updateLocalForm(e.target.value, "daysBetweenRefills");
               }}
+              value={localForm.daysBetweenRefills}
             />
             {
               //TODO: translation
@@ -220,8 +220,9 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
             <Input
               placeholder="Comment"
               onChange={e => {
-                updateLocalForm(e.target.value, "comment");
+                updateLocalForm(e.target.value, "comments");
               }}
+              value={localForm.comments}
             />
             {
               //TODO: translation
@@ -229,7 +230,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
             <FormErrorMessage>Please enter a comment</FormErrorMessage>
           </FormControl>
 
-          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !image}>
+          <FormControl>
             {
               //TODO: translation
             }
@@ -258,6 +259,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
               onChange={e => {
                 updateLocalForm(parseInt(e.target.value), "tankNumber");
               }}
+              value={localForm.tankNumber}
             />
             {
               //TODO: translation
@@ -275,7 +277,8 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
                 placeholder="Tank capacity"
                 onChange={value => {
                   updateLocalForm(parseInt(value), "tankCapacity");
-                }}>
+                }}
+                value={localForm.tankCapacity}>
                 <NumberInputField />
               </NumberInput>
               <InputRightAddon>liters</InputRightAddon>
@@ -298,7 +301,8 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
                 placeholder="Min. fuel amount"
                 onChange={value => {
                   updateLocalForm(parseInt(value), "minimumFuelAmount");
-                }}>
+                }}
+                value={localForm.minimumFuelAmount}>
                 <NumberInputField />
               </NumberInput>
               <InputRightAddon>liters</InputRightAddon>
@@ -311,7 +315,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
 
           <FormControl
             isRequired
-            isInvalid={formSubmitAttempts > 0 && !localForm.estimateConsumption}>
+            isInvalid={formSubmitAttempts > 0 && !localForm.estimateFuelConsumption}>
             {
               //TODO: translation
             }
@@ -320,8 +324,9 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
               <NumberInput
                 placeholder="Est. fuel consumption"
                 onChange={value => {
-                  updateLocalForm(parseInt(value), "estimateConsumption");
-                }}>
+                  updateLocalForm(parseInt(value), "estimateFuelConsumption");
+                }}
+                value={localForm.estimateFuelConsumption}>
                 <NumberInputField />
               </NumberInput>
               <InputRightAddon>liters</InputRightAddon>
@@ -332,17 +337,11 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
             <FormErrorMessage>Please enter the estimated fuel consumption</FormErrorMessage>
           </FormControl>
 
-          <FormControl
-            isInvalid={
-              formSubmitAttempts > 0 &&
-              Object.values(FuelTypeRecord).every(
-                key => localForm.fuelType !== (FuelType[key] as unknown)
-              )
-            }
-            isRequired>
+          <FormControl isInvalid={formSubmitAttempts > 0 && localForm.fuelType <= -1} isRequired>
             <FormLabel id="fuel-type">Select fuel type:</FormLabel>
             <Select
-              onChange={e => updateLocalForm(FuelType[Number(e.target.value)], "fuelType")}
+              onChange={e => updateLocalForm(e.target.value, "fuelType")}
+              value={localForm.fuelType}
               placeholder="Select option">
               {Object.entries(FuelTypeRecord).map(([a, b]) => (
                 <option key={b} value={b}>
@@ -362,35 +361,21 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
             //TODO: translation
           }
           <FormControl
-            isRequired
             isInvalid={
               formSubmitAttempts > 0 && !mainDebtorId && !baseDebtorId && !upcomingDebtorId
             }>
             <FormLabel>Main</FormLabel>
-            <Input
-              onChange={e => {
-                setMainDebtorId(e.target.value);
-              }}
-              placeholder="Debtor ID"
-            />
+            <DebtorSelector cb={x => setMainDebtorId(x?.dbId)} />
+
             <FormLabel>Base</FormLabel>
-            <Input
-              onChange={e => {
-                setBaseDebtorId(e.target.value);
-              }}
-              placeholder="Debtor ID"
-            />
+            <DebtorSelector cb={x => setBaseDebtorId(x?.dbId)} />
             <FormLabel>Upcoming</FormLabel>
-            <Input
-              onChange={e => {
-                setUpcomingDebtorId(e.target.value);
-              }}
-              placeholder="Debtor ID"
-            />
+            <DebtorSelector cb={x => setUpcomingDebtorId(x?.dbId)} />
             <FormLabel>Select date:</FormLabel>
             <DatePicker
               selectedDate={debtorDate}
               onChange={(date: Date) => setDebtorDate(date)}
+              // value={localForm.fuelType}
               showPopperArrow={false}
             />
             <FormErrorMessage>Please add at least one Debtor ID</FormErrorMessage>

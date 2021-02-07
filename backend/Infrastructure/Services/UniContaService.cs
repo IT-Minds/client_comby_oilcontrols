@@ -58,16 +58,17 @@ namespace Infrastructure.Services
       defaultCompany = await session.OpenCompany(45182, true);
     }
 
-    public async Task CreateOrder()
+    public async Task<bool> CreateOrder(UniContaOrder order)
     {
       var api = new CrudAPI(session, defaultCompany);
 
       var result = await api.Insert(
-        new Uniconta.DataModel.DebtorOrder
-        {
-
-        }
+        order
       );
+
+      if (result != ErrorCodes.Succes) return false;
+
+      return true;
     }
   }
 }

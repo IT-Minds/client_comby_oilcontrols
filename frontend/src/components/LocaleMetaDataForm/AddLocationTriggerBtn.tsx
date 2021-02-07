@@ -14,7 +14,8 @@ import { genLocationClient } from "services/backend/apiClients";
 import {
   AddDebtorToLocationCommand,
   CreateLocationCommand,
-  ILocationDto,
+  ILocationDetailsDto,
+  LocationDetailsDto,
   TankType
 } from "services/backend/nswagts";
 
@@ -30,19 +31,22 @@ const AddLocationTriggerBtn: FC<Props> = ({ tankType = null }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const createLocation = useCallback(
-    async (reportForm: ILocationDto, debtors: AddDebtorToLocationCommand[], image: File) => {
+    async (reportForm: ILocationDetailsDto, debtors: AddDebtorToLocationCommand[], image: File) => {
       const client = await genLocationClient();
 
+      const data = new LocationDetailsDto();
+      data.init(reportForm);
       const newId = await client.addNewLocation(
         new CreateLocationCommand({
-          data: reportForm
+          data
         })
       );
 
-      await client.saveLocationImage(newId, {
-        data: image,
-        fileName: newId + ".webp"
-      });
+      if (image)
+        await client.saveLocationImage(newId, {
+          data: image,
+          fileName: newId + ".webp"
+        });
 
       await Promise.all(
         debtors.map(x =>

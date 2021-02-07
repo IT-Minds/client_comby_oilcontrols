@@ -15,7 +15,7 @@ namespace Application.Locations.Commands.UpdateLocationMetaData
   {
     [JsonIgnore]
     public int Id { get; set; }
-    public LocationDto Data { get; set; }
+    public LocationDetailsDto Data { get; set; }
 
     public class UpdateLocationMetaDataCommandHandler : IRequestHandler<UpdateLocationMetaDataCommand, int>
     {
@@ -43,9 +43,9 @@ namespace Application.Locations.Commands.UpdateLocationMetaData
         }
 
         location.Address = request.Data.Address;
-        location.Comments = request.Data.Comment;
-        location.Schedule = request.Data.Refillschedule;
-        location.EstimateFuelConsumption = request.Data.EstimateConsumption;
+        location.Comments = request.Data.Comments;
+        location.Schedule = request.Data.Schedule;
+        location.EstimateFuelConsumption = request.Data.EstimateFuelConsumption;
         location.DaysBetweenRefills = request.Data.DaysBetweenRefills;
 
         var tank = location.FuelTank;

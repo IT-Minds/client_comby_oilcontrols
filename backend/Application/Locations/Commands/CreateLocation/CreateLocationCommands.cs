@@ -11,7 +11,7 @@ namespace Application.Locations.Commands.CreateLocation
   [AuthorizeAttribute(Domain.Enums.Action.CREATE_LOCATION)]
   public class CreateLocationCommand : IRequest<int>
   {
-    public LocationDto Data { get; set; }
+    public LocationDetailsDto Data { get; set; }
 
     public class CreateLocationCommandHandler : IRequestHandler<CreateLocationCommand, int>
     {
@@ -37,11 +37,11 @@ namespace Application.Locations.Commands.CreateLocation
         var location = new Location
         {
           Address = request.Data.Address,
-          Comments = request.Data.Comment,
-          Schedule = request.Data.Refillschedule,
+          Comments = request.Data.Comments,
+          Schedule = request.Data.Schedule,
           RegionId = request.Data.RegionId,
           FuelTank = tank,
-          EstimateFuelConsumption = request.Data.EstimateConsumption,
+          EstimateFuelConsumption = request.Data.EstimateFuelConsumption,
           DaysBetweenRefills = request.Data.DaysBetweenRefills
         };
         _context.Locations.Add(location);

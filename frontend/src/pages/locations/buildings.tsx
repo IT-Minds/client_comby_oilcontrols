@@ -1,22 +1,33 @@
-import AddLocationTriggerBtn from "components/LocaleMetaDataForm/LocationCreationModal";
+import AddLocationTriggerBtn from "components/LocaleMetaDataForm/AddLocationTriggerBtn";
+import LocationList from "components/LocationList/LocationList";
+import { useEffectAsync } from "hooks/useEffectAsync";
 import { GetStaticProps, NextPage } from "next";
 import { I18nProps } from "next-rosetta";
-import { TankType } from "services/backend/nswagts";
+import { useState } from "react";
+import { genLocationClient } from "services/backend/apiClients";
+import { LocationDetailsIdDto, TankType } from "services/backend/nswagts";
 
-type Props = {
-  //
-};
+const type = TankType.BUILDING;
 
-const BuildingPage: NextPage<Props> = () => {
+const LocationPage: NextPage = () => {
+  const [locations, setLocations] = useState<LocationDetailsIdDto[]>([]);
+
+  useEffectAsync(async () => {
+    const client = await genLocationClient();
+    const locations = await client.getAll(type);
+    setLocations(locations.results);
+  }, []);
+
   return (
     <>
       <h1>Hello World</h1>
-      <AddLocationTriggerBtn tankType={TankType.BUILDING} />
+      <AddLocationTriggerBtn tankType={type} />
+      <LocationList data={locations} />
     </>
   );
 };
 
-export const getStaticProps: GetStaticProps<I18nProps<Locale> & Props> = async context => {
+export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context => {
   const locale = context.locale || context.defaultLocale;
   const { table = {} } = await import(`../../i18n/${locale}`);
 
@@ -27,4 +38,4 @@ export const getStaticProps: GetStaticProps<I18nProps<Locale> & Props> = async c
   };
 };
 
-export default BuildingPage;
+export default LocationPage;

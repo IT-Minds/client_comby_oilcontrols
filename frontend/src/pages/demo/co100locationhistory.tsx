@@ -3,7 +3,7 @@ import LocationHistoryComp from "components/LocationHistory/LocationHistoryComp"
 import { Locale } from "i18n/Locale";
 import { GetStaticProps, NextPage } from "next";
 import { I18nProps } from "next-rosetta";
-import { genLocationHistoryClient } from "services/backend/apiClients";
+import { genLocationClient } from "services/backend/apiClients";
 import {
   LocationHistoryDto,
   PageResultOfLocationHistoryDtoAndString
@@ -38,7 +38,7 @@ export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context =
 
   const { table = {} } = await import(`../../i18n/${locale}`);
 
-  const data = await genLocationHistoryClient().then(client =>
+  const data = await genLocationClient().then(client =>
     client.getLocationHistory(1).catch(() => {
       return new PageResultOfLocationHistoryDtoAndString({
         hasMore: true,
