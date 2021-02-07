@@ -1,5 +1,5 @@
 import { IconType } from "react-icons";
-import { MdArchive, MdAttachMoney, MdDirectionsBus, MdLocationOn } from "react-icons/md";
+import { MdArchive, MdAttachMoney, MdDirectionsBus, MdLocationOn, MdPeople } from "react-icons/md";
 
 export interface ChildLink {
   id: string;
@@ -71,6 +71,13 @@ export const testLinks: MenuLink[] = [
     ],
 
     logo: MdAttachMoney
+  },
+  {
+    id: "users",
+    title: "menu.users",
+    href: "/users",
+
+    logo: MdPeople
   },
   {
     id: "stats",

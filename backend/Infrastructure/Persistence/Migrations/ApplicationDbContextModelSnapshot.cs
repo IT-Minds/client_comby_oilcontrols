@@ -85,6 +85,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("ModifiedCount")
                         .HasColumnType("int");
 
+                    b.Property<int>("UnicontaId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Debtors");

@@ -13,11 +13,12 @@ import {
   VStack
 } from "@chakra-ui/react";
 import ColorModeToggle from "components/ColorModeToggle/ColorModeToggle";
+import { UserTypeContext } from "contexts/UserTypeContext";
 import { useColors } from "hooks/useColors";
 import { Locale } from "i18n/Locale";
 import Link from "next/link";
 import { useI18n } from "next-rosetta";
-import React, { FC, useState } from "react";
+import React, { FC, useContext, useState } from "react";
 
 import AppVersion from "./AppVersion";
 import LanguageSelector from "./LanguageSelector";
@@ -35,6 +36,8 @@ const MyUserSnippet: FC<Props> = ({ forceOpen = false }) => {
   const { t } = useI18n<Locale>();
 
   const [isActive, setIsActive] = useState(forceOpen);
+
+  const { logout } = useContext(UserTypeContext);
 
   return (
     <VStack alignItems="left" bg={bg} spacing={0}>
@@ -78,17 +81,16 @@ const MyUserSnippet: FC<Props> = ({ forceOpen = false }) => {
               <Text>{t("user.editInfo")}</Text>
             </HStack>
           </Link>
-          <Link href="/" passHref>
-            <HStack
-              cursor="pointer"
-              _hover={{
-                background: hoverBg
-              }}
-              padding={1}
-              paddingLeft={8}>
-              <Text>{t("user.logout")}</Text>
-            </HStack>
-          </Link>
+          <HStack
+            cursor="pointer"
+            _hover={{
+              background: hoverBg
+            }}
+            padding={1}
+            paddingLeft={8}
+            onClick={logout}>
+            <Text>{t("user.logout")}</Text>
+          </HStack>
           <Box
             cursor="pointer"
             _hover={{

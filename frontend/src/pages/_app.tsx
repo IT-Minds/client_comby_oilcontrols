@@ -2,10 +2,12 @@ import "../styles.global.css";
 import "../reactdatepicker.global.css";
 import "isomorphic-unfetch";
 
-import { ChakraProvider, Progress } from "@chakra-ui/react";
+import { Center, ChakraProvider, CircularProgress, Container, Progress } from "@chakra-ui/react";
 import LayoutDesktop from "components/Layout/LayoutDesktop";
+import LoginComp from "components/Login/LoginComp";
 import RouteProtector from "components/RouteProtector/RouteProtector";
 import UserTypeContextProvider from "contexts/providers/UserTypeContextProvider";
+import { AuthStage, useAuth } from "hooks/useAuth";
 import { useLoadProgress } from "hooks/useLoadProgress";
 import { usePWA } from "hooks/usePWA";
 import { AppPropsType } from "next/dist/next-server/lib/utils";
@@ -23,31 +25,31 @@ type Props = {
 };
 
 const MyApp = ({ Component, pageProps, __N_SSG, router }: AppPropsType & Props): ReactElement => {
-  usePWA();
-
   const progressVal = useLoadProgress(router);
 
   useEffect(() => {
-    if (!__N_SSG) {
-      logger.info("Environment should be readable");
+    if (__N_SSG) {
+      logger.info("Page is SSG");
+    }
+    logger.info("Environment should be readable");
 
-      const envSettings = isomorphicEnvSettings();
-      if (envSettings) setEnvSettings(envSettings);
-      if (process.browser) {
-        fetch("/api/getEnv")
-          .then(res => {
-            if (res.ok) return res.json();
-            throw res.statusText;
-          })
-          .then(
-            envSettings => setEnvSettings(envSettings),
-            e => {
-              logger.debug("env error", e);
-            }
-          );
-      }
+    if (process.browser) {
+      fetch("/api/getEnv")
+        .then(res => {
+          if (res.ok) return res.json();
+          throw res.statusText;
+        })
+        .then(
+          envSettings => setEnvSettings(envSettings),
+          e => {
+            logger.debug("env error", e);
+          }
+        );
     }
   }, []);
+
+  const { authStage, login, logout } = useAuth();
+  usePWA();
 
   return (
     <main>
@@ -67,21 +69,33 @@ const MyApp = ({ Component, pageProps, __N_SSG, router }: AppPropsType & Props):
       </noscript>
       <I18nProvider table={pageProps.table}>
         <ChakraProvider theme={theme}>
-          <Progress
-            hasStripe
-            isAnimated
-            size="xs"
-            value={progressVal}
-            marginBottom={-1}
-            zIndex={99}
-            hidden={progressVal < 10}
-          />
-          <UserTypeContextProvider>
-            <RouteProtector />
-            <LayoutDesktop>
-              <Component {...pageProps} />
-            </LayoutDesktop>
-          </UserTypeContextProvider>
+          {authStage == AuthStage.CHECKING ? (
+            <Center>
+              <CircularProgress isIndeterminate />
+            </Center>
+          ) : authStage == AuthStage.UNAUTHENTICATED ? (
+            <Container>
+              <LoginComp submitCallback={login} />
+            </Container>
+          ) : (
+            <>
+              <Progress
+                hasStripe
+                isAnimated
+                size="xs"
+                value={progressVal}
+                marginBottom={-1}
+                zIndex={99}
+                hidden={progressVal < 10}
+              />
+              <UserTypeContextProvider logout={logout}>
+                <RouteProtector />
+                <LayoutDesktop>
+                  <Component {...pageProps} />
+                </LayoutDesktop>
+              </UserTypeContextProvider>
+            </>
+          )}
         </ChakraProvider>
       </I18nProvider>
     </main>

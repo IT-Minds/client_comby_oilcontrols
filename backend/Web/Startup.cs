@@ -25,6 +25,8 @@ using Microsoft.Extensions.Options;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Domain.Entities;
+using Application.Security;
 
 namespace Web
 {
@@ -58,12 +60,11 @@ namespace Web
       services.Configure<FileDriveOptions>(Configuration.GetSection(FileDriveOptions.FileDrive));
       services.Configure<UniContaOptions>(Configuration.GetSection(UniContaOptions.UniConta));
       services.Configure<SeedOptions>(Configuration.GetSection(SeedOptions.SampleData));
-
+      services.Configure<HashingOptions>(Configuration.GetSection(HashingOptions.Hashing));
       services.Configure<TokenOptions>(Configuration.GetSection(TokenOptions.Tokens));
+      services.Configure<SuperUserOptions>(Configuration.GetSection(SuperUserOptions.SuperUser));
       services.AddApplication();
       services.AddInfrastructure(Configuration, Environment);
-
-
 
       services.AddHttpContextAccessor();
 
@@ -89,19 +90,22 @@ namespace Web
           Type = OpenApiSecuritySchemeType.ApiKey,
           Name = "Authorization",
           In = OpenApiSecurityApiKeyLocation.Header,
-          Description = "Bearer {your JWT token}."
+          Description = "In the value box below write: \"Bearer {your JWT token}\"."
         });
 
         configure.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
       });
 
+      services.AddScoped<SuperAdminService>();
       services.AddScoped<ICurrentUserService, CurrentUserService>();
       services.AddScoped<IAuthorizationService, AuthorizationService>();
       services.AddScoped<IExampleHubService, ExampleHubService>();
       services.AddScoped<ITokenService, TokenService>();
       services.AddSignalR();
 
-      var key = Encoding.ASCII.GetBytes(Configuration.GetSection(TokenOptions.Tokens).GetChildren().FirstOrDefault(x => x.Key.Equals("Secret")).Value);
+      var key = Encoding.ASCII.GetBytes(Configuration.GetSection(TokenOptions.Tokens)
+        .GetChildren().FirstOrDefault(x => x.Key.Equals("Secret")).Value);
+
       services.AddAuthentication(x =>
       {
         x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -122,7 +126,7 @@ namespace Web
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationDbContext context, IOptions<SeedOptions> seedOptions)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationDbContext context, IOptions<SeedOptions> seedOptions,  SuperAdminService superAdminService)
     {
       if (env.IsDevelopment())
       {
@@ -137,27 +141,15 @@ namespace Web
 
       using (context)
       {
-        context.Database.AutoTransactionsEnabled = true;
-        var transaction = context.Database.BeginTransaction();
-        transaction?.CreateSavepoint("PRE_MIGRATION");
-        try
-        {
-          context.Database.Migrate();
-        }
-        catch
-        {
-          transaction?.RollbackToSavepoint("PRE_MIGRATION");
-        }
-        transaction?.CreateSavepoint("POST_MIGRATION");
-        if (env.IsDevelopment() && !env.IsEnvironment("Test") && seedOptions.Value.SeedSampleData)
-        {
-        transaction = context.Database.CurrentTransaction;
+        context.Database.AutoTransactionsEnabled = false;
         context.Database.Migrate();
-        transaction?.Commit();
+
         if (env.IsDevelopment() && !env.IsEnvironment("Test") && seedOptions.Value.SeedSampleData)
-          new SampleData().SeedSampleData(context);
+        {
+          SampleData.SeedSampleData(context);
         }
-        transaction?.Commit();
+
+        superAdminService.SetupSuperUser();
       }
 
       //TODO Handle cors

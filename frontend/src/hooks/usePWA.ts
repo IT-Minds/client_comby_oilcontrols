@@ -32,18 +32,18 @@ export const usePWA = (): void => {
           logger.debug("wasWaitingBeforeRegister");
         }
 
-        if (confirm("A newer version of this web app is available, reload to update?")) {
-          wb.addEventListener("controlling", () => {
-            window.location.reload();
-          });
+        // if (confirm("A newer version of this web app is available, reload to update?")) {
+        //   wb.addEventListener("controlling", () => {
+        //     window.location.reload();
+        //   });
 
-          // Send a message to the waiting service worker, instructing it to activate.
-          wb.messageSW({ type: "SKIP_WAITING" });
-        } else {
-          logger.debug(
-            "User rejected to reload the web app, keep using old version. New version will be automatically load when user open the app next time."
-          );
-        }
+        //   // Send a message to the waiting service worker, instructing it to activate.
+        //   wb.messageSW({ type: "SKIP_WAITING" });
+        // } else {
+        //   logger.debug(
+        //     "User rejected to reload the web app, keep using old version. New version will be automatically load when user open the app next time."
+        //   );
+        // }
       };
 
       wb.addEventListener("waiting", promptNewVersionAvailable);

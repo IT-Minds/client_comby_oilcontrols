@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
@@ -16,11 +15,13 @@ namespace Application.Users.Commands.AssignToken
     {
       private readonly IApplicationDbContext _context;
       private readonly ITokenService _tokenService;
+      private readonly IPasswordHasher _passwordHasher;
 
-      public AssignTokenCommandHandler(IApplicationDbContext context, ITokenService tokenService)
+      public AssignTokenCommandHandler(IApplicationDbContext context, ITokenService tokenService, IPasswordHasher passwordHasher)
       {
         _context = context;
         _tokenService = tokenService;
+        _passwordHasher = passwordHasher;
       }
       public async Task<UserTokenDto> Handle(AssignTokenCommand request, CancellationToken cancellationToken)
       {
@@ -28,15 +29,25 @@ namespace Application.Users.Commands.AssignToken
           .Include(x => x.Roles)
           .ThenInclude(x => x.Role)
           .ThenInclude(x => x.Actions)
-          .FirstOrDefaultAsync(x => x.Username.Equals(request.UserDto.Username) && x.Password.Equals(request.UserDto.Password));
+          .FirstOrDefaultAsync(x => x.Username.Equals(request.UserDto.Username));
+
         if (user == null)
         {
           throw new ArgumentException("Invalid credentials.");
         }
+
+        var (verified, needsUpgrade) = _passwordHasher.Check(user.Password, request.UserDto.Password);
+
+        if (!verified) {
+          throw new ArgumentException("Invalid credentials.");
+        }
+
+        // TODO maybe do something with the needsUpgrade?
+
         var token = _tokenService.CreateToken(user);
         return new UserTokenDto
         {
-          UserDto = request.UserDto,
+          // UserDto = request.UserDto,
           Token = token
         };
       }

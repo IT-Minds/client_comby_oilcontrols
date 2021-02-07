@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using Application.Common.Interfaces;
@@ -25,13 +26,13 @@ namespace Web.Services
     {
       var claims = new List<Claim>();
       claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Username));
-      foreach(var role in user.Roles)
+
+      var allActions = user.Roles.SelectMany(r => r.Role.Actions).Distinct();
+      foreach(RoleAction action in allActions)
       {
-        foreach(RoleAction action in role.Role.Actions)
-        {
-          claims.Add(new Claim(ClaimTypes.Role, System.Enum.GetName(action.Action)));
-        }
+        claims.Add(new Claim(ClaimTypes.Role, System.Enum.GetName(action.Action)));
       }
+
       var key = Encoding.ASCII.GetBytes(_options.Secret);
       var tokenHandler = new JwtSecurityTokenHandler();
       var descriptor = new SecurityTokenDescriptor

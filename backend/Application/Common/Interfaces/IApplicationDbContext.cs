@@ -30,5 +30,6 @@ namespace Application.Common.Interfaces
     DbSet<ExampleEntity> ExampleEntities { get; set; }
     DbSet<ExampleEntityList> ExampleEntityLists { get; set; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    int SaveChanges();
   }
 }

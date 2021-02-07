@@ -332,6 +332,43 @@ namespace Application.UnitTests
         new LocationDebtorHistory { LocationId = 501, DebtorId = 500, Type = LocationDebtorType.MAIN, LastModified = new DateTime(1990, 1, 1), Created = new DateTime(1990, 1, 1) }
       );
       //END
+
+      //START: TEST ROLE UPDATE COMMAND
+      context.Roles.Add(
+        new Role { Id = 100, Name = "Test Role" }
+      );
+      context.RoleActions.AddRange(
+        new RoleAction { Action = Domain.Enums.Action.ASSIGN_COUPON, RoleId = 100 },
+        new RoleAction { Action = Domain.Enums.Action.CREATE_LOCATION, RoleId = 100 },
+        new RoleAction { Action = Domain.Enums.Action.CREATE_REFILL, RoleId = 100 }
+      );
+      //END
+
+      //START: MORE DATA FOR THE QUERY TEST
+      context.Roles.AddRange(
+        new Role { Id = 200, Name = "Test Role 1" },
+        new Role { Id = 201, Name = "Test Role 2" },
+        new Role { Id = 202, Name = "Test Role 3" },
+        new Role { Id = 203, Name = "Test Role 4" }
+      );
+      //END
+
+      //START: TEST USER ROLE UPDATE COMMAND
+      var role1 = new Role { Id = 300, Name = "VeryImportant" };
+      var role2 = new Role { Id = 301, Name = "LittleLessImportant" };
+      var role3 = new Role { Id = 302, Name = "WhoAreYou?" };
+      context.Roles.AddRange(role1, role2, role3);
+
+      var user1 = new User { Username = "LegitUser64", Password = "Password" };
+      context.Users.AddRange(
+        user1
+      );
+
+      context.UserRoles.AddRange(
+        new UserRole { User = user1, Role = role1 }
+      );
+
+      //END
       context.SaveChanges();
     }
 

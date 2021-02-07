@@ -1,37 +1,53 @@
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
-using Application.Common.Security;
+using Application.Common.Services;
 using AutoMapper;
 using MediatR;
-using UniContaDomain.Entities;
 
-namespace Application.Trucks.Queries.GetTruckInfo
+namespace Application.Debtors.Queries
 {
-  [AuthorizeAttribute(Domain.Enums.Action.GET_DEBTOR)]
-  public class GetDebtorQuery : IRequest<bool>
+  // [AuthorizeAttribute(Domain.Enums.Action.GET_DEBTOR)]
+  public class GetDebtorQuery : IRequest<List<DebtorDto>>
   {
-    public class GetDebtorQueryHandler : IRequestHandler<GetDebtorQuery, bool>
+    public class GetDebtorQueryHandler : IRequestHandler<GetDebtorQuery, List<DebtorDto>>
     {
       private readonly IApplicationDbContext _context;
       private readonly IMapper _mapper;
-      private readonly IUniContaService _uniContaService;
+      private readonly SyncroniceDebtorService _syncroniceDebtorService;
 
-      public GetDebtorQueryHandler(IApplicationDbContext context, IMapper mapper, IUniContaService uniContaService)
+      public GetDebtorQueryHandler(IApplicationDbContext context, IMapper mapper, IUniContaService uniContaService, SyncroniceDebtorService syncroniceDebtorService)
       {
         _context = context;
         _mapper = mapper;
-        _uniContaService = uniContaService;
+        _syncroniceDebtorService = syncroniceDebtorService;
       }
 
-      public async Task<bool> Handle(GetDebtorQuery request, CancellationToken cancellationToken)
+      public async Task<List<DebtorDto>> Handle(GetDebtorQuery request, CancellationToken cancellationToken)
       {
-        await _uniContaService.Login();
+        _syncroniceDebtorService.SetDebtorQuery(
+          _context.Debtors
+            // .Include(x => x.Locations)
+        );
 
-        var result = await _uniContaService.GetDebtors();
+        var result = await _syncroniceDebtorService.SyncroniceDebtor();
 
-        return result.FirstOrDefault()._Blocked;
+        var debtorDtos = new List<DebtorDto>();
+        foreach (var (a,b) in result)
+        {
+          debtorDtos.Add(new DebtorDto {
+            DbId = b.Id,
+            UnicontaId = a.RowId,
+            Blocked = a.Blocked,
+            AccountNumber = a.AccountNumber,
+            Name = a.Name,
+            GLN = a.GLN,
+            CouponRequired = b.CouponRequired
+          });
+        }
+
+        return debtorDtos;
       }
     }
   }
