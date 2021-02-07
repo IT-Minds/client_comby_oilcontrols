@@ -2688,16 +2688,7 @@ export interface ICreateExampleEntityListCommand {
 }
 
 export class UpdateLocationMetaDataCommand implements IUpdateLocationMetaDataCommand {
-    address?: string | null;
-    comment?: string | null;
-    refillschedule?: RefillSchedule;
-    tankType?: TankType;
-    tankNumber?: number;
-    tankCapacity?: number;
-    minimumFuelAmount?: number;
-    estimateConsumption?: number;
-    daysBetweenRefills?: number;
-    fuelType?: FuelType;
+    data?: LocationDto | null;
 
     constructor(data?: IUpdateLocationMetaDataCommand) {
         if (data) {
@@ -2705,21 +2696,13 @@ export class UpdateLocationMetaDataCommand implements IUpdateLocationMetaDataCom
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
+            this.data = data.data && !(<any>data.data).toJSON ? new LocationDto(data.data) : <LocationDto>this.data; 
         }
     }
 
     init(_data?: any) {
         if (_data) {
-            this.address = _data["address"] !== undefined ? _data["address"] : <any>null;
-            this.comment = _data["comment"] !== undefined ? _data["comment"] : <any>null;
-            this.refillschedule = _data["refillschedule"] !== undefined ? _data["refillschedule"] : <any>null;
-            this.tankType = _data["tankType"] !== undefined ? _data["tankType"] : <any>null;
-            this.tankNumber = _data["tankNumber"] !== undefined ? _data["tankNumber"] : <any>null;
-            this.tankCapacity = _data["tankCapacity"] !== undefined ? _data["tankCapacity"] : <any>null;
-            this.minimumFuelAmount = _data["minimumFuelAmount"] !== undefined ? _data["minimumFuelAmount"] : <any>null;
-            this.estimateConsumption = _data["estimateConsumption"] !== undefined ? _data["estimateConsumption"] : <any>null;
-            this.daysBetweenRefills = _data["daysBetweenRefills"] !== undefined ? _data["daysBetweenRefills"] : <any>null;
-            this.fuelType = _data["fuelType"] !== undefined ? _data["fuelType"] : <any>null;
+            this.data = _data["data"] ? LocationDto.fromJS(_data["data"]) : <any>null;
         }
     }
 
@@ -2732,8 +2715,65 @@ export class UpdateLocationMetaDataCommand implements IUpdateLocationMetaDataCom
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["data"] = this.data ? this.data.toJSON() : <any>null;
+        return data; 
+    }
+}
+
+export interface IUpdateLocationMetaDataCommand {
+    data?: ILocationDto | null;
+}
+
+export class LocationDto implements ILocationDto {
+    address?: string | null;
+    comment?: string | null;
+    regionId?: number;
+    refillschedule?: RefillSchedule;
+    tankType?: TankType;
+    tankNumber?: number;
+    tankCapacity?: number;
+    minimumFuelAmount?: number;
+    estimateConsumption?: number;
+    daysBetweenRefills?: number;
+    fuelType?: FuelType;
+
+    constructor(data?: ILocationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.address = _data["address"] !== undefined ? _data["address"] : <any>null;
+            this.comment = _data["comment"] !== undefined ? _data["comment"] : <any>null;
+            this.regionId = _data["regionId"] !== undefined ? _data["regionId"] : <any>null;
+            this.refillschedule = _data["refillschedule"] !== undefined ? _data["refillschedule"] : <any>null;
+            this.tankType = _data["tankType"] !== undefined ? _data["tankType"] : <any>null;
+            this.tankNumber = _data["tankNumber"] !== undefined ? _data["tankNumber"] : <any>null;
+            this.tankCapacity = _data["tankCapacity"] !== undefined ? _data["tankCapacity"] : <any>null;
+            this.minimumFuelAmount = _data["minimumFuelAmount"] !== undefined ? _data["minimumFuelAmount"] : <any>null;
+            this.estimateConsumption = _data["estimateConsumption"] !== undefined ? _data["estimateConsumption"] : <any>null;
+            this.daysBetweenRefills = _data["daysBetweenRefills"] !== undefined ? _data["daysBetweenRefills"] : <any>null;
+            this.fuelType = _data["fuelType"] !== undefined ? _data["fuelType"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): LocationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new LocationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
         data["address"] = this.address !== undefined ? this.address : <any>null;
         data["comment"] = this.comment !== undefined ? this.comment : <any>null;
+        data["regionId"] = this.regionId !== undefined ? this.regionId : <any>null;
         data["refillschedule"] = this.refillschedule !== undefined ? this.refillschedule : <any>null;
         data["tankType"] = this.tankType !== undefined ? this.tankType : <any>null;
         data["tankNumber"] = this.tankNumber !== undefined ? this.tankNumber : <any>null;
@@ -2746,9 +2786,10 @@ export class UpdateLocationMetaDataCommand implements IUpdateLocationMetaDataCom
     }
 }
 
-export interface IUpdateLocationMetaDataCommand {
+export interface ILocationDto {
     address?: string | null;
     comment?: string | null;
+    regionId?: number;
     refillschedule?: RefillSchedule;
     tankType?: TankType;
     tankNumber?: number;
@@ -2779,17 +2820,7 @@ export enum FuelType {
 }
 
 export class CreateLocationCommand implements ICreateLocationCommand {
-    address?: string | null;
-    comment?: string | null;
-    regionId?: number;
-    refillschedule?: RefillSchedule;
-    tankType?: TankType;
-    tankNumber?: number;
-    tankCapacity?: number;
-    minimumFuelAmount?: number;
-    estimateConsumption?: number;
-    daysBetweenRefills?: number;
-    fuelType?: FuelType;
+    data?: LocationDto | null;
 
     constructor(data?: ICreateLocationCommand) {
         if (data) {
@@ -2797,22 +2828,13 @@ export class CreateLocationCommand implements ICreateLocationCommand {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
+            this.data = data.data && !(<any>data.data).toJSON ? new LocationDto(data.data) : <LocationDto>this.data; 
         }
     }
 
     init(_data?: any) {
         if (_data) {
-            this.address = _data["address"] !== undefined ? _data["address"] : <any>null;
-            this.comment = _data["comment"] !== undefined ? _data["comment"] : <any>null;
-            this.regionId = _data["regionId"] !== undefined ? _data["regionId"] : <any>null;
-            this.refillschedule = _data["refillschedule"] !== undefined ? _data["refillschedule"] : <any>null;
-            this.tankType = _data["tankType"] !== undefined ? _data["tankType"] : <any>null;
-            this.tankNumber = _data["tankNumber"] !== undefined ? _data["tankNumber"] : <any>null;
-            this.tankCapacity = _data["tankCapacity"] !== undefined ? _data["tankCapacity"] : <any>null;
-            this.minimumFuelAmount = _data["minimumFuelAmount"] !== undefined ? _data["minimumFuelAmount"] : <any>null;
-            this.estimateConsumption = _data["estimateConsumption"] !== undefined ? _data["estimateConsumption"] : <any>null;
-            this.daysBetweenRefills = _data["daysBetweenRefills"] !== undefined ? _data["daysBetweenRefills"] : <any>null;
-            this.fuelType = _data["fuelType"] !== undefined ? _data["fuelType"] : <any>null;
+            this.data = _data["data"] ? LocationDto.fromJS(_data["data"]) : <any>null;
         }
     }
 
@@ -2825,33 +2847,13 @@ export class CreateLocationCommand implements ICreateLocationCommand {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["address"] = this.address !== undefined ? this.address : <any>null;
-        data["comment"] = this.comment !== undefined ? this.comment : <any>null;
-        data["regionId"] = this.regionId !== undefined ? this.regionId : <any>null;
-        data["refillschedule"] = this.refillschedule !== undefined ? this.refillschedule : <any>null;
-        data["tankType"] = this.tankType !== undefined ? this.tankType : <any>null;
-        data["tankNumber"] = this.tankNumber !== undefined ? this.tankNumber : <any>null;
-        data["tankCapacity"] = this.tankCapacity !== undefined ? this.tankCapacity : <any>null;
-        data["minimumFuelAmount"] = this.minimumFuelAmount !== undefined ? this.minimumFuelAmount : <any>null;
-        data["estimateConsumption"] = this.estimateConsumption !== undefined ? this.estimateConsumption : <any>null;
-        data["daysBetweenRefills"] = this.daysBetweenRefills !== undefined ? this.daysBetweenRefills : <any>null;
-        data["fuelType"] = this.fuelType !== undefined ? this.fuelType : <any>null;
+        data["data"] = this.data ? this.data.toJSON() : <any>null;
         return data; 
     }
 }
 
 export interface ICreateLocationCommand {
-    address?: string | null;
-    comment?: string | null;
-    regionId?: number;
-    refillschedule?: RefillSchedule;
-    tankType?: TankType;
-    tankNumber?: number;
-    tankCapacity?: number;
-    minimumFuelAmount?: number;
-    estimateConsumption?: number;
-    daysBetweenRefills?: number;
-    fuelType?: FuelType;
+    data?: ILocationDto | null;
 }
 
 export class AddDebtorToLocationCommand implements IAddDebtorToLocationCommand {

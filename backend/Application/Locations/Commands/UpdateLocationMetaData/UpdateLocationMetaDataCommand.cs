@@ -15,16 +15,7 @@ namespace Application.Locations.Commands.UpdateLocationMetaData
   {
     [JsonIgnore]
     public int Id { get; set; }
-    public string Address { get; set; }
-    public string Comment { get; set; }
-    public RefillSchedule Refillschedule { get; set; }
-    public TankType TankType { get; set; }
-    public int TankNumber { get; set; }
-    public double TankCapacity { get; set; }
-    public double MinimumFuelAmount { get; set; }
-    public double EstimateConsumption { get; set; }
-    public int DaysBetweenRefills { get; set; }
-    public FuelType FuelType { get; set; }
+    public LocationDto Data { get; set; }
 
     public class UpdateLocationMetaDataCommandHandler : IRequestHandler<UpdateLocationMetaDataCommand, int>
     {
@@ -51,18 +42,18 @@ namespace Application.Locations.Commands.UpdateLocationMetaData
           throw new NotFoundException(nameof(location.FuelTank), request.Id);
         }
 
-        location.Address = request.Address;
-        location.Comments = request.Comment;
-        location.Schedule = request.Refillschedule;
-        location.EstimateFuelConsumption = request.EstimateConsumption;
-        location.DaysBetweenRefills = request.DaysBetweenRefills;
+        location.Address = request.Data.Address;
+        location.Comments = request.Data.Comment;
+        location.Schedule = request.Data.Refillschedule;
+        location.EstimateFuelConsumption = request.Data.EstimateConsumption;
+        location.DaysBetweenRefills = request.Data.DaysBetweenRefills;
 
         var tank = location.FuelTank;
-        tank.TankType = request.TankType;
-        tank.TankNumber = request.TankNumber;
-        tank.TankCapacity = request.TankCapacity;
-        tank.MinimumFuelAmount = request.MinimumFuelAmount;
-        tank.FuelType = request.FuelType;
+        tank.TankType = request.Data.TankType;
+        tank.TankNumber = request.Data.TankNumber;
+        tank.TankCapacity = request.Data.TankCapacity;
+        tank.MinimumFuelAmount = request.Data.MinimumFuelAmount;
+        tank.FuelType = request.Data.FuelType;
 
         await _context.SaveChangesAsync(cancellationToken);
         return request.Id;

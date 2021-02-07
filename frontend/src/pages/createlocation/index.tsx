@@ -1,6 +1,7 @@
 import { Heading, useToast, VStack } from "@chakra-ui/react";
 import LocaleMetaDataComp from "components/LocaleMetaDataForm/LocaleMetaDataComp";
 import { LocaleMetaDataForm } from "components/LocaleMetaDataForm/LocaleMetaDataCompForm";
+import AddLocationTriggerBtn from "components/LocaleMetaDataForm/LocationCreationModal";
 import { useOffline } from "hooks/useOffline";
 import { NextPage } from "next";
 import React, { useCallback } from "react";
@@ -35,7 +36,7 @@ const CreateLocationPage: NextPage = () => {
   return (
     <VStack position="relative" overflow="visible" h="95vh" w="100%">
       <Heading>Create Location</Heading>
-      <LocaleMetaDataComp submitCallback={x => createLocation(x)} localeMetaData={null} />
+      <AddLocationTriggerBtn />
     </VStack>
   );
 };

@@ -11,17 +11,7 @@ namespace Application.Locations.Commands.CreateLocation
   [AuthorizeAttribute(Domain.Enums.Action.CREATE_LOCATION)]
   public class CreateLocationCommand : IRequest<int>
   {
-    public string Address { get; set; }
-    public string Comment { get; set; }
-    public int RegionId { get; set; }
-    public RefillSchedule Refillschedule { get; set; }
-    public TankType TankType { get; set; }
-    public int TankNumber { get; set; }
-    public double TankCapacity { get; set; }
-    public double MinimumFuelAmount { get; set; }
-    public double EstimateConsumption { get; set; }
-    public int DaysBetweenRefills { get; set; }
-    public FuelType FuelType { get; set; }
+    public LocationDto Data { get; set; }
 
     public class CreateLocationCommandHandler : IRequestHandler<CreateLocationCommand, int>
     {
@@ -36,23 +26,23 @@ namespace Application.Locations.Commands.CreateLocation
       {
         var tank = new FuelTank
         {
-          TankType = request.TankType,
-          TankCapacity = request.TankCapacity,
-          TankNumber = request.TankNumber,
-          MinimumFuelAmount = request.MinimumFuelAmount,
-          FuelType = request.FuelType
+          TankType = request.Data.TankType,
+          TankCapacity = request.Data.TankCapacity,
+          TankNumber = request.Data.TankNumber,
+          MinimumFuelAmount = request.Data.MinimumFuelAmount,
+          FuelType = request.Data.FuelType
         };
         _context.FuelTanks.Add(tank);
 
         var location = new Location
         {
-          Address = request.Address,
-          Comments = request.Comment,
-          Schedule = request.Refillschedule,
-          RegionId = request.RegionId,
+          Address = request.Data.Address,
+          Comments = request.Data.Comment,
+          Schedule = request.Data.Refillschedule,
+          RegionId = request.Data.RegionId,
           FuelTank = tank,
-          EstimateFuelConsumption = request.EstimateConsumption,
-          DaysBetweenRefills = request.DaysBetweenRefills
+          EstimateFuelConsumption = request.Data.EstimateConsumption,
+          DaysBetweenRefills = request.Data.DaysBetweenRefills
         };
         _context.Locations.Add(location);
 
