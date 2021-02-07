@@ -2,11 +2,13 @@ import {
   Box,
   Button,
   Center,
+  Container,
   Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
   Heading,
+  HStack,
   Input,
   InputGroup,
   InputRightAddon,
@@ -24,6 +26,7 @@ import { FuelTypeRecord, RefillScheduleRecord } from "services/backend/ext/enumC
 import {
   AddDebtorToLocationCommand,
   FuelType,
+  ILocationDto,
   LocationDebtorType,
   RefillSchedule,
   TankType
@@ -31,11 +34,13 @@ import {
 import { capitalize } from "utils/capitalizeAnyString";
 import { logger } from "utils/logger";
 
-import { LocaleMetaDataForm } from "./LocaleMetaDataCompForm";
-
 type Props = {
-  submitCallback: (reportForm: LocaleMetaDataForm, debtors: AddDebtorToLocationCommand[]) => void;
-  localeMetaData: LocaleMetaDataForm;
+  submitCallback: (
+    reportForm: ILocationDto,
+    debtors: AddDebtorToLocationCommand[],
+    image?: File
+  ) => void;
+  localeMetaData: ILocationDto;
 };
 
 const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
@@ -43,35 +48,36 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
   const [baseDebtorId, setBaseDebtorId] = useState(null);
   const [upcomingDebtorId, setUpcomingDebtorId] = useState(null);
   const [debtorDate, setDebtorDate] = useState(new Date());
+  const [image, setImage] = useState<File>(null);
 
-  const [localForm, setLocalForm] = useState<LocaleMetaDataForm>(
-    localeMetaData ?? {
-      address: "",
-      comment: "",
-      estimateConsumption: null,
-      regionId: null,
-      minimumFuelAmount: null,
-      refillschedule: null,
-      tankCapacity: null,
-      tankNumber: null,
-      tankType: null,
-      image: null
-    }
-  );
+  const [localForm, setLocalForm] = useState<ILocationDto>({
+    address: "",
+    comment: "",
+    estimateConsumption: null,
+    regionId: null,
+    minimumFuelAmount: null,
+    refillschedule: null,
+    tankCapacity: null,
+    tankNumber: null,
+    tankType: null,
+    fuelType: null,
+    daysBetweenRefills: 0,
+    ...localeMetaData
+  });
 
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
 
   const updateLocalForm = useCallback((value: unknown, key: keyof typeof localForm) => {
     setLocalForm(form => {
       (form[key] as unknown) = value;
-      return form;
+      return { ...form };
     });
   }, []);
 
   const saveImage = useCallback(async () => {
     const [handle] = await window.showOpenFilePicker();
     const file = await handle.getFile();
-    updateLocalForm(file, "image");
+    setImage(file);
   }, []);
 
   const handleSubmit = useCallback(
@@ -105,15 +111,15 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
         );
       }
 
-      submitCallback(localForm, debtors);
+      submitCallback(localForm, debtors, image);
       setFormSubmitAttempts(0);
     },
-    [localForm, mainDebtorId, baseDebtorId, upcomingDebtorId, debtorDate]
+    [localForm, mainDebtorId, baseDebtorId, upcomingDebtorId, debtorDate, image]
   );
 
   return (
     <form onSubmit={handleSubmit}>
-      <Flex>
+      <HStack alignItems="top">
         <Box>
           <Heading size="md" mb={4}>
             Location
@@ -125,7 +131,8 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
             <FormLabel>Location Type:</FormLabel>
             <Select
               placeholder="Location Type"
-              onChange={e => updateLocalForm(e.target.value, "tankType")}>
+              onChange={e => updateLocalForm(e.target.value, "tankType")}
+              value={localForm.tankType}>
               {
                 //TODO: translation
               }
@@ -149,7 +156,8 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
               cb={x => {
                 updateLocalForm(x.id, "address");
                 updateLocalForm(x.regionId, "regionId" as keyof typeof localForm);
-              }}></StreetSelector>
+              }}
+            />
             {
               //TODO: translation
             }
@@ -168,8 +176,8 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
                 //TODO: translation
               }
               {Object.entries(RefillScheduleRecord).map(([key, value]) => (
-                <option key={key} value={key}>
-                  {capitalize(RefillSchedule[value])}
+                <option key={key} value={value}>
+                  {capitalize(key)}
                 </option>
               ))}
             </Select>
@@ -179,7 +187,32 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
             <FormErrorMessage>Please select a refill schedule</FormErrorMessage>
           </FormControl>
 
-          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.comment}>
+          <FormControl
+            isRequired={localForm.refillschedule == RefillSchedule.INTERVAL}
+            isDisabled={localForm.refillschedule != RefillSchedule.INTERVAL}
+            isInvalid={
+              formSubmitAttempts > 0 &&
+              localForm.refillschedule == RefillSchedule.INTERVAL &&
+              !localForm.daysBetweenRefills
+            }>
+            {
+              //TODO: translation
+            }
+            <FormLabel>Days between refills</FormLabel>
+            <Input
+              placeholder="# of days"
+              type="number"
+              onChange={e => {
+                updateLocalForm(e.target.value, "daysBetweenRefills");
+              }}
+            />
+            {
+              //TODO: translation
+            }
+            <FormErrorMessage>Please enter a comment</FormErrorMessage>
+          </FormControl>
+
+          <FormControl>
             {
               //TODO: translation
             }
@@ -196,13 +229,13 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
             <FormErrorMessage>Please enter a comment</FormErrorMessage>
           </FormControl>
 
-          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.image}>
+          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !image}>
             {
               //TODO: translation
             }
-            <FormLabel>Select an image to upload</FormLabel>
+            <FormLabel>Select an image of the tank location</FormLabel>
             <Button colorScheme="blue" onClick={saveImage}>
-              {localForm.image ? "Re-select image" : "Select image"}
+              {image ? "Re-select image" : "Select image"}
             </Button>
             {
               //TODO: translation
@@ -300,26 +333,6 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
           </FormControl>
 
           <FormControl
-            isRequired
-            isInvalid={formSubmitAttempts > 0 && !localForm.daysBetweenRefills}>
-            {
-              //TODO: translation
-            }
-            <FormLabel>Days between refills: </FormLabel>
-            <NumberInput
-              placeholder="Days between refills"
-              onChange={value => {
-                updateLocalForm(parseInt(value), "daysBetweenRefills");
-              }}>
-              <NumberInputField />
-            </NumberInput>
-            {
-              //TODO: translation
-            }
-            <FormErrorMessage>Please enter days between refills</FormErrorMessage>
-          </FormControl>
-
-          <FormControl
             isInvalid={
               formSubmitAttempts > 0 &&
               Object.values(FuelTypeRecord).every(
@@ -348,7 +361,11 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
           {
             //TODO: translation
           }
-          <FormControl isRequired isInvalid={!mainDebtorId && !baseDebtorId && !upcomingDebtorId}>
+          <FormControl
+            isRequired
+            isInvalid={
+              formSubmitAttempts > 0 && !mainDebtorId && !baseDebtorId && !upcomingDebtorId
+            }>
             <FormLabel>Main</FormLabel>
             <Input
               onChange={e => {
@@ -379,7 +396,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
             <FormErrorMessage>Please add at least one Debtor ID</FormErrorMessage>
           </FormControl>
         </Box>
-      </Flex>
+      </HStack>
       <Center mt={25}>
         {
           //TODO: translation

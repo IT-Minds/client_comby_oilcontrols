@@ -11,7 +11,7 @@ const BuildingPage: NextPage<Props> = () => {
   return (
     <>
       <h1>Hello World</h1>
-      <AddLocationTriggerBtn tankType={TankType.BUILDING} />
+      <AddLocationTriggerBtn tankType={TankType.TANK} />
     </>
   );
 };

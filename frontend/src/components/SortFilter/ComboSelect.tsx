@@ -154,13 +154,13 @@ const ComboSelect: FC<Props> = ({
               )}
               {filteredOptions.slice(0, 250).map((x, i) => (
                 <Input
-                  isLazy
+                  islazy="true"
                   variant="flushed"
                   readOnly
                   id={"combobox" + i}
                   key={x.id}
                   onClick={() => select(x)}
-                  tabindex="-1"
+                  tabIndex={-1}
                   cursor="pointer"
                   userSelect="none"
                   onKeyDown={e => focusElement(e, x)}

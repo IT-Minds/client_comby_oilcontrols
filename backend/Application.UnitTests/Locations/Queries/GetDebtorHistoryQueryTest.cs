@@ -31,14 +31,14 @@ namespace Application.UnitTests.Locations.Queries
       {
         LocationId = 500,
         Size = 500,
-        Needle = new DateTime(3000, 1, 1),
+        Needle = DateTime.MaxValue,
         Skip = 0
       };
 
       var handler = new GetDebtorHistoryQuery.GetDebtorHistoryQueryHandler(_context, _mapper);
       var result = await handler.Handle(query, CancellationToken.None);
       result.Should().BeOfType<PageResult<LocationDebtorHistoryDto, DateTime>>();
-      result.Results.Count.Should().Be(2);
+      result.Results.Count.Should().Be(4);
       result.PagesRemaining.Should().Be(0);
     }
 

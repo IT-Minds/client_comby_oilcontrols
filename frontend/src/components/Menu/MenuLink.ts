@@ -33,22 +33,17 @@ export const testLinks: MenuLink[] = [
       {
         id: "buildings",
         title: "menu.locations.buildings",
-        href: "/demo"
+        href: "/locations/buildings"
       },
       {
         id: "ships",
         title: "menu.locations.ships",
-        href: "/demo"
+        href: "/locations/ships"
       },
       {
         id: "tanks",
         title: "menu.locations.freestands",
-        href: "/demo"
-      },
-      {
-        id: "location-create",
-        title: "menu.locations.create",
-        href: "/demo"
+        href: "/locations/tanks"
       }
     ],
 
