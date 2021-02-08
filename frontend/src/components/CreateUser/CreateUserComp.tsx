@@ -6,7 +6,7 @@ import { CreateUserCommand } from "services/backend/nswagts";
 import { logger } from "utils/logger";
 
 type Props = {
-  submitCallback: (createUserForm: CreateUserCommand) => void;
+  submitCallback: (createUserForm: CreateUserCommand, role: string) => void;
 };
 
 const CreateUserComp: FC<Props> = ({ submitCallback }) => {
@@ -16,6 +16,8 @@ const CreateUserComp: FC<Props> = ({ submitCallback }) => {
       password: ""
     })
   );
+
+  const [role, setRole] = useState(null);
 
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
 
@@ -29,11 +31,13 @@ const CreateUserComp: FC<Props> = ({ submitCallback }) => {
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      logger.debug("Submitting form CreateUserComp");
-      submitCallback(localForm);
+      if (role) {
+        logger.debug("Submitting form CreateUserComp");
+        submitCallback(localForm, role);
+      }
       setFormSubmitAttempts(0);
     },
-    [localForm]
+    [localForm, role]
   );
 
   return (
@@ -74,21 +78,15 @@ const CreateUserComp: FC<Props> = ({ submitCallback }) => {
           <FormErrorMessage>Please enter a password</FormErrorMessage>
         </FormControl>
 
-        {
-          //TODO: use role property when BE is ready
-        }
-        <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.userName}>
+        <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !role}>
           {
             //TODO: translation
           }
           <FormLabel>Role</FormLabel>
 
-          {
-            //TODO: use role property when BE is ready
-          }
           <UserRoleSelector
             cb={x => {
-              updateLocalForm(x.name, "userName");
+              setRole(x.name);
             }}></UserRoleSelector>
           {
             //TODO: translation
