@@ -4,7 +4,7 @@ import { useOffline } from "hooks/useOffline";
 import { NextPage } from "next";
 import React, { useCallback } from "react";
 import { genUserClient } from "services/backend/apiClients";
-import { CreateUserCommand } from "services/backend/nswagts";
+import { CreateUserCommand, UpdateUserRolesCommand } from "services/backend/nswagts";
 
 const DemoPage: NextPage = () => {
   const toast = useToast();
@@ -14,10 +14,14 @@ const DemoPage: NextPage = () => {
   const bg = useColorModeValue("gray.100", "gray.700");
 
   const createUser = useCallback(
-    async (form: CreateUserCommand) => {
+    async (form: CreateUserCommand, role: string) => {
       awaitCallback(async () => {
         const client = await genUserClient();
-        const newId = await client.createUser(form);
+        await client.createUser(form);
+
+        await client.updateUserRoles(
+          new UpdateUserRolesCommand({ user: { username: form.userName, role } })
+        );
 
         toast({
           title: "Create user successful",
@@ -34,7 +38,7 @@ const DemoPage: NextPage = () => {
   return (
     <Container maxW="xl" centerContent>
       <Box padding="4" bg={bg} maxW="6xl" maxH="4xl" resize="both" overflow="auto">
-        <CreateUserComp submitCallback={x => createUser(x)} />
+        <CreateUserComp submitCallback={(x, y) => createUser(x, y)} />
       </Box>
     </Container>
   );
