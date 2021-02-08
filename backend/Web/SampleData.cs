@@ -195,15 +195,17 @@ namespace Web
         role11,
         role12
       );
-      context.SaveChanges();
+
       context.RoleActions.AddRange(
-        new RoleAction { RoleId = role1.Id, Action = Domain.Enums.Action.ASSIGN_COUPON }
+        new RoleAction { Role = role1, Action = Domain.Enums.Action.ASSIGN_COUPON }
       );
       context.UserRoles.AddRange(
-        new UserRole { RoleId = role1.Id, UserId = user1.Id }
+        new UserRole { Role = role1, UserId = user1.Id }
       );
 
-
+      context.Roles.AddRange(
+        new Role { Name = "Certainly a role" }
+      );
 
       context.SaveChanges();
     }

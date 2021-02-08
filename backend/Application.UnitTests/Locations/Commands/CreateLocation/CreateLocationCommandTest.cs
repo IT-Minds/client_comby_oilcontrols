@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Locations;
 using Application.Locations.Commands.CreateLocation;
 using Domain.Enums;
 using FluentAssertions;
@@ -15,16 +16,18 @@ namespace Application.UnitTests.Locations.Commands.CreateLocations
     {
       var command = new CreateLocationCommand
       {
-        Address = "This is address 23",
-        Comment = "This is comment.",
-        Refillschedule = RefillSchedule.AUTOMATIC,
-        TankType = TankType.BUILDING,
-        TankNumber = 9696,
-        TankCapacity = 4005.1,
-        MinimumFuelAmount = 50.5,
-        EstimateConsumption = 10,
-        FuelType = FuelType.GASOLINE,
-        DaysBetweenRefills = 10
+        Data = new LocationDetailsDto {
+          Address = "This is address 23",
+          Comments = "This is comment.",
+          Schedule = RefillSchedule.AUTOMATIC,
+          TankType = TankType.BUILDING,
+          TankNumber = 9696,
+          TankCapacity = 4005.1,
+          MinimumFuelAmount = 50.5,
+          EstimateFuelConsumption = 10,
+          FuelType = FuelType.GASOLINE,
+          DaysBetweenRefills = 10
+        }
       };
       var oldLocation = Context.Locations.Find(1);
       var historyNumber = oldLocation.LocationHistories == null ? 0 : oldLocation.LocationHistories.Count();
@@ -36,16 +39,16 @@ namespace Application.UnitTests.Locations.Commands.CreateLocations
       var newestHistory = entity.LocationHistories.OrderByDescending(x => x.Created).FirstOrDefault();
 
       entity.Should().NotBeNull();
-      entity.Address.Should().Be(command.Address);
-      entity.Comments.Should().Be(command.Comment);
-      entity.Schedule.Should().Be(command.Refillschedule);
-      entity.DaysBetweenRefills.Should().Be(command.DaysBetweenRefills);
-      entity.EstimateFuelConsumption.Should().Be(command.EstimateConsumption);
-      entity.FuelTank.TankType.Should().Be(command.TankType);
-      entity.FuelTank.TankNumber.Should().Be(command.TankNumber);
-      entity.FuelTank.TankCapacity.Should().Be(command.TankCapacity);
-      entity.FuelTank.MinimumFuelAmount.Should().Be(command.MinimumFuelAmount);
-      entity.FuelTank.FuelType.Should().Be(command.FuelType);
+      entity.Address.Should().Be(command.Data.Address);
+      entity.Comments.Should().Be(command.Data.Comments);
+      entity.Schedule.Should().Be(command.Data.Schedule);
+      entity.DaysBetweenRefills.Should().Be(command.Data.DaysBetweenRefills);
+      entity.EstimateFuelConsumption.Should().Be(command.Data.EstimateFuelConsumption);
+      entity.FuelTank.TankType.Should().Be(command.Data.TankType);
+      entity.FuelTank.TankNumber.Should().Be(command.Data.TankNumber);
+      entity.FuelTank.TankCapacity.Should().Be(command.Data.TankCapacity);
+      entity.FuelTank.MinimumFuelAmount.Should().Be(command.Data.MinimumFuelAmount);
+      entity.FuelTank.FuelType.Should().Be(command.Data.FuelType);
       newestHistory.Should().NotBeNull();
       newestHistory.LocationId.Should().Be(entity.Id);
       newestHistory.RegionId.Should().Be(entity.RegionId);

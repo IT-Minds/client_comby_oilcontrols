@@ -8,7 +8,8 @@ namespace Infrastructure.Persistence.Configurations
   {
     public void Configure(EntityTypeBuilder<LocationDebtor> builder)
     {
-      builder.HasKey(e => new { e.DebtorId, e.LocationId });
+      // builder.HasKey(e => new { e.DebtorId, e.LocationId });
+
       builder.HasOne(e => e.Debtor)
         .WithMany(e => e.Locations)
         .IsRequired(true);

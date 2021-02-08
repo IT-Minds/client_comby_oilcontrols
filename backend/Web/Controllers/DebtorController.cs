@@ -1,9 +1,9 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Debtors.PrintCouponRequired;
-using Application.Trucks.Queries.GetTruckInfo;
+using Application.Debtors.Queries;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
-using Uniconta.DataModel;
 
 namespace Web.Controllers
 {
@@ -17,7 +17,8 @@ namespace Web.Controllers
     }
 
     [HttpGet]
-    public async Task<ActionResult<bool>> Get()
+    [ResponseCache(Duration = 3600)] // 1 hour cache
+    public async Task<ActionResult<List<DebtorDto>>> Get()
     {
       return await Mediator.Send(new GetDebtorQuery());
     }

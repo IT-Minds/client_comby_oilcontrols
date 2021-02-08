@@ -283,55 +283,44 @@ namespace Application.UnitTests
       );
       //END
       //START: Data to test the commands to remove/update/add debtors to location.
-      context.Regions.Add(
-        new Region { Id = 400 }
-      );
-      context.FuelTanks.AddRange(
-        new FuelTank { Id = 400, TankNumber = 400, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
-        new FuelTank { Id = 401, TankNumber = 401, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 }
-      );
-      context.Debtors.AddRange(
-        new Debtor { Id = 1 },
-        new Debtor { Id = 2 }
-      );
-      context.Locations.AddRange(
-        new Location { Id = 400, RegionId = 400, FuelTankId = 400, Address = "Address region 400.", Comments = "Location 400.", EstimateFuelConsumption = 100 },
-        new Location { Id = 401, RegionId = 400, FuelTankId = 401, Address = "Address region 400.", Comments = "Location 401.", EstimateFuelConsumption = 100 }
-      );
-      context.LocationDebtors.AddRange(
-        new LocationDebtor { LocationId = 400, DebtorId = 1, Type = LocationDebtorType.MAIN },
-        new LocationDebtor { LocationId = 400, DebtorId = 2, Type = LocationDebtorType.BASE },
-        new LocationDebtor { LocationId = 401, DebtorId = 1, Type = LocationDebtorType.MAIN }
-      );
-      //END
-
-      //START: Data to test the commands to remove/update/add debtors to location.
-      context.Regions.Add(
+      context.Regions.AddRange(
+        new Region { Id = 400 },
         new Region { Id = 500 }
       );
       context.FuelTanks.AddRange(
+        new FuelTank { Id = 400, TankNumber = 400, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
+        new FuelTank { Id = 401, TankNumber = 401, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
         new FuelTank { Id = 500, TankNumber = 500, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
         new FuelTank { Id = 501, TankNumber = 501, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 }
       );
       context.Debtors.AddRange(
+        new Debtor { Id = 1 },
+        new Debtor { Id = 2 },
         new Debtor { Id = 500, CouponRequired = false },
         new Debtor { Id = 501, CouponRequired = false }
       );
       context.Locations.AddRange(
-        new Location { Id = 500, RegionId = 500, FuelTankId = 500, Address = "Address region 400.", Comments = "Location 400.", EstimateFuelConsumption = 100 },
-        new Location { Id = 501, RegionId = 500, FuelTankId = 501, Address = "Address region 400.", Comments = "Location 401.", EstimateFuelConsumption = 100 }
+        new Location { Id = 400, RegionId = 400, FuelTankId = 400, Address = "Address region 400.", Comments = "Location 400.", EstimateFuelConsumption = 100 },
+        new Location { Id = 401, RegionId = 400, FuelTankId = 401, Address = "Address region 400.", Comments = "Location 401.", EstimateFuelConsumption = 100 },
+        new Location { Id = 500, RegionId = 500, FuelTankId = 500, Address = "Address region 500.", Comments = "Location 500.", EstimateFuelConsumption = 100 },
+        new Location { Id = 501, RegionId = 500, FuelTankId = 501, Address = "Address region 500.", Comments = "Location 501.", EstimateFuelConsumption = 100 }
       );
       context.LocationDebtors.AddRange(
-        new LocationDebtor { LocationId = 500, DebtorId = 500, Type = LocationDebtorType.MAIN },
-        new LocationDebtor { LocationId = 500, DebtorId = 501, Type = LocationDebtorType.BASE },
-        new LocationDebtor { LocationId = 501, DebtorId = 500, Type = LocationDebtorType.MAIN }
+        new LocationDebtor { Id=100,LocationId = 400, DebtorId = 1, Type = LocationDebtorType.MAIN },
+        new LocationDebtor { Id=101,LocationId = 400, DebtorId = 2, Type = LocationDebtorType.BASE },
+        new LocationDebtor { Id=102,LocationId = 401, DebtorId = 1, Type = LocationDebtorType.MAIN },
+        new LocationDebtor { Id=103,LocationId = 500, DebtorId = 500, Type = LocationDebtorType.MAIN },
+        new LocationDebtor { Id=104,LocationId = 500, DebtorId = 501, Type = LocationDebtorType.BASE },
+        new LocationDebtor { Id=105,LocationId = 501, DebtorId = 500, Type = LocationDebtorType.MAIN }
       );
+
       context.LocationDebtorHistories.AddRange(
-        new LocationDebtorHistory { LocationId = 500, DebtorId = 500, Type = LocationDebtorType.MAIN, LastModified = new DateTime(1990, 1, 1), Created = new DateTime(1990, 1, 1) },
-        new LocationDebtorHistory { LocationId = 500, DebtorId = 501, Type = LocationDebtorType.BASE, LastModified = new DateTime(1990, 1, 1), Created = new DateTime(1990, 1, 1) },
-        new LocationDebtorHistory { LocationId = 501, DebtorId = 500, Type = LocationDebtorType.MAIN, LastModified = new DateTime(1990, 1, 1), Created = new DateTime(1990, 1, 1) }
+        new LocationDebtorHistory { Id=100, LocationId = 500, DebtorId = 500, Type = LocationDebtorType.MAIN, LastModified = new DateTime(1990, 1, 1), Created = new DateTime(1990, 1, 1), LocationDebtorId = 100 },
+        new LocationDebtorHistory { Id=101, LocationId = 500, DebtorId = 501, Type = LocationDebtorType.BASE, LastModified = new DateTime(1990, 1, 1), Created = new DateTime(1990, 1, 1), LocationDebtorId = 100},
+        new LocationDebtorHistory { Id=102, LocationId = 501, DebtorId = 500, Type = LocationDebtorType.MAIN, LastModified = new DateTime(1990, 1, 1), Created = new DateTime(1990, 1, 1), LocationDebtorId = 100 }
       );
       //END
+
 
       //START: TEST ROLE UPDATE COMMAND
       context.Roles.Add(
@@ -351,6 +340,23 @@ namespace Application.UnitTests
         new Role { Id = 202, Name = "Test Role 3" },
         new Role { Id = 203, Name = "Test Role 4" }
       );
+      //END
+
+      //START: TEST USER ROLE UPDATE COMMAND
+      var role1 = new Role { Id = 300, Name = "VeryImportant" };
+      var role2 = new Role { Id = 301, Name = "LittleLessImportant" };
+      var role3 = new Role { Id = 302, Name = "WhoAreYou?" };
+      context.Roles.AddRange(role1, role2, role3);
+
+      var user1 = new User { Username = "LegitUser64", Password = "Password" };
+      context.Users.AddRange(
+        user1
+      );
+
+      context.UserRoles.AddRange(
+        new UserRole { Id = 100, User = user1, Role = role1 }
+      );
+
       //END
       context.SaveChanges();
     }

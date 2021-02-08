@@ -54,7 +54,7 @@ namespace Application.UnitTests.Roles.Queryies.GetAllRoles
       var result = await handler.Handle(query, CancellationToken.None);
       result.Should().BeOfType<PageResult<RoleDto>>();
       result.Results.Count.Should().Be(2);
-      result.PagesRemaining.Should().Be(2);
+      result.PagesRemaining.Should().Be(3);
     }
   }
 }

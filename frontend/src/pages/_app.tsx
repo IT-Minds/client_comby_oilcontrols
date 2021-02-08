@@ -2,7 +2,7 @@ import "../styles.global.css";
 import "../reactdatepicker.global.css";
 import "isomorphic-unfetch";
 
-import { ChakraProvider, CircularProgress, Container, Progress } from "@chakra-ui/react";
+import { Center, ChakraProvider, CircularProgress, Container, Progress } from "@chakra-ui/react";
 import LayoutDesktop from "components/Layout/LayoutDesktop";
 import LoginComp from "components/Login/LoginComp";
 import RouteProtector from "components/RouteProtector/RouteProtector";
@@ -25,33 +25,31 @@ type Props = {
 };
 
 const MyApp = ({ Component, pageProps, __N_SSG, router }: AppPropsType & Props): ReactElement => {
-  usePWA();
-
   const progressVal = useLoadProgress(router);
 
-  const { authStage, login } = useAuth();
-
   useEffect(() => {
-    if (!__N_SSG) {
-      logger.info("Environment should be readable");
+    if (__N_SSG) {
+      logger.info("Page is SSG");
+    }
+    logger.info("Environment should be readable");
 
-      const envSettings = isomorphicEnvSettings();
-      if (envSettings) setEnvSettings(envSettings);
-      if (process.browser) {
-        fetch("/api/getEnv")
-          .then(res => {
-            if (res.ok) return res.json();
-            throw res.statusText;
-          })
-          .then(
-            envSettings => setEnvSettings(envSettings),
-            e => {
-              logger.debug("env error", e);
-            }
-          );
-      }
+    if (process.browser) {
+      fetch("/api/getEnv")
+        .then(res => {
+          if (res.ok) return res.json();
+          throw res.statusText;
+        })
+        .then(
+          envSettings => setEnvSettings(envSettings),
+          e => {
+            logger.debug("env error", e);
+          }
+        );
     }
   }, []);
+
+  const { authStage, login, logout } = useAuth();
+  usePWA();
 
   return (
     <main>
@@ -72,7 +70,9 @@ const MyApp = ({ Component, pageProps, __N_SSG, router }: AppPropsType & Props):
       <I18nProvider table={pageProps.table}>
         <ChakraProvider theme={theme}>
           {authStage == AuthStage.CHECKING ? (
-            <CircularProgress isIndeterminate />
+            <Center>
+              <CircularProgress isIndeterminate />
+            </Center>
           ) : authStage == AuthStage.UNAUTHENTICATED ? (
             <Container>
               <LoginComp submitCallback={login} />
@@ -88,7 +88,7 @@ const MyApp = ({ Component, pageProps, __N_SSG, router }: AppPropsType & Props):
                 zIndex={99}
                 hidden={progressVal < 10}
               />
-              <UserTypeContextProvider>
+              <UserTypeContextProvider logout={logout}>
                 <RouteProtector />
                 <LayoutDesktop>
                   <Component {...pageProps} />

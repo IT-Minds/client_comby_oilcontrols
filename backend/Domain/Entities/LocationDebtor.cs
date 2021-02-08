@@ -6,6 +6,7 @@ namespace Domain.Entities
 {
   public class LocationDebtor : AuditableEntity
   {
+    public int Id { get; set; }
     public LocationDebtorType Type { get; set; }
     public int LocationId { get; set; }
     public Location Location { get; set; }

@@ -1,4 +1,5 @@
 import {
+  Action,
   CouponStatus,
   FuelType,
   LocationDebtorType,
@@ -13,7 +14,8 @@ type AllEnums =
   | typeof TankType
   | typeof FuelType
   | typeof TankState
-  | typeof LocationDebtorType;
+  | typeof LocationDebtorType
+  | typeof Action;
 
 const enumConvertor = <U extends AllEnums>(enumType: U): Record<keyof U, U[keyof U]> => {
   const filterAmount = Object.values(enumType).length / 2;
@@ -24,6 +26,8 @@ const enumConvertor = <U extends AllEnums>(enumType: U): Record<keyof U, U[keyof
     return acc;
   }, {} as Record<keyof U, U[keyof U]>);
 
+  console.log(result);
+
   return result;
 };
 
@@ -33,3 +37,4 @@ export const TankTypeRecord = enumConvertor(TankType);
 export const FuelTypeRecord = enumConvertor(FuelType);
 export const TankStateRecord = enumConvertor(TankState);
 export const LocationDebtorTypeRecord = enumConvertor(LocationDebtorType);
+export const ActionRecord = enumConvertor(Action);

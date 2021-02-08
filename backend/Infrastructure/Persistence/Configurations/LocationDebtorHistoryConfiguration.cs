@@ -8,7 +8,7 @@ namespace Infrastructure.Persistence.Configurations
   {
     public void Configure(EntityTypeBuilder<LocationDebtorHistory> builder)
     {
-      builder.HasKey(e => new {e.LocationId, e.DebtorId});
+      // builder.HasKey(e => new {e.LocationId, e.DebtorId});
     }
   }
 }

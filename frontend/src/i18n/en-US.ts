@@ -23,6 +23,7 @@ export const table: Locale = {
       overview: "View debtors",
       create: "Create new debtor"
     },
+    users: "Users",
     statistics: "Statistics"
   },
   user: {

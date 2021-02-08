@@ -35,7 +35,7 @@ namespace Application.UnitTests.LocationHistories.GetAllLocationsHistories
       var handler = new GetAllLocationHistoriesQuery.GetAllLocationHistoriesQueryHandler(_context, _mapper);
       var result = await handler.Handle(query, CancellationToken.None);
       result.Should().BeOfType<PageResult<LocationHistoryDto>>();
-      result.Results.Count.Should().Be(3);
+      result.Results.Count.Should().Be(22);
       result.PagesRemaining.Should().Be(0);
     }
 
@@ -51,7 +51,7 @@ namespace Application.UnitTests.LocationHistories.GetAllLocationsHistories
       var handler = new GetAllLocationHistoriesQuery.GetAllLocationHistoriesQueryHandler(_context, _mapper);
       var result = await handler.Handle(query, CancellationToken.None);
       result.Should().BeOfType<PageResult<LocationHistoryDto>>();
-      result.Results.Count.Should().Be(0);
+      result.Results.Count.Should().Be(18);
       result.PagesRemaining.Should().Be(0);
     }
 
@@ -68,7 +68,7 @@ namespace Application.UnitTests.LocationHistories.GetAllLocationsHistories
       var result = await handler.Handle(query, CancellationToken.None);
       result.Should().BeOfType<PageResult<LocationHistoryDto>>();
       result.Results.Count.Should().Be(1);
-      result.PagesRemaining.Should().Be(0);
+      result.PagesRemaining.Should().Be(19);
     }
 
     [Fact]
@@ -76,9 +76,9 @@ namespace Application.UnitTests.LocationHistories.GetAllLocationsHistories
     {
       var query = new GetAllLocationHistoriesQuery
       {
-        Size = 3,
+        Size = 500,
         Needle = 0,
-        Skip = 2
+        Skip = 100
       };
       var handler = new GetAllLocationHistoriesQuery.GetAllLocationHistoriesQueryHandler(_context, _mapper);
       var result = await handler.Handle(query, CancellationToken.None);
@@ -100,7 +100,7 @@ namespace Application.UnitTests.LocationHistories.GetAllLocationsHistories
       var result = await handler.Handle(query, CancellationToken.None);
       result.Should().BeOfType<PageResult<LocationHistoryDto>>();
       result.Results.Count.Should().Be(1);
-      result.PagesRemaining.Should().Be(2);
+      result.PagesRemaining.Should().Be(21);
     }
   }
 }

@@ -30,13 +30,13 @@ namespace Application.UnitTests.LocationHistories.GetLocationHistory
       {
         LocationId = 1,
         Size = 500,
-        Needle = new DateTime(3000, 1, 1),
+        Needle = DateTime.MaxValue,
         Skip = 0
       };
       var handler = new GetLocationHistoryQuery.GetLocationHistoryQueryHandler(_context, _mapper);
       var result = await handler.Handle(query, CancellationToken.None);
       result.Should().BeOfType<PageResult<LocationHistoryDto>>();
-      result.Results.Count.Should().Be(3);
+      result.Results.Count.Should().Be(4);
       result.PagesRemaining.Should().Be(0);
     }
 

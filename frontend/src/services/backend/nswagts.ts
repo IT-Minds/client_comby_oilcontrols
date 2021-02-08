@@ -431,7 +431,7 @@ export class DailyTemperatureClient extends ClientBase implements IDailyTemperat
 }
 
 export interface IDebtorClient {
-    get(): Promise<boolean>;
+    get(): Promise<DebtorDto[]>;
     printCouponRequired(id: number, command: PrintCouponRequiredCommand): Promise<number>;
 }
 
@@ -446,7 +446,7 @@ export class DebtorClient extends ClientBase implements IDebtorClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    get(): Promise<boolean> {
+    get(): Promise<DebtorDto[]> {
         let url_ = this.baseUrl + "/api/Debtor";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -464,14 +464,18 @@ export class DebtorClient extends ClientBase implements IDebtorClient {
         });
     }
 
-    protected processGet(response: Response): Promise<boolean> {
+    protected processGet(response: Response): Promise<DebtorDto[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(DebtorDto.fromJS(item));
+            }
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -479,7 +483,7 @@ export class DebtorClient extends ClientBase implements IDebtorClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<boolean>(<any>null);
+        return Promise.resolve<DebtorDto[]>(<any>null);
     }
 
     printCouponRequired(id: number, command: PrintCouponRequiredCommand): Promise<number> {
@@ -820,11 +824,15 @@ export class HealthClient extends ClientBase implements IHealthClient {
 export interface ILocationClient {
     updateMetaData(id: number, command: UpdateLocationMetaDataCommand): Promise<number>;
     saveLocationImage(id: number, file?: FileParameter | null | undefined): Promise<string>;
+    get(id: number): Promise<LocationDetailsIdDto>;
     addNewLocation(command: CreateLocationCommand): Promise<number>;
+    getAll(locationType?: TankType | null | undefined, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationDetailsIdDtoAndDateTime>;
     addDebtor(command: AddDebtorToLocationCommand): Promise<number>;
     updateDebtor(command: UpdateDebtorOnLocationCommand): Promise<number>;
     removeDebtor(command: RemoveDebtorFromLocationCommand): Promise<number>;
     getDebtorHistory(id: number, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationDebtorHistoryDtoAndDateTime>;
+    getAllLocationHistories(needle?: number | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationHistoryDto>;
+    getLocationHistory(id: number, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationHistoryDto>;
 }
 
 export class LocationClient extends ClientBase implements ILocationClient {
@@ -925,6 +933,45 @@ export class LocationClient extends ClientBase implements ILocationClient {
         return Promise.resolve<string>(<any>null);
     }
 
+    get(id: number): Promise<LocationDetailsIdDto> {
+        let url_ = this.baseUrl + "/api/Location/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGet(_response));
+        });
+    }
+
+    protected processGet(response: Response): Promise<LocationDetailsIdDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = LocationDetailsIdDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<LocationDetailsIdDto>(<any>null);
+    }
+
     addNewLocation(command: CreateLocationCommand): Promise<number> {
         let url_ = this.baseUrl + "/api/Location";
         url_ = url_.replace(/[?&]$/, "");
@@ -963,6 +1010,52 @@ export class LocationClient extends ClientBase implements ILocationClient {
             });
         }
         return Promise.resolve<number>(<any>null);
+    }
+
+    getAll(locationType?: TankType | null | undefined, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationDetailsIdDtoAndDateTime> {
+        let url_ = this.baseUrl + "/api/Location?";
+        if (locationType !== undefined && locationType !== null)
+            url_ += "locationType=" + encodeURIComponent("" + locationType) + "&";
+        if (needle !== undefined && needle !== null)
+            url_ += "needle=" + encodeURIComponent(needle ? "" + needle.toJSON() : "") + "&";
+        if (size === null)
+            throw new Error("The parameter 'size' cannot be null.");
+        else if (size !== undefined)
+            url_ += "size=" + encodeURIComponent("" + size) + "&";
+        if (skip !== undefined && skip !== null)
+            url_ += "skip=" + encodeURIComponent("" + skip) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetAll(_response));
+        });
+    }
+
+    protected processGetAll(response: Response): Promise<PageResultOfLocationDetailsIdDtoAndDateTime> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PageResultOfLocationDetailsIdDtoAndDateTime.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<PageResultOfLocationDetailsIdDtoAndDateTime>(<any>null);
     }
 
     addDebtor(command: AddDebtorToLocationCommand): Promise<number> {
@@ -1131,26 +1224,9 @@ export class LocationClient extends ClientBase implements ILocationClient {
         }
         return Promise.resolve<PageResultOfLocationDebtorHistoryDtoAndDateTime>(<any>null);
     }
-}
-
-export interface ILocationHistoryClient {
-    getAllLocationHistories(needle?: number | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationHistoryDto>;
-    getLocationHistory(id: number, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationHistoryDto>;
-}
-
-export class LocationHistoryClient extends ClientBase implements ILocationHistoryClient {
-    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(configuration: AuthClient, baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
-        super(configuration);
-        this.http = http ? http : <any>window;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
-    }
 
     getAllLocationHistories(needle?: number | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationHistoryDto> {
-        let url_ = this.baseUrl + "/api/LocationHistory?";
+        let url_ = this.baseUrl + "/histories?";
         if (needle === null)
             throw new Error("The parameter 'needle' cannot be null.");
         else if (needle !== undefined)
@@ -1196,7 +1272,7 @@ export class LocationHistoryClient extends ClientBase implements ILocationHistor
     }
 
     getLocationHistory(id: number, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationHistoryDto> {
-        let url_ = this.baseUrl + "/api/LocationHistory/{id}?";
+        let url_ = this.baseUrl + "/api/Location/{id}/history?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -2004,6 +2080,7 @@ export class TruckClient extends ClientBase implements ITruckClient {
 
 export interface IUserClient {
     createUser(command: CreateUserCommand): Promise<number>;
+    updateUserRoles(command: UpdateUserRolesCommand): Promise<UserRoleDto>;
 }
 
 export class UserClient extends ClientBase implements IUserClient {
@@ -2055,6 +2132,46 @@ export class UserClient extends ClientBase implements IUserClient {
             });
         }
         return Promise.resolve<number>(<any>null);
+    }
+
+    updateUserRoles(command: UpdateUserRolesCommand): Promise<UserRoleDto> {
+        let url_ = this.baseUrl + "/api/User";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processUpdateUserRoles(_response));
+        });
+    }
+
+    protected processUpdateUserRoles(response: Response): Promise<UserRoleDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserRoleDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<UserRoleDto>(<any>null);
     }
 }
 
@@ -2261,6 +2378,66 @@ export interface ICreateDailyTemperatureCommand {
     regionId?: number;
     date?: Date;
     temperature?: number;
+}
+
+export class DebtorDto implements IDebtorDto {
+    dbId?: number;
+    unicontaId?: number;
+    blocked?: boolean;
+    accountNumber?: string | null;
+    name?: string | null;
+    gln?: string | null;
+    couponRequired?: boolean;
+
+    constructor(data?: IDebtorDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.dbId = _data["dbId"] !== undefined ? _data["dbId"] : <any>null;
+            this.unicontaId = _data["unicontaId"] !== undefined ? _data["unicontaId"] : <any>null;
+            this.blocked = _data["blocked"] !== undefined ? _data["blocked"] : <any>null;
+            this.accountNumber = _data["accountNumber"] !== undefined ? _data["accountNumber"] : <any>null;
+            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
+            this.gln = _data["gln"] !== undefined ? _data["gln"] : <any>null;
+            this.couponRequired = _data["couponRequired"] !== undefined ? _data["couponRequired"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): DebtorDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new DebtorDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["dbId"] = this.dbId !== undefined ? this.dbId : <any>null;
+        data["unicontaId"] = this.unicontaId !== undefined ? this.unicontaId : <any>null;
+        data["blocked"] = this.blocked !== undefined ? this.blocked : <any>null;
+        data["accountNumber"] = this.accountNumber !== undefined ? this.accountNumber : <any>null;
+        data["name"] = this.name !== undefined ? this.name : <any>null;
+        data["gln"] = this.gln !== undefined ? this.gln : <any>null;
+        data["couponRequired"] = this.couponRequired !== undefined ? this.couponRequired : <any>null;
+        return data; 
+    }
+}
+
+export interface IDebtorDto {
+    dbId?: number;
+    unicontaId?: number;
+    blocked?: boolean;
+    accountNumber?: string | null;
+    name?: string | null;
+    gln?: string | null;
+    couponRequired?: boolean;
 }
 
 export class PrintCouponRequiredCommand implements IPrintCouponRequiredCommand {
@@ -2583,16 +2760,7 @@ export interface ICreateExampleEntityListCommand {
 }
 
 export class UpdateLocationMetaDataCommand implements IUpdateLocationMetaDataCommand {
-    address?: string | null;
-    comment?: string | null;
-    refillschedule?: RefillSchedule;
-    tankType?: TankType;
-    tankNumber?: number;
-    tankCapacity?: number;
-    minimumFuelAmount?: number;
-    estimateConsumption?: number;
-    daysBetweenRefills?: number;
-    fuelType?: FuelType;
+    data?: LocationDetailsDto | null;
 
     constructor(data?: IUpdateLocationMetaDataCommand) {
         if (data) {
@@ -2600,21 +2768,13 @@ export class UpdateLocationMetaDataCommand implements IUpdateLocationMetaDataCom
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
+            this.data = data.data && !(<any>data.data).toJSON ? new LocationDetailsDto(data.data) : <LocationDetailsDto>this.data; 
         }
     }
 
     init(_data?: any) {
         if (_data) {
-            this.address = _data["address"] !== undefined ? _data["address"] : <any>null;
-            this.comment = _data["comment"] !== undefined ? _data["comment"] : <any>null;
-            this.refillschedule = _data["refillschedule"] !== undefined ? _data["refillschedule"] : <any>null;
-            this.tankType = _data["tankType"] !== undefined ? _data["tankType"] : <any>null;
-            this.tankNumber = _data["tankNumber"] !== undefined ? _data["tankNumber"] : <any>null;
-            this.tankCapacity = _data["tankCapacity"] !== undefined ? _data["tankCapacity"] : <any>null;
-            this.minimumFuelAmount = _data["minimumFuelAmount"] !== undefined ? _data["minimumFuelAmount"] : <any>null;
-            this.estimateConsumption = _data["estimateConsumption"] !== undefined ? _data["estimateConsumption"] : <any>null;
-            this.daysBetweenRefills = _data["daysBetweenRefills"] !== undefined ? _data["daysBetweenRefills"] : <any>null;
-            this.fuelType = _data["fuelType"] !== undefined ? _data["fuelType"] : <any>null;
+            this.data = _data["data"] ? LocationDetailsDto.fromJS(_data["data"]) : <any>null;
         }
     }
 
@@ -2627,37 +2787,118 @@ export class UpdateLocationMetaDataCommand implements IUpdateLocationMetaDataCom
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["address"] = this.address !== undefined ? this.address : <any>null;
-        data["comment"] = this.comment !== undefined ? this.comment : <any>null;
-        data["refillschedule"] = this.refillschedule !== undefined ? this.refillschedule : <any>null;
-        data["tankType"] = this.tankType !== undefined ? this.tankType : <any>null;
-        data["tankNumber"] = this.tankNumber !== undefined ? this.tankNumber : <any>null;
-        data["tankCapacity"] = this.tankCapacity !== undefined ? this.tankCapacity : <any>null;
-        data["minimumFuelAmount"] = this.minimumFuelAmount !== undefined ? this.minimumFuelAmount : <any>null;
-        data["estimateConsumption"] = this.estimateConsumption !== undefined ? this.estimateConsumption : <any>null;
-        data["daysBetweenRefills"] = this.daysBetweenRefills !== undefined ? this.daysBetweenRefills : <any>null;
-        data["fuelType"] = this.fuelType !== undefined ? this.fuelType : <any>null;
+        data["data"] = this.data ? this.data.toJSON() : <any>null;
         return data; 
     }
 }
 
 export interface IUpdateLocationMetaDataCommand {
+    data?: ILocationDetailsDto | null;
+}
+
+export class LocationDto implements ILocationDto {
     address?: string | null;
-    comment?: string | null;
-    refillschedule?: RefillSchedule;
+    comments?: string | null;
+    regionId?: number;
+    schedule?: RefillSchedule;
+    estimateFuelConsumption?: number;
+    daysBetweenRefills?: number;
+
+    constructor(data?: ILocationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.address = _data["address"] !== undefined ? _data["address"] : <any>null;
+            this.comments = _data["comments"] !== undefined ? _data["comments"] : <any>null;
+            this.regionId = _data["regionId"] !== undefined ? _data["regionId"] : <any>null;
+            this.schedule = _data["schedule"] !== undefined ? _data["schedule"] : <any>null;
+            this.estimateFuelConsumption = _data["estimateFuelConsumption"] !== undefined ? _data["estimateFuelConsumption"] : <any>null;
+            this.daysBetweenRefills = _data["daysBetweenRefills"] !== undefined ? _data["daysBetweenRefills"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): LocationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new LocationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["address"] = this.address !== undefined ? this.address : <any>null;
+        data["comments"] = this.comments !== undefined ? this.comments : <any>null;
+        data["regionId"] = this.regionId !== undefined ? this.regionId : <any>null;
+        data["schedule"] = this.schedule !== undefined ? this.schedule : <any>null;
+        data["estimateFuelConsumption"] = this.estimateFuelConsumption !== undefined ? this.estimateFuelConsumption : <any>null;
+        data["daysBetweenRefills"] = this.daysBetweenRefills !== undefined ? this.daysBetweenRefills : <any>null;
+        return data; 
+    }
+}
+
+export interface ILocationDto {
+    address?: string | null;
+    comments?: string | null;
+    regionId?: number;
+    schedule?: RefillSchedule;
+    estimateFuelConsumption?: number;
+    daysBetweenRefills?: number;
+}
+
+export class LocationDetailsDto extends LocationDto implements ILocationDetailsDto {
     tankType?: TankType;
     tankNumber?: number;
     tankCapacity?: number;
     minimumFuelAmount?: number;
-    estimateConsumption?: number;
-    daysBetweenRefills?: number;
     fuelType?: FuelType;
+
+    constructor(data?: ILocationDetailsDto) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.tankType = _data["tankType"] !== undefined ? _data["tankType"] : <any>null;
+            this.tankNumber = _data["tankNumber"] !== undefined ? _data["tankNumber"] : <any>null;
+            this.tankCapacity = _data["tankCapacity"] !== undefined ? _data["tankCapacity"] : <any>null;
+            this.minimumFuelAmount = _data["minimumFuelAmount"] !== undefined ? _data["minimumFuelAmount"] : <any>null;
+            this.fuelType = _data["fuelType"] !== undefined ? _data["fuelType"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): LocationDetailsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new LocationDetailsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["tankType"] = this.tankType !== undefined ? this.tankType : <any>null;
+        data["tankNumber"] = this.tankNumber !== undefined ? this.tankNumber : <any>null;
+        data["tankCapacity"] = this.tankCapacity !== undefined ? this.tankCapacity : <any>null;
+        data["minimumFuelAmount"] = this.minimumFuelAmount !== undefined ? this.minimumFuelAmount : <any>null;
+        data["fuelType"] = this.fuelType !== undefined ? this.fuelType : <any>null;
+        super.toJSON(data);
+        return data; 
+    }
 }
 
-export enum RefillSchedule {
-    AUTOMATIC = 0,
-    INTERVAL = 1,
-    MANUAL = 2,
+export interface ILocationDetailsDto extends ILocationDto {
+    tankType?: TankType;
+    tankNumber?: number;
+    tankCapacity?: number;
+    minimumFuelAmount?: number;
+    fuelType?: FuelType;
 }
 
 export enum TankType {
@@ -2673,18 +2914,14 @@ export enum FuelType {
     OTHER = 3,
 }
 
+export enum RefillSchedule {
+    AUTOMATIC = 0,
+    INTERVAL = 1,
+    MANUAL = 2,
+}
+
 export class CreateLocationCommand implements ICreateLocationCommand {
-    address?: string | null;
-    comment?: string | null;
-    regionId?: number;
-    refillschedule?: RefillSchedule;
-    tankType?: TankType;
-    tankNumber?: number;
-    tankCapacity?: number;
-    minimumFuelAmount?: number;
-    estimateConsumption?: number;
-    daysBetweenRefills?: number;
-    fuelType?: FuelType;
+    data?: LocationDetailsDto | null;
 
     constructor(data?: ICreateLocationCommand) {
         if (data) {
@@ -2692,22 +2929,13 @@ export class CreateLocationCommand implements ICreateLocationCommand {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
+            this.data = data.data && !(<any>data.data).toJSON ? new LocationDetailsDto(data.data) : <LocationDetailsDto>this.data; 
         }
     }
 
     init(_data?: any) {
         if (_data) {
-            this.address = _data["address"] !== undefined ? _data["address"] : <any>null;
-            this.comment = _data["comment"] !== undefined ? _data["comment"] : <any>null;
-            this.regionId = _data["regionId"] !== undefined ? _data["regionId"] : <any>null;
-            this.refillschedule = _data["refillschedule"] !== undefined ? _data["refillschedule"] : <any>null;
-            this.tankType = _data["tankType"] !== undefined ? _data["tankType"] : <any>null;
-            this.tankNumber = _data["tankNumber"] !== undefined ? _data["tankNumber"] : <any>null;
-            this.tankCapacity = _data["tankCapacity"] !== undefined ? _data["tankCapacity"] : <any>null;
-            this.minimumFuelAmount = _data["minimumFuelAmount"] !== undefined ? _data["minimumFuelAmount"] : <any>null;
-            this.estimateConsumption = _data["estimateConsumption"] !== undefined ? _data["estimateConsumption"] : <any>null;
-            this.daysBetweenRefills = _data["daysBetweenRefills"] !== undefined ? _data["daysBetweenRefills"] : <any>null;
-            this.fuelType = _data["fuelType"] !== undefined ? _data["fuelType"] : <any>null;
+            this.data = _data["data"] ? LocationDetailsDto.fromJS(_data["data"]) : <any>null;
         }
     }
 
@@ -2720,33 +2948,13 @@ export class CreateLocationCommand implements ICreateLocationCommand {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["address"] = this.address !== undefined ? this.address : <any>null;
-        data["comment"] = this.comment !== undefined ? this.comment : <any>null;
-        data["regionId"] = this.regionId !== undefined ? this.regionId : <any>null;
-        data["refillschedule"] = this.refillschedule !== undefined ? this.refillschedule : <any>null;
-        data["tankType"] = this.tankType !== undefined ? this.tankType : <any>null;
-        data["tankNumber"] = this.tankNumber !== undefined ? this.tankNumber : <any>null;
-        data["tankCapacity"] = this.tankCapacity !== undefined ? this.tankCapacity : <any>null;
-        data["minimumFuelAmount"] = this.minimumFuelAmount !== undefined ? this.minimumFuelAmount : <any>null;
-        data["estimateConsumption"] = this.estimateConsumption !== undefined ? this.estimateConsumption : <any>null;
-        data["daysBetweenRefills"] = this.daysBetweenRefills !== undefined ? this.daysBetweenRefills : <any>null;
-        data["fuelType"] = this.fuelType !== undefined ? this.fuelType : <any>null;
+        data["data"] = this.data ? this.data.toJSON() : <any>null;
         return data; 
     }
 }
 
 export interface ICreateLocationCommand {
-    address?: string | null;
-    comment?: string | null;
-    regionId?: number;
-    refillschedule?: RefillSchedule;
-    tankType?: TankType;
-    tankNumber?: number;
-    tankCapacity?: number;
-    minimumFuelAmount?: number;
-    estimateConsumption?: number;
-    daysBetweenRefills?: number;
-    fuelType?: FuelType;
+    data?: ILocationDetailsDto | null;
 }
 
 export class AddDebtorToLocationCommand implements IAddDebtorToLocationCommand {
@@ -3000,6 +3208,95 @@ export interface ILocationDebtorHistoryDto {
     debtorId?: number;
     type?: LocationDebtorType;
     timeOfChange?: Date;
+}
+
+export class PageResultOfLocationDetailsIdDtoAndDateTime implements IPageResultOfLocationDetailsIdDtoAndDateTime {
+    newNeedle?: Date;
+    pagesRemaining?: number;
+    results?: LocationDetailsIdDto[] | null;
+    hasMore?: boolean;
+
+    constructor(data?: IPageResultOfLocationDetailsIdDtoAndDateTime) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.newNeedle = _data["newNeedle"] ? new Date(_data["newNeedle"].toString()) : <any>null;
+            this.pagesRemaining = _data["pagesRemaining"] !== undefined ? _data["pagesRemaining"] : <any>null;
+            if (Array.isArray(_data["results"])) {
+                this.results = [] as any;
+                for (let item of _data["results"])
+                    this.results!.push(LocationDetailsIdDto.fromJS(item));
+            }
+            this.hasMore = _data["hasMore"] !== undefined ? _data["hasMore"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): PageResultOfLocationDetailsIdDtoAndDateTime {
+        data = typeof data === 'object' ? data : {};
+        let result = new PageResultOfLocationDetailsIdDtoAndDateTime();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["newNeedle"] = this.newNeedle ? this.newNeedle.toISOString() : <any>null;
+        data["pagesRemaining"] = this.pagesRemaining !== undefined ? this.pagesRemaining : <any>null;
+        if (Array.isArray(this.results)) {
+            data["results"] = [];
+            for (let item of this.results)
+                data["results"].push(item.toJSON());
+        }
+        data["hasMore"] = this.hasMore !== undefined ? this.hasMore : <any>null;
+        return data; 
+    }
+}
+
+export interface IPageResultOfLocationDetailsIdDtoAndDateTime {
+    newNeedle?: Date;
+    pagesRemaining?: number;
+    results?: LocationDetailsIdDto[] | null;
+    hasMore?: boolean;
+}
+
+export class LocationDetailsIdDto extends LocationDetailsDto implements ILocationDetailsIdDto {
+    id?: number;
+
+    constructor(data?: ILocationDetailsIdDto) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): LocationDetailsIdDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new LocationDetailsIdDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface ILocationDetailsIdDto extends ILocationDetailsDto {
+    id?: number;
 }
 
 export class PageResultOfLocationHistoryDtoAndString implements IPageResultOfLocationHistoryDtoAndString {
@@ -3521,6 +3818,7 @@ export enum Action {
     UPDATE_TRUCK = 16,
     GET_TRUCK = 17,
     GET_ROLES = 18,
+    UPDATE_USER = 19,
 }
 
 export class CreateRoleCommand implements ICreateRoleCommand {
@@ -4341,6 +4639,83 @@ export class CreateUserCommand implements ICreateUserCommand {
 export interface ICreateUserCommand {
     userName?: string | null;
     password?: string | null;
+}
+
+export class UserRoleDto implements IUserRoleDto {
+    username?: string | null;
+    role?: string | null;
+
+    constructor(data?: IUserRoleDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.username = _data["username"] !== undefined ? _data["username"] : <any>null;
+            this.role = _data["role"] !== undefined ? _data["role"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): UserRoleDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserRoleDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["username"] = this.username !== undefined ? this.username : <any>null;
+        data["role"] = this.role !== undefined ? this.role : <any>null;
+        return data; 
+    }
+}
+
+export interface IUserRoleDto {
+    username?: string | null;
+    role?: string | null;
+}
+
+export class UpdateUserRolesCommand implements IUpdateUserRolesCommand {
+    user?: UserRoleDto | null;
+
+    constructor(data?: IUpdateUserRolesCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            this.user = data.user && !(<any>data.user).toJSON ? new UserRoleDto(data.user) : <UserRoleDto>this.user; 
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.user = _data["user"] ? UserRoleDto.fromJS(_data["user"]) : <any>null;
+        }
+    }
+
+    static fromJS(data: any): UpdateUserRolesCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateUserRolesCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["user"] = this.user ? this.user.toJSON() : <any>null;
+        return data; 
+    }
+}
+
+export interface IUpdateUserRolesCommand {
+    user?: IUserRoleDto | null;
 }
 
 export interface FileParameter {

@@ -25,6 +25,7 @@ type Props = {
   options: DropdownType[];
   onSelect?: (selected: DropdownType) => void;
   isLoading?: boolean;
+  value?: DropdownType;
 };
 
 const LIGHT = "blue.500";
@@ -34,10 +35,11 @@ const ComboSelect: FC<Props> = ({
   placeholder = "Click to enable combo box",
   options,
   onSelect = () => null,
-  isLoading = false
+  isLoading = false,
+  value = null
 }) => {
   const [active, setActive] = useState(false);
-  const [activeItem, setActiveItem] = useState<DropdownType>(null);
+  const [activeItem, setActiveItem] = useState<DropdownType>(value);
   const [searchValue, setSeachValue] = useState("");
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -57,13 +59,20 @@ const ComboSelect: FC<Props> = ({
     options
   ]);
 
-  const select = useCallback((item: DropdownType) => {
-    setSeachValue(item.name);
-    setActiveItem(item);
-    setActive(false);
-    onSelect(item);
-    inputRef.current.focus();
-  }, []);
+  useEffect(() => {
+    setActiveItem(value);
+  }, [value]);
+
+  const select = useCallback(
+    (item: DropdownType) => {
+      setSeachValue(item.name);
+      setActiveItem(item);
+      setActive(false);
+      onSelect(item);
+      inputRef.current.focus();
+    },
+    [onSelect]
+  );
 
   const focusElement = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>, item: DropdownType) => {
@@ -154,13 +163,13 @@ const ComboSelect: FC<Props> = ({
               )}
               {filteredOptions.slice(0, 250).map((x, i) => (
                 <Input
-                  isLazy
+                  islazy="true"
                   variant="flushed"
                   readOnly
                   id={"combobox" + i}
                   key={x.id}
                   onClick={() => select(x)}
-                  tabindex="-1"
+                  tabIndex={-1}
                   cursor="pointer"
                   userSelect="none"
                   onKeyDown={e => focusElement(e, x)}

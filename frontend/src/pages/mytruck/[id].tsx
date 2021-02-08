@@ -15,6 +15,7 @@ import FillOutRefillForm from "components/FillOutRefillForm/FillOutRefillForm";
 import { RefillForm } from "components/FillOutRefillForm/RefillForm";
 import InvalidateCouponBtn from "components/InvalidateCouponBtn/InvalidateCouponBtn";
 import RunListTable from "components/RunList/RunListTable";
+import { TOKEN_STORAGE_KEY } from "hooks/useAuth";
 import { useOffline } from "hooks/useOffline";
 import { GetServerSideProps, GetStaticProps, NextPage } from "next";
 import Head from "next/head";
@@ -22,8 +23,13 @@ import { useRouter } from "next/router";
 import { I18nProps, useI18n } from "next-rosetta";
 import { useCallback, useState } from "react";
 import { MdArrowBack } from "react-icons/md";
-import { genRefillClient, genTruckClient } from "services/backend/apiClients";
 import {
+  genAuthenticationClient,
+  genRefillClient,
+  genTruckClient
+} from "services/backend/apiClients";
+import {
+  AssignTokenCommand,
   CompleteRefillCommand,
   CouponIdDto,
   CreateTruckRefillCommand,
@@ -191,8 +197,18 @@ const LocalePage: NextPage<Props> = ({ truckInfo, coupons }) => {
 // export const getStaticProps: GetStaticProps<I18nProps<Locale> & Props> = async context => {
 export const getServerSideProps: GetServerSideProps<Props & I18nProps<Locale>> = async context => {
   const locale = context.locale || context.defaultLocale;
-
   const id = Number.parseInt(context.query.id as string);
+
+  const token = context.req.cookies[TOKEN_STORAGE_KEY];
+
+  if (!token) {
+    context.res.statusCode = 302;
+    context.res.setHeader("Location", "/");
+    return { props: {} as any };
+  }
+  console.log("token=", token);
+
+  process.env.AUTH_TOKEN = token;
 
   const truckClient = await genTruckClient();
 

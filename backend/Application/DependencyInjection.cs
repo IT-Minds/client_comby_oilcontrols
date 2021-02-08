@@ -1,5 +1,6 @@
 using Application.Common.Behaviours;
 using Application.Common.Interfaces;
+using Application.Common.Services;
 using Application.Security;
 using AutoMapper;
 using MediatR;
@@ -17,6 +18,7 @@ namespace Application
       services.AddAutoMapper(Assembly.GetExecutingAssembly());
       services.AddMediatR(Assembly.GetExecutingAssembly());
       services.AddScoped<IPasswordHasher, PasswordHasher>();
+      services.AddScoped<SyncroniceDebtorService>();
 
       services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
       services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehaviour<,>));

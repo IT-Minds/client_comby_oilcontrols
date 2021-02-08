@@ -25,6 +25,7 @@ export interface Locale {
       overview: string;
       create: string;
     };
+    users: string;
     statistics: string;
   };
 

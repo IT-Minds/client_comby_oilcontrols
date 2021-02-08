@@ -14,7 +14,7 @@ import PageIndicator from "components/Demo/components/PageIndicator";
 import { usePagedFetched } from "hooks/usePagedFetched";
 import React, { FC, useEffect, useMemo, useReducer, useState } from "react";
 import ListReducer from "react-list-reducer";
-import { genLocationHistoryClient } from "services/backend/apiClients";
+import { genLocationClient } from "services/backend/apiClients";
 import { ILocationHistoryDto, LocationHistoryDto } from "services/backend/nswagts";
 
 type Props = {
@@ -44,7 +44,7 @@ const LocationHistoryComp: FC<Props> = ({
   const { done, error } = usePagedFetched(
     "0",
     (needle, size, _sortBy, skip) =>
-      genLocationHistoryClient().then(client =>
+      genLocationClient().then(client =>
         client.getLocationHistory(locationId, new Date(needle), size, skip)
       ),
     dataDispatch,

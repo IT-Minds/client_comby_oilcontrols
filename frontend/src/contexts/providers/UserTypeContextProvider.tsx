@@ -23,7 +23,12 @@ function getLocalStorage(key: string, initialValue?: unknown) {
   }
 }
 
-const UserTypeContextProvider: FC = ({ children }) => {
+import { useAuth } from "hooks/useAuth";
+type Props = {
+  logout: ReturnType<typeof useAuth>["logout"];
+};
+
+const UserTypeContextProvider: FC<Props> = ({ children, logout }) => {
   const [userType, setUserType] = useState<UserType>(() =>
     getLocalStorage(STORAGE_KEY, UserType.OFFICE_WORKER)
   );
@@ -50,7 +55,8 @@ const UserTypeContextProvider: FC = ({ children }) => {
       value={{
         userType,
         setUserType,
-        isType
+        isType,
+        logout
       }}>
       {children}
     </UserTypeContext.Provider>
