@@ -37,8 +37,6 @@ export const useAuth = () => {
   }, [authCounter]);
 
   const login = useCallback(async (userDto: IUserDto) => {
-    console.log("LOGGING IN: ", userDto);
-
     const client = await genAuthenticationClient();
 
     const user: UserTokenDto = await client

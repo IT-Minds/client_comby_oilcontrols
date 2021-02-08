@@ -113,8 +113,7 @@ const LocationHistoryComp: FC<Props> = ({
     if (done)
       toast({
         title: "All data loaded",
-        description:
-          "All the pages for the table is now loaded and the skeleton should not be visible",
+        description: "All the pages for the table is now loaded",
         status: "success",
         duration: 3000,
         isClosable: true
@@ -130,8 +129,8 @@ const LocationHistoryComp: FC<Props> = ({
   }, [done, error]);
 
   return (
-    <Container>
-      <Table variant="striped" colorScheme="teal">
+    <Container w="100%" maxW="unset">
+      <Table variant="striped" colorScheme="blue" size="sm">
         <TableCaption placement="top">Location History</TableCaption>
         <Thead>
           <Tr>
@@ -149,7 +148,7 @@ const LocationHistoryComp: FC<Props> = ({
               <Td>{lh.comments}</Td>
               <Td>{lh.regionId}</Td>
               <Td>{lh.schedule}</Td>
-              <Td>{lh.timeOfChange}</Td>
+              <Td>{lh.timeOfChange.toLocaleDateString()}</Td>
             </Tr>
           ))}
         </Tbody>

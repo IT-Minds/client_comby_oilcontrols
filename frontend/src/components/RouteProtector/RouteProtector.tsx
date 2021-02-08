@@ -32,8 +32,6 @@ const RouteProtector: FC = () => {
 
     const isMyTruck = matchMyTruck.test(router.pathname);
     if (isType(UserType.DRIVER) && !isMyTruck) {
-      console.log("ROUTER TURKCN OT SAFE", router.pathname);
-
       router.push("/mytruck");
     } else if (isType(UserType.OFFICE_WORKER) && isMyTruck) {
       router.push("/");

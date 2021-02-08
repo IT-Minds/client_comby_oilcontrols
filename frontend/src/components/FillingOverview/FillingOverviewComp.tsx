@@ -19,6 +19,7 @@ import ListReducer, { ListReducerActionType } from "react-list-reducer";
 import { genRefillClient } from "services/backend/apiClients";
 import { LocationRefillDto, TankType } from "services/backend/nswagts";
 import { capitalize } from "utils/capitalizeAnyString";
+import { logger } from "utils/logger";
 
 import QueryMultiSelectBtn from "../SortFilter/QueryMultiSelectBtn";
 import QuerySortBtn, { Direction } from "../SortFilter/QuerySortBtn";
@@ -129,7 +130,7 @@ const FillingOverviewComp: FC<Props> = ({
                     { id: "2", name: "test2" },
                     { id: "3", name: "test3" }
                   ]}
-                  filterCb={(a, b) => console.log(a, b)}
+                  filterCb={(a, b) => logger.debug(a, b)}
                 />
               </HStack>
             </Th>

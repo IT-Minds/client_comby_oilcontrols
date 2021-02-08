@@ -10,10 +10,9 @@ import {
   useToast
 } from "@chakra-ui/react";
 import React, { FC, useCallback } from "react";
-import { MdRemoveRedEye } from "react-icons/md";
+import { MdModeEdit } from "react-icons/md";
 import { genLocationClient } from "services/backend/apiClients";
 import {
-  AddDebtorToLocationCommand,
   ILocationDetailsIdDto,
   LocationDetailsIdDto,
   UpdateLocationMetaDataCommand
@@ -71,7 +70,7 @@ const EditLocationTriggerBtn: FC<Props> = ({ data = null }) => {
         colorScheme="gray"
         aria-label={"Open details for location: " + data.id}
         onClick={onOpen}
-        icon={<MdRemoveRedEye size={24} />}
+        icon={<MdModeEdit size={24} />}
       />
 
       <Modal isOpen={isOpen} onClose={onClose} size="5xl">

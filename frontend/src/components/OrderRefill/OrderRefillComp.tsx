@@ -7,12 +7,14 @@ import {
   AlertDialogOverlay,
   Button,
   Container,
+  IconButton,
   useDisclosure
 } from "@chakra-ui/react";
 import DatePicker from "components/DatePicker/DatePicker";
 import { Locale } from "i18n/Locale";
 import { useI18n } from "next-rosetta";
 import React, { FC, useCallback, useRef, useState } from "react";
+import { MdInput } from "react-icons/md";
 import { IOrderRefillCommand } from "services/backend/nswagts";
 import { logger } from "utils/logger";
 
@@ -40,10 +42,14 @@ const OrderRefillComp: FC<Props> = ({ submitCallback, locationId }) => {
   }, [refillDate]);
 
   return (
-    <Container>
-      <Button colorScheme="green" onClick={onOpen}>
-        Order refill
-      </Button>
+    <>
+      <IconButton
+        size="sm"
+        aria-label="Order Refill For location"
+        colorScheme="green"
+        onClick={onOpen}
+        icon={<MdInput size={24} />}
+      />
 
       <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose} isCentered>
         <AlertDialogOverlay>
@@ -71,7 +77,7 @@ const OrderRefillComp: FC<Props> = ({ submitCallback, locationId }) => {
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
-    </Container>
+    </>
   );
 };
 

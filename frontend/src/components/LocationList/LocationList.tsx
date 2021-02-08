@@ -1,5 +1,8 @@
-import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { HStack, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import RefillModalBtn from "components/FillOutRefillForm/RefillModalBtn";
 import EditLocationTriggerBtn from "components/LocaleMetaDataForm/EditLocationTriggerBtn";
+import ViewLocationHistoryModalBtn from "components/LocationHistory/ViewLocationHistoryModalBtn";
+import OrderRefillComp from "components/OrderRefill/OrderRefillComp";
 import { useColors } from "hooks/useColors";
 import { FC } from "react";
 import { LocationDetailsIdDto, RefillSchedule } from "services/backend/nswagts";
@@ -32,7 +35,15 @@ const LocationList: FC<Props> = ({ data }) => {
             <Td>{dat.regionId}</Td>
             <Td>{RefillSchedule[dat.schedule]}</Td>
             <Td>
-              <EditLocationTriggerBtn data={dat} />
+              <HStack>
+                <EditLocationTriggerBtn data={dat} />
+
+                <ViewLocationHistoryModalBtn data={dat} />
+
+                <OrderRefillComp locationId={dat.id} submitCallback={null} />
+
+                <RefillModalBtn />
+              </HStack>
             </Td>
           </Tr>
         ))}

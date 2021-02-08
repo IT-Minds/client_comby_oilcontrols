@@ -26,8 +26,6 @@ const enumConvertor = <U extends AllEnums>(enumType: U): Record<keyof U, U[keyof
     return acc;
   }, {} as Record<keyof U, U[keyof U]>);
 
-  console.log(result);
-
   return result;
 };
 

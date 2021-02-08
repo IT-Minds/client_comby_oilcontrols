@@ -110,8 +110,6 @@ const LocalePage: NextPage<Props> = ({ truckInfo, coupons }) => {
           timeStamp: form.date
         })
       );
-
-      console.log(result);
     }, "asd");
   }, []);
 
@@ -206,8 +204,6 @@ export const getServerSideProps: GetServerSideProps<Props & I18nProps<Locale>> =
     context.res.setHeader("Location", "/");
     return { props: {} as any };
   }
-  console.log("token=", token);
-
   process.env.AUTH_TOKEN = token;
 
   const truckClient = await genTruckClient();
