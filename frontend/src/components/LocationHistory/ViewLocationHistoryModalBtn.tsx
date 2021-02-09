@@ -9,6 +9,7 @@ import {
   useDisclosure,
   useToast
 } from "@chakra-ui/react";
+import RefillHistoryComp from "components/RefillHistory/RefillHistoryTable";
 import { FC } from "react";
 import { MdRemoveRedEye } from "react-icons/md";
 import { LocationDetailsIdDto } from "services/backend/nswagts";
@@ -40,6 +41,7 @@ const ViewLocationHistoryModalBtn: FC<Props> = ({ data }) => {
           <ModalHeader>MY TITLE</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
+            <RefillHistoryComp locationId={data.id} />
             <LocationHistoryComp locationId={data.id} />
           </ModalBody>
         </ModalContent>

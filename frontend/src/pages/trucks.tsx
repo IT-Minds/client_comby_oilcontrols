@@ -44,78 +44,74 @@ const TruckPage: NextPage = () => {
   const [couponData, setCouponData] = useState<CouponDto[]>(null);
   const [truckRefillData, setTruckRefillData] = useState<LocationRefillDto[]>(null);
   // <<<
-
-  const { awaitCallback } = useOffline();
   const toast = useToast();
 
   const saveCoupons = useCallback(
     async (couponNumbers: number[]) => {
-      awaitCallback(async () => {
-        const client = await genCouponsClient();
-        await client.create(
-          new AssignCouponsCommand({
-            truckId,
-            couponNumbers
+      const client = await genCouponsClient();
+      await client.create(
+        new AssignCouponsCommand({
+          truckId,
+          couponNumbers
+        })
+      );
+      loadSingleTruck(truckId);
+      toast({
+        title: "Coupons Saved",
+        description: "Successful",
+        status: "success",
+        duration: 9000,
+        isClosable: true
+      });
+    },
+    [truckId]
+  );
+
+  const saveMetaDataForm = useCallback(async metaDataForm => {
+    const client = await genTruckClient();
+    await (metaDataForm.id
+      ? client.updateTruck(
+          metaDataForm.id,
+          new UpdateTruckCommand({
+            truckInfo: metaDataForm
           })
-        );
-        toast({
-          title: "Coupons Saved",
-          description: "Successful",
-          status: "success",
-          duration: 9000,
-          isClosable: true
-        });
-      }, Date.now().toString());
-    },
-    [awaitCallback, truckId]
-  );
+        )
+      : client.createTruck(
+          new CreateTruckCommand({
+            truckInfo: metaDataForm
+          })
+        ));
 
-  const saveMetaDataForm = useCallback(
-    async metaDataForm => {
-      awaitCallback(async () => {
-        const client = await genTruckClient();
-        await (metaDataForm.id
-          ? client.updateTruck(
-              metaDataForm.id,
-              new UpdateTruckCommand({
-                truckInfo: metaDataForm
-              })
-            )
-          : client.createTruck(
-              new CreateTruckCommand({
-                truckInfo: metaDataForm
-              })
-            ));
+    toast({
+      title: "Truck Meta Data Saved",
+      description: "Successful",
+      status: "success",
+      duration: 9000,
+      isClosable: true
+    });
+  }, []);
 
-        toast({
-          title: "Truck Meta Data Saved",
-          description: "Successful",
-          status: "success",
-          duration: 9000,
-          isClosable: true
-        });
-      }, Date.now().toString());
-    },
-    [awaitCallback]
-  );
+  const loadSingleTruck = useCallback(async truckId => {
+    const client = await genTruckClient();
+    onOpen();
+    setIsLoading(true);
+
+    const couponsData = await client.getTrucksCoupons(truckId);
+    const truckMetaData = await client.getTruck(truckId);
+    const truckRefillData = await client.getTrucksRefills(truckId);
+
+    setCouponData(couponsData.results);
+    setTruckMetaData(truckMetaData);
+    setTruckRefillData(truckRefillData);
+
+    setIsLoading(false);
+  }, []);
 
   useEffectAsync(async () => {
-    const client = await genTruckClient();
-
     if (truckId) {
-      onOpen();
-      setIsLoading(true);
-
-      const couponsData = await client.getTrucksCoupons(truckId);
-      const truckMetaData = await client.getTruck(truckId);
-      const truckRefillData = await client.getTrucksRefills(truckId);
-
-      setCouponData(couponsData.results);
-      setTruckMetaData(truckMetaData);
-      setTruckRefillData(truckRefillData);
-
-      setIsLoading(false);
+      loadSingleTruck(truckId);
     } else {
+      const client = await genTruckClient();
       const truckEntityData = await client.getTrucks();
       setTruckEntities(truckEntityData.results);
     }
@@ -126,7 +122,6 @@ const TruckPage: NextPage = () => {
       <Heading>Truck Overview</Heading>
       <AddTruckTriggerBtn />
       <TruckListComp preLoadedData={truckEntities} truckId={setTruckId} />
-
       {/* // TODO move modal into own component */}
       <Modal
         size="4xl"

@@ -2,6 +2,7 @@ using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Common.Security;
 using Domain.Entities;
+using Domain.Entities.Refills;
 using Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -34,8 +35,7 @@ namespace Application.Refills.Commands.OrderRefill
       {
 
         var truck = await _context.Trucks
-          .Include(t => t.Route)
-            .ThenInclude(r => r.Refills)
+          .Include(r => r.Refills)
           .Where(t => t.Id == request.TruckId)
           .FirstOrDefaultAsync();
 
@@ -51,26 +51,26 @@ namespace Application.Refills.Commands.OrderRefill
           throw new NotFoundException(nameof(Location), request.LocationId);
         }
 
-        if (truck.Route == null)
+        if (truck.Refills == null)
         {
-          truck.Route = new Route { Refills = new List<Refill>() };
+          truck.Refills = new List<AssignedRefill>();
         }
 
-        var refill = truck.Route.Refills
-          .FirstOrDefault(refill => refill.ActualDeliveryDate == null && refill.LocationId == request.LocationId);
+        var refill = truck.Refills
+          .FirstOrDefault(refill =>  refill.LocationId == request.LocationId);
         if (refill != null)
         {
-          truck.Route.Refills.Remove(refill);
+          truck.Refills.Remove(refill);
+          _context.AssignedRefills.Remove(refill);
         }
 
-        var newRefill = new Refill
+        var newRefill = new AssignedRefill
         {
-
           ExpectedDeliveryDate = request.ExpectedDeliveryDate,
           LocationId = request.LocationId
         };
 
-        truck.Route.Refills.Add(newRefill);
+        truck.Refills.Add(newRefill);
 
         // _context.Routes.Update(route);
         _context.Trucks.Update(truck);

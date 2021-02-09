@@ -17,12 +17,11 @@ namespace Application.UnitTests.EntityExtensions.TruckExtension
         .Where(x => x.Id == 100)
         .Include(x => x.DailyStates)
           .ThenInclude(x => x.TruckRefills)
-        .Include(x => x.Route)
-          .ThenInclude(x => x.Refills)
+        .Include(x => x.Refills)
         .FirstOrDefaultAsync();
 
       var eveningQuantity = truck.EveningQuantity(new System.DateTime(2020, 1, 1));
-      eveningQuantity.Should().Be(700);
+      eveningQuantity.Should().Be(1000);
     }
 
     [Fact]
@@ -32,8 +31,7 @@ namespace Application.UnitTests.EntityExtensions.TruckExtension
         .Where(x => x.Id == 100)
         .Include(x => x.DailyStates)
           .ThenInclude(x => x.TruckRefills)
-        .Include(x => x.Route)
-          .ThenInclude(x => x.Refills)
+          .Include(x => x.Refills)
         .FirstOrDefaultAsync();
 
       var eveningQuantity = truck.EveningQuantity(new System.DateTime(2020, 1, 2));
@@ -47,8 +45,7 @@ namespace Application.UnitTests.EntityExtensions.TruckExtension
         .Where(x => x.Id == 100)
         .Include(x => x.DailyStates)
           .ThenInclude(x => x.TruckRefills)
-        .Include(x => x.Route)
-          .ThenInclude(x => x.Refills)
+        .Include(x => x.Refills)
         .FirstOrDefaultAsync();
 
       var eveningQuantity = truck.EveningQuantity(new System.DateTime(2020, 1, 3));
@@ -58,7 +55,12 @@ namespace Application.UnitTests.EntityExtensions.TruckExtension
     [Fact]
     public async Task Handle_CalculateEveningAmountNothingRegistered()
     {
-      var truck = await Context.Trucks.Where(x => x.Id == 100).Include(x => x.DailyStates).ThenInclude(x => x.TruckRefills).Include(x => x.Route).ThenInclude(x => x.Refills).FirstOrDefaultAsync();
+      var truck = await Context.Trucks
+        .Where(x => x.Id == 100)
+        .Include(x => x.DailyStates)
+          .ThenInclude(x => x.TruckRefills)
+        .Include(x => x.Refills)
+        .FirstOrDefaultAsync();
 
       Assert.Throws<ArgumentException>(
         () => { var eveningQuantity = truck.EveningQuantity(new System.DateTime(2020, 1, 4)); }
@@ -68,7 +70,12 @@ namespace Application.UnitTests.EntityExtensions.TruckExtension
     [Fact]
     public async Task Handle_CalculateEveningAmountNoDeliveries()
     {
-      var truck = await Context.Trucks.Where(x => x.Id == 100).Include(x => x.DailyStates).ThenInclude(x => x.TruckRefills).Include(x => x.Route).ThenInclude(x => x.Refills).FirstOrDefaultAsync();
+       var truck = await Context.Trucks
+        .Where(x => x.Id == 100)
+        .Include(x => x.DailyStates)
+          .ThenInclude(x => x.TruckRefills)
+        .Include(x => x.Refills)
+        .FirstOrDefaultAsync();
 
       var eveningQuantity = truck.EveningQuantity(new System.DateTime(2020, 1, 5));
       eveningQuantity.Should().Be(1000);

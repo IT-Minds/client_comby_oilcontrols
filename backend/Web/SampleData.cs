@@ -1,5 +1,6 @@
 using System;
 using Domain.Entities;
+using Domain.Entities.Refills;
 using Domain.Enums;
 using Infrastructure.Persistence;
 
@@ -12,9 +13,9 @@ namespace Web
       //Clear all the existing data from db before adding new sample data.
       context.Locations.RemoveRange(context.Locations);
       context.Coupons.RemoveRange(context.Coupons);
-      context.Refills.RemoveRange(context.Refills);
+      // context.Refills.RemoveRange(context.Refills);
       context.Trucks.RemoveRange(context.Trucks);
-      context.Routes.RemoveRange(context.Routes);
+      // context.Routes.RemoveRange(context.Routes);
       context.Regions.RemoveRange(context.Regions);
       context.RegionDailyTemps.RemoveRange(context.RegionDailyTemps);
       context.TruckDailyStates.RemoveRange(context.TruckDailyStates);
@@ -31,16 +32,8 @@ namespace Web
       context.Regions.Add(region1);
       context.SaveChanges();
 
-      var route1 = new Route { };
-      var route2 = new Route { };
-      context.Routes.AddRange(
-        route1,
-        route2
-      );
-      context.SaveChanges();
-
-      var truck1 = new Truck { RouteId = route1.Id, TruckIdentifier = "Truck1", Name = "Trucky", Description = "Certainly a truck.", TankCapacity = 100000 };
-      var truck2 = new Truck { RouteId = route2.Id, TruckIdentifier = "Truck1", Name = "TruckMan", Description = "Truck?", TankCapacity = 100000 };
+      var truck1 = new Truck { TruckIdentifier = "Truck1", Name = "Trucky", Description = "Certainly a truck.", TankCapacity = 100000 };
+      var truck2 = new Truck { TruckIdentifier = "Truck1", Name = "TruckMan", Description = "Truck?", TankCapacity = 100000 };
 
       context.Trucks.AddRange(
         truck1,
@@ -128,12 +121,12 @@ namespace Web
       );
       context.SaveChanges();
 
-      var refill1 = new Refill { CouponId = coupon1.Id, StartAmount = 200, EndAmount = 10000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2000, 5, 1), ActualDeliveryDate = new DateTime(2000, 5, 1), LocationId = location1.Id };
-      var refill2 = new Refill { CouponId = coupon2.Id, StartAmount = 1000, EndAmount = 10000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2000, 5, 10), ActualDeliveryDate = new DateTime(2000, 5, 10), LocationId = location1.Id };
-      var refill3 = new Refill { CouponId = coupon3.Id, StartAmount = 1000, EndAmount = 10000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2000, 5, 20), ActualDeliveryDate = new DateTime(2000, 5, 20), LocationId = location1.Id };
-      var refill4 = new Refill { ExpectedDeliveryDate = new DateTime(2000, 5, 1), ActualDeliveryDate = new DateTime(2000, 5, 30), LocationId = location1.Id };
+      var refill1 = new CompletedRefill { CouponId = coupon1.Id, StartAmount = 200, EndAmount = 10000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2000, 5, 1), ActualDeliveryDate = new DateTime(2000, 5, 1), LocationId = location1.Id, TruckId = truck1.Id  };
+      var refill2 = new CompletedRefill { CouponId = coupon2.Id, StartAmount = 1000, EndAmount = 10000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2000, 5, 10), ActualDeliveryDate = new DateTime(2000, 5, 10), LocationId = location1.Id, TruckId = truck1.Id  };
+      var refill3 = new CompletedRefill { CouponId = coupon3.Id, StartAmount = 1000, EndAmount = 10000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2000, 5, 20), ActualDeliveryDate = new DateTime(2000, 5, 20), LocationId = location1.Id, TruckId = truck2.Id };
+      var refill4 = new OrderedRefill { ExpectedDeliveryDate = new DateTime(2000, 5, 1), LocationId = location1.Id };
 
-      context.Refills.AddRange(
+      context.OrderedRefills.AddRange(
         refill1,
         refill2,
         refill3,

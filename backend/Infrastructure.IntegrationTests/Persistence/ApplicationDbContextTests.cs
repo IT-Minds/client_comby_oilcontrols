@@ -1,5 +1,6 @@
 using Application.Common.Interfaces;
 using Domain.Entities;
+using Domain.Entities.Refills;
 using Domain.Enums;
 using FluentAssertions;
 using Infrastructure.Persistence;
@@ -78,6 +79,28 @@ namespace Infrastructure.IntegrationTests.Persistence
       item.LastModified.Should().Be(_dateTimeOffset);
       item.LastModifiedBy.Should().Be(_userId);
     }
+
+
+    [Fact]
+    public async Task Inheritance_SaveEachType()
+    {
+
+      _context.OrderedRefills.Add(new OrderedRefill
+      {
+        Id = 1
+      });
+
+      await _context.SaveChangesAsync();
+
+      var item1 = await _context.OrderedRefills.FindAsync(1);
+      var item2 = await _context.AssignedRefills.FindAsync(1);
+      var item3 = await _context.CompletedRefills.FindAsync(1);
+
+      item1.Should().NotBe(null);
+      item2.Should().Be(null);
+      item3.Should().Be(null);
+    }
+
     public void Dispose()
     {
       _context?.Dispose();

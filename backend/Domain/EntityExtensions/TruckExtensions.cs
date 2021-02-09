@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Domain.Entities;
+using Domain.Entities.Refills;
 using Domain.Enums;
 
 namespace Domain.EntityExtensions
@@ -19,13 +20,15 @@ namespace Domain.EntityExtensions
       var truckFills = dailyState.TruckRefills
         .Where(x => x.TimeStamp.DayOfYear == date.DayOfYear && x.TimeStamp.Year == date.Year)
         .Sum(x => x.Amount);
-      var locaitonFills = truck.Route.Refills
-        .Where(x => x.ActualDeliveryDate.HasValue && x.ActualDeliveryDate?.DayOfYear == date.DayOfYear && x.ActualDeliveryDate?.Year == date.Year)
-        .Sum(x => x.AmountDelivered() ?? 0);
+
+      var locationFills = truck.Refills
+        .Where(x => x.RefillState == RefillState.COMPLETED)
+        .Where(x => ((CompletedRefill)x).ActualDeliveryDate.DayOfYear == date.DayOfYear && ((CompletedRefill)x).ActualDeliveryDate.Year == date.Year)
+        .Sum(x => ((CompletedRefill)x).AmountDelivered());
 
 
 
-      return dailyState.MorningQuantity + truckFills - locaitonFills ;
+      return dailyState.MorningQuantity + truckFills - locationFills ;
     }
 
     public static TruckDailyState GetCurrentDailyState(this Truck truck)

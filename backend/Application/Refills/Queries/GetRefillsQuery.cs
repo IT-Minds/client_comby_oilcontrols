@@ -4,6 +4,7 @@ using Application.Common.Security;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Entities;
+using Domain.Entities.Refills;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -14,7 +15,7 @@ using System.Threading.Tasks;
 namespace Application.Refills.Queries.GetRefills.Location
 {
   [AuthorizeAttribute(Domain.Enums.Action.GET_REFILLS)]
-  public class GetRefillsLocationQuery : IPageRequest<RefillDto>, IPageBody<Refill, DateTimeOffset>
+  public class GetRefillsLocationQuery : IPageRequest<RefillDto>, IPageBody<CompletedRefill, DateTimeOffset>
   {
     public int Size { get; set; }
     public DateTimeOffset Needle { get; set; }
@@ -22,12 +23,12 @@ namespace Application.Refills.Queries.GetRefills.Location
 
     public TankType? TankType { get; set; }
 
-    public DateTimeOffset GetNewNeedle(IQueryable<Refill> query)
+    public DateTimeOffset GetNewNeedle(IQueryable<CompletedRefill> query)
     {
       return query.Select(x => x.Created).Take(Size).LastOrDefault();
     }
 
-    public IQueryable<Refill> PreparePage(IQueryable<Refill> query)
+    public IQueryable<CompletedRefill> PreparePage(IQueryable<CompletedRefill> query)
     {
       if (Skip.HasValue)
       {
@@ -41,7 +42,7 @@ namespace Application.Refills.Queries.GetRefills.Location
             .Where(x => x.Created > Needle);
     }
 
-    public async Task<int> PagesRemaining(IQueryable<Refill> query)
+    public async Task<int> PagesRemaining(IQueryable<CompletedRefill> query)
     {
       var count = await query.CountAsync();
       var pagesLeft = (int)(Math.Ceiling((float)count / (float)Size)) - 1;
@@ -65,7 +66,7 @@ namespace Application.Refills.Queries.GetRefills.Location
 
         var page = new PageResult<RefillDto>();
 
-        IQueryable<Refill> baseQuery = _context.Refills.AsQueryable()
+        IQueryable<CompletedRefill> baseQuery = _context.CompletedRefills.AsQueryable()
          .Include(refill => refill.Coupon)
          .Include(refill => refill.Location)
             .ThenInclude(location => location.FuelTank);

@@ -53,8 +53,7 @@ namespace Application.TruckRefills.Commands.CreateTruckRefill
             truck = await _context.Trucks
               .Include(x => x.DailyStates)
                 .ThenInclude(x => x.TruckRefills)
-              .Include(t => t.Route)
-                .ThenInclude(r => r.Refills)
+              .Include(r => r.Refills)
               .FirstAsync(x => x.Id == request.TruckId);
 
             DateTime dayBefore = request.TimeStamp;

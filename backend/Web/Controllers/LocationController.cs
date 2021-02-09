@@ -10,6 +10,8 @@ using Application.Locations.Commands.UpdateDebtorOnLocation;
 using Application.Locations.Commands.UpdateLocationMetaData;
 using Application.Locations.Queries.GetDebtorHistory;
 using Application.Locations.Queries.GetDebtors;
+using Application.Refills;
+using Application.Refills.Queries;
 using Domain.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,23 +22,6 @@ namespace Web.Controllers
 {
   public class LocationController : ApiControllerBase
   {
-    [HttpPut("{id}")]
-    public async Task<ActionResult<int>> UpdateMetaData([FromRoute] int id, UpdateLocationMetaDataCommand command)
-    {
-      command.Id = id;
-      return await Mediator.Send(command);
-    }
-
-    [HttpPost("{id}")]
-    [Consumes("multipart/form-data")]
-    public async Task<ActionResult<string>> SaveLocationImage([FromRoute] int id, IFormFile file)
-    {
-      return await Mediator.Send(new AddLocationImageCommand
-      {
-        Picture = file,
-        LocationId = id
-      });
-    }
     [HttpPost]
     public async Task<ActionResult<int>> AddNewLocation(CreateLocationCommand command)
     {
@@ -61,24 +46,6 @@ namespace Web.Controllers
       return await Mediator.Send(command);
     }
 
-    [HttpGet("{id}/debtorHistory")]
-    public async Task<ActionResult<PageResult<LocationDebtorHistoryDto, DateTime>>> GetDebtorHistory(
-    [FromRoute] int id, [FromQuery] DateTime? needle = null, [FromQuery] int size = 1000, [FromQuery] int? skip = 0)
-    {
-      if (!needle.HasValue)
-      {
-        needle = DateTime.MaxValue;
-      }
-
-      return await Mediator.Send(new GetDebtorHistoryQuery
-      {
-        LocationId = id,
-        Needle = (DateTime)needle,
-        Size = size,
-        Skip = skip
-      });
-    }
-
     [HttpGet]
     public async Task<ActionResult<PageResult<LocationDetailsIdDto, DateTime>>> GetAll(
     [FromQuery] TankType? locationType,
@@ -98,29 +65,28 @@ namespace Web.Controllers
       });
     }
 
+    // [HttpGet("/histories")]
+    // public async Task<ActionResult<PageResult<LocationHistoryDto>>> GetAllLocationHistories(
+    //  [FromQuery] int needle, [FromQuery] int size = 1000, [FromQuery] int? skip = 0
+    // )
+    // {
+    //   return await Mediator.Send(new GetAllLocationHistoriesQuery
+    //   {
+    //     Needle = needle,
+    //     Size = size,
+    //     Skip = skip
+    //   });
+    // }
+
     [HttpGet("{id}")]
     public async Task<ActionResult<LocationDetailsIdDto>> Get(
     [FromRoute] int id)
     {
-
-
       return null;
     }
 
-    [HttpGet("/histories")]
-    public async Task<ActionResult<PageResult<LocationHistoryDto>>> GetAllLocationHistories(
-     [FromQuery] int needle, [FromQuery] int size = 1000, [FromQuery] int? skip = 0
-    )
-    {
-      return await Mediator.Send(new GetAllLocationHistoriesQuery
-      {
-        Needle = needle,
-        Size = size,
-        Skip = skip
-      });
-    }
-
     [HttpGet("{id}/history")]
+    [ResponseCache(Duration = 43200)] // 12 hour cache
     public async Task<ActionResult<PageResult<LocationHistoryDto>>> GetLocationHistory(
     [FromRoute] int id, [FromQuery] DateTime? needle = null, [FromQuery] int size = 1000, [FromQuery] int? skip = 0)
     {
@@ -135,6 +101,65 @@ namespace Web.Controllers
         Needle = (DateTime)needle,
         Size = size,
         Skip = skip
+      });
+    }
+
+    [HttpGet("{id}/debtorHistory")]
+    [ResponseCache(Duration = 43200)] // 12 hour cache
+    public async Task<ActionResult<PageResult<LocationDebtorHistoryDto, DateTime>>> GetDebtorHistory(
+    [FromRoute] int id, [FromQuery] DateTime? needle = null, [FromQuery] int size = 1000, [FromQuery] int? skip = 0)
+    {
+      if (!needle.HasValue)
+      {
+        needle = DateTime.MaxValue;
+      }
+
+      return await Mediator.Send(new GetDebtorHistoryQuery
+      {
+        LocationId = id,
+        Needle = (DateTime)needle,
+        Size = size,
+        Skip = skip
+      });
+    }
+
+    [HttpGet("{id}/refillHistory")]
+    [ResponseCache(Duration = 43200)] // 12 hour cache
+    public async Task<ActionResult<PageResult<RefillDto, DateTimeOffset>>> GetRefillHistory(
+    [FromRoute] int id, [FromQuery] DateTimeOffset? needle = null, [FromQuery] int size = 1000, [FromQuery] int? skip = 0)
+    {
+      if (!needle.HasValue)
+      {
+        needle = DateTimeOffset.MaxValue;
+      }
+
+      return await Mediator.Send(new GetLocationRefillHistoryQuery
+      {
+        LocationId = id,
+        Needle = (DateTimeOffset)needle,
+        Size = size,
+        Skip = skip
+      });
+    }
+
+
+
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<int>> UpdateMetaData([FromRoute] int id, UpdateLocationMetaDataCommand command)
+    {
+      command.Id = id;
+      return await Mediator.Send(command);
+    }
+
+    [HttpPost("{id}")]
+    [Consumes("multipart/form-data")]
+    public async Task<ActionResult<string>> SaveLocationImage([FromRoute] int id, IFormFile file)
+    {
+      return await Mediator.Send(new AddLocationImageCommand
+      {
+        Picture = file,
+        LocationId = id
       });
     }
   }

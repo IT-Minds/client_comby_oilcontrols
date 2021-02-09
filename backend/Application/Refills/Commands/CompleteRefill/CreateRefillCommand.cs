@@ -10,10 +10,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Application.Common.Security;
+using Domain.Entities.Refills;
 
 namespace Application.Refills.Commands.CompleteRefill
 {
-  [AuthorizeAttribute(Domain.Enums.Action.CREATE_REFILL)]
+  //[AuthorizeAttribute(Domain.Enums.Action.CREATE_REFILL)]
   public class CompleteRefillCommand : IRequest<int>
   {
     [JsonIgnore]
@@ -36,18 +37,17 @@ namespace Application.Refills.Commands.CompleteRefill
       public async Task<int> Handle(CompleteRefillCommand request, CancellationToken cancellationToken)
       {
 
-        var refill = await _context.Refills.FindAsync(request.Id);
+        var refill = await _context.AssignedRefills.FirstOrDefaultAsync(x => x.Id == request.Id);
 
         if (refill == null)
         {
-          throw new NotFoundException(nameof(Refill), request.Id);
+          throw new NotFoundException(nameof(AssignedRefill), request.Id);
         }
 
         var truck = await _context.Trucks
-          .Include(t => t.Route)
-            .ThenInclude(r => r.Refills)
+            .Include(r => r.Refills)
           .Include(x => x.DailyStates.Where(x => x.Date.DayOfYear == request.ActualDeliveryDate.DayOfYear && x.Date.Year == request.ActualDeliveryDate.Year))
-          .Where(t => t.Route.Refills.Any(r => r.Id == refill.Id))
+          .Where(t => t.Refills.Any(r => r.Id == refill.Id))
           .FirstOrDefaultAsync();
 
         if (truck == null)
@@ -70,22 +70,23 @@ namespace Application.Refills.Commands.CompleteRefill
           throw new ArgumentException("Invalid Coupon Number: " + request.CouponNumber + ". Should have been: " + coupon.CouponNumber);
         }
 
-        refill.StartAmount = request.StartAmount;
-        refill.EndAmount = request.EndAmount;
-        refill.ActualDeliveryDate = request.ActualDeliveryDate;
-        refill.TankState = request.TankState;
+        var completingrefill = new CompletedRefill(refill);
 
-        refill.CouponId = coupon.Id;
-
-        refill.RefillNumber = truck.RefillNumber++;
-        // refill.RouteId = null; //TODO should properly detach the entity from the route
+        completingrefill.StartAmount = request.StartAmount;
+        completingrefill.EndAmount = request.EndAmount;
+        completingrefill.ActualDeliveryDate = request.ActualDeliveryDate;
+        completingrefill.TankState = request.TankState;
+        completingrefill.CouponId = coupon.Id;
+        completingrefill.RefillNumber = truck.RefillNumber++;
+        // completingrefill.RefillState = RefillState.COMPLETED;
 
         coupon.Status = CouponStatus.USED;
 
-
         _context.Trucks.Update(truck);
         _context.Coupons.Update(coupon);
-        _context.Refills.Update(refill);
+
+        _context.AssignedRefills.Remove(refill);
+        _context.CompletedRefills.Add(completingrefill);
 
         await _context.SaveChangesAsync(cancellationToken);
 

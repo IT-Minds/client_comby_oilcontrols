@@ -33,7 +33,7 @@ namespace Application.Coupons.Commands.SaveCouponImage
 
       public async Task<string> Handle(SaveCouponImageCommand request, CancellationToken cancellationToken)
       {
-        var refill = await _context.Refills.FindAsync(request.RefillId);
+        var refill = await _context.AssignedRefills.FindAsync(request.RefillId);
         if (refill == null)
         {
           throw new NotFoundException("No refill with ID: " + request.RefillId);

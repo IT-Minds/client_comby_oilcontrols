@@ -1,6 +1,7 @@
 using Application.Common.Interfaces;
 using Domain.Common;
 using Domain.Entities;
+using Domain.Entities.Refills;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
@@ -31,9 +32,12 @@ namespace Infrastructure.Persistence
     public DbSet<ExampleEntityList> ExampleEntityLists { get; set; }
     public DbSet<Location> Locations { get; set; }
     public DbSet<Coupon> Coupons { get; set; }
-    public DbSet<Refill> Refills { get; set; }
+
+    public DbSet<CompletedRefill> CompletedRefills { get; set; }
+    public DbSet<OrderedRefill> OrderedRefills { get; set; }
+    public DbSet<AssignedRefill> AssignedRefills { get; set; }
+
     public DbSet<Truck> Trucks { get; set; }
-    public DbSet<Route> Routes { get; set; }
     public DbSet<Region> Regions { get; set; }
     public DbSet<RegionDailyTemp> RegionDailyTemps { get; set; }
     public DbSet<TruckDailyState> TruckDailyStates { get; set; }
@@ -94,6 +98,17 @@ namespace Infrastructure.Persistence
       builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
       base.OnModelCreating(builder);
+    }
+
+    public virtual EntityEntry Entry(AuditableEntity entity)
+    {
+      return base.Entry(entity);
+    }
+
+    public void Replace<TEntity>(TEntity oldEntity, TEntity newEntity) where TEntity : AuditableEntity
+    {
+        ChangeTracker.TrackGraph(oldEntity, e => e.Entry.State = EntityState.Deleted);
+        ChangeTracker.TrackGraph(newEntity, e => e.Entry.State = e.Entry.IsKeySet ? EntityState.Modified : EntityState.Added);
     }
 
     private void OnLocationsChange(IEnumerable<EntityEntry<AuditableEntity>> entities)

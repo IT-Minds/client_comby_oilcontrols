@@ -1,17 +1,17 @@
 /* istanbul ignore file */
 
-export const errorToJSON = (error?: Error): void | string => {
+export function errorToJSON(): void;
+export function errorToJSON(error: Error): string;
+export function errorToJSON(error?: Error): string | void {
   if (!("toJSON" in Error.prototype))
     Object.defineProperty(Error.prototype, "toJSON", {
       value: function () {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const alt: any = {};
-
+        const errorRecord: Record<string, unknown> = {};
         Object.getOwnPropertyNames(this).forEach(function (key) {
-          alt[key] = this[key];
+          errorRecord[key] = this[key];
         }, this);
 
-        return alt;
+        return errorRecord;
       },
       configurable: true,
       writable: true
@@ -20,4 +20,4 @@ export const errorToJSON = (error?: Error): void | string => {
   if (error) {
     return JSON.stringify(error);
   }
-};
+}

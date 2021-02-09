@@ -26,7 +26,7 @@ namespace Application.UnitTests.Refills.Commands.CreateRefill
 
       var result = await handler.Handle(command, CancellationToken.None);
 
-      var entity = Context.Refills.Find(result);
+      var entity = Context.CompletedRefills.Find(result);
 
       entity.Should().NotBeNull();
       entity.StartAmount.Should().Be(command.StartAmount);

@@ -182,7 +182,7 @@ const FillingOverviewComp: FC<Props> = ({
                 <Td>{data.regionId}</Td>
                 <Td isNumeric>{data.locationId}</Td>
                 <Td isNumeric>{data.schedule}</Td>
-                <Td>{data.debtorBlocked}</Td>
+                <Td>{data.fuelType}</Td>
               </Tr>
             );
           })}

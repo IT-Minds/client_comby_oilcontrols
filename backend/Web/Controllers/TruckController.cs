@@ -13,6 +13,8 @@ using Application.Coupons.Queries.GetCoupons.Truck;
 using System;
 using Application.Coupons.Queries.GetCoupons;
 using Application.TruckRefills.Commands.CreateTruckRefill;
+using Application.Refills.Queries;
+using Application.Refills;
 
 namespace Web.Controllers
 {
@@ -31,7 +33,7 @@ namespace Web.Controllers
     {
       if (needle == null)
       {
-        needle = DateTime.MaxValue;
+        needle = DateTimeOffset.MinValue;
       }
 
       return await Mediator.Send(new GetCouponsTruckQuery
@@ -76,6 +78,25 @@ namespace Web.Controllers
       return await Mediator.Send(new GetLocationRequiringRefill
       {
         TruckId = id
+      });
+    }
+
+    [HttpGet("{id}/refillHistory")]
+    [ResponseCache(Duration = 43200)] // 12 hour cache
+    public async Task<ActionResult<PageResult<RefillDto, DateTimeOffset>>> GetRefillHistory(
+    [FromRoute] int id, [FromQuery] DateTimeOffset? needle = null, [FromQuery] int size = 1000, [FromQuery] int? skip = 0)
+    {
+      if (!needle.HasValue)
+      {
+        needle = DateTimeOffset.MaxValue;
+      }
+
+      return await Mediator.Send(new GetLocationRefillHistoryQuery
+      {
+        LocationId = id,
+        Needle = (DateTimeOffset)needle,
+        Size = size,
+        Skip = skip
       });
     }
 

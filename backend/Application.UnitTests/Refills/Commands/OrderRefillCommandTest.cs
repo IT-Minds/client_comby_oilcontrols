@@ -23,13 +23,11 @@ namespace Application.UnitTests.Refills.Commands.OrderRefill
 
       var handler = new OrderRefillCommand.OrderRefillCommandHandler(Context);
       var result = await handler.Handle(command, CancellationToken.None);
-      var entity = Context.Refills.Find(result);
-      var route = Context.Routes.FirstOrDefault(x => x.Refills.Contains(entity));
-      var truck = Context.Trucks.FirstOrDefault(x => x.RouteId == route.Id);
+      var entity = Context.AssignedRefills.Find(result);
+      var truck = Context.Trucks.FirstOrDefault(x => x.Id == entity.TruckId);
 
       entity.Should().NotBeNull();
       entity.LocationId.Should().Be(command.LocationId);
-      route.Should().NotBeNull();
       truck.Id.Should().Be(command.TruckId);
     }
 
@@ -47,8 +45,7 @@ namespace Application.UnitTests.Refills.Commands.OrderRefill
       await handler.Handle(command1, CancellationToken.None);
 
       var truck = Context.Trucks.FirstOrDefault(x => x.Id == command1.TruckId);
-      var route = Context.Routes.FirstOrDefault(x => x.Id == truck.RouteId);
-      var locationCount = route.Refills.Where(x => x.LocationId == command1.LocationId).Count();
+      var locationCount = truck.Refills.Where(x => x.LocationId == command1.LocationId).Count();
 
       var command2 = new OrderRefillCommand
       {
@@ -57,10 +54,9 @@ namespace Application.UnitTests.Refills.Commands.OrderRefill
         ExpectedDeliveryDate = new DateTime(2020, 12, 31)
       };
       var result = await handler.Handle(command2, CancellationToken.None);
-      var entity = Context.Refills.Find(result);
+      var entity = Context.AssignedRefills.Find(result);
       truck = Context.Trucks.FirstOrDefault(x => x.Id == command2.TruckId);
-      route = Context.Routes.FirstOrDefault(x => x.Id == truck.RouteId);
-      var locationCountPost = route.Refills.Where(x => x.LocationId == command2.LocationId).Count();
+      var locationCountPost = truck.Refills.Where(x => x.LocationId == command2.LocationId).Count();
 
       locationCount.Should().Be(locationCountPost);
       entity.Should().NotBeNull();

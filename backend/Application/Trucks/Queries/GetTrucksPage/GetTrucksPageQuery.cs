@@ -62,8 +62,7 @@ namespace Application.Trucks.Queries.GetTrucksPage
 
         var baseQuery = _context.Trucks
           .Include(x => x.DailyStates)
-          .Include(x => x.Route)
-          .ThenInclude(x => x.Refills);
+          .Include(x => x.Refills);
         var query = request.PreparePage(baseQuery);
         var pagesRemaining = await request.PagesRemaining(query);
         var needle = request.GetNewNeedle(query);

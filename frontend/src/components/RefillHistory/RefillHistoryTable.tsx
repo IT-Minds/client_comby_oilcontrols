@@ -15,10 +15,10 @@ import { usePagedFetched } from "hooks/usePagedFetched";
 import React, { FC, useEffect, useMemo, useReducer, useState } from "react";
 import ListReducer from "react-list-reducer";
 import { genLocationClient } from "services/backend/apiClients";
-import { ILocationHistoryDto, LocationHistoryDto } from "services/backend/nswagts";
+import { ILocationHistoryDto, IRefillDto, LocationHistoryDto } from "services/backend/nswagts";
 
 type Props = {
-  preLoadedData?: LocationHistoryDto[];
+  preLoadedData?: IRefillDto[];
   preloadDataNeedle?: string;
   preloadLoadedAll?: boolean;
   preLoadedPageCount?: number;
@@ -27,7 +27,7 @@ type Props = {
 
 export const PAGE_SHOW_SIZE = 15;
 
-const LocationHistoryComp: FC<Props> = ({
+const RefillHistoryComp: FC<Props> = ({
   preLoadedData = [],
   preloadDataNeedle = "",
   preloadLoadedAll = false,
@@ -35,22 +35,19 @@ const LocationHistoryComp: FC<Props> = ({
 }) => {
   const toast = useToast();
 
-  const [data, dataDispatch] = useReducer(
-    ListReducer<ILocationHistoryDto>("locationId"),
-    preLoadedData
-  );
+  const [data, dataDispatch] = useReducer(ListReducer<IRefillDto>("id"), preLoadedData);
   const [pageShowing, setPageShowing] = useState(0);
 
   const { done, error } = usePagedFetched(
     "0",
     (needle, size, _sortBy, skip) =>
       genLocationClient().then(client =>
-        client.getLocationHistory(locationId, new Date(needle), size, skip)
+        client.getRefillHistory(locationId, new Date(needle), size, skip)
       ),
     dataDispatch,
     {
       autoStart: !preloadLoadedAll,
-      initialNeedle: preloadDataNeedle,
+      initialNeedle: new Date(preloadDataNeedle),
       pageSize: PAGE_SHOW_SIZE
     }
   );
@@ -131,24 +128,22 @@ const LocationHistoryComp: FC<Props> = ({
   return (
     <Container w="100%" maxW="unset">
       <Table variant="striped" colorScheme="blue" size="sm">
-        <TableCaption placement="top">Location Meta Changes History</TableCaption>
+        <TableCaption placement="top">Refill History</TableCaption>
         <Thead>
           <Tr>
-            <Th>Address</Th>
-            <Th>Comments</Th>
-            <Th>Region ID</Th>
-            <Th>Schedule</Th>
-            <Th>Time of change</Th>
+            <Th>Delivery Time</Th>
+            <Th>Amount</Th>
+            <Th>Truck ID</Th>
+            <Th>Coupon</Th>
           </Tr>
         </Thead>
         <Tbody>
           {dataSplitter.data.map(lh => (
             <Tr key={lh.id}>
-              <Td>{lh.address}</Td>
-              <Td>{lh.comments}</Td>
-              <Td>{lh.regionId}</Td>
-              <Td>{lh.schedule}</Td>
-              <Td>{lh.timeOfChange.toLocaleDateString()}</Td>
+              <Td>{lh.actualDeliveryDate}</Td>
+              <Td>{lh.endAmount - lh.startAmount}</Td>
+              <Td>{lh.truckId}</Td>
+              <Td>{lh.couponId}</Td>
             </Tr>
           ))}
         </Tbody>
@@ -156,7 +151,7 @@ const LocationHistoryComp: FC<Props> = ({
       {pages.length > 1 && (
         <PageIndicator activePage={pageShowing} onClickPage={setPageShowing} pages={pages}>
           {!done && elementsOnLastPage >= PAGE_SHOW_SIZE && (
-            <Button colorScheme="blue" size="sm" variant="outline"></Button>
+            <Button colorScheme="blue" size="sm" variant="outline" />
           )}
         </PageIndicator>
       )}
@@ -164,4 +159,4 @@ const LocationHistoryComp: FC<Props> = ({
   );
 };
 
-export default LocationHistoryComp;
+export default RefillHistoryComp;

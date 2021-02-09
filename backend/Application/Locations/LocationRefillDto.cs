@@ -2,11 +2,12 @@ using System;
 using Application.Common.Mappings;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Entities.Refills;
 using Domain.Enums;
 
 namespace Application.Locations
 {
-  public class LocationRefillDto : IAutoMap<Refill>
+  public class LocationRefillDto : IAutoMap<OrderedRefill>
   {
     public int RefillId { get; set; }
     public int LocationId { get; set; }
@@ -21,7 +22,7 @@ namespace Application.Locations
 
     public void Mapping(Profile profile)
     {
-      profile.CreateMap<Refill, LocationRefillDto>()
+      profile.CreateMap<OrderedRefill, LocationRefillDto>()
       .ForMember(dest => dest.RefillId, map => map.MapFrom(from => from.Id))
 
       .ForMember(dest => dest.RegionId, map => map.MapFrom(from => from.Location.RegionId))

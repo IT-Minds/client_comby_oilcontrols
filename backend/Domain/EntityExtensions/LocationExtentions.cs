@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Domain.Entities;
+using Domain.Entities.Refills;
+
 namespace Domain.EntityExtensions
 {
   public static class LocationExtensions
@@ -26,7 +29,8 @@ namespace Domain.EntityExtensions
         return location.EstimateFuelConsumption;
       }
 
-      var pastRefills = location.Refills.Where(x => x.ActualDeliveryDate != null).OrderByDescending(x => x.ActualDeliveryDate);
+       var pastRefills = location.CompletedRefills.OrderByDescending(x => x.ActualDeliveryDate);
+
       if (pastRefills == null || pastRefills.Count() < 3)
       {
         return location.EstimateFuelConsumption;
@@ -42,7 +46,7 @@ namespace Domain.EntityExtensions
       }
 
       var heatIndex = location.HeatingIndex(startDate, endDate);
-      var fuelConsumed = pastRefills.Where(x => x.ActualDeliveryDate > startDate).Sum(x => x.AmountDelivered() ?? 0);
+      var fuelConsumed = pastRefills.Where(x => x.ActualDeliveryDate > startDate).Sum(x => x.AmountDelivered());
 
       return fuelConsumed == 0 ? location.EstimateFuelConsumption : fuelConsumed / heatIndex;
     }
@@ -63,9 +67,7 @@ namespace Domain.EntityExtensions
     public static DateTime PredictDayReachingMinimumFuelLevel(this Location location, int maxDays = 7)
     {
       double limit = location.FuelTank.MinimumFuelAmount;
-      var newestRefill = location.Refills
-        .Where(x => x.ActualDeliveryDate.HasValue)
-        .OrderBy(x => x.ActualDeliveryDate).LastOrDefault();
+      var newestRefill = location.CompletedRefills.OrderBy(x => x.ActualDeliveryDate).LastOrDefault();
 
       if (newestRefill == null)
       {

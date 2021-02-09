@@ -1,3 +1,5 @@
+import "ts-array-ext/sortByAttr";
+
 import {
   Button,
   Container,
@@ -88,9 +90,7 @@ const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
       logger.debug("Submitting form AddCouponComp");
       const couponNumbers = localCoupons
         .filter(c => !(c as CouponIdDto).id)
-        .map(c => {
-          return c.couponNumber;
-        });
+        .map(c => c.couponNumber);
 
       if (couponNumbers.length > 0) {
         submitCallback(couponNumbers);
@@ -150,20 +150,22 @@ const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
         <FormControl>
           <FormLabel>Available Coupons:</FormLabel>
           <Wrap>
-            {localCoupons?.map((c, index) => (
-              <WrapItem key={index}>
-                {(c as CouponIdDto).id ? (
-                  <Tag size="md" borderRadius="full" variant="solid" colorScheme="blue">
+            {localCoupons
+              .sortByAttr(x => x.couponNumber)
+              .map((c, index) => (
+                <WrapItem key={index}>
+                  <Tag
+                    size="md"
+                    borderRadius="full"
+                    variant="solid"
+                    colorScheme={(c as CouponIdDto).id ? "blue" : "yellow"}>
                     <TagLabel>{c.couponNumber}</TagLabel>
+                    {(c as CouponIdDto).id == undefined && (
+                      <TagCloseButton onClick={() => removeCoupon(c.couponNumber)} />
+                    )}
                   </Tag>
-                ) : (
-                  <Tag size="md" borderRadius="full" variant="solid" colorScheme="yellow">
-                    <TagLabel>{c.couponNumber}</TagLabel>
-                    <TagCloseButton onClick={() => removeCoupon(c.couponNumber)} />
-                  </Tag>
-                )}
-              </WrapItem>
-            ))}
+                </WrapItem>
+              ))}
           </Wrap>
         </FormControl>
 

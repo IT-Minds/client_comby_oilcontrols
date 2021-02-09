@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Domain.Common;
+using Domain.Entities.Refills;
 using Domain.Enums;
 
 namespace Domain.Entities
@@ -15,7 +17,13 @@ namespace Domain.Entities
     public RefillSchedule Schedule { get; set; }
     public string Address { get; set; }
     public string Comments { get; set; }
-    public ICollection<Refill> Refills { get; set; }
+    public ICollection<OrderedRefill> Refills { get; set; }
+    public virtual IEnumerable<AssignedRefill> AssignedRefills { get {
+      return this.Refills.Where(x => x.RefillState == RefillState.ASSIGNED).OfType<AssignedRefill>();
+    } }
+    public virtual IEnumerable<CompletedRefill> CompletedRefills { get {
+      return this.Refills.Where(x => x.RefillState == RefillState.COMPLETED).OfType<CompletedRefill>();
+    } }
     public ICollection<LocationHistory> LocationHistories { get; set; }
     //Used with the interval schedule type.
     public int DaysBetweenRefills { get; set; }
