@@ -30,9 +30,6 @@ export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context =
 
   const data = await genDebtorClient().then(client => client.get());
 
-  {
-    //TODO: waiting 'data'
-  }
   return {
     props: {
       table,
