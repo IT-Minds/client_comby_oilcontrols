@@ -10,22 +10,21 @@ type Props = {
 const DebtorDetailsComp: FC<Props> = ({ debtorData }) => {
   const [debtor, setDebtor] = useState<IDebtorDto>(debtorData ?? {});
   const toast = useToast();
-  
+
   const saveCouponRequired = useCallback(
     async (isRequired: boolean) => {
       const client = await genDebtorClient();
-      await client.printCouponRequired(
-            debtor.dbId,
-            new PrintCouponRequiredCommand({
+      await client
+        .printCouponRequired(
+          debtor.dbId,
+          new PrintCouponRequiredCommand({
             debtorId: debtor.dbId,
             printCouponRequired: isRequired
-            })
-      ).then(() => {
-          setDebtor(
-            {...debtor,
-            couponRequired: isRequired
-            });
-      });
+          })
+        )
+        .then(() => {
+          setDebtor({ ...debtor, couponRequired: isRequired });
+        });
       toast({
         title: "Debtor Updated",
         description: "Successful",
@@ -36,8 +35,6 @@ const DebtorDetailsComp: FC<Props> = ({ debtorData }) => {
     },
     [debtor]
   );
-
-  
 
   return (
     <Container w="100%" maxW="unset">
@@ -50,7 +47,7 @@ const DebtorDetailsComp: FC<Props> = ({ debtorData }) => {
           <Switch
             isChecked={debtor.couponRequired}
             id="couponRequired"
-                onChange={e => saveCouponRequired(e.target.checked)}
+            onChange={e => saveCouponRequired(e.target.checked)}
           />
         </HStack>
       </VStack>
