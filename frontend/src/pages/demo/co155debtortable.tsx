@@ -17,8 +17,7 @@ const DemoPage: NextPage<Props> = ({ debtorEntities }) => {
   return (
     <Container maxW="xl" centerContent>
       <Box padding="4" bg={bg} maxW="6xl" maxH="4xl" resize="both" overflow="auto">
-        <DebtorTableComp
-          preLoadedData={debtorEntities}></DebtorTableComp>
+        <DebtorTableComp preLoadedData={debtorEntities}></DebtorTableComp>
       </Box>
     </Container>
   );
@@ -29,12 +28,16 @@ export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context =
 
   const { table = {} } = await import(`../../i18n/${locale}`);
 
-    const data = await genDebtorClient().then(client => client.get());
+  const data = await genDebtorClient().then(client => client.get());
 
+  {
+    //TODO: waiting 'data'
+  }
   return {
     props: {
       table,
-       debtorEntities: data
+      // !This is a hack to get around undefined values in dataset
+      debtorEntities: JSON.parse(JSON.stringify(data))
     },
     revalidate: 60
   };
