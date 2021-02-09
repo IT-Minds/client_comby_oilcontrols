@@ -71,7 +71,7 @@ const DebtorTableComp: FC<Props> = ({ preLoadedData = [] }) => {
           <ModalHeader>Overview of debtor {debtor?.name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-              <DebtorDetailsComp debtorData={debtor}></DebtorDetailsComp>
+            <DebtorDetailsComp debtorData={debtor}></DebtorDetailsComp>
           </ModalBody>
         </ModalContent>
       </Modal>
