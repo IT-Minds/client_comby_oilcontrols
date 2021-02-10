@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Application.Common.Interfaces.Pagination;
 using Application.Users;
 using Application.Users.Commands.CreateUser;
+using Application.Users.Commands.UpdatePassword;
 using Application.Users.Commands.UpdateUserRole;
 using Application.Users.Queries.GetAllUsers;
 using Microsoft.AspNetCore.Mvc;
@@ -16,9 +17,17 @@ namespace Web.Controllers
       return await Mediator.Send(command);
     }
 
-    [HttpPut]
-    public async Task<ActionResult<UserRoleDto>> UpdateUserRoles(UpdateUserRolesCommand command)
+    [HttpPut("{id}/role")]
+    public async Task<ActionResult<UserIdDto>> UpdateUserRoles([FromRoute] int id, UpdateUserRolesCommand command)
     {
+      command.UserId = id;
+      return await Mediator.Send(command);
+    }
+
+    [HttpPut("{id}/password")]
+    public async Task<ActionResult<int>> UpdateUserPassword([FromRoute] int id, UpdatePasswordCommand command)
+    {
+      command.UserId = id;
       return await Mediator.Send(command);
     }
 

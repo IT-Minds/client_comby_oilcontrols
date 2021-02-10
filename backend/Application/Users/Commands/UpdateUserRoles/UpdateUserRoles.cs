@@ -4,40 +4,45 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
 using Application.Common.Security;
+using AutoMapper;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Application.Users.Commands.UpdateUserRole
 {
   [AuthorizeAttribute(Domain.Enums.Action.UPDATE_USER)]
-  public class UpdateUserRolesCommand : IRequest<UserRoleDto>
+  public class UpdateUserRolesCommand : IRequest<UserIdDto>
   {
-    public UserRoleDto User { get; set; }
+    [JsonIgnore]
+    public int UserId { get; set; }
+    public string Role { get; set; }
 
-    public class UpdateUserRolesCommandHandler : IRequestHandler<UpdateUserRolesCommand, UserRoleDto>
+    public class UpdateUserRolesCommandHandler : IRequestHandler<UpdateUserRolesCommand, UserIdDto>
     {
       private readonly IApplicationDbContext _context;
+      private readonly IMapper _mapper;
 
-      public UpdateUserRolesCommandHandler(IApplicationDbContext context)
+      public UpdateUserRolesCommandHandler(IApplicationDbContext context, IMapper mapper)
       {
         _context = context;
+        _mapper = mapper;
       }
 
-      public async Task<UserRoleDto> Handle(UpdateUserRolesCommand request, CancellationToken cancellationToken)
+      public async Task<UserIdDto> Handle(UpdateUserRolesCommand request, CancellationToken cancellationToken)
       {
         var userEntity = await _context.Users
           .Include(x => x.Roles)
           .ThenInclude(x => x.Role)
-          .Where(x => x.Username.Equals(request.User.Username))
-          .FirstOrDefaultAsync(cancellationToken);
+          .FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);
         if (userEntity == null)
         {
           throw new ArgumentException("Username doesn't exist");
         }
 
         var roleEntity = await _context.Roles
-          .Where(x => x.Name.Equals(request.User.Role))
+          .Where(x => x.Name.Equals(request.Role))
           .FirstOrDefaultAsync(cancellationToken);
         if (roleEntity == null)
         {
@@ -63,8 +68,7 @@ namespace Application.Users.Commands.UpdateUserRole
           _context.UserRoles.Add(userRole);
         }
 
-        await _context.SaveChangesAsync(cancellationToken);
-        return request.User;
+        return _mapper.Map<UserIdDto>(userEntity);
       }
     }
   }

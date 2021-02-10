@@ -17,10 +17,13 @@ const DemoPage: NextPage = () => {
     async (form: CreateUserCommand, role: string) => {
       awaitCallback(async () => {
         const client = await genUserClient();
-        await client.createUser(form);
+        const id = await client.createUser(form);
 
         await client.updateUserRoles(
-          new UpdateUserRolesCommand({ user: { username: form.userName, role } })
+          id,
+          new UpdateUserRolesCommand({
+            role
+          })
         );
 
         toast({
