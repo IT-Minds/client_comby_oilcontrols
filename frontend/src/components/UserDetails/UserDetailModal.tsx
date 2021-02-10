@@ -23,9 +23,8 @@ import { genUserClient } from "services/backend/apiClients";
 import {
   IRoleDto,
   IUserIdDto,
-  RoleDto,
-  UpdateUserRolesCommand,
-  UserRoleDto
+  UpdatePasswordCommand,
+  UpdateUserRolesCommand
 } from "services/backend/nswagts";
 
 type Props = {
@@ -50,12 +49,12 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
     {
       //TODO: waiting for backend query
     }
-    // await client.updatePassword(
-    //   new AssignCouponsCommand({
-    //     newPassword,
-    //     repeatNewPassword
-    //   })
-    // );
+    await client.updateUserPassword(
+      user.id,
+      new UpdatePasswordCommand({
+        password: newPassword
+      })
+    );
     toast({
       title: "Password Updated",
       description: "Successful",
@@ -68,9 +67,7 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
   const updateRole = useCallback(async () => {
     if (role) {
       const client = await genUserClient();
-      await client.updateUserRoles(
-        new UpdateUserRolesCommand({ user: { username: user.username, role: role.name } })
-      );
+      await client.updateUserRoles(user.id, new UpdateUserRolesCommand({ role: role.name }));
       toast({
         title: "Role Updated",
         description: "Successful",
