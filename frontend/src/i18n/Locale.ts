@@ -116,6 +116,13 @@ export interface Locale {
         imageIsNeeded: string;
       };
     };
+    runlist: {
+      locationType: string;
+      address: string;
+      agreementType: string;
+      fuelType: string;
+      deadline: string;
+    };
   };
 
   enums: {

@@ -111,6 +111,13 @@ export const table: Locale = {
         liters: "Indtast antal liter",
         imageIsNeeded: "Tag et billede"
       }
+    },
+    runlist: {
+      locationType: "Lokationstype",
+      address: "Adresse",
+      agreementType: "Aftaletype",
+      fuelType: "Brændstofstype",
+      deadline: "Deadline"
     }
   },
   enums: {
