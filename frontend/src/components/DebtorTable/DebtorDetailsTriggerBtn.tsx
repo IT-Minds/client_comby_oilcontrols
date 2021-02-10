@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import DebtorDetailsComp from "components/DebtorDetailsComp";
 import React, { FC, useState } from "react";
-import { MdModeEdit } from "react-icons/md";
+import { MdVisibility } from "react-icons/md";
 import { IDebtorDto } from "services/backend/nswagts";
 
 type Props = {
@@ -31,7 +31,7 @@ const DebtorDetailsTriggerBtn: FC<Props> = ({ debtorData }) => {
         colorScheme="gray"
         aria-label={"Open details for debtor: " + debtor.dbId}
         onClick={onOpen}
-        icon={<MdModeEdit size={24} />}
+        icon={<MdVisibility size={24} />}
       />
 
       <Modal isOpen={isOpen} onClose={onClose} size="5xl">
