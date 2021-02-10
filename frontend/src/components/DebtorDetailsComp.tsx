@@ -41,6 +41,9 @@ const DebtorDetailsComp: FC<Props> = ({ debtorData }) => {
 
   return (
     <Container w="100%" maxW="unset">
+        {
+            //TODO: translation
+        }
       <VStack>
         <Text>Name: {debtor.name}</Text>
         <Text>Account number: {debtor.accountNumber}</Text>

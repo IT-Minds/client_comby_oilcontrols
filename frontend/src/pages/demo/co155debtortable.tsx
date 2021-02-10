@@ -33,7 +33,6 @@ export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context =
   return {
     props: {
       table,
-      // !This is a hack to get around undefined values in dataset
       debtorEntities: JSON.parse(JSON.stringify(data))
     },
     revalidate: 60

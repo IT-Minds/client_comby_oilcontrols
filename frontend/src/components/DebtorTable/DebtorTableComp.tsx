@@ -33,6 +33,9 @@ const DebtorTableComp: FC<Props> = ({ preLoadedData = [] }) => {
     <Container w="100%" maxW="unset">
       <Table variant="striped" colorScheme="blue" size="sm">
         <TableCaption placement="top">Debtor table</TableCaption>
+        {
+            //TODO: translation
+        }
         <Thead>
           <Tr>
             <Th>Debtor name</Th>
