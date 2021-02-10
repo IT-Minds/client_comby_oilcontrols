@@ -35,8 +35,8 @@ type Props = {
 const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [showPassword, setShowPassword] = React.useState(false);
-  const [showRepeatPassword, setShowRepeatPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const [newPassword, setNewPassword] = useState(null);
   const [repeatNewPassword, setRepeateNewPassword] = useState(null);
   const [passwordSubmitAttempts, setPasswordSubmitAttempts] = useState(0);
@@ -46,9 +46,6 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
 
   const updatePassword = useCallback(async () => {
     const client = await genUserClient();
-    {
-      //TODO: waiting for backend query
-    }
     await client.updateUserPassword(
       user.id,
       new UpdatePasswordCommand({
@@ -91,6 +88,9 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
+          {
+            //TODO: translation
+          }
           <ModalHeader>Manage User {user.username}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
