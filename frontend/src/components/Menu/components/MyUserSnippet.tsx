@@ -51,7 +51,7 @@ const MyUserSnippet: FC<Props> = ({ forceOpen = false }) => {
         cursor="pointer"
         borderColor={borderColor}
         borderBottom={"1px"}>
-        <UserCirle />
+        <UserCirle user={activeUser} />
         <VStack spacing={0} alignItems="left" maxW={nameLength + "px"}>
           <Text isTruncated>{activeUser.username}</Text>
           <Text size="xs" isTruncated as="i">

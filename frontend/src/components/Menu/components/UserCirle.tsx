@@ -1,17 +1,16 @@
 import { Circle } from "@chakra-ui/react";
-import { UserTypeContext } from "contexts/UserTypeContext";
-import { FC, useContext } from "react";
+import { FC } from "react";
 import { MdPerson } from "react-icons/md";
+import { IUserIdDto } from "services/backend/nswagts";
 
 type Props = {
   size?: number;
+  user: IUserIdDto;
 };
 
-const UserCirle: FC<Props> = ({ size = 12 }) => {
-  const { activeUser } = useContext(UserTypeContext);
-
+const UserCirle: FC<Props> = ({ size = 12, user }) => {
   return (
-    <Circle bgColor={toColor(activeUser.id)} width={size} height={size} p={1}>
+    <Circle bgColor={toColor(user?.id)} width={size} height={size} p={1}>
       <MdPerson size={"100%"} color="white" />
     </Circle>
   );
