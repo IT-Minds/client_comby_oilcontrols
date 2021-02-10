@@ -34,7 +34,7 @@ const DebtorTableComp: FC<Props> = ({ preLoadedData = [] }) => {
       <Table variant="striped" colorScheme="blue" size="sm">
         <TableCaption placement="top">Debtor table</TableCaption>
         {
-            //TODO: translation
+          //TODO: translation
         }
         <Thead>
           <Tr>
