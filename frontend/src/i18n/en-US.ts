@@ -89,6 +89,25 @@ export const table: Locale = {
     refuel: {
       trigger: "Refuel tank",
       complete: "Submit refuel"
+    },
+    refill: {
+      selectCouponNumber: "Select coupon number:",
+      selectFuelType: "Select fuel type:",
+      fuelInTankAfterRefill: "Brændstof i tanken EFTER påfyldning:",
+      fuelInTankBeforeRefill: "Brændstof i tanken FØR påfyldning",
+      liters: "liter",
+      isPartialFill: "Delvist påfyldning:",
+      viewImage: "Vis billede",
+      takeImage: "Tag billede",
+      submit: "Indsend",
+      image: "Billede",
+      retakeImage: "Tag billedet igen",
+      formErrors: {
+        selectCoupons: "Vælg en gyldig kupon",
+        selectFuel: "Vælg en brændstofstype",
+        liters: "Indtast antal liter",
+        imageIsNeeded: "Tag et billede"
+      }
     }
   },
   enums: {

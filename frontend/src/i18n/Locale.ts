@@ -93,6 +93,25 @@ export interface Locale {
       trigger: string;
       complete: string;
     };
+    refill: {
+      selectCouponNumber: string;
+      selectFuelType: string;
+      fuelInTankAfterRefill: string;
+      fuelInTankBeforeRefill: string;
+      liters: string;
+      isPartialFill: string;
+      viewImage: string;
+      takeImage: string;
+      submit: string;
+      image: string;
+      retakeImage: string;
+      formErrors: {
+        selectCoupons: string;
+        selectFuel: string;
+        liters: string;
+        imageIsNeeded: string;
+      };
+    };
   };
 
   enums: {
