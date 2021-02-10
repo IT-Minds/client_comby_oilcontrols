@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Users.Queries.GetAllUsers
 {
   [AuthorizeAttribute(Domain.Enums.Action.GET_ALL_USERS)]
-  public class GetAllUsersQuery: IPageRequest<UserDto, int>, IPageBody<User, int>
+  public class GetAllUsersQuery: IPageRequest<UserIdDto, int>, IPageBody<User, int>
   {
     public int Size { get; set; }
     public int? Skip { get; set; }
@@ -46,7 +46,7 @@ namespace Application.Users.Queries.GetAllUsers
       return partial;
     }
 
-    public class GetAllUsersQueryHandler : IPageRequestHandler<GetAllUsersQuery, UserDto, int>
+    public class GetAllUsersQueryHandler : IPageRequestHandler<GetAllUsersQuery, UserIdDto, int>
     {
       private readonly IApplicationDbContext _context;
       private readonly IMapper _mapper;
@@ -57,9 +57,9 @@ namespace Application.Users.Queries.GetAllUsers
         _mapper = mapper;
       }
 
-      public async Task<PageResult<UserDto, int>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
+      public async Task<PageResult<UserIdDto, int>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
       {
-        var page = new PageResult<UserDto, int>();
+        var page = new PageResult<UserIdDto, int>();
 
         var query = request.PreparePage(_context.Users
           .Include(u => u.Roles)
@@ -69,7 +69,7 @@ namespace Application.Users.Queries.GetAllUsers
 
         page.Results = await query
           .Take(request.Size)
-          .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
+          .ProjectTo<UserIdDto>(_mapper.ConfigurationProvider)
           .ToListAsync(cancellationToken);
 
         var pagesRemaining = await request.PagesRemaining(query);

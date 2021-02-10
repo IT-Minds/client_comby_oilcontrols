@@ -1,10 +1,8 @@
-using System.Collections.Generic;
 using System.Linq;
 using Application.Common.Mappings;
 using Application.Roles;
 using AutoMapper;
 using Domain.Entities;
-using Domain.Enums;
 
 namespace Application.Users
 {
@@ -12,6 +10,7 @@ namespace Application.Users
   {
     public string Username { get; set; }
     public int? TruckId { get; set; }
+    public bool IsTrucker { get => TruckId.HasValue; }
 
     public RoleDto CurrentRole { get; set; }
 

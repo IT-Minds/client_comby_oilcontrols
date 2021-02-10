@@ -23,7 +23,7 @@ namespace Web.Controllers
     }
 
     [HttpGet]
-    public async Task<ActionResult<PageResult<UserDto, int>>> GetAllUser(
+    public async Task<ActionResult<PageResult<UserIdDto, int>>> GetAllUser(
       [FromQuery] int needle = 0, [FromQuery] int size = 1000, [FromQuery] int skip = 0
     )
     {

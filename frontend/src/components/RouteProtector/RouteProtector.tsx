@@ -21,10 +21,10 @@ const RouteProtector: FC = () => {
   useEffect(() => {
     const handler = (newUrl: string) => {
       const isMyTruck = matchMyTruck.test(newUrl);
-      if (activeUser.truckId && !isMyTruck) {
+      if (activeUser.isTrucker && !isMyTruck) {
         router.events.emit("routeChangeError");
         throw "Ignore this error 1";
-      } else if (!activeUser.truckId && isMyTruck) {
+      } else if (!activeUser.isTrucker && isMyTruck) {
         router.events.emit("routeChangeError");
         throw "Ignore this error 2";
       }
@@ -32,9 +32,9 @@ const RouteProtector: FC = () => {
     router.events.on("routeChangeStart", handler);
 
     const isMyTruck = matchMyTruck.test(router.pathname);
-    if (activeUser.truckId && !isMyTruck) {
+    if (activeUser.isTrucker && !isMyTruck) {
       router.push("/mytruck");
-    } else if (!activeUser.truckId && isMyTruck) {
+    } else if (!activeUser.isTrucker && isMyTruck) {
       router.push("/");
     }
     return () => {
@@ -43,7 +43,7 @@ const RouteProtector: FC = () => {
   }, []);
 
   return (
-    <VisuallyHidden>Route is protected: {activeUser.truckId ? "true" : "false"}</VisuallyHidden>
+    <VisuallyHidden>Route is protected: {activeUser.isTrucker ? "true" : "false"}</VisuallyHidden>
   );
 };
 

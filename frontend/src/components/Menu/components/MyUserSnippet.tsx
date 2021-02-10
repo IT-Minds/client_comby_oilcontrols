@@ -20,10 +20,10 @@ import { useColors } from "hooks/useColors";
 import { Locale } from "i18n/Locale";
 import { useI18n } from "next-rosetta";
 import React, { FC, useContext, useState } from "react";
-import { MdPerson } from "react-icons/md";
 
 import AppVersion from "./AppVersion";
 import LanguageSelector from "./LanguageSelector";
+import UserCirle from "./UserCirle";
 
 type Props = {
   forceOpen?: boolean;
@@ -51,9 +51,7 @@ const MyUserSnippet: FC<Props> = ({ forceOpen = false }) => {
         cursor="pointer"
         borderColor={borderColor}
         borderBottom={"1px"}>
-        <Circle bgColor={toColor(activeUser.id)} width={12} height={12}>
-          <MdPerson size={32} color="white" />
-        </Circle>
+        <UserCirle />
         <VStack spacing={0} alignItems="left" maxW={nameLength + "px"}>
           <Text isTruncated>{activeUser.username}</Text>
           <Text size="xs" isTruncated as="i">
@@ -110,19 +108,3 @@ const MyUserSnippet: FC<Props> = ({ forceOpen = false }) => {
 };
 
 export default MyUserSnippet;
-
-function toColor(num: number) {
-  const options = [
-    "orange.500",
-    "yellow.500",
-    "green.500",
-    "teal.500",
-    "purple.500",
-    "blue.500",
-    "pink.500",
-    "red.500",
-    "cyan.500"
-  ];
-
-  return options[num % options.length];
-}

@@ -2130,7 +2130,7 @@ export class TruckClient extends ClientBase implements ITruckClient {
 export interface IUserClient {
     createUser(command: CreateUserCommand): Promise<number>;
     updateUserRoles(command: UpdateUserRolesCommand): Promise<UserRoleDto>;
-    getAllUser(needle?: number | undefined, size?: number | undefined, skip?: number | undefined): Promise<PageResultOfUserDtoAndInteger>;
+    getAllUser(needle?: number | undefined, size?: number | undefined, skip?: number | undefined): Promise<PageResultOfUserIdDtoAndInteger>;
 }
 
 export class UserClient extends ClientBase implements IUserClient {
@@ -2224,7 +2224,7 @@ export class UserClient extends ClientBase implements IUserClient {
         return Promise.resolve<UserRoleDto>(<any>null);
     }
 
-    getAllUser(needle?: number | undefined, size?: number | undefined, skip?: number | undefined): Promise<PageResultOfUserDtoAndInteger> {
+    getAllUser(needle?: number | undefined, size?: number | undefined, skip?: number | undefined): Promise<PageResultOfUserIdDtoAndInteger> {
         let url_ = this.baseUrl + "/api/User?";
         if (needle === null)
             throw new Error("The parameter 'needle' cannot be null.");
@@ -2254,14 +2254,14 @@ export class UserClient extends ClientBase implements IUserClient {
         });
     }
 
-    protected processGetAllUser(response: Response): Promise<PageResultOfUserDtoAndInteger> {
+    protected processGetAllUser(response: Response): Promise<PageResultOfUserIdDtoAndInteger> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PageResultOfUserDtoAndInteger.fromJS(resultData200);
+            result200 = PageResultOfUserIdDtoAndInteger.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -2269,7 +2269,7 @@ export class UserClient extends ClientBase implements IUserClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<PageResultOfUserDtoAndInteger>(<any>null);
+        return Promise.resolve<PageResultOfUserIdDtoAndInteger>(<any>null);
     }
 }
 
@@ -2317,6 +2317,7 @@ export interface IUserTokenDto {
 export class UserDto implements IUserDto {
     username?: string | null;
     truckId?: number | null;
+    isTrucker?: boolean;
     currentRole?: RoleDto | null;
 
     constructor(data?: IUserDto) {
@@ -2333,6 +2334,7 @@ export class UserDto implements IUserDto {
         if (_data) {
             this.username = _data["username"] !== undefined ? _data["username"] : <any>null;
             this.truckId = _data["truckId"] !== undefined ? _data["truckId"] : <any>null;
+            this.isTrucker = _data["isTrucker"] !== undefined ? _data["isTrucker"] : <any>null;
             this.currentRole = _data["currentRole"] ? RoleDto.fromJS(_data["currentRole"]) : <any>null;
         }
     }
@@ -2348,6 +2350,7 @@ export class UserDto implements IUserDto {
         data = typeof data === 'object' ? data : {};
         data["username"] = this.username !== undefined ? this.username : <any>null;
         data["truckId"] = this.truckId !== undefined ? this.truckId : <any>null;
+        data["isTrucker"] = this.isTrucker !== undefined ? this.isTrucker : <any>null;
         data["currentRole"] = this.currentRole ? this.currentRole.toJSON() : <any>null;
         return data; 
     }
@@ -2356,6 +2359,7 @@ export class UserDto implements IUserDto {
 export interface IUserDto {
     username?: string | null;
     truckId?: number | null;
+    isTrucker?: boolean;
     currentRole?: IRoleDto | null;
 }
 
@@ -2855,7 +2859,6 @@ export interface IPageResultOfExampleEntityDtoAndString {
 }
 
 export class PageResultOfExampleEntityDto extends PageResultOfExampleEntityDtoAndString implements IPageResultOfExampleEntityDto {
-    newNeedle?: string | null;
 
     constructor(data?: IPageResultOfExampleEntityDto) {
         super(data);
@@ -2863,9 +2866,6 @@ export class PageResultOfExampleEntityDto extends PageResultOfExampleEntityDtoAn
 
     init(_data?: any) {
         super.init(_data);
-        if (_data) {
-            this.newNeedle = _data["newNeedle"] !== undefined ? _data["newNeedle"] : <any>null;
-        }
     }
 
     static fromJS(data: any): PageResultOfExampleEntityDto {
@@ -2877,14 +2877,12 @@ export class PageResultOfExampleEntityDto extends PageResultOfExampleEntityDtoAn
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["newNeedle"] = this.newNeedle !== undefined ? this.newNeedle : <any>null;
         super.toJSON(data);
         return data; 
     }
 }
 
 export interface IPageResultOfExampleEntityDto extends IPageResultOfExampleEntityDtoAndString {
-    newNeedle?: string | null;
 }
 
 export class ExampleEntityDto implements IExampleEntityDto {
@@ -3431,7 +3429,6 @@ export interface IPageResultOfLocationHistoryDtoAndString {
 }
 
 export class PageResultOfLocationHistoryDto extends PageResultOfLocationHistoryDtoAndString implements IPageResultOfLocationHistoryDto {
-    newNeedle?: string | null;
 
     constructor(data?: IPageResultOfLocationHistoryDto) {
         super(data);
@@ -3439,9 +3436,6 @@ export class PageResultOfLocationHistoryDto extends PageResultOfLocationHistoryD
 
     init(_data?: any) {
         super.init(_data);
-        if (_data) {
-            this.newNeedle = _data["newNeedle"] !== undefined ? _data["newNeedle"] : <any>null;
-        }
     }
 
     static fromJS(data: any): PageResultOfLocationHistoryDto {
@@ -3453,14 +3447,12 @@ export class PageResultOfLocationHistoryDto extends PageResultOfLocationHistoryD
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["newNeedle"] = this.newNeedle !== undefined ? this.newNeedle : <any>null;
         super.toJSON(data);
         return data; 
     }
 }
 
 export interface IPageResultOfLocationHistoryDto extends IPageResultOfLocationHistoryDtoAndString {
-    newNeedle?: string | null;
 }
 
 export class LocationHistoryDto implements ILocationHistoryDto {
@@ -3920,7 +3912,6 @@ export interface IPageResultOfRefillDtoAndString {
 }
 
 export class PageResultOfRefillDto extends PageResultOfRefillDtoAndString implements IPageResultOfRefillDto {
-    newNeedle?: string | null;
 
     constructor(data?: IPageResultOfRefillDto) {
         super(data);
@@ -3928,9 +3919,6 @@ export class PageResultOfRefillDto extends PageResultOfRefillDtoAndString implem
 
     init(_data?: any) {
         super.init(_data);
-        if (_data) {
-            this.newNeedle = _data["newNeedle"] !== undefined ? _data["newNeedle"] : <any>null;
-        }
     }
 
     static fromJS(data: any): PageResultOfRefillDto {
@@ -3942,14 +3930,12 @@ export class PageResultOfRefillDto extends PageResultOfRefillDtoAndString implem
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["newNeedle"] = this.newNeedle !== undefined ? this.newNeedle : <any>null;
         super.toJSON(data);
         return data; 
     }
 }
 
 export interface IPageResultOfRefillDto extends IPageResultOfRefillDtoAndString {
-    newNeedle?: string | null;
 }
 
 export class OrderRefillCommand implements IOrderRefillCommand {
@@ -4230,7 +4216,6 @@ export interface IPageResultOfStreetDtoAndString {
 }
 
 export class PageResultOfStreetDto extends PageResultOfStreetDtoAndString implements IPageResultOfStreetDto {
-    newNeedle?: string | null;
 
     constructor(data?: IPageResultOfStreetDto) {
         super(data);
@@ -4238,9 +4223,6 @@ export class PageResultOfStreetDto extends PageResultOfStreetDtoAndString implem
 
     init(_data?: any) {
         super.init(_data);
-        if (_data) {
-            this.newNeedle = _data["newNeedle"] !== undefined ? _data["newNeedle"] : <any>null;
-        }
     }
 
     static fromJS(data: any): PageResultOfStreetDto {
@@ -4252,14 +4234,12 @@ export class PageResultOfStreetDto extends PageResultOfStreetDtoAndString implem
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["newNeedle"] = this.newNeedle !== undefined ? this.newNeedle : <any>null;
         super.toJSON(data);
         return data; 
     }
 }
 
 export interface IPageResultOfStreetDto extends IPageResultOfStreetDtoAndString {
-    newNeedle?: string | null;
 }
 
 export class StreetDto implements IStreetDto {
@@ -4816,6 +4796,7 @@ export interface ICreateTruckRefillCommand {
 export class CreateUserCommand implements ICreateUserCommand {
     userName?: string | null;
     password?: string | null;
+    roleId?: number;
 
     constructor(data?: ICreateUserCommand) {
         if (data) {
@@ -4830,6 +4811,7 @@ export class CreateUserCommand implements ICreateUserCommand {
         if (_data) {
             this.userName = _data["userName"] !== undefined ? _data["userName"] : <any>null;
             this.password = _data["password"] !== undefined ? _data["password"] : <any>null;
+            this.roleId = _data["roleId"] !== undefined ? _data["roleId"] : <any>null;
         }
     }
 
@@ -4844,6 +4826,7 @@ export class CreateUserCommand implements ICreateUserCommand {
         data = typeof data === 'object' ? data : {};
         data["userName"] = this.userName !== undefined ? this.userName : <any>null;
         data["password"] = this.password !== undefined ? this.password : <any>null;
+        data["roleId"] = this.roleId !== undefined ? this.roleId : <any>null;
         return data; 
     }
 }
@@ -4851,6 +4834,7 @@ export class CreateUserCommand implements ICreateUserCommand {
 export interface ICreateUserCommand {
     userName?: string | null;
     password?: string | null;
+    roleId?: number;
 }
 
 export class UserRoleDto implements IUserRoleDto {
@@ -4930,24 +4914,17 @@ export interface IUpdateUserRolesCommand {
     user?: IUserRoleDto | null;
 }
 
-export class PageResultOfUserDtoAndInteger implements IPageResultOfUserDtoAndInteger {
+export class PageResultOfUserIdDtoAndInteger implements IPageResultOfUserIdDtoAndInteger {
     newNeedle?: number;
     pagesRemaining?: number;
-    results?: UserDto[] | null;
+    results?: UserIdDto[] | null;
     hasMore?: boolean;
 
-    constructor(data?: IPageResultOfUserDtoAndInteger) {
+    constructor(data?: IPageResultOfUserIdDtoAndInteger) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
-            }
-            if (data.results) {
-                this.results = [];
-                for (let i = 0; i < data.results.length; i++) {
-                    let item = data.results[i];
-                    this.results[i] = item && !(<any>item).toJSON ? new UserDto(item) : <UserDto>item;
-                }
             }
         }
     }
@@ -4959,15 +4936,15 @@ export class PageResultOfUserDtoAndInteger implements IPageResultOfUserDtoAndInt
             if (Array.isArray(_data["results"])) {
                 this.results = [] as any;
                 for (let item of _data["results"])
-                    this.results!.push(UserDto.fromJS(item));
+                    this.results!.push(UserIdDto.fromJS(item));
             }
             this.hasMore = _data["hasMore"] !== undefined ? _data["hasMore"] : <any>null;
         }
     }
 
-    static fromJS(data: any): PageResultOfUserDtoAndInteger {
+    static fromJS(data: any): PageResultOfUserIdDtoAndInteger {
         data = typeof data === 'object' ? data : {};
-        let result = new PageResultOfUserDtoAndInteger();
+        let result = new PageResultOfUserIdDtoAndInteger();
         result.init(data);
         return result;
     }
@@ -4986,10 +4963,10 @@ export class PageResultOfUserDtoAndInteger implements IPageResultOfUserDtoAndInt
     }
 }
 
-export interface IPageResultOfUserDtoAndInteger {
+export interface IPageResultOfUserIdDtoAndInteger {
     newNeedle?: number;
     pagesRemaining?: number;
-    results?: IUserDto[] | null;
+    results?: UserIdDto[] | null;
     hasMore?: boolean;
 }
 

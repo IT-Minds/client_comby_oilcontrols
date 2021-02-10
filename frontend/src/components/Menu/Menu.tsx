@@ -46,7 +46,7 @@ const Menu: FC<Props> = ({ links, userForceOpen = false }) => {
         </Center>
       </Box>
       <Box flexGrow={1} minH={0}>
-        {!activeUser.truckId ? <Navigator links={links} /> : <Text></Text>}
+        {!activeUser.isTrucker ? <Navigator links={links} /> : <Text></Text>}
       </Box>
       <MyUserSnippet forceOpen={userForceOpen} />
     </Flex>

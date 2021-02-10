@@ -43,7 +43,7 @@ const LayoutDesktop: FC = ({ children }) => {
   return (
     <Flex>
       {displaymenu ? (
-        activeUser.truckId ? (
+        activeUser.isTrucker ? (
           <>
             <Box position="fixed" bottom={0} zIndex={99}>
               <MyUserSnippet />
