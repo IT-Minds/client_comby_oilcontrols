@@ -1,14 +1,6 @@
-import {
-  Container,
-  Table,
-  TableCaption,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr
-} from "@chakra-ui/react";
-import React, { FC, useEffect, useReducer, useState } from "react";
+import { Container, Table, TableCaption, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { DebtorTableContext } from "contexts/DebtorTableContext";
+import React, { FC, useCallback, useEffect, useReducer } from "react";
 import ListReducer, { ListReducerActionType } from "react-list-reducer";
 import { DebtorDto } from "services/backend/nswagts";
 
@@ -30,12 +22,17 @@ const DebtorTableComp: FC<Props> = ({ preLoadedData = [] }) => {
     }
   });
 
+  const debtorUpdated = useCallback((debtor: DebtorDto) => {
+    dataDispatch({
+      type: ListReducerActionType.Update,
+      data: debtor
+    });
+  }, []);
+
   return (
     <Container w="100%" maxW="unset">
       <Table variant="striped" colorScheme="blue" size="sm">
-        <TableCaption placement="top">
-          Debtor table
-        </TableCaption>
+        <TableCaption placement="top">Debtor table</TableCaption>
         <Thead>
           <Tr>
             <Th>Debtor name</Th>
@@ -43,19 +40,24 @@ const DebtorTableComp: FC<Props> = ({ preLoadedData = [] }) => {
             <Th>Uniconta ID</Th>
           </Tr>
         </Thead>
-        <Tbody>
-          {data.map(debtor => (
-            <Tr
-              key={debtor.dbId}>
-              <Td>{debtor.name}</Td>
-              <Td>{debtor.dbId}</Td>
-              <Td>{debtor.unicontaId}</Td>
-              <Td>
-                <DebtorDetailsTriggerBtn debtorData={debtor} />
-              </Td>
-            </Tr>
-          ))}
-        </Tbody>
+
+        <DebtorTableContext.Provider
+          value={{
+            debtorUpdated
+          }}>
+          <Tbody>
+            {data.map(debtor => (
+              <Tr key={debtor.dbId}>
+                <Td>{debtor.name}</Td>
+                <Td>{debtor.dbId}</Td>
+                <Td>{debtor.unicontaId}</Td>
+                <Td>
+                  <DebtorDetailsTriggerBtn debtorData={debtor} />
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </DebtorTableContext.Provider>
       </Table>
     </Container>
   );
