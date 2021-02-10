@@ -51,9 +51,16 @@ namespace Application.UnitTests
           new ExampleEntity { Id = 5, ExampleEntityListId = null, Name = "Coffee", ExampleEnum = ExampleEnum.D }
       );
 
+      var driver1 = new User { Username = "Driver1", Password = "Password" };
+      var driver2 = new User { Username = "Driver2", Password = "Password" };
+      context.Users.AddRange(
+        driver1,
+        driver2
+      );
+
       context.Trucks.AddRange(
-        new Truck { Id = 43, TruckIdentifier = "Truck1" },
-        new Truck { Id = 44, TruckIdentifier = "Truck2" }
+        new Truck { Driver = driver1, Id = 43, TruckIdentifier = "Truck1" },
+        new Truck { Driver = driver2, Id = 44, TruckIdentifier = "Truck2" }
       );
 
       context.FuelTanks.AddRange(
@@ -169,9 +176,13 @@ namespace Application.UnitTests
       var refill101 = new CompletedRefill { Id = 101, CouponId = 101, StartAmount = 200, EndAmount = 300, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 1, 1), ActualDeliveryDate = new DateTime(2020, 1, 1, 10, 0, 0), LocationId = 100 };
       var refill102 = new CompletedRefill { Id = 102, CouponId = 102, StartAmount = 200, EndAmount = 300, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 1, 1), ActualDeliveryDate = new DateTime(2020, 1, 2, 10, 0, 0), LocationId = 100 };
 
+      var driver3 = new User { Username = "Driver3", Password = "Password" };
+      context.Users.AddRange(
+        driver3
+      );
 
       context.Trucks.Add(
-        new Truck { Id = 100, TruckIdentifier = "Truck3" }
+        new Truck { Driver = driver3, Id = 100, TruckIdentifier = "Truck3" }
       );
       context.Coupons.AddRange(
         new Coupon { Id = 100, CouponNumber = 100, TruckId = 100 },

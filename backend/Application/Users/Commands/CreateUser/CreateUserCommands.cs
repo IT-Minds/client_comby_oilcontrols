@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
@@ -10,6 +11,7 @@ namespace Application.Users.Commands.CreateUser
   {
     public string UserName { get; set; }
     public string Password { get; set; }
+    public int RoleId { get; set; }
 
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, int>
     {
@@ -33,7 +35,22 @@ namespace Application.Users.Commands.CreateUser
           Password = hash
         };
 
+        var role = await _context.Roles.FindAsync(request.RoleId);
+
+        if (role == null)
+        {
+          throw new ArgumentException("No such role.");
+        }
+
+        var userRole = new UserRole
+        {
+          User = user,
+          Role = role
+        };
+
         _context.Users.Add(user);
+        _context.UserRoles.Add(userRole);
+
         return await _context.SaveChangesAsync(cancellationToken);
       }
     }

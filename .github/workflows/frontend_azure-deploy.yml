@@ -6,7 +6,6 @@ on:
       - "frontend/**"
     branches:
       - main
-      - cicd
 
 defaults:
   run:

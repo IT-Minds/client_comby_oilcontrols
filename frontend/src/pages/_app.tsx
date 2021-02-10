@@ -6,7 +6,7 @@ import { Center, ChakraProvider, CircularProgress, Container, Progress } from "@
 import LayoutDesktop from "components/Layout/LayoutDesktop";
 import LoginComp from "components/Login/LoginComp";
 import RouteProtector from "components/RouteProtector/RouteProtector";
-import UserTypeContextProvider from "contexts/providers/UserTypeContextProvider";
+import { UserTypeContext } from "contexts/UserTypeContext";
 import { AuthStage, useAuth } from "hooks/useAuth";
 import { useLoadProgress } from "hooks/useLoadProgress";
 import { usePWA } from "hooks/usePWA";
@@ -15,7 +15,7 @@ import Head from "next/head";
 import { I18nProvider } from "next-rosetta";
 import { ReactElement, useEffect } from "react";
 import EnvSettings from "types/EnvSettings";
-import isomorphicEnvSettings, { setEnvSettings } from "utils/envSettings";
+import { setEnvSettings } from "utils/envSettings";
 import { logger } from "utils/logger";
 
 import theme from "../theme/theme";
@@ -48,7 +48,8 @@ const MyApp = ({ Component, pageProps, __N_SSG, router }: AppPropsType & Props):
     }
   }, []);
 
-  const { authStage, login, logout } = useAuth();
+  const auth = useAuth();
+  const { authStage, login } = auth;
   usePWA();
 
   return (
@@ -88,12 +89,12 @@ const MyApp = ({ Component, pageProps, __N_SSG, router }: AppPropsType & Props):
                 zIndex={99}
                 hidden={progressVal < 10}
               />
-              <UserTypeContextProvider logout={logout}>
+              <UserTypeContext.Provider value={auth}>
                 <RouteProtector />
                 <LayoutDesktop>
                   <Component {...pageProps} />
                 </LayoutDesktop>
-              </UserTypeContextProvider>
+              </UserTypeContext.Provider>
             </>
           )}
         </ChakraProvider>

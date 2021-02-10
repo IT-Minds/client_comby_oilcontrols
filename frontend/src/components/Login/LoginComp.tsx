@@ -10,24 +10,24 @@ import {
 } from "@chakra-ui/react";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
-import { IUserDto } from "services/backend/nswagts";
+import { IAssignTokenCommand } from "services/backend/nswagts";
 import { logger } from "utils/logger";
 
 type Props = {
-  submitCallback: (loginForm: IUserDto) => Promise<unknown>;
+  submitCallback: (loginForm: IAssignTokenCommand) => Promise<unknown>;
 };
 
 const LoginComp: FC<Props> = ({ submitCallback }) => {
   const [show, setShow] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const [localForm, setLocalForm] = useState<IUserDto>({
+  const [localForm, setLocalForm] = useState<IAssignTokenCommand>({
     username: "",
     password: ""
   });
 
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
 
-  const updateLocalForm = useCallback((value: unknown, key: keyof IUserDto) => {
+  const updateLocalForm = useCallback((value: unknown, key: keyof IAssignTokenCommand) => {
     setLocalForm(form => {
       (form[key] as unknown) = value;
       return form;

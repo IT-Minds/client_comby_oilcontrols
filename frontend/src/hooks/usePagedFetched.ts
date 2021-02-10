@@ -19,7 +19,11 @@ type Return<T = unknown> = {
   needle: T;
   fetchData: (initialNeedle?: T, initialSkip?: number) => Promise<void>;
 };
-export const usePagedFetched = <T extends IPageResult<V, U>, U = string, V = unknown>(
+export const usePagedFetched = <
+  U = string,
+  V = unknown,
+  T extends IPageResult<V, U> = IPageResult<V, U>
+>(
   sortBy: string,
   callback: Callback<T, U>,
   dataDispatch: Dispatch<AllListActions<V>>,

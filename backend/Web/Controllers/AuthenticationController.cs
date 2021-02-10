@@ -15,7 +15,7 @@ namespace Web.Controllers
     }
 
     [HttpPost("checkauth")]
-    public async Task<ActionResult<UserDto>> CheckAuth()
+    public async Task<ActionResult<UserIdDto>> CheckAuth()
     {
       var result = await Mediator.Send(new CheckAuthCommand());
       return result;

@@ -13,10 +13,5 @@ namespace Application.Common.Interfaces.Pagination
     public bool HasMore { get; set; }
   }
 
-  public class PageResult<T> : PageResult<T, string>
-  {
-    #pragma warning disable 0108
-    public string NewNeedle { get; set; }
-    #pragma warning restore 0108
-  }
+  public class PageResult<T> : PageResult<T, string> { }
 }

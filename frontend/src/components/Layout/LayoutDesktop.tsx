@@ -28,7 +28,7 @@ const LayoutDesktop: FC = ({ children }) => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { isType } = useContext(UserTypeContext);
+  const { activeUser } = useContext(UserTypeContext);
 
   const router = useRouter();
 
@@ -43,11 +43,7 @@ const LayoutDesktop: FC = ({ children }) => {
   return (
     <Flex>
       {displaymenu ? (
-        isType(UserType.OFFICE_WORKER) ? (
-          <Box className={styles.desktop}>
-            <Menu links={testLinks} />
-          </Box>
-        ) : (
+        activeUser.isTrucker ? (
           <>
             <Box position="fixed" bottom={0} zIndex={99}>
               <MyUserSnippet />
@@ -64,6 +60,10 @@ const LayoutDesktop: FC = ({ children }) => {
               />
             </Box>
           </>
+        ) : (
+          <Box className={styles.desktop}>
+            <Menu links={testLinks} />
+          </Box>
         )
       ) : (
         <Box className={styles.mobile} padding={2} position="absolute" left={1}>

@@ -15,6 +15,11 @@ namespace Infrastructure.Persistence.Configurations
         .IsRequired(true);
 
       builder.Ignore(x => x.CompletedRefills);
+
+      builder.HasOne(t => t.Driver)
+        .WithOne(u => u.Truck)
+        .HasForeignKey<User>(u => u.TruckId)
+        .IsRequired(false);
     }
   }
 }

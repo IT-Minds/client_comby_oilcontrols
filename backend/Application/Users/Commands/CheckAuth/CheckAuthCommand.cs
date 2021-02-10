@@ -10,9 +10,9 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Users.Commands.AssignToken
 {
   [Authenticated]
-  public class CheckAuthCommand : IRequest<UserDto>
+  public class CheckAuthCommand : IRequest<UserIdDto>
   {
-    public class CheckAuthCommandHandler : IRequestHandler<CheckAuthCommand, UserDto>
+    public class CheckAuthCommandHandler : IRequestHandler<CheckAuthCommand, UserIdDto>
     {
       private readonly IApplicationDbContext _context;
       private readonly ICurrentUserService _userAuthService;
@@ -26,16 +26,20 @@ namespace Application.Users.Commands.AssignToken
         _mapper = mapper;
       }
 
-      public async Task<UserDto> Handle(CheckAuthCommand request, CancellationToken cancellationToken)
+      public async Task<UserIdDto> Handle(CheckAuthCommand request, CancellationToken cancellationToken)
       {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == _userAuthService.UserId);
+        var user = await _context.Users
+          .Include(u => u.Roles)
+            .ThenInclude(r => r.Role)
+              .ThenInclude(r => r.Actions)
+          .FirstOrDefaultAsync(u => u.Username == _userAuthService.UserId);
 
         if (user == null) {
           // throw 401??
           throw new ArgumentException("Invalid credentials.");
         }
 
-        return _mapper.Map<UserDto>(user);
+        return _mapper.Map<UserIdDto>(user);
       }
     }
   }

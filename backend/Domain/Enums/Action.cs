@@ -21,6 +21,7 @@ namespace Domain.Enums
     UPDATE_TRUCK = 16,
     GET_TRUCK = 17,
     GET_ROLES = 18,
-    UPDATE_USER = 19
+    UPDATE_USER = 19,
+    GET_ALL_USERS = 20,
   }
 }

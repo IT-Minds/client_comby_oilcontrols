@@ -85,7 +85,7 @@ jobs:
           npm ci --production
           rm -rf .next/cache
           mkdir -p ${{ env.artifact-dir }}
-          zip -r ${{ env.frontend-artifact }} .next next.config.js package.json package-lock.json server.js web.config public node_modules
+          zip -r ${{ env.frontend-artifact }} .next next.config.js package.json package-lock.json server.js web.config public node_modules src/i18n
         env:
           NEXT_PUBLIC_APP_VERSION: ${{ github.event.release.tag_name }}.${{ github.run_id }}
 

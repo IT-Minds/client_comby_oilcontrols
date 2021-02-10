@@ -13,6 +13,8 @@ namespace Application.Trucks
     public double TankCapacity { get; set; }
     public int RefillNumber { get; set; }
 
+    public int DriverId { get; set; }
+
     public void Mapping(Profile profile)
     {
       profile.CreateMap<Truck, TruckInfoDto>();
