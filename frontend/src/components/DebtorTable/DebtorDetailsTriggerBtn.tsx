@@ -25,7 +25,7 @@ const DebtorDetailsTriggerBtn: FC<Props> = ({ debtorData }) => {
     if (debtorData) {
       setDebtor(debtorData);
     }
-  });
+  }, [debtorData]);
 
   return (
     <>

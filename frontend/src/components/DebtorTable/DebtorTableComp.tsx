@@ -20,7 +20,7 @@ const DebtorTableComp: FC<Props> = ({ preLoadedData = [] }) => {
         data: preLoadedData
       });
     }
-  });
+  }, [preLoadedData]);
 
   const debtorUpdated = useCallback((debtor: DebtorDto) => {
     dataDispatch({
