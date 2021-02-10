@@ -20,6 +20,8 @@ import React, { FC, useEffect, useReducer, useState } from "react";
 import ListReducer, { ListReducerActionType } from "react-list-reducer";
 import { DebtorDto } from "services/backend/nswagts";
 
+import DebtorDetailsTriggerBtn from "./DebtorDetailsTriggerBtn";
+
 type Props = {
   preLoadedData?: DebtorDto[];
 };
@@ -41,7 +43,9 @@ const DebtorTableComp: FC<Props> = ({ preLoadedData = [] }) => {
   return (
     <Container w="100%" maxW="unset">
       <Table variant="striped" colorScheme="blue" size="sm">
-        <TableCaption placement="top">Debtor table</TableCaption>
+        <TableCaption placement="top">
+          Debtor table
+        </TableCaption>
         <Thead>
           <Tr>
             <Th>Debtor name</Th>
@@ -60,21 +64,13 @@ const DebtorTableComp: FC<Props> = ({ preLoadedData = [] }) => {
               <Td>{debtor.name}</Td>
               <Td>{debtor.dbId}</Td>
               <Td>{debtor.unicontaId}</Td>
+              <Td>
+                <DebtorDetailsTriggerBtn debtorData={debtor} />
+              </Td>
             </Tr>
           ))}
         </Tbody>
       </Table>
-
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Overview of debtor {debtor?.name}</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <DebtorDetailsComp debtorData={debtor}></DebtorDetailsComp>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
     </Container>
   );
 };
