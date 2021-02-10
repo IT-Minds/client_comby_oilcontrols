@@ -13,14 +13,14 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Text,
   useDisclosure,
   useToast
 } from "@chakra-ui/react";
+import UserRoleSelector from "components/UserRoleSelector/UserRoleSelector";
 import React, { FC, useCallback, useState } from "react";
 import { MdAdd, MdEdit } from "react-icons/md";
 import { genUserClient } from "services/backend/apiClients";
-import { IUserIdDto } from "services/backend/nswagts";
+import { IUserIdDto, RoleDto, UpdateUserRolesCommand } from "services/backend/nswagts";
 
 type Props = {
   user: IUserIdDto;
@@ -34,6 +34,9 @@ const UserDetailModal: FC<Props> = ({ user }) => {
   const [newPassword, setNewPassword] = useState(null);
   const [repeatNewPassword, setRepeateNewPassword] = useState(null);
   const [passwordSubmitAttempts, setPasswordSubmitAttempts] = useState(0);
+
+  const [roleSubmitAttempts, setRoleSubmitAttempts] = useState(0);
+  const [role, setRole] = useState(null);
 
   const updatePassword = useCallback(async () => {
     const client = await genUserClient();
@@ -54,6 +57,22 @@ const UserDetailModal: FC<Props> = ({ user }) => {
       isClosable: true
     });
   }, [newPassword, repeatNewPassword]);
+
+  const updateRole = useCallback(async () => {
+    if (role) {
+      const client = await genUserClient();
+      await client.updateUserRoles(
+        new UpdateUserRolesCommand({ user: { username: user.username, role } })
+      );
+      toast({
+        title: "Role Updated",
+        description: "Successful",
+        status: "success",
+        duration: 9000,
+        isClosable: true
+      });
+    }
+  }, [role]);
 
   return (
     <>
@@ -131,7 +150,7 @@ const UserDetailModal: FC<Props> = ({ user }) => {
 
             <Button
               mt={4}
-              colorScheme="blue"
+              colorScheme="green"
               rightIcon={<MdAdd />}
               type="submit"
               onClick={() => {
@@ -143,7 +162,42 @@ const UserDetailModal: FC<Props> = ({ user }) => {
               }
               Update Password
             </Button>
-            <Text>Change Role</Text>
+
+            <FormControl mt={4} isInvalid={roleSubmitAttempts > 0 && !role}>
+              {
+                //TODO: translation
+              }
+              <FormLabel>User role</FormLabel>
+
+              <UserRoleSelector
+                preselectedValue={
+                  role ? { id: "0", name: role } : { id: "0", name: user.currentRole?.name }
+                }
+                cb={x => {
+                  setRole(x.name);
+                }}
+              />
+              {
+                //TODO: translation
+              }
+              <FormErrorMessage>Please choose a role</FormErrorMessage>
+            </FormControl>
+
+            {
+              //TODO: translation
+            }
+            <Button
+              mt={4}
+              mb={4}
+              colorScheme="green"
+              type="submit"
+              rightIcon={<MdAdd />}
+              onClick={() => {
+                setRoleSubmitAttempts(x => x + 1);
+                updateRole();
+              }}>
+              Update role
+            </Button>
           </ModalBody>
         </ModalContent>
       </Modal>
