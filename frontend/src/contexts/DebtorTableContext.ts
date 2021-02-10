@@ -1,4 +1,3 @@
-import { useAuth } from "hooks/useAuth";
 import { createContext } from "react";
 import { IDebtorDto } from "services/backend/nswagts";
 
