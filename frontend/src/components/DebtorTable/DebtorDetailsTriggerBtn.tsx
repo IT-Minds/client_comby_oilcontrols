@@ -39,7 +39,7 @@ const DebtorDetailsTriggerBtn: FC<Props> = ({ debtorData }) => {
         <ModalContent>
           <ModalHeader textAlign="center">Overview of debtor {debtor?.name}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
+          <ModalBody mb={4}>
             <DebtorDetailsComp debtorData={debtor}></DebtorDetailsComp>
           </ModalBody>
         </ModalContent>
