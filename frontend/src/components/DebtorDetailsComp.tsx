@@ -16,17 +16,14 @@ const DebtorDetailsComp: FC<Props> = ({ debtorData }) => {
   const saveCouponRequired = useCallback(
     async (isRequired: boolean) => {
       const client = await genDebtorClient();
-      await client
-        .printCouponRequired(
-          debtor.dbId,
-          new PrintCouponRequiredCommand({
-            debtorId: debtor.dbId,
-            printCouponRequired: isRequired
-          })
-        )
-        .then(() => {
-          setDebtor({ ...debtor, couponRequired: isRequired });
-        });
+      await client.printCouponRequired(
+        debtor.dbId,
+        new PrintCouponRequiredCommand({
+          debtorId: debtor.dbId,
+          printCouponRequired: isRequired
+        })
+      );
+      setDebtor({ ...debtor, couponRequired: isRequired });
       debtorUpdated({ ...debtor, couponRequired: isRequired });
       toast({
         title: "Debtor Updated",
