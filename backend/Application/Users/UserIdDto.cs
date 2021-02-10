@@ -12,6 +12,8 @@ namespace Application.Users
   {
     public int Id { get; set; }
 
+    public bool IsTrucker { get => TruckId.HasValue; }
+
     public void Mapping(Profile profile)
     {
       profile.CreateMap<User, UserIdDto>()

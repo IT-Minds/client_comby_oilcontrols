@@ -6,15 +6,12 @@ on:
       - "backend/**"
     branches:
       - main
-      - cicd
 
   pull_request:
     paths:
       - "backend/**"
-      - ".github/workflows/**"
     branches:
       - main
-      - cicd
 
 defaults:
   run:

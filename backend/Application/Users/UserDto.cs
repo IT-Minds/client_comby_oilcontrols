@@ -10,7 +10,6 @@ namespace Application.Users
   {
     public string Username { get; set; }
     public int? TruckId { get; set; }
-    public bool IsTrucker { get => TruckId.HasValue; }
 
     public RoleDto CurrentRole { get; set; }
 

@@ -2317,7 +2317,6 @@ export interface IUserTokenDto {
 export class UserDto implements IUserDto {
     username?: string | null;
     truckId?: number | null;
-    isTrucker?: boolean;
     currentRole?: RoleDto | null;
 
     constructor(data?: IUserDto) {
@@ -2334,7 +2333,6 @@ export class UserDto implements IUserDto {
         if (_data) {
             this.username = _data["username"] !== undefined ? _data["username"] : <any>null;
             this.truckId = _data["truckId"] !== undefined ? _data["truckId"] : <any>null;
-            this.isTrucker = _data["isTrucker"] !== undefined ? _data["isTrucker"] : <any>null;
             this.currentRole = _data["currentRole"] ? RoleDto.fromJS(_data["currentRole"]) : <any>null;
         }
     }
@@ -2350,7 +2348,6 @@ export class UserDto implements IUserDto {
         data = typeof data === 'object' ? data : {};
         data["username"] = this.username !== undefined ? this.username : <any>null;
         data["truckId"] = this.truckId !== undefined ? this.truckId : <any>null;
-        data["isTrucker"] = this.isTrucker !== undefined ? this.isTrucker : <any>null;
         data["currentRole"] = this.currentRole ? this.currentRole.toJSON() : <any>null;
         return data; 
     }
@@ -2359,12 +2356,12 @@ export class UserDto implements IUserDto {
 export interface IUserDto {
     username?: string | null;
     truckId?: number | null;
-    isTrucker?: boolean;
     currentRole?: IRoleDto | null;
 }
 
 export class UserIdDto extends UserDto implements IUserIdDto {
     id?: number;
+    isTrucker?: boolean;
 
     constructor(data?: IUserIdDto) {
         super(data);
@@ -2374,6 +2371,7 @@ export class UserIdDto extends UserDto implements IUserIdDto {
         super.init(_data);
         if (_data) {
             this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+            this.isTrucker = _data["isTrucker"] !== undefined ? _data["isTrucker"] : <any>null;
         }
     }
 
@@ -2387,6 +2385,7 @@ export class UserIdDto extends UserDto implements IUserIdDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id !== undefined ? this.id : <any>null;
+        data["isTrucker"] = this.isTrucker !== undefined ? this.isTrucker : <any>null;
         super.toJSON(data);
         return data; 
     }
@@ -2394,6 +2393,7 @@ export class UserIdDto extends UserDto implements IUserIdDto {
 
 export interface IUserIdDto extends IUserDto {
     id?: number;
+    isTrucker?: boolean;
 }
 
 export class RoleDto implements IRoleDto {

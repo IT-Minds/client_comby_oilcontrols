@@ -6,7 +6,6 @@ on:
       - "backend/**"
     branches:
       - main
-      - cicd
 
 defaults:
   run:
