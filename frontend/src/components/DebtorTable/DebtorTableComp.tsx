@@ -1,21 +1,13 @@
 import {
   Container,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
   Table,
   TableCaption,
   Tbody,
   Td,
   Th,
   Thead,
-  Tr,
-  useDisclosure
+  Tr
 } from "@chakra-ui/react";
-import DebtorDetailsComp from "components/DebtorDetailsComp";
 import React, { FC, useEffect, useReducer, useState } from "react";
 import ListReducer, { ListReducerActionType } from "react-list-reducer";
 import { DebtorDto } from "services/backend/nswagts";
@@ -28,8 +20,6 @@ type Props = {
 
 const DebtorTableComp: FC<Props> = ({ preLoadedData = [] }) => {
   const [data, dataDispatch] = useReducer(ListReducer<DebtorDto>("dbId"), preLoadedData ?? []);
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [debtor, setDebtor] = useState<DebtorDto>(null);
 
   useEffect(() => {
     if (preLoadedData) {
@@ -56,11 +46,7 @@ const DebtorTableComp: FC<Props> = ({ preLoadedData = [] }) => {
         <Tbody>
           {data.map(debtor => (
             <Tr
-              key={debtor.dbId}
-              onClick={() => {
-                setDebtor(debtor);
-                onOpen();
-              }}>
+              key={debtor.dbId}>
               <Td>{debtor.name}</Td>
               <Td>{debtor.dbId}</Td>
               <Td>{debtor.unicontaId}</Td>

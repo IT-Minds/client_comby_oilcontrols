@@ -1,7 +1,7 @@
 import { Container, HStack, Switch, Text, useToast, VStack } from "@chakra-ui/react";
 import React, { FC, useCallback, useState } from "react";
 import { genDebtorClient } from "services/backend/apiClients";
-import { DebtorDto, IDebtorDto, PrintCouponRequiredCommand } from "services/backend/nswagts";
+import { IDebtorDto, PrintCouponRequiredCommand } from "services/backend/nswagts";
 
 type Props = {
   debtorData: IDebtorDto;

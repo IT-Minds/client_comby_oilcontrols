@@ -6,8 +6,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  useDisclosure,
-  useToast
+  useDisclosure
 } from "@chakra-ui/react";
 import DebtorDetailsComp from "components/DebtorDetailsComp";
 import React, { FC, useState } from "react";
@@ -20,8 +19,6 @@ type Props = {
 
 const DebtorDetailsTriggerBtn: FC<Props> = ({ debtorData }) => {
   const [debtor, setDebtor] = useState<IDebtorDto>(debtorData ?? {});
-  const toast = useToast();
-
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
