@@ -2129,8 +2129,9 @@ export class TruckClient extends ClientBase implements ITruckClient {
 
 export interface IUserClient {
     createUser(command: CreateUserCommand): Promise<number>;
-    updateUserRoles(command: UpdateUserRolesCommand): Promise<UserRoleDto>;
     getAllUser(needle?: number | undefined, size?: number | undefined, skip?: number | undefined): Promise<PageResultOfUserIdDtoAndInteger>;
+    updateUserRoles(id: number, command: UpdateUserRolesCommand): Promise<UserIdDto>;
+    updateUserPassword(id: number, command: UpdatePasswordCommand): Promise<number>;
 }
 
 export class UserClient extends ClientBase implements IUserClient {
@@ -2184,46 +2185,6 @@ export class UserClient extends ClientBase implements IUserClient {
         return Promise.resolve<number>(<any>null);
     }
 
-    updateUserRoles(command: UpdateUserRolesCommand): Promise<UserRoleDto> {
-        let url_ = this.baseUrl + "/api/User";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(command);
-
-        let options_ = <RequestInit>{
-            body: content_,
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            }
-        };
-
-        return this.transformOptions(options_).then(transformedOptions_ => {
-            return this.http.fetch(url_, transformedOptions_);
-        }).then((_response: Response) => {
-            return this.transformResult(url_, _response, (_response: Response) => this.processUpdateUserRoles(_response));
-        });
-    }
-
-    protected processUpdateUserRoles(response: Response): Promise<UserRoleDto> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = UserRoleDto.fromJS(resultData200);
-            return result200;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<UserRoleDto>(<any>null);
-    }
-
     getAllUser(needle?: number | undefined, size?: number | undefined, skip?: number | undefined): Promise<PageResultOfUserIdDtoAndInteger> {
         let url_ = this.baseUrl + "/api/User?";
         if (needle === null)
@@ -2270,6 +2231,92 @@ export class UserClient extends ClientBase implements IUserClient {
             });
         }
         return Promise.resolve<PageResultOfUserIdDtoAndInteger>(<any>null);
+    }
+
+    updateUserRoles(id: number, command: UpdateUserRolesCommand): Promise<UserIdDto> {
+        let url_ = this.baseUrl + "/api/User/{id}/role";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processUpdateUserRoles(_response));
+        });
+    }
+
+    protected processUpdateUserRoles(response: Response): Promise<UserIdDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserIdDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<UserIdDto>(<any>null);
+    }
+
+    updateUserPassword(id: number, command: UpdatePasswordCommand): Promise<number> {
+        let url_ = this.baseUrl + "/api/User/{id}/password";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processUpdateUserPassword(_response));
+        });
+    }
+
+    protected processUpdateUserPassword(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(<any>null);
     }
 }
 
@@ -4837,48 +4884,8 @@ export interface ICreateUserCommand {
     roleId?: number;
 }
 
-export class UserRoleDto implements IUserRoleDto {
-    username?: string | null;
-    role?: string | null;
-
-    constructor(data?: IUserRoleDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.username = _data["username"] !== undefined ? _data["username"] : <any>null;
-            this.role = _data["role"] !== undefined ? _data["role"] : <any>null;
-        }
-    }
-
-    static fromJS(data: any): UserRoleDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new UserRoleDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["username"] = this.username !== undefined ? this.username : <any>null;
-        data["role"] = this.role !== undefined ? this.role : <any>null;
-        return data; 
-    }
-}
-
-export interface IUserRoleDto {
-    username?: string | null;
-    role?: string | null;
-}
-
 export class UpdateUserRolesCommand implements IUpdateUserRolesCommand {
-    user?: UserRoleDto | null;
+    role?: string | null;
 
     constructor(data?: IUpdateUserRolesCommand) {
         if (data) {
@@ -4886,13 +4893,12 @@ export class UpdateUserRolesCommand implements IUpdateUserRolesCommand {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
-            this.user = data.user && !(<any>data.user).toJSON ? new UserRoleDto(data.user) : <UserRoleDto>this.user; 
         }
     }
 
     init(_data?: any) {
         if (_data) {
-            this.user = _data["user"] ? UserRoleDto.fromJS(_data["user"]) : <any>null;
+            this.role = _data["role"] !== undefined ? _data["role"] : <any>null;
         }
     }
 
@@ -4905,13 +4911,49 @@ export class UpdateUserRolesCommand implements IUpdateUserRolesCommand {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["user"] = this.user ? this.user.toJSON() : <any>null;
+        data["role"] = this.role !== undefined ? this.role : <any>null;
         return data; 
     }
 }
 
 export interface IUpdateUserRolesCommand {
-    user?: IUserRoleDto | null;
+    role?: string | null;
+}
+
+export class UpdatePasswordCommand implements IUpdatePasswordCommand {
+    password?: string | null;
+
+    constructor(data?: IUpdatePasswordCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.password = _data["password"] !== undefined ? _data["password"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): UpdatePasswordCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdatePasswordCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["password"] = this.password !== undefined ? this.password : <any>null;
+        return data; 
+    }
+}
+
+export interface IUpdatePasswordCommand {
+    password?: string | null;
 }
 
 export class PageResultOfUserIdDtoAndInteger implements IPageResultOfUserIdDtoAndInteger {

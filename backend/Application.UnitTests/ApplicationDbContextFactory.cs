@@ -355,7 +355,7 @@ namespace Application.UnitTests
       var role3 = new Role { Id = 302, Name = "WhoAreYou?" };
       context.Roles.AddRange(role1, role2, role3);
 
-      var user1 = new User { Username = "LegitUser64", Password = "Password" };
+      var user1 = new User { Id = 500, Username = "LegitUser64", Password = "Password" };
       context.Users.AddRange(
         user1
       );
