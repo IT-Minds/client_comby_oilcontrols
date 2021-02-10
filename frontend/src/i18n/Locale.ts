@@ -80,6 +80,10 @@ export interface Locale {
     };
   };
 
+  camera: {
+    takePicture: string;
+  };
+
   mytruck: {
     title: string;
     heading: string;

@@ -52,6 +52,10 @@ export const table: Locale = {
     }
   },
 
+  camera: {
+    takePicture: "Tag billede"
+  },
+
   truckMetaData: {
     startNumber: "Startudleveringsnummer",
     carNumber: "Bilnummer",

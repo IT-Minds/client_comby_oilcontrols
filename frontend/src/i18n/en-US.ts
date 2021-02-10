@@ -77,6 +77,10 @@ export const table: Locale = {
     }
   },
 
+  camera: {
+    takePicture: "Tag billede"
+  },
+
   mytruck: {
     title: "Comby OilControl - Truck {{id}}",
     heading: "Truck {{id}}",
