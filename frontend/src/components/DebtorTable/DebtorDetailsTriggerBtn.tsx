@@ -9,7 +9,7 @@ import {
   useDisclosure
 } from "@chakra-ui/react";
 import DebtorDetailsComp from "components/DebtorDetailsComp";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { MdVisibility } from "react-icons/md";
 import { IDebtorDto } from "services/backend/nswagts";
 
@@ -20,6 +20,12 @@ type Props = {
 const DebtorDetailsTriggerBtn: FC<Props> = ({ debtorData }) => {
   const [debtor, setDebtor] = useState<IDebtorDto>(debtorData ?? {});
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  useEffect(() => {
+    if (debtorData) {
+      setDebtor(debtorData);
+    }
+  });
 
   return (
     <>
