@@ -1,5 +1,6 @@
 import { Container, HStack, Switch, Text, useToast, VStack } from "@chakra-ui/react";
-import React, { FC, useCallback, useState } from "react";
+import { DebtorTableContext } from "contexts/DebtorTableContext";
+import React, { FC, useCallback, useContext, useState } from "react";
 import { genDebtorClient } from "services/backend/apiClients";
 import { IDebtorDto, PrintCouponRequiredCommand } from "services/backend/nswagts";
 
@@ -10,6 +11,7 @@ type Props = {
 const DebtorDetailsComp: FC<Props> = ({ debtorData }) => {
   const [debtor, setDebtor] = useState<IDebtorDto>(debtorData ?? {});
   const toast = useToast();
+  const { debtorUpdated } = useContext(DebtorTableContext);
 
   const saveCouponRequired = useCallback(
     async (isRequired: boolean) => {
@@ -25,6 +27,7 @@ const DebtorDetailsComp: FC<Props> = ({ debtorData }) => {
         .then(() => {
           setDebtor({ ...debtor, couponRequired: isRequired });
         });
+      debtorUpdated({ ...debtor, couponRequired: isRequired });
       toast({
         title: "Debtor Updated",
         description: "Successful",
