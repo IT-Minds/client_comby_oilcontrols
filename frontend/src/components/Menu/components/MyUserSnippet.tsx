@@ -1,5 +1,6 @@
 import {
   Box,
+  Circle,
   Collapse,
   Flex,
   HStack,
@@ -10,19 +11,19 @@ import {
   Tooltip,
   useBreakpointValue,
   useColorModeValue,
+  VisuallyHidden,
   VStack
 } from "@chakra-ui/react";
 import ColorModeToggle from "components/ColorModeToggle/ColorModeToggle";
 import { UserTypeContext } from "contexts/UserTypeContext";
 import { useColors } from "hooks/useColors";
 import { Locale } from "i18n/Locale";
-import Link from "next/link";
 import { useI18n } from "next-rosetta";
 import React, { FC, useContext, useState } from "react";
+import { MdPerson } from "react-icons/md";
 
 import AppVersion from "./AppVersion";
 import LanguageSelector from "./LanguageSelector";
-import UserTypeSwitcher from "./UserTypeSwitcher";
 
 type Props = {
   forceOpen?: boolean;
@@ -37,10 +38,10 @@ const MyUserSnippet: FC<Props> = ({ forceOpen = false }) => {
 
   const [isActive, setIsActive] = useState(forceOpen);
 
-  const { logout } = useContext(UserTypeContext);
+  const { logout, activeUser } = useContext(UserTypeContext);
 
   return (
-    <VStack alignItems="left" bg={bg} spacing={0}>
+    <VStack alignItems="left" bg={bg} spacing={0} minW="250px">
       <HStack
         padding={4}
         onClick={() => setIsActive(forceOpen || !isActive)}
@@ -50,27 +51,22 @@ const MyUserSnippet: FC<Props> = ({ forceOpen = false }) => {
         cursor="pointer"
         borderColor={borderColor}
         borderBottom={"1px"}>
-        <Image
-          src="https://picsum.photos/100/100"
-          alt="My Profile Picture"
-          width={12}
-          height={12}
-          quality={90}
-          objectFit="contain"
-          borderRadius="full"
-        />
+        <Circle bgColor={toColor(activeUser.id)} width={12} height={12}>
+          <MdPerson size={32} color="white" />
+        </Circle>
         <VStack spacing={0} alignItems="left" maxW={nameLength + "px"}>
-          <Text isTruncated>My Full Name Is very long so it should cut it off</Text>
+          <Text isTruncated>{activeUser.username}</Text>
           <Text size="xs" isTruncated as="i">
-            My title
+            {activeUser.currentRole?.name}
           </Text>
+          <VisuallyHidden>{activeUser.id}</VisuallyHidden>
         </VStack>
       </HStack>
 
       <Collapse in={isActive} animateOpacity>
         <StackDivider borderColor={borderColor} />
         <VStack alignItems="left" spacing={0} divider={<StackDivider borderColor={borderColor} />}>
-          <Link href="/" passHref>
+          {/* <Link href="/" passHref>
             <HStack
               cursor="pointer"
               _hover={{
@@ -80,7 +76,7 @@ const MyUserSnippet: FC<Props> = ({ forceOpen = false }) => {
               paddingLeft={8}>
               <Text>{t("user.editInfo")}</Text>
             </HStack>
-          </Link>
+          </Link> */}
           <HStack
             cursor="pointer"
             _hover={{
@@ -91,15 +87,6 @@ const MyUserSnippet: FC<Props> = ({ forceOpen = false }) => {
             onClick={logout}>
             <Text>{t("user.logout")}</Text>
           </HStack>
-          <Box
-            cursor="pointer"
-            _hover={{
-              background: hoverBg
-            }}
-            padding={1}
-            paddingLeft={8}>
-            <UserTypeSwitcher />
-          </Box>
 
           <Flex padding={1} paddingLeft={8} align="center">
             <Spacer />
@@ -123,3 +110,19 @@ const MyUserSnippet: FC<Props> = ({ forceOpen = false }) => {
 };
 
 export default MyUserSnippet;
+
+function toColor(num: number) {
+  const options = [
+    "orange.500",
+    "yellow.500",
+    "green.500",
+    "teal.500",
+    "purple.500",
+    "blue.500",
+    "pink.500",
+    "red.500",
+    "cyan.500"
+  ];
+
+  return options[num % options.length];
+}

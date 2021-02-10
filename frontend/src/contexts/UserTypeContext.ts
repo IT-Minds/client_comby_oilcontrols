@@ -1,13 +1,6 @@
 import { useAuth } from "hooks/useAuth";
-import { createContext, Dispatch, SetStateAction } from "react";
-import { UserType } from "types/UserType";
+import { createContext } from "react";
 
-type ContextType = {
-  userType: UserType;
-  setUserType: Dispatch<SetStateAction<UserType>>;
-  isType: (ut: UserType) => boolean;
-
-  logout: ReturnType<typeof useAuth>["logout"];
-};
+type ContextType = ReturnType<typeof useAuth>;
 
 export const UserTypeContext = createContext<ContextType>(null);

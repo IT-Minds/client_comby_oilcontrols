@@ -183,7 +183,7 @@ export class ActionClient extends ClientBase implements IActionClient {
 
 export interface IAuthenticationClient {
     login(command: AssignTokenCommand): Promise<UserTokenDto>;
-    checkAuth(): Promise<UserDto>;
+    checkAuth(): Promise<UserIdDto>;
 }
 
 export class AuthenticationClient extends ClientBase implements IAuthenticationClient {
@@ -237,7 +237,7 @@ export class AuthenticationClient extends ClientBase implements IAuthenticationC
         return Promise.resolve<UserTokenDto>(<any>null);
     }
 
-    checkAuth(): Promise<UserDto> {
+    checkAuth(): Promise<UserIdDto> {
         let url_ = this.baseUrl + "/api/Authentication/checkauth";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -255,14 +255,14 @@ export class AuthenticationClient extends ClientBase implements IAuthenticationC
         });
     }
 
-    protected processCheckAuth(response: Response): Promise<UserDto> {
+    protected processCheckAuth(response: Response): Promise<UserIdDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = UserDto.fromJS(resultData200);
+            result200 = UserIdDto.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -270,7 +270,7 @@ export class AuthenticationClient extends ClientBase implements IAuthenticationC
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<UserDto>(<any>null);
+        return Promise.resolve<UserIdDto>(<any>null);
     }
 }
 
@@ -2130,6 +2130,7 @@ export class TruckClient extends ClientBase implements ITruckClient {
 export interface IUserClient {
     createUser(command: CreateUserCommand): Promise<number>;
     updateUserRoles(command: UpdateUserRolesCommand): Promise<UserRoleDto>;
+    getAllUser(needle?: number | undefined, size?: number | undefined, skip?: number | undefined): Promise<PageResultOfUserDtoAndInteger>;
 }
 
 export class UserClient extends ClientBase implements IUserClient {
@@ -2222,9 +2223,58 @@ export class UserClient extends ClientBase implements IUserClient {
         }
         return Promise.resolve<UserRoleDto>(<any>null);
     }
+
+    getAllUser(needle?: number | undefined, size?: number | undefined, skip?: number | undefined): Promise<PageResultOfUserDtoAndInteger> {
+        let url_ = this.baseUrl + "/api/User?";
+        if (needle === null)
+            throw new Error("The parameter 'needle' cannot be null.");
+        else if (needle !== undefined)
+            url_ += "needle=" + encodeURIComponent("" + needle) + "&";
+        if (size === null)
+            throw new Error("The parameter 'size' cannot be null.");
+        else if (size !== undefined)
+            url_ += "size=" + encodeURIComponent("" + size) + "&";
+        if (skip === null)
+            throw new Error("The parameter 'skip' cannot be null.");
+        else if (skip !== undefined)
+            url_ += "skip=" + encodeURIComponent("" + skip) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetAllUser(_response));
+        });
+    }
+
+    protected processGetAllUser(response: Response): Promise<PageResultOfUserDtoAndInteger> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PageResultOfUserDtoAndInteger.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<PageResultOfUserDtoAndInteger>(<any>null);
+    }
 }
 
 export class UserTokenDto implements IUserTokenDto {
+    user?: UserIdDto | null;
     token?: string | null;
 
     constructor(data?: IUserTokenDto) {
@@ -2233,11 +2283,13 @@ export class UserTokenDto implements IUserTokenDto {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
+            this.user = data.user && !(<any>data.user).toJSON ? new UserIdDto(data.user) : <UserIdDto>this.user; 
         }
     }
 
     init(_data?: any) {
         if (_data) {
+            this.user = _data["user"] ? UserIdDto.fromJS(_data["user"]) : <any>null;
             this.token = _data["token"] !== undefined ? _data["token"] : <any>null;
         }
     }
@@ -2251,57 +2303,172 @@ export class UserTokenDto implements IUserTokenDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["user"] = this.user ? this.user.toJSON() : <any>null;
         data["token"] = this.token !== undefined ? this.token : <any>null;
         return data; 
     }
 }
 
 export interface IUserTokenDto {
+    user?: IUserIdDto | null;
     token?: string | null;
 }
 
-export class AssignTokenCommand implements IAssignTokenCommand {
-    userDto?: UserDto | null;
+export class UserDto implements IUserDto {
+    username?: string | null;
+    truckId?: number | null;
+    currentRole?: RoleDto | null;
 
-    constructor(data?: IAssignTokenCommand) {
+    constructor(data?: IUserDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
-            this.userDto = data.userDto && !(<any>data.userDto).toJSON ? new UserDto(data.userDto) : <UserDto>this.userDto; 
+            this.currentRole = data.currentRole && !(<any>data.currentRole).toJSON ? new RoleDto(data.currentRole) : <RoleDto>this.currentRole; 
         }
     }
 
     init(_data?: any) {
         if (_data) {
-            this.userDto = _data["userDto"] ? UserDto.fromJS(_data["userDto"]) : <any>null;
+            this.username = _data["username"] !== undefined ? _data["username"] : <any>null;
+            this.truckId = _data["truckId"] !== undefined ? _data["truckId"] : <any>null;
+            this.currentRole = _data["currentRole"] ? RoleDto.fromJS(_data["currentRole"]) : <any>null;
         }
     }
 
-    static fromJS(data: any): AssignTokenCommand {
+    static fromJS(data: any): UserDto {
         data = typeof data === 'object' ? data : {};
-        let result = new AssignTokenCommand();
+        let result = new UserDto();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["userDto"] = this.userDto ? this.userDto.toJSON() : <any>null;
+        data["username"] = this.username !== undefined ? this.username : <any>null;
+        data["truckId"] = this.truckId !== undefined ? this.truckId : <any>null;
+        data["currentRole"] = this.currentRole ? this.currentRole.toJSON() : <any>null;
         return data; 
     }
 }
 
-export interface IAssignTokenCommand {
-    userDto?: IUserDto | null;
+export interface IUserDto {
+    username?: string | null;
+    truckId?: number | null;
+    currentRole?: IRoleDto | null;
 }
 
-export class UserDto implements IUserDto {
+export class UserIdDto extends UserDto implements IUserIdDto {
+    id?: number;
+
+    constructor(data?: IUserIdDto) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): UserIdDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserIdDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IUserIdDto extends IUserDto {
+    id?: number;
+}
+
+export class RoleDto implements IRoleDto {
+    name?: string | null;
+    actions?: Action[] | null;
+
+    constructor(data?: IRoleDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
+            if (Array.isArray(_data["actions"])) {
+                this.actions = [] as any;
+                for (let item of _data["actions"])
+                    this.actions!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): RoleDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new RoleDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name !== undefined ? this.name : <any>null;
+        if (Array.isArray(this.actions)) {
+            data["actions"] = [];
+            for (let item of this.actions)
+                data["actions"].push(item);
+        }
+        return data; 
+    }
+}
+
+export interface IRoleDto {
+    name?: string | null;
+    actions?: Action[] | null;
+}
+
+export enum Action {
+    ASSIGN_COUPON = 0,
+    SAVE_COUPON_IMAGE = 1,
+    UPDATE_COUPON_STATUS = 2,
+    GET_COUPONS = 3,
+    SET_TEMPERATURE = 4,
+    GET_DEBTOR = 5,
+    GET_LOCATION_HISTORIES = 6,
+    CREATE_LOCATION = 7,
+    UPDATE_LOCATION = 8,
+    GET_LOCATION = 9,
+    CREATE_REFILL = 10,
+    ORDER_REFILL = 11,
+    GET_REFILLS = 12,
+    GET_STREETS = 13,
+    CREATE_TRUCK_REFILL = 14,
+    CREATE_TRUCK = 15,
+    UPDATE_TRUCK = 16,
+    GET_TRUCK = 17,
+    GET_ROLES = 18,
+    UPDATE_USER = 19,
+    GET_ALL_USERS = 20,
+}
+
+export class AssignTokenCommand implements IAssignTokenCommand {
     username?: string | null;
     password?: string | null;
 
-    constructor(data?: IUserDto) {
+    constructor(data?: IAssignTokenCommand) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2317,9 +2484,9 @@ export class UserDto implements IUserDto {
         }
     }
 
-    static fromJS(data: any): UserDto {
+    static fromJS(data: any): AssignTokenCommand {
         data = typeof data === 'object' ? data : {};
-        let result = new UserDto();
+        let result = new AssignTokenCommand();
         result.init(data);
         return result;
     }
@@ -2332,7 +2499,7 @@ export class UserDto implements IUserDto {
     }
 }
 
-export interface IUserDto {
+export interface IAssignTokenCommand {
     username?: string | null;
     password?: string | null;
 }
@@ -3829,54 +3996,6 @@ export interface IOrderRefillCommand {
     truckId?: number;
 }
 
-export class RoleDto implements IRoleDto {
-    name?: string | null;
-    actions?: Action[] | null;
-
-    constructor(data?: IRoleDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
-            if (Array.isArray(_data["actions"])) {
-                this.actions = [] as any;
-                for (let item of _data["actions"])
-                    this.actions!.push(item);
-            }
-        }
-    }
-
-    static fromJS(data: any): RoleDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new RoleDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name !== undefined ? this.name : <any>null;
-        if (Array.isArray(this.actions)) {
-            data["actions"] = [];
-            for (let item of this.actions)
-                data["actions"].push(item);
-        }
-        return data; 
-    }
-}
-
-export interface IRoleDto {
-    name?: string | null;
-    actions?: Action[] | null;
-}
-
 export class RoleIdDto extends RoleDto implements IRoleIdDto {
     id?: number;
 
@@ -3908,29 +4027,6 @@ export class RoleIdDto extends RoleDto implements IRoleIdDto {
 
 export interface IRoleIdDto extends IRoleDto {
     id?: number;
-}
-
-export enum Action {
-    ASSIGN_COUPON = 0,
-    SAVE_COUPON_IMAGE = 1,
-    UPDATE_COUPON_STATUS = 2,
-    GET_COUPONS = 3,
-    SET_TEMPERATURE = 4,
-    GET_DEBTOR = 5,
-    GET_LOCATION_HISTORIES = 6,
-    CREATE_LOCATION = 7,
-    UPDATE_LOCATION = 8,
-    GET_LOCATION = 9,
-    CREATE_REFILL = 10,
-    ORDER_REFILL = 11,
-    GET_REFILLS = 12,
-    GET_STREETS = 13,
-    CREATE_TRUCK_REFILL = 14,
-    CREATE_TRUCK = 15,
-    UPDATE_TRUCK = 16,
-    GET_TRUCK = 17,
-    GET_ROLES = 18,
-    UPDATE_USER = 19,
 }
 
 export class CreateRoleCommand implements ICreateRoleCommand {
@@ -4216,6 +4312,7 @@ export class TruckInfoDto implements ITruckInfoDto {
     description?: string | null;
     tankCapacity?: number;
     refillNumber?: number;
+    driverId?: number;
 
     constructor(data?: ITruckInfoDto) {
         if (data) {
@@ -4233,6 +4330,7 @@ export class TruckInfoDto implements ITruckInfoDto {
             this.description = _data["description"] !== undefined ? _data["description"] : <any>null;
             this.tankCapacity = _data["tankCapacity"] !== undefined ? _data["tankCapacity"] : <any>null;
             this.refillNumber = _data["refillNumber"] !== undefined ? _data["refillNumber"] : <any>null;
+            this.driverId = _data["driverId"] !== undefined ? _data["driverId"] : <any>null;
         }
     }
 
@@ -4250,6 +4348,7 @@ export class TruckInfoDto implements ITruckInfoDto {
         data["description"] = this.description !== undefined ? this.description : <any>null;
         data["tankCapacity"] = this.tankCapacity !== undefined ? this.tankCapacity : <any>null;
         data["refillNumber"] = this.refillNumber !== undefined ? this.refillNumber : <any>null;
+        data["driverId"] = this.driverId !== undefined ? this.driverId : <any>null;
         return data; 
     }
 }
@@ -4260,6 +4359,7 @@ export interface ITruckInfoDto {
     description?: string | null;
     tankCapacity?: number;
     refillNumber?: number;
+    driverId?: number;
 }
 
 export class TruckInfoIdDto extends TruckInfoDto implements ITruckInfoIdDto {
@@ -4828,6 +4928,69 @@ export class UpdateUserRolesCommand implements IUpdateUserRolesCommand {
 
 export interface IUpdateUserRolesCommand {
     user?: IUserRoleDto | null;
+}
+
+export class PageResultOfUserDtoAndInteger implements IPageResultOfUserDtoAndInteger {
+    newNeedle?: number;
+    pagesRemaining?: number;
+    results?: UserDto[] | null;
+    hasMore?: boolean;
+
+    constructor(data?: IPageResultOfUserDtoAndInteger) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            if (data.results) {
+                this.results = [];
+                for (let i = 0; i < data.results.length; i++) {
+                    let item = data.results[i];
+                    this.results[i] = item && !(<any>item).toJSON ? new UserDto(item) : <UserDto>item;
+                }
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.newNeedle = _data["newNeedle"] !== undefined ? _data["newNeedle"] : <any>null;
+            this.pagesRemaining = _data["pagesRemaining"] !== undefined ? _data["pagesRemaining"] : <any>null;
+            if (Array.isArray(_data["results"])) {
+                this.results = [] as any;
+                for (let item of _data["results"])
+                    this.results!.push(UserDto.fromJS(item));
+            }
+            this.hasMore = _data["hasMore"] !== undefined ? _data["hasMore"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): PageResultOfUserDtoAndInteger {
+        data = typeof data === 'object' ? data : {};
+        let result = new PageResultOfUserDtoAndInteger();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["newNeedle"] = this.newNeedle !== undefined ? this.newNeedle : <any>null;
+        data["pagesRemaining"] = this.pagesRemaining !== undefined ? this.pagesRemaining : <any>null;
+        if (Array.isArray(this.results)) {
+            data["results"] = [];
+            for (let item of this.results)
+                data["results"].push(item.toJSON());
+        }
+        data["hasMore"] = this.hasMore !== undefined ? this.hasMore : <any>null;
+        return data; 
+    }
+}
+
+export interface IPageResultOfUserDtoAndInteger {
+    newNeedle?: number;
+    pagesRemaining?: number;
+    results?: IUserDto[] | null;
+    hasMore?: boolean;
 }
 
 export interface FileParameter {

@@ -11,7 +11,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Trucks.Queries.GetTruckInfo
 {
-  [AuthorizeAttribute(Domain.Enums.Action.GET_TRUCK)]
+  // [AuthorizeAttribute(Domain.Enums.Action.GET_TRUCK)]
+  [Authenticated]
   public class GetTruckInfoQuery : IRequest<TruckInfoDetailsDto>
   {
     public int Id { get; set; }

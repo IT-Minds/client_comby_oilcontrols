@@ -27,10 +27,10 @@ namespace Web.Services
       var claims = new List<Claim>();
       claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Username));
 
-      var allActions = user.Roles.SelectMany(r => r.Role.Actions).Distinct();
-      foreach(RoleAction action in allActions)
+      var allActions = user.Roles.SelectMany(r => r.Role.Actions).Select(x => x.Action);
+      foreach(Domain.Enums.Action action in allActions)
       {
-        claims.Add(new Claim(ClaimTypes.Role, System.Enum.GetName(action.Action)));
+        claims.Add(new Claim(ClaimTypes.Role, System.Enum.GetName(action)));
       }
 
       var key = Encoding.ASCII.GetBytes(_options.Secret);

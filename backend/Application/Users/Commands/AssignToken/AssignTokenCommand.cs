@@ -9,7 +9,8 @@ namespace Application.Users.Commands.AssignToken
 {
   public class AssignTokenCommand : IRequest<UserTokenDto>
   {
-    public UserDto UserDto { get; set; }
+    public string Username { get; set; }
+    public string Password { get; set; }
 
     public class AssignTokenCommandHandler : IRequestHandler<AssignTokenCommand, UserTokenDto>
     {
@@ -29,14 +30,14 @@ namespace Application.Users.Commands.AssignToken
           .Include(x => x.Roles)
           .ThenInclude(x => x.Role)
           .ThenInclude(x => x.Actions)
-          .FirstOrDefaultAsync(x => x.Username.Equals(request.UserDto.Username));
+          .FirstOrDefaultAsync(x => x.Username.Equals(request.Username));
 
         if (user == null)
         {
           throw new ArgumentException("Invalid credentials.");
         }
 
-        var (verified, needsUpgrade) = _passwordHasher.Check(user.Password, request.UserDto.Password);
+        var (verified, needsUpgrade) = _passwordHasher.Check(user.Password, request.Password);
 
         if (!verified) {
           throw new ArgumentException("Invalid credentials.");

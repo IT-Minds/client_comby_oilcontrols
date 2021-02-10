@@ -2,7 +2,13 @@
 import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
 import { genAuthenticationClient } from "services/backend/apiClients";
-import { AssignTokenCommand, IUserDto, UserTokenDto } from "services/backend/nswagts";
+import {
+  AssignTokenCommand,
+  IAssignTokenCommand,
+  IUserIdDto,
+  UserIdDto,
+  UserTokenDto
+} from "services/backend/nswagts";
 
 import { useEffectAsync } from "./useEffectAsync";
 
@@ -17,6 +23,7 @@ export enum AuthStage {
 export const useAuth = () => {
   const [authStage, setAuthStage] = useState(AuthStage.CHECKING);
   const [authCounter, setAuthCounter] = useState(0);
+  const [activeUser, setActiveUser] = useState<IUserIdDto>(null);
   const router = useRouter();
 
   const setCookie = useCallback((token: string) => {
@@ -32,19 +39,18 @@ export const useAuth = () => {
 
   useEffectAsync(async () => {
     const client = await genAuthenticationClient();
-    const user = await client.checkAuth().catch(() => null);
+    const user: UserIdDto = await client.checkAuth().catch(() => null);
+
+    setActiveUser(user);
+
     setAuthStage(user ? AuthStage.AUTHENTICATED : AuthStage.UNAUTHENTICATED);
   }, [authCounter]);
 
-  const login = useCallback(async (userDto: IUserDto) => {
+  const login = useCallback(async (userDto: IAssignTokenCommand) => {
     const client = await genAuthenticationClient();
 
     const user: UserTokenDto = await client
-      .login(
-        new AssignTokenCommand({
-          userDto
-        })
-      )
+      .login(new AssignTokenCommand(userDto))
       .catch(() => null);
 
     if (!user) {
@@ -65,7 +71,7 @@ export const useAuth = () => {
     router.push("/");
   }, []);
 
-  return { authStage, login, logout };
+  return { authStage, login, logout, activeUser };
 };
 
 export const getAuthToken = (): string => {

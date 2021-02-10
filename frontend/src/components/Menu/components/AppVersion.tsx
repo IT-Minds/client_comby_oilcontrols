@@ -1,4 +1,4 @@
-import { Code, useToast, VisuallyHidden } from "@chakra-ui/react";
+import { Center, Code, useToast, VisuallyHidden } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { FC, useCallback, useMemo, useRef } from "react";
 
@@ -35,14 +35,14 @@ const AppVersion: FC = () => {
   }, [router]);
 
   return (
-    <>
+    <Center>
       <Code colorScheme="black" variant="subtle" cursor="pointer" userSelect="none" onClick={copy}>
         App Version: {process.env.NEXT_PUBLIC_APP_VERSION}
       </Code>
       <VisuallyHidden>
         <input ref={copyInput} value={value} readOnly />
       </VisuallyHidden>
-    </>
+    </Center>
   );
 };
 

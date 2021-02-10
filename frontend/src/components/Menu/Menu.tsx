@@ -18,7 +18,7 @@ type Props = {
 const Menu: FC<Props> = ({ links, userForceOpen = false }) => {
   const { hoverBg, menuBg } = useColors();
 
-  const { isType } = useContext(UserTypeContext);
+  const { activeUser } = useContext(UserTypeContext);
 
   return (
     <Flex bg={menuBg} direction="column" h={"100%"} maxH={"100vh"} w="100%">
@@ -36,7 +36,7 @@ const Menu: FC<Props> = ({ links, userForceOpen = false }) => {
               <Image
                 src="/images/logo.webp"
                 alt="Main Logo"
-                width={400}
+                width={280}
                 height={100}
                 quality={90}
                 objectFit="contain"
@@ -46,7 +46,7 @@ const Menu: FC<Props> = ({ links, userForceOpen = false }) => {
         </Center>
       </Box>
       <Box flexGrow={1} minH={0}>
-        {isType(UserType.OFFICE_WORKER) ? <Navigator links={links} /> : <Text></Text>}
+        {!activeUser.truckId ? <Navigator links={links} /> : <Text></Text>}
       </Box>
       <MyUserSnippet forceOpen={userForceOpen} />
     </Flex>

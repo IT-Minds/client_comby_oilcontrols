@@ -12,16 +12,13 @@ import {
   Tr
 } from "@chakra-ui/react";
 import PageIndicator from "components/Demo/components/PageIndicator";
-import QuerySingleSelectBtn from "components/SortFilter/QuerySingleSelectBtn";
 import { usePagedFetched } from "hooks/usePagedFetched";
 import React, { FC, useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import ListReducer, { ListReducerActionType } from "react-list-reducer";
 import { genRefillClient } from "services/backend/apiClients";
 import { LocationRefillDto, TankType } from "services/backend/nswagts";
 import { capitalize } from "utils/capitalizeAnyString";
-import { logger } from "utils/logger";
 
-import QueryMultiSelectBtn from "../SortFilter/QueryMultiSelectBtn";
 import QuerySortBtn, { Direction } from "../SortFilter/QuerySortBtn";
 import styles from "./styles.module.css";
 
@@ -123,15 +120,6 @@ const FillingOverviewComp: FC<Props> = ({
                 <Text>Type</Text>
                 <Spacer />
                 <QuerySortBtn queryKey="locationType" sortCb={sortCb} />
-                <QueryMultiSelectBtn
-                  queryKey="locationType"
-                  options={[
-                    { id: "1", name: "test1" },
-                    { id: "2", name: "test2" },
-                    { id: "3", name: "test3" }
-                  ]}
-                  filterCb={(a, b) => logger.debug(a, b)}
-                />
               </HStack>
             </Th>
             <Th>
@@ -139,14 +127,6 @@ const FillingOverviewComp: FC<Props> = ({
                 <Text>Date</Text>
                 <Spacer />
                 <QuerySortBtn queryKey="actualDeliveryDate" sortCb={sortCb} />
-                <QuerySingleSelectBtn
-                  queryKey="actualDeliveryDate"
-                  options={[
-                    { id: "1", name: "test1" },
-                    { id: "2", name: "test2" },
-                    { id: "3", name: "test3" }
-                  ]}
-                />
               </HStack>
             </Th>
             <Th>
@@ -156,14 +136,14 @@ const FillingOverviewComp: FC<Props> = ({
                 <QuerySortBtn queryKey="truckId" sortCb={sortCb} />
               </HStack>
             </Th>
-            <Th>
+            <Th isNumeric>
               <HStack>
                 <Text>Start</Text>
                 <Spacer />
                 <QuerySortBtn queryKey="startAmount" sortCb={sortCb} />
               </HStack>
             </Th>
-            <Th>
+            <Th isNumeric>
               <HStack>
                 <Text>End</Text>
                 <Spacer />

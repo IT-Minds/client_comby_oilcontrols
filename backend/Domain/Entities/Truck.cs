@@ -18,5 +18,7 @@ namespace Domain.Entities
     public virtual IEnumerable<CompletedRefill> CompletedRefills { get {
       return this.Refills.Where(x => x.RefillState == RefillState.COMPLETED).OfType<CompletedRefill>();
     } }
+
+    public User Driver { get; set; }
   }
 }

@@ -27,12 +27,19 @@ namespace Application.Trucks.Commands.CreateTruck
 
       public async Task<TruckInfoIdDto> Handle(CreateTruckCommand request, CancellationToken cancellationToken)
       {
+        var driver = await _context.Users.FindAsync(request.TruckInfo.DriverId);
+
+        // TODO check driver isn't null
+        // TODO check if driver doesn't have role
+        // TODO check driver doesn't driver another truck
+
         var truck = new Truck
         {
           TruckIdentifier = request.TruckInfo.TruckIdentifier,
           Name = request.TruckInfo.Name,
           Description = request.TruckInfo.Description,
-          TankCapacity = request.TruckInfo.TankCapacity
+          TankCapacity = request.TruckInfo.TankCapacity,
+          Driver = driver
         };
         _context.Trucks.Add(truck);
         await _context.SaveChangesAsync(cancellationToken);

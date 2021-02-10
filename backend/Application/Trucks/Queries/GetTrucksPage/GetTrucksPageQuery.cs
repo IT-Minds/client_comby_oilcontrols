@@ -27,6 +27,7 @@ namespace Application.Trucks.Queries.GetTrucksPage
     public async Task<int> PagesRemaining(IQueryable<Truck> query)
     {
       var count = await query.CountAsync();
+      if(count == 0) return 0;
       var pagesLeft = (int)(Math.Ceiling((float)count / (float)Size)) - 1;
 
       return pagesLeft;
