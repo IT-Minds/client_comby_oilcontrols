@@ -40,16 +40,28 @@ const DebtorDetailsComp: FC<Props> = ({ debtorData }) => {
   );
 
   return (
-    <Container w="100%" maxW="unset">
-        {
-            //TODO: translation
-        }
-      <VStack>
-        <Text>Name: {debtor.name}</Text>
-        <Text>Account number: {debtor.accountNumber}</Text>
-        <Text>Blocked: {debtor.blocked ? "true" : "false"}</Text>
+    <Container w="100%" maxW="unset" textAlign="center">
+      {
+        //TODO: translation
+      }
+      <VStack textAlign="left" display="inline-block">
         <HStack>
-          <Text>Coupon is required: {debtor.couponRequired}</Text>
+          <Text fontWeight="bold">Name:</Text>
+          <Text>{debtor.name}</Text>
+        </HStack>
+
+        <HStack>
+          <Text fontWeight="bold">Account number:</Text>
+          <Text>{debtor.accountNumber}</Text>
+        </HStack>
+
+        <HStack>
+          <Text fontWeight="bold">Blocked:</Text>
+          <Text>{debtor.blocked ? "true" : "false"}</Text>
+        </HStack>
+
+        <HStack>
+          <Text fontWeight="bold">Coupon is required: {debtor.couponRequired}</Text>
           <Switch
             isChecked={debtor.couponRequired}
             id="couponRequired"
