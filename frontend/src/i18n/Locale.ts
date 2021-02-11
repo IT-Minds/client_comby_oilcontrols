@@ -185,6 +185,16 @@ export interface Locale {
     scheduleType: string;
   };
 
+  login: {
+    username: string;
+    password: string;
+    login: string;
+    formErrors: {
+      enterUsername: string;
+      enterPassword: string;
+    };
+  };
+
   trucks: {
     truckOverview: string;
     overviewOfTruck: string;

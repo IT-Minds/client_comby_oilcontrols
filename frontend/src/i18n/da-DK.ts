@@ -182,6 +182,16 @@ export const table: Locale = {
     scheduleType: "Tidsplanstype"
   },
 
+  login: {
+    username: "Brugernavn",
+    password: "Kodeord",
+    login: "Log ind",
+    formErrors: {
+      enterUsername: "Indtast et brugernavn",
+      enterPassword: "Indtast et kodeord"
+    }
+  },
+
   trucks: {
     truckOverview: "Vogn overblik",
     overviewOfTruck: "Overblik over vogn {{id}}",
