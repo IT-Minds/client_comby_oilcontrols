@@ -46,9 +46,10 @@ import styles from "./index.module.css";
 type Props = {
   truckInfo: TruckInfoDetailsDto;
   coupons: CouponIdDto[];
+  viewOnly?: boolean;
 };
 
-const LocalePage: NextPage<Props> = ({ truckInfo, coupons }) => {
+const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
   const { t } = useI18n<Locale>();
   const { locale } = useRouter();
 
@@ -114,7 +115,7 @@ const LocalePage: NextPage<Props> = ({ truckInfo, coupons }) => {
   }, []);
 
   return (
-    <VStack position="relative" overflow="visible" h="95vh" w="100%">
+    <VStack position="relative" overflow="visible" h={viewOnly ? "" : "95vh"} w="100%">
       <Head>
         <title>
           {t("mytruck.title", {
@@ -179,15 +180,17 @@ const LocalePage: NextPage<Props> = ({ truckInfo, coupons }) => {
         </Collapse>
       </Box>
 
-      <HStack position="absolute" bottom={2} right={0}>
-        <RefuelForm fillData={completeTruckRefuel} />
-        <InvalidateCouponBtn
-          coupons={coupons.map<DropdownType>(x => ({
-            id: x.id + "",
-            name: x.couponNumber + ""
-          }))}
-        />
-      </HStack>
+      {!viewOnly && (
+        <HStack position="absolute" bottom={2} right={0}>
+          <RefuelForm fillData={completeTruckRefuel} />
+          <InvalidateCouponBtn
+            coupons={coupons.map<DropdownType>(x => ({
+              id: x.id + "",
+              name: x.couponNumber + ""
+            }))}
+          />
+        </HStack>
+      )}
     </VStack>
   );
 };
@@ -228,4 +231,4 @@ export const getServerSideProps: GetServerSideProps<Props & I18nProps<Locale>> =
   return { props: { table, truckInfo, coupons } };
 };
 
-export default LocalePage;
+export default MyTruck;

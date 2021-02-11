@@ -19,6 +19,7 @@ namespace Application
       services.AddMediatR(Assembly.GetExecutingAssembly());
       services.AddScoped<IPasswordHasher, PasswordHasher>();
       services.AddScoped<SyncroniceDebtorService>();
+      services.AddScoped<StatsService>();
 
       services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
       services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehaviour<,>));

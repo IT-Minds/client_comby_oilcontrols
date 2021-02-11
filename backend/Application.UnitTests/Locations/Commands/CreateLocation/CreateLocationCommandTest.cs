@@ -21,7 +21,7 @@ namespace Application.UnitTests.Locations.Commands.CreateLocations
           Comments = "This is comment.",
           Schedule = RefillSchedule.AUTOMATIC,
           TankType = TankType.BUILDING,
-          TankNumber = 9696,
+          TankNumber = "9696",
           TankCapacity = 4005.1,
           MinimumFuelAmount = 50.5,
           EstimateFuelConsumption = 10,

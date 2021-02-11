@@ -103,15 +103,4 @@ const MyApp = ({ Component, pageProps, __N_SSG, router }: AppPropsType & Props):
   );
 };
 
-// MyApp.getInitialProps = async ({ Component, ctx }: AppContextType) => {
-//   let pageProps: Record<string, unknown> = {};
-//   if (Component.getInitialProps) {
-//     pageProps = await Component.getInitialProps(ctx);
-//   }
-
-//   const envSettings = isomorphicEnvSettings();
-
-//   return { pageProps, envSettings };
-// };
-
 export default MyApp;

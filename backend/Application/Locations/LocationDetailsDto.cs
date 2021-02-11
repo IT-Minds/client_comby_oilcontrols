@@ -8,7 +8,7 @@ namespace Application.Locations
   public class LocationDetailsDto : LocationDto, IAutoMap<Location>
   {
     public TankType TankType { get; set; }
-    public int TankNumber { get; set; }
+    public string TankNumber { get; set; }
     public double TankCapacity { get; set; }
     public double MinimumFuelAmount { get; set; }
     public FuelType FuelType { get; set; }
