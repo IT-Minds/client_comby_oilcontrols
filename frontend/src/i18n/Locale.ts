@@ -125,6 +125,16 @@ export interface Locale {
     };
   };
 
+  debtorTable: {
+    debtorTable: string;
+    debtorName: string;
+    debtorId: string;
+    unicontaId: string;
+    debtorDetails: {
+      overViewOfDebtor: string;
+    };
+  };
+
   trucks: {
     truckOverview: string;
     overviewOfTruck: string;

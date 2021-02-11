@@ -122,6 +122,16 @@ export const table: Locale = {
     }
   },
 
+  debtorTable: {
+    debtorTable: "Debitortabel",
+    debtorName: "Debitornavn",
+    debtorId: "Debitor ID",
+    unicontaId: "Uniconta ID",
+    debtorDetails: {
+      overViewOfDebtor: "Overblik over debitor {{debtor}}"
+    }
+  },
+
   trucks: {
     truckOverview: "Vogn overblik",
     overviewOfTruck: "Overblik over vogn {{id}}",
