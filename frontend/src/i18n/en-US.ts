@@ -100,6 +100,14 @@ export const table: Locale = {
     }
   },
 
+  trucks: {
+    truckOverview: "Vogn overblik",
+    overviewOfTruck: "Overblik over vogn {{id}}",
+    metaData: "Meta data",
+    coupons: "Kuponner",
+    fuelingHistory: "Påfyldningshistorik"
+  },
+
   mytruck: {
     title: "Comby OilControl - Truck {{id}}",
     heading: "Truck {{id}}",

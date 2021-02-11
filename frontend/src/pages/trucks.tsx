@@ -21,7 +21,7 @@ import { useEffectAsync } from "hooks/useEffectAsync";
 import { useOffline } from "hooks/useOffline";
 import { Locale } from "i18n/Locale";
 import { GetStaticProps, NextPage } from "next";
-import { I18nProps } from "next-rosetta";
+import { I18nProps, useI18n } from "next-rosetta";
 import React, { useCallback, useState } from "react";
 import { genCouponsClient, genTruckClient } from "services/backend/apiClients";
 import {
@@ -34,6 +34,8 @@ import {
 } from "services/backend/nswagts";
 
 const TruckPage: NextPage = () => {
+  const { t } = useI18n<Locale>();
+
   const [truckEntities, setTruckEntities] = useState<TruckInfoIdDto[]>(null);
 
   // For modal >>>
@@ -119,7 +121,7 @@ const TruckPage: NextPage = () => {
 
   return (
     <VStack h="95vh" w="100%">
-      <Heading>Truck Overview</Heading>
+      <Heading>{t("trucks.truckOverview")}</Heading>
       <AddTruckTriggerBtn />
       <TruckListComp preLoadedData={truckEntities} truckId={setTruckId} />
       {/* // TODO move modal into own component */}
@@ -132,7 +134,7 @@ const TruckPage: NextPage = () => {
         }}>
         <ModalOverlay />
         <ModalContent height="90vh">
-          <ModalHeader>Overview of Truck {truckId}</ModalHeader>
+          <ModalHeader>{t("trucks.overviewOfTruck", { id: truckId })}</ModalHeader>
           <ModalCloseButton />
           <Center>
             <Spinner
@@ -145,14 +147,14 @@ const TruckPage: NextPage = () => {
             />
           </Center>
           <ModalBody hidden={isLoading} overflowY="auto">
-            <Heading size="sm">Meta data</Heading>
+            <Heading size="sm">{t("trucks.metaData")}</Heading>
             <AddTruckMetaData
               submitCallback={x => saveMetaDataForm(x)}
               truckMetaData={truckMetaData}
             />
 
             <Heading size="sm" mt={8}>
-              Coupons
+              {t("trucks.coupons")}
             </Heading>
             <AddCouponComp
               submitCallback={x => {
@@ -162,7 +164,7 @@ const TruckPage: NextPage = () => {
             />
 
             <Heading size="sm" mt={8}>
-              Fueling history
+              {t("trucks.fuelingHistory")}
             </Heading>
             <FillingOverviewComp preLoadedData={truckRefillData} />
           </ModalBody>

@@ -103,6 +103,14 @@ export interface Locale {
     };
   };
 
+  trucks: {
+    truckOverview: string;
+    overviewOfTruck: string;
+    metaData: string;
+    coupons: string;
+    fuelingHistory: string;
+  };
+
   mytruck: {
     title: string;
     heading: string;
