@@ -55,7 +55,7 @@ const OrderRefillComp: FC<Props> = ({ submitCallback, locationId }) => {
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Choose a date
+              {t("locationList.orderRefill.chooseDate")}
             </AlertDialogHeader>
 
             <AlertDialogBody>
@@ -71,7 +71,7 @@ const OrderRefillComp: FC<Props> = ({ submitCallback, locationId }) => {
                 {t("actions.cancel")}
               </Button>
               <Button colorScheme="green" onClick={() => postOrderRefill()} ml={3}>
-                Order refill
+                {t("locationList.orderRefill.orderRefill")}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>

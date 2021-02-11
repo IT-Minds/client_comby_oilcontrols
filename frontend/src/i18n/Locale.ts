@@ -183,6 +183,10 @@ export interface Locale {
     address: string;
     regionId: string;
     scheduleType: string;
+    orderRefill: {
+      chooseDate: string;
+      orderRefill: string;
+    };
   };
 
   login: {

@@ -179,7 +179,11 @@ export const table: Locale = {
   locationList: {
     address: "Adresse",
     regionId: "Region ID",
-    scheduleType: "Tidsplanstype"
+    scheduleType: "Tidsplanstype",
+    orderRefill: {
+      chooseDate: "Vælg en dato",
+      orderRefill: "Bestil opfyldning"
+    }
   },
 
   login: {
