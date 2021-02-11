@@ -113,6 +113,18 @@ export interface Locale {
     };
   };
 
+  createUser: {
+    userName: string;
+    password: string;
+    role: string;
+    createUser: string;
+    formErrors: {
+      enterUsername: string;
+      enterPassword: string;
+      chooseRole: string;
+    };
+  };
+
   trucks: {
     truckOverview: string;
     overviewOfTruck: string;

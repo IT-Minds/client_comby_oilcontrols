@@ -85,6 +85,18 @@ export const table: Locale = {
     }
   },
 
+  createUser: {
+    userName: "Brugernavn",
+    password: "Kodeord",
+    role: "Rolle",
+    createUser: "Opret bruger",
+    formErrors: {
+      enterUsername: "Indtast et brugernavn",
+      enterPassword: "Indtast et kodeord",
+      chooseRole: "Vælg en rolle"
+    }
+  },
+
   trucks: {
     truckOverview: "Vogn overblik",
     overviewOfTruck: "Overblik over vogn {{id}}",
