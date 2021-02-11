@@ -134,6 +134,10 @@ export interface Locale {
     unicontaId: string;
     debtorDetails: {
       overViewOfDebtor: string;
+      name: string;
+      accountNumber: string;
+      blocked: string;
+      couponIsRequired: string;
     };
   };
 

@@ -103,7 +103,11 @@ export const table: Locale = {
     debtorId: "Debitor ID",
     unicontaId: "Uniconta ID",
     debtorDetails: {
-      overViewOfDebtor: "Overblik over debitor {{debtor}}"
+      overViewOfDebtor: "Overblik over debitor {{debtor}}",
+      name: "Navn:",
+      accountNumber: "Kontonummer:",
+      blocked: "Blokkeret:",
+      couponIsRequired: "Kupon er påkrævet:"
     }
   },
 
@@ -192,7 +196,6 @@ export const table: Locale = {
     },
     addTruckTrigger: {
       addNewTruck: "Tilføj ny vogn"
-    }
     }
   },
 

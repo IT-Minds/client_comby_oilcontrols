@@ -1,5 +1,6 @@
 import { Container, HStack, Switch, Text, useToast, VStack } from "@chakra-ui/react";
 import { DebtorTableContext } from "contexts/DebtorTableContext";
+import { useI18n } from "next-rosetta";
 import React, { FC, useCallback, useContext, useState } from "react";
 import { genDebtorClient } from "services/backend/apiClients";
 import { IDebtorDto, PrintCouponRequiredCommand } from "services/backend/nswagts";
@@ -9,6 +10,8 @@ type Props = {
 };
 
 const DebtorDetailsComp: FC<Props> = ({ debtorData }) => {
+  const { t } = useI18n<Locale>();
+
   const [debtor, setDebtor] = useState<IDebtorDto>(debtorData ?? {});
   const toast = useToast();
   const { debtorUpdated } = useContext(DebtorTableContext);
@@ -38,27 +41,26 @@ const DebtorDetailsComp: FC<Props> = ({ debtorData }) => {
 
   return (
     <Container w="100%" maxW="unset" textAlign="center">
-      {
-        //TODO: translation
-      }
       <VStack textAlign="left" display="inline-block">
         <HStack>
-          <Text fontWeight="bold">Name:</Text>
+          <Text fontWeight="bold">{t("debtorTable.debtorDetails.name")}</Text>
           <Text>{debtor.name}</Text>
         </HStack>
 
         <HStack>
-          <Text fontWeight="bold">Account number:</Text>
+          <Text fontWeight="bold">{t("debtorTable.debtorDetails.accountNumber")}</Text>
           <Text>{debtor.accountNumber}</Text>
         </HStack>
 
         <HStack>
-          <Text fontWeight="bold">Blocked:</Text>
+          <Text fontWeight="bold">{t("debtorTable.debtorDetails.blocked")}</Text>
           <Text>{debtor.blocked ? "true" : "false"}</Text>
         </HStack>
 
         <HStack>
-          <Text fontWeight="bold">Coupon is required: {debtor.couponRequired}</Text>
+          <Text fontWeight="bold">
+            {t("debtorTable.debtorDetails.couponIsRequired")} {debtor.couponRequired}
+          </Text>
           <Switch
             isChecked={debtor.couponRequired}
             id="couponRequired"
