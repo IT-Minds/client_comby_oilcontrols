@@ -213,6 +213,11 @@ export interface Locale {
     metaData: string;
     coupons: string;
     fuelingHistory: string;
+    truckList: {
+      truckName: string;
+      truckDescription: string;
+      id: string;
+    };
   };
 
   mytruck: {

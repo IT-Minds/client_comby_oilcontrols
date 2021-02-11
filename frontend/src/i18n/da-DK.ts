@@ -209,7 +209,12 @@ export const table: Locale = {
     overviewOfTruck: "Overblik over vogn {{id}}",
     metaData: "Meta data",
     coupons: "Kuponner",
-    fuelingHistory: "Påfyldningshistorik"
+    fuelingHistory: "Påfyldningshistorik",
+    truckList: {
+      truckName: "Vognnavn",
+      truckDescription: "Vognbeskrivelse",
+      id: "ID"
+    }
   },
 
   mytruck: {

@@ -1,5 +1,6 @@
 import { IconButton, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { useColors } from "hooks/useColors";
+import { useI18n } from "next-rosetta";
 import React, { FC, useEffect, useReducer } from "react";
 import { MdRemoveRedEye } from "react-icons/md";
 import ListReducer, { ListReducerActionType } from "react-list-reducer";
@@ -16,6 +17,8 @@ type Props = {
 export const PAGE_SHOW_SIZE = 15;
 
 const TruckListComp: FC<Props> = ({ preLoadedData = [], truckId }) => {
+  const { t } = useI18n<Locale>();
+
   const [data, dataDispatch] = useReducer(ListReducer<TruckInfoIdDto>("id"), preLoadedData ?? []);
 
   const { hoverBg } = useColors();
@@ -33,9 +36,9 @@ const TruckListComp: FC<Props> = ({ preLoadedData = [], truckId }) => {
     <Table size="sm">
       <Thead>
         <Tr>
-          <Th>Truck name</Th>
-          <Th>Truck description</Th>
-          <Th>Id</Th>
+          <Th>{t("trucks.truckList.truckName")}</Th>
+          <Th>{t("trucks.truckList.truckDescription")}</Th>
+          <Th>{t("trucks.truckList.id")}</Th>
           <Th></Th>
         </Tr>
       </Thead>
