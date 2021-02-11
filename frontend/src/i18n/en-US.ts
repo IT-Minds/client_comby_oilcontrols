@@ -176,6 +176,12 @@ export const table: Locale = {
     timeOfChange: "Ændringstidspunkt"
   },
 
+  locationList: {
+    address: "Adresse",
+    regionId: "Region ID",
+    scheduleType: "Tidsplanstype"
+  },
+
   trucks: {
     truckOverview: "Vogn overblik",
     overviewOfTruck: "Overblik over vogn {{id}}",

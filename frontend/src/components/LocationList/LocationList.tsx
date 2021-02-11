@@ -4,6 +4,7 @@ import EditLocationTriggerBtn from "components/LocaleMetaDataForm/EditLocationTr
 import ViewLocationHistoryModalBtn from "components/LocationHistory/ViewLocationHistoryModalBtn";
 import OrderRefillComp from "components/OrderRefill/OrderRefillComp";
 import { useColors } from "hooks/useColors";
+import { useI18n } from "next-rosetta";
 import { FC } from "react";
 import { LocationDetailsIdDto, RefillSchedule } from "services/backend/nswagts";
 
@@ -12,15 +13,17 @@ type Props = {
 };
 
 const LocationList: FC<Props> = ({ data }) => {
+  const { t } = useI18n<Locale>();
+
   const { hoverBg } = useColors();
 
   return (
     <Table size="sm">
       <Thead>
         <Tr>
-          <Th>Address</Th>
-          <Th>Region Id</Th>
-          <Th>Schedule Type</Th>
+          <Th>{t("locationList.address")}</Th>
+          <Th>{t("locationList.regionId")}</Th>
+          <Th>{t("locationList.scheduleType")}</Th>
           <Th></Th>
         </Tr>
       </Thead>

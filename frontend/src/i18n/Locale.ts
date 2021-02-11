@@ -179,6 +179,12 @@ export interface Locale {
     timeOfChange: string;
   };
 
+  locationList: {
+    address: string;
+    regionId: string;
+    scheduleType: string;
+  };
+
   trucks: {
     truckOverview: string;
     overviewOfTruck: string;
