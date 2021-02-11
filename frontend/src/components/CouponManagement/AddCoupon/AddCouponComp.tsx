@@ -16,6 +16,7 @@ import {
   Wrap,
   WrapItem
 } from "@chakra-ui/react";
+import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useEffect, useReducer, useState } from "react";
 import { MdAdd, MdCheck } from "react-icons/md";
 import ListReduce, { ListReducerActionType } from "react-list-reducer";
@@ -28,6 +29,8 @@ type Props = {
 };
 
 const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
+  const { t } = useI18n<Locale>();
+
   const [from, setFrom] = useState(null);
   const [to, setTo] = useState(null);
 
@@ -110,7 +113,7 @@ const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
             from > to ||
             to < from
           }>
-          <FormLabel>Enter coupon interval:</FormLabel>
+          <FormLabel>{t("addCoupon.enterCouponInterval")}</FormLabel>
           <HStack>
             <FormControl
               isInvalid={
@@ -141,14 +144,14 @@ const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
               </NumberInput>
             </FormControl>
           </HStack>
-          <FormErrorMessage>Please enter a valid interval</FormErrorMessage>
+          <FormErrorMessage>{t("addCoupon.formErrors.validInterval")}</FormErrorMessage>
           <Button mt={4} colorScheme="blue" rightIcon={<MdAdd />} onClick={() => addCoupons()}>
-            Add pending coupons
+            {t("addCoupon.addPendingCoupons")}
           </Button>
         </FormControl>
 
         <FormControl>
-          <FormLabel>Available Coupons:</FormLabel>
+          <FormLabel>{t("addCoupon.availableCoupons")}</FormLabel>
           <Wrap>
             {localCoupons
               .sortByAttr(x => x.couponNumber)
@@ -174,7 +177,7 @@ const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
           type="submit"
           rightIcon={<MdCheck />}
           onClick={() => setFormSubmitAttempts(x => x + 1)}>
-          Submit Coupons
+          {t("addCoupon.submitCoupons")}
         </Button>
       </VStack>
     </form>

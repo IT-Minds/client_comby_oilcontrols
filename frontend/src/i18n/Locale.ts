@@ -93,6 +93,16 @@ export interface Locale {
     coupon: string;
   };
 
+  addCoupon: {
+    enterCouponInterval: string;
+    addPendingCoupons: string;
+    availableCoupons: string;
+    submitCoupons: string;
+    formErrors: {
+      validInterval: string;
+    };
+  };
+
   mytruck: {
     title: string;
     heading: string;

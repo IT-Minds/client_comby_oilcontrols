@@ -90,6 +90,16 @@ export const table: Locale = {
     coupon: "Kupon"
   },
 
+  addCoupon: {
+    enterCouponInterval: "Udfyld kuponinterval:",
+    addPendingCoupons: "Tilføj ventende kuponner",
+    availableCoupons: "Tilgængelige kuponner",
+    submitCoupons: "Indsend kuponner",
+    formErrors: {
+      validInterval: "Indtast et gyldigt interval"
+    }
+  },
+
   mytruck: {
     title: "Comby Olistying - Lastbil #{{id}}",
     heading: "Lastbil #{{id}}",
