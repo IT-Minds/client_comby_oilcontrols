@@ -196,6 +196,14 @@ export const table: Locale = {
     }
   },
 
+  refillHistoryTable: {
+    refillHistory: "Påfyldningshistorik",
+    deliveryTime: "Leveringstid",
+    amount: "Mængde",
+    truckId: "Vogn ID",
+    coupon: "Kupon"
+  },
+
   trucks: {
     truckOverview: "Vogn overblik",
     overviewOfTruck: "Overblik over vogn {{id}}",

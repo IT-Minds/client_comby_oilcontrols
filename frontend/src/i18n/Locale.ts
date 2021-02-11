@@ -199,6 +199,14 @@ export interface Locale {
     };
   };
 
+  refillHistoryTable: {
+    refillHistory: string;
+    deliveryTime: string;
+    amount: string;
+    truckId: string;
+    coupon: string;
+  };
+
   trucks: {
     truckOverview: string;
     overviewOfTruck: string;
