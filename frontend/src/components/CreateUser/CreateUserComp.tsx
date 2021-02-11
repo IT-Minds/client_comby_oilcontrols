@@ -47,9 +47,6 @@ const CreateUserComp: FC<Props> = ({ submitCallback }) => {
     <form onSubmit={handleSubmit}>
       <VStack spacing={2}>
         <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.userName}>
-          {
-            //TODO: translation
-          }
           <FormLabel>{t("createUser.userName")}</FormLabel>
           <Input
             placeholder="Username"
@@ -57,16 +54,10 @@ const CreateUserComp: FC<Props> = ({ submitCallback }) => {
               updateLocalForm(e.target.value, "userName");
             }}
           />
-          {
-            //TODO: translation
-          }
           <FormErrorMessage>{t("createUser.formErrors.enterUsername")}</FormErrorMessage>
         </FormControl>
 
         <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.password}>
-          {
-            //TODO: translation
-          }
           <FormLabel>{t("createUser.password")}</FormLabel>
           <Input
             type="password"
@@ -75,31 +66,18 @@ const CreateUserComp: FC<Props> = ({ submitCallback }) => {
               updateLocalForm(e.target.value, "password");
             }}
           />
-          {
-            //TODO: translation
-          }
           <FormErrorMessage>{t("createUser.formErrors.enterPassword")}</FormErrorMessage>
         </FormControl>
 
         <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !role}>
-          {
-            //TODO: translation
-          }
           <FormLabel>{t("createUser.role")}</FormLabel>
 
           <UserRoleSelector
             cb={x => {
               setRole(x.name);
             }}></UserRoleSelector>
-          {
-            //TODO: translation
-          }
           <FormErrorMessage>{t("createUser.formErrors.chooseRole")}</FormErrorMessage>
         </FormControl>
-
-        {
-          //TODO: translation
-        }
         <Button
           colorScheme="green"
           type="submit"

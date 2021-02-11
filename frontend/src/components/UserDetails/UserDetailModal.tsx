@@ -90,9 +90,6 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          {
-            //TODO: translation
-          }
           <ModalHeader>
             {t("user.userDetailsTable.userDetailsModal", { user: user.username })}
           </ModalHeader>
@@ -103,9 +100,6 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
                 passwordSubmitAttempts > 0 &&
                 (!newPassword || !repeatNewPassword || newPassword !== repeatNewPassword)
               }>
-              {
-                //TODO: translation
-              }
               <FormLabel id="fuel-type">{t("user.userDetailsTable.newPassword")}</FormLabel>
 
               <InputGroup size="md">
@@ -149,9 +143,6 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
                   </Button>
                 </InputRightElement>
               </InputGroup>
-              {
-                //TODO: translation
-              }
               <FormErrorMessage>
                 {t("user.userDetailsTable.formErrors.inputPassword")}
               </FormErrorMessage>
@@ -166,16 +157,10 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
                 setPasswordSubmitAttempts(x => x + 1);
                 updatePassword();
               }}>
-              {
-                //TODO: translation
-              }
               {t("user.userDetailsTable.updatePassword")}
             </Button>
 
             <FormControl mt={4} isInvalid={roleSubmitAttempts > 0 && !role}>
-              {
-                //TODO: translation
-              }
               <FormLabel>{t("user.userDetailsTable.userRole")}</FormLabel>
 
               <UserRoleSelector
@@ -186,17 +171,10 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
                   setRole(x);
                 }}
               />
-              {
-                //TODO: translation
-              }
               <FormErrorMessage>
                 {t("user.userDetailsTable.formErrors.chooseARole")}
               </FormErrorMessage>
             </FormControl>
-
-            {
-              //TODO: translation
-            }
             <Button
               mt={4}
               mb={4}

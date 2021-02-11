@@ -68,9 +68,6 @@ const CreateRoleComp: FC<Props> = ({ submitCallback }) => {
     <form onSubmit={handleSubmit}>
       <VStack spacing={2}>
         <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.name}>
-          {
-            //TODO: translation
-          }
           <FormLabel>{t("createRole.roleName")}</FormLabel>
           <Input
             placeholder="Role name"
@@ -78,16 +75,10 @@ const CreateRoleComp: FC<Props> = ({ submitCallback }) => {
               updateLocalForm(e.target.value, "name");
             }}
           />
-          {
-            //TODO: translation
-          }
           <FormErrorMessage>{t("createRole.formErrors.enterRoleName")}</FormErrorMessage>
         </FormControl>
 
         <FormControl isRequired isInvalid={formSubmitAttempts > 0 && localActions.length < 1}>
-          {
-            //TODO: translation
-          }
           <FormLabel>{t("createRole.roleAction")}</FormLabel>
           {Object.entries(ActionRecord).map(([a, b]) => (
             <HStack key={b}>
@@ -96,16 +87,8 @@ const CreateRoleComp: FC<Props> = ({ submitCallback }) => {
               <Checkbox onChange={e => setRole(b)}></Checkbox>
             </HStack>
           ))}
-
-          {
-            //TODO: translation
-          }
           <FormErrorMessage>{t("createRole.formErrors.selectActions")}</FormErrorMessage>
         </FormControl>
-
-        {
-          //TODO: translation
-        }
         <Button
           colorScheme="green"
           type="submit"

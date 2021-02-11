@@ -43,9 +43,6 @@ const DebtorDetailsTriggerBtn: FC<Props> = ({ debtorData }) => {
       <Modal isOpen={isOpen} onClose={onClose} size="5xl">
         <ModalOverlay />
         <ModalContent>
-          {
-            //TODO: translation
-          }
           <ModalHeader textAlign="center">
             {t("debtorTable.debtorDetails.overViewOfDebtor", { debtor: debtor?.name })}
           </ModalHeader>
