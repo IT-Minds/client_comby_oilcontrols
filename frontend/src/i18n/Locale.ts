@@ -84,6 +84,15 @@ export interface Locale {
     takePicture: string;
   };
 
+  fillingOverview: {
+    type: string;
+    date: string;
+    truckId: string;
+    start: string;
+    end: string;
+    coupon: string;
+  };
+
   mytruck: {
     title: string;
     heading: string;

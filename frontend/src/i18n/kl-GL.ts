@@ -56,6 +56,15 @@ export const table: Locale = {
     takePicture: "Tag billede"
   },
 
+  fillingOverview: {
+    type: "Type",
+    date: "Dato",
+    truckId: "Vogn ID",
+    start: "Start",
+    end: "Slut",
+    coupon: "Kupon"
+  },
+
   truckMetaData: {
     startNumber: "Startudleveringsnummer",
     carNumber: "Bilnummer",

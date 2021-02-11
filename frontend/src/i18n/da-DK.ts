@@ -81,6 +81,15 @@ export const table: Locale = {
     takePicture: "Tag billede"
   },
 
+  fillingOverview: {
+    type: "Type",
+    date: "Dato",
+    truckId: "Vogn ID",
+    start: "Start",
+    end: "Slut",
+    coupon: "Kupon"
+  },
+
   mytruck: {
     title: "Comby Olistying - Lastbil #{{id}}",
     heading: "Lastbil #{{id}}",
