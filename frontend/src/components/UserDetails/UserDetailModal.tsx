@@ -91,7 +91,7 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
-            {t("user.userDetailsTable.userDetailsModal", { user: user.username })}
+            {t("users.userDetailsTable.userDetailsModal.manageUser", { user: user.username })}
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
@@ -100,7 +100,9 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
                 passwordSubmitAttempts > 0 &&
                 (!newPassword || !repeatNewPassword || newPassword !== repeatNewPassword)
               }>
-              <FormLabel id="fuel-type">{t("user.userDetailsTable.newPassword")}</FormLabel>
+              <FormLabel id="fuel-type">
+                {t("users.userDetailsTable.userDetailsModal.newPassword")}
+              </FormLabel>
 
               <InputGroup size="md">
                 <Input
@@ -119,7 +121,9 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
                     onTouchCancel={() => setShowPassword(false)}
                     onMouseLeave={() => setShowPassword(false)}
                     onMouseUp={() => setShowPassword(false)}>
-                    {showPassword ? "Hide" : "Show"}
+                    {showPassword
+                      ? t("users.userDetailsTable.userDetailsModal.hide")
+                      : t("users.userDetailsTable.userDetailsModal.show")}
                   </Button>
                 </InputRightElement>
               </InputGroup>
@@ -139,12 +143,14 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
                     onTouchCancel={() => setShowRepeatPassword(false)}
                     onMouseLeave={() => setShowRepeatPassword(false)}
                     onMouseUp={() => setShowRepeatPassword(false)}>
-                    {showRepeatPassword ? "Hide" : "Show"}
+                    {showRepeatPassword
+                      ? t("users.userDetailsTable.userDetailsModal.hide")
+                      : t("users.userDetailsTable.userDetailsModal.show")}
                   </Button>
                 </InputRightElement>
               </InputGroup>
               <FormErrorMessage>
-                {t("user.userDetailsTable.formErrors.inputPassword")}
+                {t("users.userDetailsTable.userDetailsModal.formErrors.inputPassword")}
               </FormErrorMessage>
             </FormControl>
 
@@ -157,11 +163,11 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
                 setPasswordSubmitAttempts(x => x + 1);
                 updatePassword();
               }}>
-              {t("user.userDetailsTable.updatePassword")}
+              {t("users.userDetailsTable.userDetailsModal.updatePassword")}
             </Button>
 
             <FormControl mt={4} isInvalid={roleSubmitAttempts > 0 && !role}>
-              <FormLabel>{t("user.userDetailsTable.userRole")}</FormLabel>
+              <FormLabel>{t("users.userDetailsTable.userDetailsModal.userRole")}</FormLabel>
 
               <UserRoleSelector
                 preselectedValue={
@@ -172,7 +178,7 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
                 }}
               />
               <FormErrorMessage>
-                {t("user.userDetailsTable.formErrors.chooseARole")}
+                {t("users.userDetailsTable.userDetailsModal.formErrors.chooseARole")}
               </FormErrorMessage>
             </FormControl>
             <Button
@@ -185,7 +191,7 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
                 setRoleSubmitAttempts(x => x + 1);
                 updateRole();
               }}>
-              {t("user.userDetailsTable.updateRole")}
+              {t("users.userDetailsTable.userDetailsModal.updateRole")}
             </Button>
           </ModalBody>
         </ModalContent>

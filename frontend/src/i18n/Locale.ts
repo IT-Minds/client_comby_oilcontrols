@@ -292,6 +292,8 @@ export interface Locale {
         updatePassword: string;
         userRole: string;
         updateRole: string;
+        hide: string;
+        show: string;
         formErrors: {
           inputPassword: string;
           chooseARole: string;

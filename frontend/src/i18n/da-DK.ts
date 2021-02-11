@@ -289,6 +289,8 @@ export const table: Locale = {
         updatePassword: "Opdatér kodeord",
         userRole: "Brugerrolle",
         updateRole: "Opdatér rolle",
+        hide: "Skjul",
+        show: "Vis",
         formErrors: {
           inputPassword: "Udfyld et nyt kodeord og sørg for at de er ens",
           chooseARole: "Vælg en rolle"

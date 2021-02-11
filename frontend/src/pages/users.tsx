@@ -1,8 +1,10 @@
 import UserDetailsTable from "components/UserDetails/UserDetailsTable";
-import { GetStaticProps } from "next";
+import { GetStaticProps, NextPage } from "next";
 import { I18nProps } from "next-rosetta";
 
-export default UserDetailsTable;
+const MyPage: NextPage = () => {
+  return <UserDetailsTable></UserDetailsTable>;
+};
 
 export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context => {
   const locale = context.locale || context.defaultLocale;
@@ -15,3 +17,5 @@ export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context =
     }
   };
 };
+
+export default MyPage;
