@@ -17,6 +17,7 @@ import {
   useToast
 } from "@chakra-ui/react";
 import UserRoleSelector from "components/UserRoleSelector/UserRoleSelector";
+import { useI18n } from "next-rosetta";
 import React, { FC, useCallback, useState } from "react";
 import { MdAdd, MdEdit } from "react-icons/md";
 import { genUserClient } from "services/backend/apiClients";
@@ -33,6 +34,7 @@ type Props = {
 };
 
 const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
+  const { t } = useI18n<Locale>();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [showPassword, setShowPassword] = useState(false);
@@ -91,7 +93,9 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
           {
             //TODO: translation
           }
-          <ModalHeader>Manage User {user.username}</ModalHeader>
+          <ModalHeader>
+            {t("user.userDetailsTable.userDetailsModal", { user: user.username })}
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <FormControl
@@ -102,7 +106,7 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
               {
                 //TODO: translation
               }
-              <FormLabel id="fuel-type">New password</FormLabel>
+              <FormLabel id="fuel-type">{t("user.userDetailsTable.newPassword")}</FormLabel>
 
               <InputGroup size="md">
                 <Input
@@ -149,7 +153,7 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
                 //TODO: translation
               }
               <FormErrorMessage>
-                Please input a new password and make sure they match
+                {t("user.userDetailsTable.formErrors.inputPassword")}
               </FormErrorMessage>
             </FormControl>
 
@@ -165,14 +169,14 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
               {
                 //TODO: translation
               }
-              Update Password
+              {t("user.userDetailsTable.updatePassword")}
             </Button>
 
             <FormControl mt={4} isInvalid={roleSubmitAttempts > 0 && !role}>
               {
                 //TODO: translation
               }
-              <FormLabel>User role</FormLabel>
+              <FormLabel>{t("user.userDetailsTable.userRole")}</FormLabel>
 
               <UserRoleSelector
                 preselectedValue={
@@ -185,7 +189,9 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
               {
                 //TODO: translation
               }
-              <FormErrorMessage>Please choose a role</FormErrorMessage>
+              <FormErrorMessage>
+                {t("user.userDetailsTable.formErrors.chooseARole")}
+              </FormErrorMessage>
             </FormControl>
 
             {
@@ -201,7 +207,7 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
                 setRoleSubmitAttempts(x => x + 1);
                 updateRole();
               }}>
-              Update role
+              {t("user.userDetailsTable.updateRole")}
             </Button>
           </ModalBody>
         </ModalContent>

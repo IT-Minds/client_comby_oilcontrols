@@ -1,6 +1,7 @@
 import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import UserCirle from "components/Menu/components/UserCirle";
 import { usePagedFetched } from "hooks/usePagedFetched";
+import { useI18n } from "next-rosetta";
 import { FC, useCallback, useReducer } from "react";
 import ListReducer, { ListReducerActionType } from "react-list-reducer";
 import { genUserClient } from "services/backend/apiClients";
@@ -9,6 +10,8 @@ import { IUserIdDto } from "services/backend/nswagts";
 import UserDetailModal from "./UserDetailModal";
 
 const UserDetailsTable: FC = () => {
+  const { t } = useI18n<Locale>();
+
   const [data, dataDispatch] = useReducer(ListReducer<IUserIdDto>("id"), []);
 
   const { done } = usePagedFetched<number, IUserIdDto>(
@@ -31,8 +34,8 @@ const UserDetailsTable: FC = () => {
       <Thead>
         <Tr>
           <Th w={8}></Th>
-          <Th>Username</Th>
-          <Th>Role</Th>
+          <Th>{t("users.userDetailsTable.userName")}</Th>
+          <Th>{t("users.userDetailsTable.role")}</Th>
           <Th w={8}></Th>
         </Tr>
       </Thead>

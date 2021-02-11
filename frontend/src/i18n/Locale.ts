@@ -152,6 +152,24 @@ export interface Locale {
     };
   };
 
+  users: {
+    userDetailsTable: {
+      userName: string;
+      role: string;
+      userDetailsModal: {
+        manageUser: string;
+        newPassword: string;
+        updatePassword: string;
+        userRole: string;
+        updateRole: string;
+        formErrors: {
+          inputPassword: string;
+          chooseARole: string;
+        };
+      };
+    };
+  };
+
   enums: {
     fuelType: {
       0: string;

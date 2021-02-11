@@ -147,6 +147,23 @@ export const table: Locale = {
       deadline: "Deadline"
     }
   },
+  users: {
+    userDetailsTable: {
+      userName: "Brugernavn",
+      role: "Rolle",
+      userDetailsModal: {
+        manageUser: "Administrer bruger {{user}}",
+        newPassword: "Nyt kodeord",
+        updatePassword: "Opdatér kodeord",
+        userRole: "Brugerrolle",
+        updateRole: "Opdatér rolle",
+        formErrors: {
+          inputPassword: "Udfyld et nyt kodeord og sørg for at de er ens",
+          chooseARole: "Vælg en rolle"
+        }
+      }
+    }
+  },
   enums: {
     fuelType: {
       "0": "Benzin",
