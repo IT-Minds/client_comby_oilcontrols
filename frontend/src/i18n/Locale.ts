@@ -123,6 +123,16 @@ export interface Locale {
     refuel: {
       trigger: string;
       complete: string;
+      selectFuelType: string;
+      fillingAmount: string;
+      cardNumber: string;
+      date: string;
+      formErrors: {
+        selectAllowedFuelType: string;
+        enterAmountFilled: string;
+        enterCardNumber: string;
+        chooseDate: string;
+      };
     };
     refill: {
       selectCouponNumber: string;

@@ -118,7 +118,17 @@ export const table: Locale = {
     tankLevel: "",
     refuel: {
       trigger: "Påfyld tank",
-      complete: "Indsend påfyldning"
+      complete: "Indsend påfyldning",
+      selectFuelType: "Vælg brændstoftype:",
+      fillingAmount: "Påfyldningsmængde (i liter):",
+      cardNumber: "Kortnummer:",
+      date: "Dato:",
+      formErrors: {
+        selectAllowedFuelType: "Vælg en gyldig brændstoftype",
+        enterAmountFilled: "Indtast påfyldningsmængde",
+        enterCardNumber: "Indtast kortnummer",
+        chooseDate: "Vælg en dato"
+      }
     },
     refill: {
       selectCouponNumber: "Vælg kuponnummer:",
