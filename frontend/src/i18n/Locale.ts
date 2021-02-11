@@ -198,6 +198,8 @@ export interface Locale {
   login: {
     username: string;
     password: string;
+    show: string;
+    hide: string;
     login: string;
     formErrors: {
       enterUsername: string;

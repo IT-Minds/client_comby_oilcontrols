@@ -168,6 +168,8 @@ export const table: Locale = {
   login: {
     username: "Brugernavn",
     password: "Kodeord",
+    show: "Vis",
+    hide: "Skjul",
     login: "Log ind",
     formErrors: {
       enterUsername: "Indtast et brugernavn",

@@ -75,7 +75,7 @@ const LoginComp: FC<Props> = ({ submitCallback }) => {
                 onTouchCancel={() => setShow(false)}
                 onMouseLeave={() => setShow(false)}
                 onMouseUp={() => setShow(false)}>
-                {show ? "Hide" : "Show"}
+                {show ? t("login.hide") : t("login.show")}
               </Button>
             </InputRightElement>
           </InputGroup>
