@@ -10,6 +10,7 @@ import {
   Text,
   VStack
 } from "@chakra-ui/react";
+import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
 import { ActionRecord } from "services/backend/ext/enumConvertor";
@@ -21,6 +22,8 @@ type Props = {
 };
 
 const CreateRoleComp: FC<Props> = ({ submitCallback }) => {
+  const { t } = useI18n<Locale>();
+
   const [localForm, setLocalForm] = useState<RoleDto>(
     new RoleDto({
       name: "",
@@ -68,7 +71,7 @@ const CreateRoleComp: FC<Props> = ({ submitCallback }) => {
           {
             //TODO: translation
           }
-          <FormLabel>Role name</FormLabel>
+          <FormLabel>{t("createRole.roleName")}</FormLabel>
           <Input
             placeholder="Role name"
             onChange={e => {
@@ -78,14 +81,14 @@ const CreateRoleComp: FC<Props> = ({ submitCallback }) => {
           {
             //TODO: translation
           }
-          <FormErrorMessage>Please enter a role name</FormErrorMessage>
+          <FormErrorMessage>{t("createRole.formErrors.enterRoleName")}</FormErrorMessage>
         </FormControl>
 
         <FormControl isRequired isInvalid={formSubmitAttempts > 0 && localActions.length < 1}>
           {
             //TODO: translation
           }
-          <FormLabel>Role action</FormLabel>
+          <FormLabel>{t("createRole.roleAction")}</FormLabel>
           {Object.entries(ActionRecord).map(([a, b]) => (
             <HStack key={b}>
               <Text>{Action[Number(b)]}</Text>
@@ -97,7 +100,7 @@ const CreateRoleComp: FC<Props> = ({ submitCallback }) => {
           {
             //TODO: translation
           }
-          <FormErrorMessage>Please select one or more actions</FormErrorMessage>
+          <FormErrorMessage>{t("createRole.formErrors.selectActions")}</FormErrorMessage>
         </FormControl>
 
         {
@@ -108,7 +111,7 @@ const CreateRoleComp: FC<Props> = ({ submitCallback }) => {
           type="submit"
           rightIcon={<MdCheck />}
           onClick={() => setFormSubmitAttempts(x => x + 1)}>
-          Create role
+          {t("createRole.createRole")}
         </Button>
       </VStack>
     </form>

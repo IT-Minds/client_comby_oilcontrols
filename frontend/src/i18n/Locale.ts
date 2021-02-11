@@ -103,6 +103,16 @@ export interface Locale {
     };
   };
 
+  createRole: {
+    roleName: string;
+    roleAction: string;
+    createRole: string;
+    formErrors: {
+      enterRoleName: string;
+      selectActions: string;
+    };
+  };
+
   trucks: {
     truckOverview: string;
     overviewOfTruck: string;

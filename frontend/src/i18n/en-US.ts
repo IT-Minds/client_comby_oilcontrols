@@ -100,6 +100,16 @@ export const table: Locale = {
     }
   },
 
+  createRole: {
+    roleName: "Rollenavn",
+    roleAction: "Rollehandling",
+    createRole: "Opret rolle",
+    formErrors: {
+      enterRoleName: "Indtast et rollenavn",
+      selectActions: "Vælg én eller flere handlinger"
+    }
+  },
+
   trucks: {
     truckOverview: "Vogn overblik",
     overviewOfTruck: "Overblik over vogn {{id}}",
