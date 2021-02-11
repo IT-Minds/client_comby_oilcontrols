@@ -71,7 +71,7 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
           client.complete(
             refillingLocation.refillId,
             new CompleteRefillCommand({
-              couponNumber: Number(reportForm.couponId),
+              couponNumber: Number(reportForm.couponNumber),
               actualDeliveryDate: new Date(),
               startAmount: reportForm.startliters,
               endAmount: reportForm.endliters,

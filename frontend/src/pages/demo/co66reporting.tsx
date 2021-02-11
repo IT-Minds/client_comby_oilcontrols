@@ -30,7 +30,7 @@ const DemoPage: NextPage = () => {
         const newRefillID = await client.complete(
           2,
           new CompleteRefillCommand({
-            couponNumber: Number(reportForm.couponId),
+            couponNumber: Number(reportForm.couponNumber),
             actualDeliveryDate: new Date(),
             startAmount: 2,
             endAmount: 20,

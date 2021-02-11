@@ -37,18 +37,20 @@ const UserDetailsTable: FC = () => {
         </Tr>
       </Thead>
       <Tbody>
-        {data.map(user => (
-          <Tr key={user.id}>
-            <Td>
-              <UserCirle size={8} user={user} />
-            </Td>
-            <Td>{user.username}</Td>
-            <Td>{user.currentRole?.name}</Td>
-            <Td>
-              <UserDetailModal user={user} userCallback={x => updateUser(x)} />
-            </Td>
-          </Tr>
-        ))}
+        {data
+          .filter(u => u.currentRole?.name !== "SuperAdmin")
+          .map(user => (
+            <Tr key={user.id}>
+              <Td>
+                <UserCirle size={8} user={user} />
+              </Td>
+              <Td>{user.username}</Td>
+              <Td>{user.currentRole?.name}</Td>
+              <Td>
+                <UserDetailModal user={user} userCallback={x => updateUser(x)} />
+              </Td>
+            </Tr>
+          ))}
       </Tbody>
     </Table>
   );

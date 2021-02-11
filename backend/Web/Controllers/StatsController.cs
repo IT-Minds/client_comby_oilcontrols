@@ -13,6 +13,14 @@ namespace Web.Controllers
         Year = year
       });
 
+      System.Net.Mime.ContentDisposition cd = new System.Net.Mime.ContentDisposition
+      {
+            FileName = data.Filename,
+            Inline = false
+      };
+      Response.Headers.Add("Content-Disposition", cd.ToString());
+      Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
+
       return File(data.Stream, "text/csv", data.Filename);;
     }
 

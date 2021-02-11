@@ -1,7 +1,7 @@
 import { FuelType } from "services/backend/nswagts";
 
 export interface RefillForm {
-  couponId: string;
+  couponNumber: string;
   fuelType: FuelType;
   startliters: number;
   endliters: number;

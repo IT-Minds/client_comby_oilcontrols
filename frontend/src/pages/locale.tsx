@@ -1,7 +1,10 @@
-import { Container, Flex, Heading, Text } from "@chakra-ui/react";
+import { Button, Container, Flex, Heading, Text } from "@chakra-ui/react";
 import { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { I18nProps, useI18n } from "next-rosetta";
+import { useCallback } from "react";
+import { genStatsClient } from "services/backend/apiClients";
+import { downloadFile } from "utils/downloadFile";
 
 import { Locale } from "../i18n/Locale";
 
@@ -12,6 +15,12 @@ type Props = {
 const LocalePage: NextPage<Props> = () => {
   const { t } = useI18n<Locale>();
 
+  const download = useCallback(async () => {
+    const client = await genStatsClient();
+    const result = await client.getRefillOfYearFile(2000);
+    downloadFile(result.data, result.fileName);
+  }, []);
+
   return (
     <main>
       <Head>
@@ -21,6 +30,7 @@ const LocalePage: NextPage<Props> = () => {
         <Container maxW="xl" centerContent>
           <Heading>{t("title")}</Heading>
           <Text fontSize="xl">Just some info text</Text>
+          <Button onClick={download}>CLICK</Button>
         </Container>
       </Flex>
     </main>

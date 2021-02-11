@@ -1,6 +1,7 @@
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Domain.Entities;
+using Domain.EntityExtensions;
 using Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Application.Common.Security;
 using Domain.Entities.Refills;
+using UniContaDomain.Entities;
 
 namespace Application.Refills.Commands.CompleteRefill
 {
@@ -28,11 +30,38 @@ namespace Application.Refills.Commands.CompleteRefill
     public class CompleteRefillCommandHandler : IRequestHandler<CompleteRefillCommand, int>
     {
       private readonly IApplicationDbContext _context;
+      private readonly IUniContaService _uniContaService;
 
-      public CompleteRefillCommandHandler(IApplicationDbContext context)
+      public CompleteRefillCommandHandler(IApplicationDbContext context, IUniContaService uniContaService)
       {
         _context = context;
+        _uniContaService = uniContaService;
       }
+
+      private async Task PostUniContaOrder(CompletedRefill refill)
+      {
+        if (!await _uniContaService.Login())
+        {
+          // TODO throw exception???
+        }
+
+        var result = await _uniContaService.CreateOrder(new UniContaOrder
+        {
+          AmountFilled = (int)Math.Ceiling(refill.AmountDelivered()),
+          BuildingId = refill.LocationId.ToString(),
+          CouponId = refill.CouponId,
+          CouponNumber = refill.Coupon.CouponNumber.ToString(),
+          Date = refill.ActualDeliveryDate,
+          DebtorId = refill.Location.ActiveDebtor().UnicontaId.ToString(),
+          ProductId = "1111"
+        });
+
+        if (!result)
+        {
+          // TODO throw exception???
+        }
+      }
+
 
       public async Task<int> Handle(CompleteRefillCommand request, CancellationToken cancellationToken)
       {
@@ -84,11 +113,12 @@ namespace Application.Refills.Commands.CompleteRefill
 
         _context.Trucks.Update(truck);
         _context.Coupons.Update(coupon);
-
         _context.AssignedRefills.Remove(refill);
         _context.CompletedRefills.Add(completingrefill);
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        PostUniContaOrder(completingrefill);
 
         return refill.Id;
       }
