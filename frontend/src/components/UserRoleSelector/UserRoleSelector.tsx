@@ -4,12 +4,14 @@ import { FC, useReducer } from "react";
 import ListReducer from "react-list-reducer";
 import { genRoleClient } from "services/backend/apiClients";
 import { RoleDto } from "services/backend/nswagts";
+import DropdownType from "types/DropdownType";
 
 type Props = {
   cb: (s: RoleDto) => void;
+  preselectedValue?: DropdownType;
 };
 
-const UserRoleSelector: FC<Props> = ({ cb }) => {
+const UserRoleSelector: FC<Props> = ({ cb, preselectedValue }) => {
   const [userRoles, dispatchUserRoles] = useReducer(ListReducer<RoleDto>("name"), []);
 
   const { done } = usePagedFetched(
@@ -24,6 +26,7 @@ const UserRoleSelector: FC<Props> = ({ cb }) => {
 
   return (
     <ComboSelect
+      value={preselectedValue}
       options={userRoles.map(s => ({
         ...s,
         id: s.name.toString(),

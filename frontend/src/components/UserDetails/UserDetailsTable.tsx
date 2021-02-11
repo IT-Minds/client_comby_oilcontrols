@@ -1,7 +1,7 @@
 import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import UserCirle from "components/Menu/components/UserCirle";
 import { usePagedFetched } from "hooks/usePagedFetched";
-import { FC, useReducer } from "react";
+import { FC, useCallback, useReducer } from "react";
 import ListReducer, { ListReducerActionType } from "react-list-reducer";
 import { genUserClient } from "services/backend/apiClients";
 import { IUserIdDto } from "services/backend/nswagts";
@@ -18,6 +18,13 @@ const UserDetailsTable: FC = () => {
     dataDispatch,
     {}
   );
+
+  const updateUser = useCallback((user: IUserIdDto) => {
+    dataDispatch({
+      type: ListReducerActionType.Update,
+      data: user
+    });
+  }, []);
 
   return (
     <Table size="sm">
@@ -38,7 +45,7 @@ const UserDetailsTable: FC = () => {
             <Td>{user.username}</Td>
             <Td>{user.currentRole?.name}</Td>
             <Td>
-              <UserDetailModal user={user} />
+              <UserDetailModal user={user} userCallback={x => updateUser(x)} />
             </Td>
           </Tr>
         ))}
