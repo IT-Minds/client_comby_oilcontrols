@@ -170,6 +170,15 @@ export interface Locale {
     };
   };
 
+  locationHistory: {
+    locationMetaChangesHistory: string;
+    address: string;
+    comments: string;
+    regionId: string;
+    schedule: string;
+    timeOfChange: string;
+  };
+
   trucks: {
     truckOverview: string;
     overviewOfTruck: string;

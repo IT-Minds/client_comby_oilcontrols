@@ -167,6 +167,15 @@ export const table: Locale = {
     }
   },
 
+  locationHistory: {
+    locationMetaChangesHistory: "Lokationsmetaændringshistorik",
+    address: "Adresse",
+    comments: "Kommentarer",
+    regionId: "Region ID",
+    schedule: "Tidsplan",
+    timeOfChange: "Ændringstidspunkt"
+  },
+
   trucks: {
     truckOverview: "Vogn overblik",
     overviewOfTruck: "Overblik over vogn {{id}}",
