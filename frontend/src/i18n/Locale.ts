@@ -135,6 +135,41 @@ export interface Locale {
     };
   };
 
+  localeMetaData: {
+    locationType: string;
+    address: string;
+    refillSchedule: string;
+    daysBetweenRefill: string;
+    comments: string;
+    selectAnImage: string;
+    tankNumber: string;
+    tankCapacity: string;
+    liters: string;
+    minFuelAmount: string;
+    dailyFuelConsumptionEstimate: string;
+    selectFuelType: string;
+    debtor: string;
+    main: string;
+    base: string;
+    upcoming: string;
+    selectDate: string;
+    submit: string;
+    formErrors: {
+      selectLocationType: string;
+      enterAddress: string;
+      selectRefillSchedule: string;
+      daysBetween: string;
+      enterComment: string;
+      selectAnImage: string;
+      tankNumber: string;
+      tankCapacity: string;
+      minFuelAmount: string;
+      dailyFuelConsumptionEstimate: string;
+      allowedFuelType: string;
+      selectDebtorId: string;
+    };
+  };
+
   trucks: {
     truckOverview: string;
     overviewOfTruck: string;

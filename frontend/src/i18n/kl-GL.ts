@@ -107,6 +107,41 @@ export const table: Locale = {
     }
   },
 
+  localeMetaData: {
+    locationType: "Lokationstype:",
+    address: "Adresse:",
+    refillSchedule: "Genopfyldningsplan:",
+    daysBetweenRefill: "Dage mellem genopfyldninger:",
+    comments: "Kommentarer:",
+    selectAnImage: "Vælg et billede a tanklokationen",
+    tankNumber: "Tanknummer:",
+    tankCapacity: "Tankkapacitet:",
+    liters: "Liter",
+    minFuelAmount: "Minimum brændstofmængde:",
+    dailyFuelConsumptionEstimate: "Daglig forventet brændstofforbrug:",
+    selectFuelType: "Vælg brændstoftype:",
+    debtor: "Debitor",
+    main: "Hoved",
+    base: "Base",
+    upcoming: "Kommende",
+    selectDate: "Vælg en dato:",
+    submit: "Indsend",
+    formErrors: {
+      selectLocationType: "Vælg en lokationstype",
+      enterAddress: "Indtast en adresse",
+      selectRefillSchedule: "Vælg en genopfyldningsplan",
+      daysBetween: "Vælg dage mellem genopfyldninger",
+      enterComment: "Angiv en kommentar",
+      selectAnImage: "Vælg et billede",
+      tankNumber: "Indtast tanknummer",
+      tankCapacity: "Indtast tankkapacitet",
+      minFuelAmount: "Indtast minimum brændstofmængde",
+      dailyFuelConsumptionEstimate: "Indtast det forventede daglige brændstofforbrug",
+      allowedFuelType: "Vælg en gyldig brændstoftype",
+      selectDebtorId: "Vælg mindst én debtor ID"
+    }
+  },
+
   trucks: {
     truckOverview: "Vogn overblik",
     overviewOfTruck: "Overblik over vogn {{id}}",
