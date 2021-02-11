@@ -189,6 +189,10 @@ export const table: Locale = {
       truckName: "Vognnavn",
       truckDescription: "Vognbeskrivelse",
       id: "ID"
+    },
+    addTruckTrigger: {
+      addNewTruck: "Tilføj ny vogn"
+    }
     }
   },
 
@@ -198,6 +202,8 @@ export const table: Locale = {
     carName: "Bilnavn",
     description: "Beskrivelse",
     tankSize: "Tankstørrelse",
+    liters: "Liter",
+    submit: "Indsend",
     formError: {
       carNumber: "Indtast bilnummer",
       carName: "Indtast bilnavn",

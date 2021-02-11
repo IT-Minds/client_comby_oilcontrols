@@ -59,6 +59,8 @@ export const table: Locale = {
     carName: "Car name",
     description: "Description",
     tankSize: "Tank size",
+    liters: "Liter",
+    submit: "Indsend",
     formError: {
       carNumber: "Please enter a car number",
       carName: "Please specify a car name",
@@ -214,6 +216,9 @@ export const table: Locale = {
       truckName: "Vognnavn",
       truckDescription: "Vognbeskrivelse",
       id: "ID"
+    }
+    addTruckTrigger: {
+      addNewTruck: "Tilføj ny vogn"
     }
   },
 

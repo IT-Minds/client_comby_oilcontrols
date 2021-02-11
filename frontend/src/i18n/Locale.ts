@@ -62,6 +62,8 @@ export interface Locale {
     carName: string;
     description: string;
     tankSize: string;
+    liters: string;
+    submit: string;
     formError: {
       carNumber: string;
       carName: string;
@@ -217,6 +219,9 @@ export interface Locale {
       truckName: string;
       truckDescription: string;
       id: string;
+    };
+    addTruckTrigger: {
+      addNewTruck: string;
     };
   };
 
