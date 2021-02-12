@@ -39,14 +39,7 @@ namespace Application.Coupons.Commands.SaveCouponImage
           throw new NotFoundException("No refill with ID: " + request.RefillId);
         }
 
-        String imgType;
-        Regex type = new Regex(@"(^image\/png$)|(^image\/webp$)");
-        if (!type.IsMatch(request.File.ContentType))
-        {
-          throw new ArgumentException("Invalid content type.");
-        }
-
-        imgType = request.File.ContentType.Substring(6);
+        string imgType = request.File.ContentType.Substring(6);
         var filename = request.RefillId + "." + imgType;
         string filePath = Path.Combine(_options.CouponPath, filename);
 

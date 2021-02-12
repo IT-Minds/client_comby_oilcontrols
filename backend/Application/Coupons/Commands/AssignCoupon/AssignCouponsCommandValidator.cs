@@ -2,9 +2,9 @@ using FluentValidation;
 
 namespace Application.Coupons.Commands.AssignCoupons
 {
-  public class CreateExampleEntityCommandValidator : AbstractValidator<AssignCouponsCommand>
+  public class AssignCouponsCommandValidator : AbstractValidator<AssignCouponsCommand>
   {
-    public CreateExampleEntityCommandValidator()
+    public AssignCouponsCommandValidator()
     {
       RuleFor(e => e.Dto.TruckId)
           .NotNull();
