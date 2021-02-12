@@ -29,19 +29,19 @@ namespace Application.Locations.Queries.GetHistoricConsumption
             .Where(x => x.Id == request.Dto.LocationId)
             .FirstOrDefaultAsync();
 
-        var refills = location.Refills
+        var refills = location.CompletedRefills
           .Where(x => x.ActualDeliveryDate >= request.Dto.StartDate && x.ActualDeliveryDate < request.Dto.EndDate)
           .OrderBy(x => x.ActualDeliveryDate)
           .ToList();
 
-        var prevRefill = location.Refills
+        var prevRefill = location.CompletedRefills
           .Where(x => x.ActualDeliveryDate < (refills == null || refills.Count() == 0 ? request.Dto.StartDate : refills.First().ActualDeliveryDate))
           .OrderByDescending(x => x.ActualDeliveryDate)
           .FirstOrDefault();
 
 
 
-        var lastRefill = location.Refills
+        var lastRefill = location.CompletedRefills
           .Where(x => x.ActualDeliveryDate > (refills == null || refills.Count() == 0 ? request.Dto.EndDate : refills.First().ActualDeliveryDate))
           .OrderByDescending(x => x.ActualDeliveryDate)
           .FirstOrDefault();
@@ -69,11 +69,11 @@ namespace Application.Locations.Queries.GetHistoricConsumption
         {
           if (prevRefill != null)
           {
-            prevRefillDate = (prevRefill.ActualDeliveryDate.Value < request.Dto.StartDate ? request.Dto.StartDate : prevRefill.ActualDeliveryDate.Value);
-            var daysBetweenRefills = (refill.ActualDeliveryDate.Value - prevRefill.ActualDeliveryDate.Value).TotalDays;
-            var consumedBetweenRefills = (prevRefill.EndAmount.Value - refill.StartAmount.Value);
+            prevRefillDate = (prevRefill.ActualDeliveryDate < request.Dto.StartDate ? request.Dto.StartDate : prevRefill.ActualDeliveryDate);
+            var daysBetweenRefills = (refill.ActualDeliveryDate - prevRefill.ActualDeliveryDate).TotalDays;
+            var consumedBetweenRefills = (prevRefill.EndAmount - refill.StartAmount);
             consumedPrDay = consumedBetweenRefills / daysBetweenRefills;
-            consumptions.Add((prevRefillDate, refill.ActualDeliveryDate.Value, consumedPrDay));
+            consumptions.Add((prevRefillDate, refill.ActualDeliveryDate, consumedPrDay));
           }
 
           prevRefill = refill;

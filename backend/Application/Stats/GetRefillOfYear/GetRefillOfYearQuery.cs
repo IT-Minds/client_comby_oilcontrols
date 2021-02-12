@@ -13,7 +13,7 @@ namespace Application.Stats.GetRefillOfYear
   {
     public int Year { get; set; }
 
-    public class GetRefillOfYearQueryHandler: IRequestHandler<GetRefillOfYearQuery, FileReponseDto>
+    public class GetRefillOfYearQueryHandler : IRequestHandler<GetRefillOfYearQuery, FileReponseDto>
     {
 
       private readonly StatsService _statsService;
@@ -37,8 +37,8 @@ namespace Application.Stats.GetRefillOfYear
 
           return new FileReponseDto
           {
-              Stream =  memwriter.ToArray(),
-              Filename = "refill-"+request.Year+".csv"
+            Stream = memwriter.ToArray(),
+            Filename = "refill-" + request.Year + ".csv"
           };
         }
       }
