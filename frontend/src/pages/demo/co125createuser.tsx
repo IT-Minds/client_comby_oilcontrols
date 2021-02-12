@@ -1,7 +1,8 @@
 import { Box, Container, useColorModeValue, useToast } from "@chakra-ui/react";
 import CreateUserComp from "components/CreateUser/CreateUserComp";
 import { useOffline } from "hooks/useOffline";
-import { NextPage } from "next";
+import { GetStaticProps, NextPage } from "next";
+import { I18nProps } from "next-rosetta";
 import React, { useCallback } from "react";
 import { genUserClient } from "services/backend/apiClients";
 import { CreateUserCommand, UpdateUserRolesCommand } from "services/backend/nswagts";
@@ -45,6 +46,13 @@ const DemoPage: NextPage = () => {
       </Box>
     </Container>
   );
+};
+
+export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context => {
+  const locale = context.locale || context.defaultLocale;
+
+  const { table = {} } = await import(`../../i18n/${locale}`);
+  return { props: { table } };
 };
 
 export default DemoPage;

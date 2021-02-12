@@ -1,5 +1,6 @@
 import { Container, Table, TableCaption, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { DebtorTableContext } from "contexts/DebtorTableContext";
+import { useI18n } from "next-rosetta";
 import React, { FC, useCallback, useEffect, useReducer } from "react";
 import ListReducer, { ListReducerActionType } from "react-list-reducer";
 import { DebtorDto } from "services/backend/nswagts";
@@ -11,6 +12,8 @@ type Props = {
 };
 
 const DebtorTableComp: FC<Props> = ({ preLoadedData = [] }) => {
+  const { t } = useI18n<Locale>();
+
   const [data, dataDispatch] = useReducer(ListReducer<DebtorDto>("dbId"), preLoadedData ?? []);
 
   useEffect(() => {
@@ -32,15 +35,12 @@ const DebtorTableComp: FC<Props> = ({ preLoadedData = [] }) => {
   return (
     <Container w="100%" maxW="unset">
       <Table variant="striped" colorScheme="blue" size="sm">
-        <TableCaption placement="top">Debtor table</TableCaption>
-        {
-          //TODO: translation
-        }
+        <TableCaption placement="top">{t("debtorTable.debtorTable")}</TableCaption>
         <Thead>
           <Tr>
-            <Th>Debtor name</Th>
-            <Th>Debtor ID</Th>
-            <Th>Uniconta ID</Th>
+            <Th>{t("debtorTable.debtorName")}</Th>
+            <Th>{t("debtorTable.debtorId")}</Th>
+            <Th>{t("debtorTable.unicontaId")}</Th>
           </Tr>
         </Thead>
 

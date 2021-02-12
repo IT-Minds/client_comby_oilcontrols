@@ -69,6 +69,9 @@ const AddLocationTriggerBtn: FC<Props> = ({ tankType = null }) => {
 
   return (
     <>
+      {
+        //TODO: translation
+      }
       <Button colorScheme="green" onClick={onOpen}>
         Add new {tankType != null ? TankType[tankType] : "Location"}
       </Button>
@@ -76,6 +79,9 @@ const AddLocationTriggerBtn: FC<Props> = ({ tankType = null }) => {
       <Modal isOpen={isOpen} onClose={onClose} size="5xl">
         <ModalOverlay />
         <ModalContent>
+          {
+            //TODO: translation
+          }
           <ModalHeader>Add new {tankType != null ? TankType[tankType] : "Location"}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>

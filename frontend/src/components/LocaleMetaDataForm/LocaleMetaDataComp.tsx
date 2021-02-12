@@ -18,6 +18,7 @@ import {
 import DatePicker from "components/DatePicker/DatePicker";
 import DebtorSelector from "components/DebtorSelector/DebtorSelector";
 import StreetSelector from "components/StreetSelector/StreetSelector";
+import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
 import { FuelTypeRecord, RefillScheduleRecord } from "services/backend/ext/enumConvertor";
@@ -41,6 +42,8 @@ type Props = {
 };
 
 const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }) => {
+  const { t } = useI18n<Locale>();
+
   const [mainDebtorId, setMainDebtorId] = useState(null);
   const [baseDebtorId, setBaseDebtorId] = useState(null);
   const [upcomingDebtorId, setUpcomingDebtorId] = useState(null);
@@ -122,10 +125,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
             Location
           </Heading>
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && localForm.tankType <= -1}>
-            {
-              //TODO: translation
-            }
-            <FormLabel>Location Type:</FormLabel>
+            <FormLabel>{t("localeMetaData.locationType")}</FormLabel>
             <Select
               placeholder="Location Type"
               onChange={e => updateLocalForm(e.target.value, "tankType")}
@@ -137,17 +137,11 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
               <option value={TankType.SHIP}>Ship</option>
               <option value={TankType.TANK}>Tank</option>
             </Select>
-            {
-              //TODO: translation
-            }
-            <FormErrorMessage>Please select a location type</FormErrorMessage>
+            <FormErrorMessage>{t("localeMetaData.formErrors.selectLocationType")}</FormErrorMessage>
           </FormControl>
 
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.address}>
-            {
-              //TODO: translation
-            }
-            <FormLabel>Address:</FormLabel>
+            <FormLabel>{t("localeMetaData.address")}</FormLabel>
 
             <StreetSelector
               cb={x => {
@@ -156,34 +150,24 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
               }}
               value={localForm.address}
             />
-            {
-              //TODO: translation
-            }
-            <FormErrorMessage>Please enter an address</FormErrorMessage>
+            <FormErrorMessage>{t("localeMetaData.formErrors.enterAddress")}</FormErrorMessage>
           </FormControl>
 
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.schedule}>
-            {
-              //TODO: translation
-            }
-            <FormLabel>Refill Schedule:</FormLabel>
+            <FormLabel>{t("localeMetaData.refillSchedule")}</FormLabel>
             <Select
               placeholder="Refill Schedule"
               onChange={e => updateLocalForm(e.target.value, "schedule")}
               value={localForm.schedule}>
-              {
-                //TODO: translation
-              }
               {Object.entries(RefillScheduleRecord).map(([key, value]) => (
                 <option key={key} value={value}>
                   {capitalize(key)}
                 </option>
               ))}
             </Select>
-            {
-              //TODO: translation
-            }
-            <FormErrorMessage>Please select a refill schedule</FormErrorMessage>
+            <FormErrorMessage>
+              {t("localeMetaData.formErrors.selectRefillSchedule")}
+            </FormErrorMessage>
           </FormControl>
 
           <FormControl
@@ -194,10 +178,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
               localForm.schedule == RefillSchedule.INTERVAL &&
               !localForm.daysBetweenRefills
             }>
-            {
-              //TODO: translation
-            }
-            <FormLabel>Days between refills</FormLabel>
+            <FormLabel>{t("localeMetaData.daysBetweenRefill")}</FormLabel>
             <Input
               placeholder="# of days"
               type="number"
@@ -206,17 +187,11 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
               }}
               value={localForm.daysBetweenRefills}
             />
-            {
-              //TODO: translation
-            }
-            <FormErrorMessage>Please enter a comment</FormErrorMessage>
+            <FormErrorMessage>{t("localeMetaData.formErrors.daysBetween")}</FormErrorMessage>
           </FormControl>
 
           <FormControl>
-            {
-              //TODO: translation
-            }
-            <FormLabel>Comments</FormLabel>
+            <FormLabel>{t("localeMetaData.comments")}</FormLabel>
             <Input
               placeholder="Comment"
               onChange={e => {
@@ -224,24 +199,15 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
               }}
               value={localForm.comments}
             />
-            {
-              //TODO: translation
-            }
-            <FormErrorMessage>Please enter a comment</FormErrorMessage>
+            <FormErrorMessage>{t("localeMetaData.formErrors.enterComment")}</FormErrorMessage>
           </FormControl>
 
           <FormControl>
-            {
-              //TODO: translation
-            }
-            <FormLabel>Select an image of the tank location</FormLabel>
+            <FormLabel>{t("localeMetaData.selectAnImage")}</FormLabel>
             <Button colorScheme="blue" onClick={saveImage}>
               {image ? "Re-select image" : "Select image"}
             </Button>
-            {
-              //TODO: translation
-            }
-            <FormErrorMessage>Please select an image</FormErrorMessage>
+            <FormErrorMessage>{t("localeMetaData.formErrors.selectAnImage")}</FormErrorMessage>
           </FormControl>
         </Box>
         <Spacer />
@@ -250,10 +216,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
             Tank
           </Heading>
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.tankNumber}>
-            {
-              //TODO: translation
-            }
-            <FormLabel>Tank Number:</FormLabel>
+            <FormLabel>{t("localeMetaData.tankNumber")}</FormLabel>
             <Input
               placeholder="Tank Number"
               onChange={e => {
@@ -261,17 +224,11 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
               }}
               value={localForm.tankNumber}
             />
-            {
-              //TODO: translation
-            }
-            <FormErrorMessage>Please enter a tank number</FormErrorMessage>
+            <FormErrorMessage>{t("localeMetaData.formErrors.tankNumber")}</FormErrorMessage>
           </FormControl>
 
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.tankCapacity}>
-            {
-              //TODO: translation
-            }
-            <FormLabel>Tank Capacity:</FormLabel>
+            <FormLabel>{t("localeMetaData.tankCapacity")}</FormLabel>
             <InputGroup>
               <NumberInput
                 placeholder="Tank capacity"
@@ -281,21 +238,15 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
                 value={localForm.tankCapacity}>
                 <NumberInputField />
               </NumberInput>
-              <InputRightAddon>liters</InputRightAddon>
+              <InputRightAddon>{t("localeMetaData.liters")}</InputRightAddon>
             </InputGroup>
-            {
-              //TODO: translation
-            }
-            <FormErrorMessage>Please enter the capacity of the tank</FormErrorMessage>
+            <FormErrorMessage>{t("localeMetaData.formErrors.tankCapacity")}</FormErrorMessage>
           </FormControl>
 
           <FormControl
             isRequired
             isInvalid={formSubmitAttempts > 0 && !localForm.minimumFuelAmount}>
-            {
-              //TODO: translation
-            }
-            <FormLabel>Minimum Fuel Amount: </FormLabel>
+            <FormLabel>{t("localeMetaData.minFuelAmount")}</FormLabel>
             <InputGroup>
               <NumberInput
                 placeholder="Min. fuel amount"
@@ -305,21 +256,15 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
                 value={localForm.minimumFuelAmount}>
                 <NumberInputField />
               </NumberInput>
-              <InputRightAddon>liters</InputRightAddon>
+              <InputRightAddon>{t("localeMetaData.liters")}</InputRightAddon>
             </InputGroup>
-            {
-              //TODO: translation
-            }
-            <FormErrorMessage>Please enter the minimum fuel amount</FormErrorMessage>
+            <FormErrorMessage>{t("localeMetaData.formErrors.minFuelAmount")}</FormErrorMessage>
           </FormControl>
 
           <FormControl
             isRequired
             isInvalid={formSubmitAttempts > 0 && !localForm.estimateFuelConsumption}>
-            {
-              //TODO: translation
-            }
-            <FormLabel>Daily Fuel Consumption Estimate: </FormLabel>
+            <FormLabel>{t("localeMetaData.dailyFuelConsumptionEstimate")}</FormLabel>
             <InputGroup>
               <NumberInput
                 placeholder="Est. fuel consumption"
@@ -331,14 +276,13 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
               </NumberInput>
               <InputRightAddon>liters</InputRightAddon>
             </InputGroup>
-            {
-              //TODO: translation
-            }
-            <FormErrorMessage>Please enter the estimated fuel consumption</FormErrorMessage>
+            <FormErrorMessage>
+              {t("localeMetaData.formErrors.dailyFuelConsumptionEstimate")}
+            </FormErrorMessage>
           </FormControl>
 
           <FormControl isInvalid={formSubmitAttempts > 0 && localForm.fuelType <= -1} isRequired>
-            <FormLabel id="fuel-type">Select fuel type:</FormLabel>
+            <FormLabel id="fuel-type">{t("localeMetaData.selectFuelType")}</FormLabel>
             <Select
               onChange={e => updateLocalForm(e.target.value, "fuelType")}
               value={localForm.fuelType}
@@ -349,49 +293,43 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
                 </option>
               ))}
             </Select>
-            <FormErrorMessage>Please select one of the allowed fuel types</FormErrorMessage>
+            <FormErrorMessage>{t("localeMetaData.formErrors.allowedFuelType")}</FormErrorMessage>
           </FormControl>
         </Box>
         <Spacer />
         <Box>
           <Heading size="md" mb={4}>
-            Debtor
+            {t("localeMetaData.debtor")}
           </Heading>
-          {
-            //TODO: translation
-          }
           <FormControl
             isInvalid={
               formSubmitAttempts > 0 && !mainDebtorId && !baseDebtorId && !upcomingDebtorId
             }>
-            <FormLabel>Main</FormLabel>
+            <FormLabel>{t("localeMetaData.main")}</FormLabel>
             <DebtorSelector cb={x => setMainDebtorId(x?.dbId)} />
 
-            <FormLabel>Base</FormLabel>
+            <FormLabel>{t("localeMetaData.base")}</FormLabel>
             <DebtorSelector cb={x => setBaseDebtorId(x?.dbId)} />
-            <FormLabel>Upcoming</FormLabel>
+            <FormLabel>{t("localeMetaData.upcoming")}</FormLabel>
             <DebtorSelector cb={x => setUpcomingDebtorId(x?.dbId)} />
-            <FormLabel>Select date:</FormLabel>
+            <FormLabel>{t("localeMetaData.selectDate")}</FormLabel>
             <DatePicker
               selectedDate={debtorDate}
               onChange={(date: Date) => setDebtorDate(date)}
               // value={localForm.fuelType}
               showPopperArrow={false}
             />
-            <FormErrorMessage>Please add at least one Debtor ID</FormErrorMessage>
+            <FormErrorMessage>{t("localeMetaData.formErrors.selectDebtorId")}</FormErrorMessage>
           </FormControl>
         </Box>
       </HStack>
       <Center mt={25}>
-        {
-          //TODO: translation
-        }
         <Button
           colorScheme="green"
           type="submit"
           rightIcon={<MdCheck />}
           onClick={() => setFormSubmitAttempts(x => x + 1)}>
-          Submit
+          {t("localeMetaData.submit")}
         </Button>
       </Center>
     </form>

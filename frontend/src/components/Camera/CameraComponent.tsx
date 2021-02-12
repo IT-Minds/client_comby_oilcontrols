@@ -1,4 +1,5 @@
 import { Button, Center, VStack } from "@chakra-ui/react";
+import { useI18n } from "next-rosetta";
 import { FC } from "react";
 import { useCallback, useRef } from "react";
 import { isBrowser } from "react-device-detect";
@@ -20,6 +21,7 @@ const browserContains = {
 
 const CameraComp: FC<Props> = ({ imgSource }) => {
   const webcamRef = useRef<Webcam>(null);
+  const { t } = useI18n<Locale>();
 
   const capture = useCallback(() => {
     imgSource(webcamRef.current.getScreenshot());
@@ -35,7 +37,7 @@ const CameraComp: FC<Props> = ({ imgSource }) => {
       />
       <Center>
         <Button className={styles.marginTop} colorScheme="teal" onClick={capture}>
-          Take picture
+          {t("camera.takePicture")}
         </Button>
       </Center>
     </VStack>

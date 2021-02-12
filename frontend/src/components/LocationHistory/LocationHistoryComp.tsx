@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import PageIndicator from "components/Demo/components/PageIndicator";
 import { usePagedFetched } from "hooks/usePagedFetched";
+import { useI18n } from "next-rosetta";
 import React, { FC, useEffect, useMemo, useReducer, useState } from "react";
 import ListReducer from "react-list-reducer";
 import { genLocationClient } from "services/backend/apiClients";
@@ -33,6 +34,8 @@ const LocationHistoryComp: FC<Props> = ({
   preloadLoadedAll = false,
   locationId = 1
 }) => {
+  const { t } = useI18n<Locale>();
+
   const toast = useToast();
 
   const [data, dataDispatch] = useReducer(
@@ -131,14 +134,16 @@ const LocationHistoryComp: FC<Props> = ({
   return (
     <Container w="100%" maxW="unset">
       <Table variant="striped" colorScheme="blue" size="sm">
-        <TableCaption placement="top">Location Meta Changes History</TableCaption>
+        <TableCaption placement="top">
+          {t("locationHistory.locationMetaChangesHistory")}
+        </TableCaption>
         <Thead>
           <Tr>
-            <Th>Address</Th>
-            <Th>Comments</Th>
-            <Th>Region ID</Th>
-            <Th>Schedule</Th>
-            <Th>Time of change</Th>
+            <Th>{t("locationHistory.address")}</Th>
+            <Th>{t("locationHistory.comments")}</Th>
+            <Th>{t("locationHistory.regionId")}</Th>
+            <Th>{t("locationHistory.schedule")}</Th>
+            <Th>{t("locationHistory.timeOfChange")}</Th>
           </Tr>
         </Thead>
         <Tbody>

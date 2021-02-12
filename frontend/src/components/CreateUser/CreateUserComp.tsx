@@ -1,5 +1,6 @@
 import { Button, FormControl, FormErrorMessage, FormLabel, Input, VStack } from "@chakra-ui/react";
 import UserRoleSelector from "components/UserRoleSelector/UserRoleSelector";
+import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
 import { CreateUserCommand } from "services/backend/nswagts";
@@ -10,6 +11,8 @@ type Props = {
 };
 
 const CreateUserComp: FC<Props> = ({ submitCallback }) => {
+  const { t } = useI18n<Locale>();
+
   const [localForm, setLocalForm] = useState<CreateUserCommand>(
     new CreateUserCommand({
       userName: "",
@@ -44,27 +47,18 @@ const CreateUserComp: FC<Props> = ({ submitCallback }) => {
     <form onSubmit={handleSubmit}>
       <VStack spacing={2}>
         <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.userName}>
-          {
-            //TODO: translation
-          }
-          <FormLabel>Username</FormLabel>
+          <FormLabel>{t("createUser.userName")}</FormLabel>
           <Input
             placeholder="Username"
             onChange={e => {
               updateLocalForm(e.target.value, "userName");
             }}
           />
-          {
-            //TODO: translation
-          }
-          <FormErrorMessage>Please enter a username</FormErrorMessage>
+          <FormErrorMessage>{t("createUser.formErrors.enterUsername")}</FormErrorMessage>
         </FormControl>
 
         <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.password}>
-          {
-            //TODO: translation
-          }
-          <FormLabel>Password</FormLabel>
+          <FormLabel>{t("createUser.password")}</FormLabel>
           <Input
             type="password"
             placeholder="Password"
@@ -72,37 +66,24 @@ const CreateUserComp: FC<Props> = ({ submitCallback }) => {
               updateLocalForm(e.target.value, "password");
             }}
           />
-          {
-            //TODO: translation
-          }
-          <FormErrorMessage>Please enter a password</FormErrorMessage>
+          <FormErrorMessage>{t("createUser.formErrors.enterPassword")}</FormErrorMessage>
         </FormControl>
 
         <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !role}>
-          {
-            //TODO: translation
-          }
-          <FormLabel>Role</FormLabel>
+          <FormLabel>{t("createUser.role")}</FormLabel>
 
           <UserRoleSelector
             cb={x => {
               setRole(x.name);
             }}></UserRoleSelector>
-          {
-            //TODO: translation
-          }
-          <FormErrorMessage>Please choose a role</FormErrorMessage>
+          <FormErrorMessage>{t("createUser.formErrors.chooseRole")}</FormErrorMessage>
         </FormControl>
-
-        {
-          //TODO: translation
-        }
         <Button
           colorScheme="green"
           type="submit"
           rightIcon={<MdCheck />}
           onClick={() => setFormSubmitAttempts(x => x + 1)}>
-          Create user
+          {t("createUser.createUser")}
         </Button>
       </VStack>
     </form>

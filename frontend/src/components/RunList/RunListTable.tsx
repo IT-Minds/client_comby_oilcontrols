@@ -3,6 +3,7 @@ import { Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
 import QuerySortBtn, { Direction } from "components/SortFilter/QuerySortBtn";
 import { useEffectAsync } from "hooks/useEffectAsync";
 import { useRouter } from "next/router";
+import { useI18n } from "next-rosetta";
 import { FC, useCallback, useRef, useState } from "react";
 import { GiFuelTank } from "react-icons/gi";
 import { MdPrint, MdRemoveRedEye } from "react-icons/md";
@@ -25,6 +26,8 @@ const defaultSort = (a: ILocationRefillDto, b: ILocationRefillDto) =>
 
 // TODO i18n;
 const RunListTable: FC<Props> = ({ truckId, refillCb }) => {
+  const { t } = useI18n<Locale>();
+
   const [refills, setRefills] = useState<ILocationRefillDto[]>([]);
   const cols = useBreakpointValue({
     base: 1,
@@ -79,7 +82,7 @@ const RunListTable: FC<Props> = ({ truckId, refillCb }) => {
         <Tr>
           <Th hidden={!isPrinting && cols < 4}>
             <HStack spacing={1}>
-              <Text>Building Number</Text>
+              <Text>{t("mytruck.runlist.locationType")}</Text>
               <Spacer />
               <QuerySortBtn queryKey="locationId" sortCb={sortCb} />
             </HStack>
@@ -100,28 +103,28 @@ const RunListTable: FC<Props> = ({ truckId, refillCb }) => {
           </Th>
           <Th>
             <HStack spacing={1}>
-              <Text>Address</Text>
+              <Text>{t("mytruck.runlist.address")}</Text>
               <Spacer />
               <QuerySortBtn queryKey="address" sortCb={sortCb} />
             </HStack>
           </Th>
           <Th hidden={!isPrinting && cols < 3}>
             <HStack spacing={1}>
-              <Text>Agreement Type</Text>
+              <Text>{t("mytruck.runlist.agreementType")}</Text>
               <Spacer />
               <QuerySortBtn queryKey="schedule" sortCb={sortCb} />
             </HStack>
           </Th>
           <Th hidden={!isPrinting && cols < 2}>
             <HStack spacing={1}>
-              <Text>Fuel Type</Text>
+              <Text>{t("mytruck.runlist.fuelType")}</Text>
               <Spacer />
               <QuerySortBtn queryKey="fuelType" sortCb={sortCb} />
             </HStack>
           </Th>
           <Th>
             <HStack spacing={1}>
-              <Text>Deadline</Text>
+              <Text>{t("mytruck.runlist.deadline")}</Text>
               <Spacer />
               <QuerySortBtn queryKey="expectedDeliveryDate" sortCb={sortCb} />
             </HStack>

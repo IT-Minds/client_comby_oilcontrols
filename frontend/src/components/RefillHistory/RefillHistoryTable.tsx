@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import PageIndicator from "components/Demo/components/PageIndicator";
 import { usePagedFetched } from "hooks/usePagedFetched";
+import { useI18n } from "next-rosetta";
 import React, { FC, useEffect, useMemo, useReducer, useState } from "react";
 import ListReducer from "react-list-reducer";
 import { genLocationClient } from "services/backend/apiClients";
@@ -33,6 +34,8 @@ const RefillHistoryComp: FC<Props> = ({
   preloadLoadedAll = false,
   locationId = 1
 }) => {
+  const { t } = useI18n<Locale>();
+
   const toast = useToast();
 
   const [data, dataDispatch] = useReducer(ListReducer<IRefillDto>("id"), preLoadedData);
@@ -128,13 +131,13 @@ const RefillHistoryComp: FC<Props> = ({
   return (
     <Container w="100%" maxW="unset">
       <Table variant="striped" colorScheme="blue" size="sm">
-        <TableCaption placement="top">Refill History</TableCaption>
+        <TableCaption placement="top">{t("refillHistoryTable.refillHistory")}</TableCaption>
         <Thead>
           <Tr>
-            <Th>Delivery Time</Th>
-            <Th>Amount</Th>
-            <Th>Truck ID</Th>
-            <Th>Coupon</Th>
+            <Th>{t("refillHistoryTable.deliveryTime")}</Th>
+            <Th>{t("refillHistoryTable.amount")}</Th>
+            <Th>{t("refillHistoryTable.truckId")}</Th>
+            <Th>{t("refillHistoryTable.coupon")}</Th>
           </Tr>
         </Thead>
         <Tbody>
