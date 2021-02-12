@@ -17,6 +17,7 @@ import {
   useToast
 } from "@chakra-ui/react";
 import UserRoleSelector from "components/UserRoleSelector/UserRoleSelector";
+import { useI18n } from "next-rosetta";
 import React, { FC, useCallback, useState } from "react";
 import { MdAdd, MdEdit } from "react-icons/md";
 import { genUserClient } from "services/backend/apiClients";
@@ -33,6 +34,7 @@ type Props = {
 };
 
 const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
+  const { t } = useI18n<Locale>();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [showPassword, setShowPassword] = useState(false);
@@ -88,10 +90,9 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          {
-            //TODO: translation
-          }
-          <ModalHeader>Manage User {user.username}</ModalHeader>
+          <ModalHeader>
+            {t("users.userDetailsTable.userDetailsModal.manageUser", { user: user.username })}
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <FormControl
@@ -99,10 +100,9 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
                 passwordSubmitAttempts > 0 &&
                 (!newPassword || !repeatNewPassword || newPassword !== repeatNewPassword)
               }>
-              {
-                //TODO: translation
-              }
-              <FormLabel id="fuel-type">New password</FormLabel>
+              <FormLabel id="fuel-type">
+                {t("users.userDetailsTable.userDetailsModal.newPassword")}
+              </FormLabel>
 
               <InputGroup size="md">
                 <Input
@@ -121,7 +121,9 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
                     onTouchCancel={() => setShowPassword(false)}
                     onMouseLeave={() => setShowPassword(false)}
                     onMouseUp={() => setShowPassword(false)}>
-                    {showPassword ? "Hide" : "Show"}
+                    {showPassword
+                      ? t("users.userDetailsTable.userDetailsModal.hide")
+                      : t("users.userDetailsTable.userDetailsModal.show")}
                   </Button>
                 </InputRightElement>
               </InputGroup>
@@ -141,15 +143,14 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
                     onTouchCancel={() => setShowRepeatPassword(false)}
                     onMouseLeave={() => setShowRepeatPassword(false)}
                     onMouseUp={() => setShowRepeatPassword(false)}>
-                    {showRepeatPassword ? "Hide" : "Show"}
+                    {showRepeatPassword
+                      ? t("users.userDetailsTable.userDetailsModal.hide")
+                      : t("users.userDetailsTable.userDetailsModal.show")}
                   </Button>
                 </InputRightElement>
               </InputGroup>
-              {
-                //TODO: translation
-              }
               <FormErrorMessage>
-                Please input a new password and make sure they match
+                {t("users.userDetailsTable.userDetailsModal.formErrors.inputPassword")}
               </FormErrorMessage>
             </FormControl>
 
@@ -162,17 +163,11 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
                 setPasswordSubmitAttempts(x => x + 1);
                 updatePassword();
               }}>
-              {
-                //TODO: translation
-              }
-              Update Password
+              {t("users.userDetailsTable.userDetailsModal.updatePassword")}
             </Button>
 
             <FormControl mt={4} isInvalid={roleSubmitAttempts > 0 && !role}>
-              {
-                //TODO: translation
-              }
-              <FormLabel>User role</FormLabel>
+              <FormLabel>{t("users.userDetailsTable.userDetailsModal.userRole")}</FormLabel>
 
               <UserRoleSelector
                 preselectedValue={
@@ -182,15 +177,10 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
                   setRole(x);
                 }}
               />
-              {
-                //TODO: translation
-              }
-              <FormErrorMessage>Please choose a role</FormErrorMessage>
+              <FormErrorMessage>
+                {t("users.userDetailsTable.userDetailsModal.formErrors.chooseARole")}
+              </FormErrorMessage>
             </FormControl>
-
-            {
-              //TODO: translation
-            }
             <Button
               mt={4}
               mb={4}
@@ -201,7 +191,7 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
                 setRoleSubmitAttempts(x => x + 1);
                 updateRole();
               }}>
-              Update role
+              {t("users.userDetailsTable.userDetailsModal.updateRole")}
             </Button>
           </ModalBody>
         </ModalContent>

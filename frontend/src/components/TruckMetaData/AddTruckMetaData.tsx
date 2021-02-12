@@ -121,7 +121,7 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
               <NumberInputField />
             </NumberInput>
 
-            <InputRightAddon>liters</InputRightAddon>
+            <InputRightAddon>{t("truckMetaData.liters")}</InputRightAddon>
           </InputGroup>
           <FormErrorMessage>{t("truckMetaData.formError.tankSize")}</FormErrorMessage>
         </FormControl>
@@ -131,7 +131,7 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
           type="submit"
           rightIcon={<MdCheck />}
           onClick={() => setFormSubmitAttempts(x => x + 1)}>
-          Submit
+          {t("truckMetaData.submit")}
         </Button>
       </VStack>
     </form>

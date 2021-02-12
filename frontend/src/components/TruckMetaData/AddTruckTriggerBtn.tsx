@@ -10,11 +10,14 @@ import {
   useToast
 } from "@chakra-ui/react";
 import AddTruckMetaData from "components/TruckMetaData/AddTruckMetaData";
+import { useI18n } from "next-rosetta";
 import React, { FC, useCallback } from "react";
 import { genTruckClient } from "services/backend/apiClients";
 import { CreateTruckCommand, TruckInfoDto } from "services/backend/nswagts";
 
 const AddTruckTriggerBtn: FC = () => {
+  const { t } = useI18n<Locale>();
+
   const toast = useToast();
 
   const createTruck = useCallback(async (form: TruckInfoDto) => {
@@ -39,13 +42,13 @@ const AddTruckTriggerBtn: FC = () => {
   return (
     <>
       <Button colorScheme="green" onClick={onOpen}>
-        Add new Truck
+        {t("trucks.addTruckTrigger.addNewTruck")}
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Add new Truck</ModalHeader>
+          <ModalHeader>{t("trucks.addTruckTrigger.addNewTruck")}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <AddTruckMetaData submitCallback={createTruck} truckMetaData={null} />

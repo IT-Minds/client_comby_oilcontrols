@@ -8,6 +8,7 @@ import {
   InputRightElement,
   VStack
 } from "@chakra-ui/react";
+import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
 import { IAssignTokenCommand } from "services/backend/nswagts";
@@ -18,6 +19,8 @@ type Props = {
 };
 
 const LoginComp: FC<Props> = ({ submitCallback }) => {
+  const { t } = useI18n<Locale>();
+
   const [show, setShow] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [localForm, setLocalForm] = useState<IAssignTokenCommand>({
@@ -51,13 +54,13 @@ const LoginComp: FC<Props> = ({ submitCallback }) => {
     <form onSubmit={handleSubmit}>
       <VStack align="center" justify="center">
         <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.username}>
-          <FormLabel>Username</FormLabel>
+          <FormLabel>{t("login.username")}</FormLabel>
           <Input onChange={e => updateLocalForm(e.target.value, "username")} />
-          <FormErrorMessage>Please enter a username</FormErrorMessage>
+          <FormErrorMessage>{t("login.formErrors.enterUsername")}</FormErrorMessage>
         </FormControl>
 
         <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.password}>
-          <FormLabel>Password</FormLabel>
+          <FormLabel>{t("login.password")}</FormLabel>
           <InputGroup size="md">
             <Input
               type={show ? "text" : "password"}
@@ -72,11 +75,11 @@ const LoginComp: FC<Props> = ({ submitCallback }) => {
                 onTouchCancel={() => setShow(false)}
                 onMouseLeave={() => setShow(false)}
                 onMouseUp={() => setShow(false)}>
-                {show ? "Hide" : "Show"}
+                {show ? t("login.hide") : t("login.show")}
               </Button>
             </InputRightElement>
           </InputGroup>
-          <FormErrorMessage>Please enter a password</FormErrorMessage>
+          <FormErrorMessage>{t("login.formErrors.enterPassword")}</FormErrorMessage>
         </FormControl>
 
         <Button
@@ -85,7 +88,7 @@ const LoginComp: FC<Props> = ({ submitCallback }) => {
           rightIcon={<MdCheck />}
           onClick={() => setFormSubmitAttempts(x => x + 1)}
           isLoading={loading}>
-          Login
+          {t("login.login")}
         </Button>
       </VStack>
     </form>

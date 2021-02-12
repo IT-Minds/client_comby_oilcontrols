@@ -4,6 +4,7 @@ import { InputRightAddon, Modal, ModalBody, ModalCloseButton } from "@chakra-ui/
 import { ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react";
 import { Select, useDisclosure, VStack } from "@chakra-ui/react";
 import CameraComp from "components/Camera/CameraComponent";
+import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck, MdPhotoCamera, MdRemoveRedEye, MdRepeat } from "react-icons/md";
 import { FuelTypeRecord } from "services/backend/ext/enumConvertor";
@@ -21,6 +22,7 @@ type Props = {
 };
 
 const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) => {
+  const { t } = useI18n<Locale>();
   const [localReportForm, setLocalReportForm] = useState<RefillForm>({
     startliters: 0,
     endliters: 0,
@@ -67,7 +69,7 @@ const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) =>
               couponNumbers.every(cn => localReportForm.couponNumber !== cn.id)
             }
             isRequired>
-            <FormLabel>Select coupon number:</FormLabel>
+            <FormLabel>{t("mytruck.refill.selectCouponNumber")}</FormLabel>
             <Select onChange={e => updateLocalForm(e.target.value, "couponNumber")}>
               {couponNumbers.map(path => (
                 <option key={path.id} value={path.name}>
@@ -75,7 +77,7 @@ const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) =>
                 </option>
               ))}
             </Select>
-            <FormErrorMessage>Please select one of the allowed coupons</FormErrorMessage>
+            <FormErrorMessage>{t("mytruck.refill.formErrors.selectCoupons")}</FormErrorMessage>
           </FormControl>
 
           <FormControl
@@ -86,7 +88,7 @@ const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) =>
               )
             }
             isRequired>
-            <FormLabel id="fuel-type">Select fuel type:</FormLabel>
+            <FormLabel id="fuel-type">{t("mytruck.refill.selectFuelType")}</FormLabel>
             <Select
               onChange={e => updateLocalForm(FuelType[Number(e.target.value)], "fuelType")}
               placeholder="Select option">
@@ -96,13 +98,13 @@ const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) =>
                 </option>
               ))}
             </Select>
-            <FormErrorMessage>Please select one of the allowed fuel types</FormErrorMessage>
+            <FormErrorMessage>{t("mytruck.refill.formErrors.selectFuel")}</FormErrorMessage>
           </FormControl>
           <FormControl
             id="liters"
             isInvalid={formSubmitAttempts > 0 && isNaN(localReportForm.endliters)}
             isRequired>
-            <FormLabel>Fuel in tank AFTER refill:</FormLabel>
+            <FormLabel>{t("mytruck.refill.fuelInTankAfterRefill")}</FormLabel>
 
             <InputGroup>
               <Input
@@ -114,16 +116,16 @@ const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) =>
                   )
                 }
                 minW="50%"></Input>
-              <InputRightAddon>liters</InputRightAddon>
+              <InputRightAddon>{t("mytruck.refill.liters")}</InputRightAddon>
             </InputGroup>
-            <FormErrorMessage>Please enter a valid amount of liters</FormErrorMessage>
+            <FormErrorMessage>{t("mytruck.refill.formErrors.liters")}</FormErrorMessage>
           </FormControl>
 
           <FormControl
             id="liters"
             isInvalid={formSubmitAttempts > 0 && isNaN(localReportForm.startliters)}
             isRequired>
-            <FormLabel>Fuel in tank BEFORE refill:</FormLabel>
+            <FormLabel>{t("mytruck.refill.fuelInTankBeforeRefill")}</FormLabel>
 
             <InputGroup>
               <Input
@@ -135,14 +137,14 @@ const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) =>
                   )
                 }
                 minW="50%"></Input>
-              <InputRightAddon>liters</InputRightAddon>
+              <InputRightAddon>{t("mytruck.refill.liters")}</InputRightAddon>
             </InputGroup>
-            <FormErrorMessage>Please enter a valid amount of liters</FormErrorMessage>
+            <FormErrorMessage>{t("mytruck.refill.formErrors.liters")}</FormErrorMessage>
           </FormControl>
 
           <FormControl mb={4} display="flex" alignItems="center">
             <HStack>
-              <FormLabel mb={0}>Is partial fill:</FormLabel>
+              <FormLabel mb={0}>{t("mytruck.refill.isPartialFill")}</FormLabel>
               <Switch
                 id="partial"
                 onChange={e => updateLocalForm(e.target.checked, "isSpecialFill")}
@@ -161,25 +163,25 @@ const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) =>
               w="unset">
               {localReportForm.image.length > 0 ? (
                 <Button onClick={onOpen} rightIcon={<MdRemoveRedEye />}>
-                  View Image
+                  {t("mytruck.refill.viewImage")}
                 </Button>
               ) : (
                 <Button
                   colorScheme="blue"
                   rightIcon={<MdPhotoCamera />}
                   onClick={() => setIsTakingPic(true)}>
-                  Take Image
+                  {t("mytruck.refill.takeImage")}
                 </Button>
               )}
               <Input hidden value={localReportForm.image} onChange={() => null} />
-              <FormErrorMessage>An image is needed</FormErrorMessage>
+              <FormErrorMessage>{t("mytruck.refill.formErrors.imageIsNeeded")}</FormErrorMessage>
             </FormControl>
             <Button
               colorScheme="green"
               type="submit"
               rightIcon={<MdCheck />}
               onClick={() => setFormSubmitAttempts(x => x + 1)}>
-              Submit
+              {t("mytruck.refill.submit")}
             </Button>
           </HStack>
         </VStack>
@@ -188,7 +190,7 @@ const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) =>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Image</ModalHeader>
+          <ModalHeader>{t("mytruck.refill.image")}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Image src={localReportForm.image} />
@@ -203,7 +205,7 @@ const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) =>
                 setIsTakingPic(true);
                 onClose();
               }}>
-              Retake Image
+              {t("mytruck.refill.retakeImage")}
             </Button>
           </ModalFooter>
         </ModalContent>

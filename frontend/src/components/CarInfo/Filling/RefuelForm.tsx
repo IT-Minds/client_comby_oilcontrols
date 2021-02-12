@@ -81,7 +81,7 @@ const RefuelForm: FC<Props> = ({ fillData }) => {
                 )
               }
               isRequired>
-              <FormLabel id="fuel-type">Select fuel type:</FormLabel>
+              <FormLabel id="fuel-type">{t("mytruck.refuel.selectFuelType")}</FormLabel>
               <Select
                 onChange={e => updateLocalForm(FuelType[Number(e.target.value)], "fuelType")}
                 placeholder="Select option">
@@ -91,34 +91,38 @@ const RefuelForm: FC<Props> = ({ fillData }) => {
                   </option>
                 ))}
               </Select>
-              <FormErrorMessage>Please select one of the allowed fuel types</FormErrorMessage>
+              <FormErrorMessage>
+                {t("mytruck.refuel.formErrors.selectAllowedFuelType")}
+              </FormErrorMessage>
             </FormControl>
             <FormControl
               isInvalid={formSubmitAttempts > 0 && !localFillingForm.fillAmount}
               isRequired>
-              <FormLabel>Filling amount (in liters):</FormLabel>
+              <FormLabel>{t("mytruck.refuel.fillingAmount")}</FormLabel>
               <NumberInput
                 placeholder="Fill amount"
                 onChange={value => updateLocalForm(value, "fillAmount")}>
                 <NumberInputField />
               </NumberInput>
-              <FormErrorMessage>Please enter amount filled</FormErrorMessage>
+              <FormErrorMessage>
+                {t("mytruck.refuel.formErrors.enterAmountFilled")}
+              </FormErrorMessage>
             </FormControl>
             <FormControl
               isInvalid={formSubmitAttempts > 0 && !localFillingForm.cardNumber}
               isRequired>
-              <FormLabel>Card number:</FormLabel>
+              <FormLabel>{t("mytruck.refuel.cardNumber")}</FormLabel>
               <NumberInput
                 placeholder="Card number"
                 onChange={value => updateLocalForm(value, "cardNumber")}>
                 <NumberInputField />
               </NumberInput>
-              <FormErrorMessage>Please enter card number</FormErrorMessage>
+              <FormErrorMessage>{t("mytruck.refuel.formErrors.enterCardNumber")}</FormErrorMessage>
             </FormControl>
             <FormControl isReadOnly>
-              <FormLabel>Date:</FormLabel>
+              <FormLabel>{t("mytruck.refuel.date")}</FormLabel>
               <Input value={formatter.format(new Date(localFillingForm.date))} />
-              <FormErrorMessage>Please enter card number</FormErrorMessage>
+              <FormErrorMessage>{t("mytruck.refuel.formErrors.chooseDate")}</FormErrorMessage>
             </FormControl>
 
             <Center>

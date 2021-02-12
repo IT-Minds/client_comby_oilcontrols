@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import PageIndicator from "components/Demo/components/PageIndicator";
 import { usePagedFetched } from "hooks/usePagedFetched";
+import { useI18n } from "next-rosetta";
 import React, { FC, useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import ListReducer, { ListReducerActionType } from "react-list-reducer";
 import { genRefillClient } from "services/backend/apiClients";
@@ -39,6 +40,8 @@ const FillingOverviewComp: FC<Props> = ({
   preloadDataNeedle = "0",
   preloadLoadedAll = false
 }) => {
+  const { t } = useI18n<Locale>();
+
   const [data, dataDispatch] = useReducer(
     ListReducer<LocationRefillDto>("refillId"),
     preLoadedData ?? []
@@ -117,40 +120,40 @@ const FillingOverviewComp: FC<Props> = ({
           <Tr className={styles.slimCol}>
             <Th>
               <HStack spacing={1}>
-                <Text>Type</Text>
+                <Text>{t("fillingOverview.type")}</Text>
                 <Spacer />
                 <QuerySortBtn queryKey="locationType" sortCb={sortCb} />
               </HStack>
             </Th>
             <Th>
               <HStack spacing={1}>
-                <Text>Date</Text>
+                <Text>{t("fillingOverview.date")}</Text>
                 <Spacer />
                 <QuerySortBtn queryKey="actualDeliveryDate" sortCb={sortCb} />
               </HStack>
             </Th>
             <Th>
               <HStack>
-                <Text>Truck ID</Text>
+                <Text>{t("fillingOverview.truckId")}</Text>
                 <Spacer />
                 <QuerySortBtn queryKey="truckId" sortCb={sortCb} />
               </HStack>
             </Th>
             <Th isNumeric>
               <HStack>
-                <Text>Start</Text>
+                <Text>{t("fillingOverview.start")}</Text>
                 <Spacer />
                 <QuerySortBtn queryKey="startAmount" sortCb={sortCb} />
               </HStack>
             </Th>
             <Th isNumeric>
               <HStack>
-                <Text>End</Text>
+                <Text>{t("fillingOverview.end")}</Text>
                 <Spacer />
                 <QuerySortBtn queryKey="endAmount" sortCb={sortCb} />
               </HStack>
             </Th>
-            <Th>Coupon</Th>
+            <Th>{t("fillingOverview.coupon")}</Th>
           </Tr>
         </Thead>
         <Tbody>
