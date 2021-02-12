@@ -313,18 +313,18 @@ namespace Application.UnitTests
         new Location { Id = 501, RegionId = 500, FuelTankId = 501, Address = "Address region 500.", Comments = "Location 501.", EstimateFuelConsumption = 100 }
       );
       context.LocationDebtors.AddRange(
-        new LocationDebtor { Id=100,LocationId = 400, DebtorId = 1, Type = LocationDebtorType.MAIN },
-        new LocationDebtor { Id=101,LocationId = 400, DebtorId = 2, Type = LocationDebtorType.BASE },
-        new LocationDebtor { Id=102,LocationId = 401, DebtorId = 1, Type = LocationDebtorType.MAIN },
-        new LocationDebtor { Id=103,LocationId = 500, DebtorId = 500, Type = LocationDebtorType.MAIN },
-        new LocationDebtor { Id=104,LocationId = 500, DebtorId = 501, Type = LocationDebtorType.BASE },
-        new LocationDebtor { Id=105,LocationId = 501, DebtorId = 500, Type = LocationDebtorType.MAIN }
+        new LocationDebtor { Id = 100, LocationId = 400, DebtorId = 1, Type = LocationDebtorType.MAIN },
+        new LocationDebtor { Id = 101, LocationId = 400, DebtorId = 2, Type = LocationDebtorType.BASE },
+        new LocationDebtor { Id = 102, LocationId = 401, DebtorId = 1, Type = LocationDebtorType.MAIN },
+        new LocationDebtor { Id = 103, LocationId = 500, DebtorId = 500, Type = LocationDebtorType.MAIN },
+        new LocationDebtor { Id = 104, LocationId = 500, DebtorId = 501, Type = LocationDebtorType.BASE },
+        new LocationDebtor { Id = 105, LocationId = 501, DebtorId = 500, Type = LocationDebtorType.MAIN }
       );
 
       context.LocationDebtorHistories.AddRange(
-        new LocationDebtorHistory { Id=100, LocationId = 500, DebtorId = 500, Type = LocationDebtorType.MAIN, LastModified = new DateTime(1990, 1, 1), Created = new DateTime(1990, 1, 1), LocationDebtorId = 100 },
-        new LocationDebtorHistory { Id=101, LocationId = 500, DebtorId = 501, Type = LocationDebtorType.BASE, LastModified = new DateTime(1990, 1, 1), Created = new DateTime(1990, 1, 1), LocationDebtorId = 100},
-        new LocationDebtorHistory { Id=102, LocationId = 501, DebtorId = 500, Type = LocationDebtorType.MAIN, LastModified = new DateTime(1990, 1, 1), Created = new DateTime(1990, 1, 1), LocationDebtorId = 100 }
+        new LocationDebtorHistory { Id = 100, LocationId = 500, DebtorId = 500, Type = LocationDebtorType.MAIN, LastModified = new DateTime(1990, 1, 1), Created = new DateTime(1990, 1, 1), LocationDebtorId = 100 },
+        new LocationDebtorHistory { Id = 101, LocationId = 500, DebtorId = 501, Type = LocationDebtorType.BASE, LastModified = new DateTime(1990, 1, 1), Created = new DateTime(1990, 1, 1), LocationDebtorId = 100 },
+        new LocationDebtorHistory { Id = 102, LocationId = 501, DebtorId = 500, Type = LocationDebtorType.MAIN, LastModified = new DateTime(1990, 1, 1), Created = new DateTime(1990, 1, 1), LocationDebtorId = 100 }
       );
       //END
 
@@ -363,7 +363,51 @@ namespace Application.UnitTests
       context.UserRoles.AddRange(
         new UserRole { Id = 100, User = user1, Role = role1 }
       );
+      //END
 
+      //START: TEST DATA TO TEST HISTORIC CONSUMPTION METHODS FOR LOCATION
+      context.Regions.AddRange(
+        new Region { Id = 600 },
+        new Region { Id = 601 }
+      );
+      context.FuelTanks.AddRange(
+        new FuelTank { Id = 600, TankNumber = "600", FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
+        new FuelTank { Id = 601, TankNumber = "601", FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
+        new FuelTank { Id = 602, TankNumber = "602", FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
+        new FuelTank { Id = 603, TankNumber = "602", FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
+        new FuelTank { Id = 604, TankNumber = "604", FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 }
+      );
+      context.Debtors.AddRange(
+        new Debtor { Id = 600 }
+      );
+      context.Locations.AddRange(
+        new Location { Id = 600, RegionId = 600, FuelTankId = 600, Address = "Address region 600.", Comments = "Location 600.", EstimateFuelConsumption = 100 },
+        new Location { Id = 601, RegionId = 601, FuelTankId = 601, Address = "Address region 601.", Comments = "Location 601.", EstimateFuelConsumption = 100 },
+        new Location { Id = 602, RegionId = 601, FuelTankId = 602, Address = "Address region 601.", Comments = "Location 602.", EstimateFuelConsumption = 100 },
+        new Location { Id = 603, RegionId = 601, FuelTankId = 603, Address = "Address region 601.", Comments = "Location 603.", EstimateFuelConsumption = 100 },
+        new Location { Id = 604, RegionId = 601, FuelTankId = 604, Address = "Address region 601.", Comments = "Location 604.", EstimateFuelConsumption = 100 }
+      );
+
+      context.CompletedRefills.AddRange(
+        new CompletedRefill { Id = 601, CouponId = 601, StartAmount = 100, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 12, 20), ActualDeliveryDate = new DateTime(2020, 12, 20), LocationId = 600, Created = new DateTime(2020, 12, 20) },
+        new CompletedRefill { Id = 600, CouponId = 600, StartAmount = 100, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2021, 1, 1), ActualDeliveryDate = new DateTime(2021, 1, 1), LocationId = 600, Created = new DateTime(2021, 1, 1) },
+        new CompletedRefill { Id = 604, CouponId = 604, StartAmount = 100, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2021, 2, 2), ActualDeliveryDate = new DateTime(2021, 2, 2), LocationId = 600, Created = new DateTime(2021, 2, 2) },
+        new CompletedRefill { Id = 605, CouponId = 605, StartAmount = 100, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 1, 1), ActualDeliveryDate = new DateTime(2020, 1, 1), LocationId = 601, Created = new DateTime(2020, 1, 1) },
+        new CompletedRefill { Id = 606, CouponId = 606, StartAmount = 100, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 3, 1), ActualDeliveryDate = new DateTime(2020, 3, 1), LocationId = 601, Created = new DateTime(2020, 3, 1) },
+        new CompletedRefill { Id = 607, CouponId = 607, StartAmount = 100, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 5, 1), ActualDeliveryDate = new DateTime(2020, 5, 1), LocationId = 601, Created = new DateTime(2020, 5, 1) },
+        new CompletedRefill { Id = 608, CouponId = 608, StartAmount = 500, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 7, 1), ActualDeliveryDate = new DateTime(2020, 7, 1), LocationId = 601, Created = new DateTime(2020, 7, 1) },
+        new CompletedRefill { Id = 609, CouponId = 609, StartAmount = 200, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 9, 1), ActualDeliveryDate = new DateTime(2020, 9, 1), LocationId = 601, Created = new DateTime(2020, 9, 1) },
+        new CompletedRefill { Id = 610, CouponId = 610, StartAmount = 400, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 11, 1), ActualDeliveryDate = new DateTime(2020, 11, 1), LocationId = 601, Created = new DateTime(2020, 11, 1) },
+        new CompletedRefill { Id = 611, CouponId = 611, StartAmount = 1, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 1, 1), ActualDeliveryDate = new DateTime(2020, 1, 1), LocationId = 602, Created = new DateTime(2020, 1, 1) },
+        new CompletedRefill { Id = 612, CouponId = 612, StartAmount = 100, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2019, 12, 1), ActualDeliveryDate = new DateTime(2019, 12, 1), LocationId = 603, Created = new DateTime(2019, 12, 1) },
+        new CompletedRefill { Id = 613, CouponId = 613, StartAmount = 0, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2021, 1, 31), ActualDeliveryDate = new DateTime(2021, 1, 31), LocationId = 603, Created = new DateTime(2021, 1, 31) },
+        //
+        new CompletedRefill { Id = 614, CouponId = 614, StartAmount = 0, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2015, 1, 1), ActualDeliveryDate = new DateTime(2015, 1, 1), LocationId = 604, Created = new DateTime(2015, 1, 1) },
+        new CompletedRefill { Id = 615, CouponId = 615, StartAmount = 0, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2016, 1, 1), ActualDeliveryDate = new DateTime(2016, 1, 1), LocationId = 604, Created = new DateTime(2016, 1, 1) },
+        new CompletedRefill { Id = 616, CouponId = 616, StartAmount = 0, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2017, 1, 1), ActualDeliveryDate = new DateTime(2017, 1, 1), LocationId = 604, Created = new DateTime(2017, 1, 1) },
+        new CompletedRefill { Id = 617, CouponId = 617, StartAmount = 0, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2018, 1, 1), ActualDeliveryDate = new DateTime(2018, 1, 1), LocationId = 604, Created = new DateTime(2018, 1, 1) },
+        new CompletedRefill { Id = 618, CouponId = 618, StartAmount = 0, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2019, 1, 1), ActualDeliveryDate = new DateTime(2019, 1, 1), LocationId = 604, Created = new DateTime(2019, 1, 1) }
+      );
       //END
       context.SaveChanges();
     }
