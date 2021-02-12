@@ -45,24 +45,27 @@ namespace Web
     // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
     public void ConfigureServices(IServiceCollection services)
     {
-
-      services.AddCors(options =>
-      {
-        options.AddPolicy("AllowAll",
-                  builder =>
-                  {
-                    builder.AllowAnyOrigin();
-                    builder.AllowAnyHeader();
-                    builder.AllowAnyMethod();
-                  });
-      });
-
       services.Configure<FileDriveOptions>(Configuration.GetSection(FileDriveOptions.FileDrive));
       services.Configure<UniContaOptions>(Configuration.GetSection(UniContaOptions.UniConta));
       services.Configure<SeedOptions>(Configuration.GetSection(SeedOptions.SampleData));
       services.Configure<HashingOptions>(Configuration.GetSection(HashingOptions.Hashing));
       services.Configure<TokenOptions>(Configuration.GetSection(TokenOptions.Tokens));
       services.Configure<SuperUserOptions>(Configuration.GetSection(SuperUserOptions.SuperUser));
+
+
+      var corsOptions = Configuration.GetSection(CorsOptions.Cors).Get<CorsOptions>();
+      services.AddCors(options =>
+      {
+        options.AddPolicy("CombyPolicy",
+          builder =>
+          {
+            builder.WithOrigins(corsOptions.Origins);
+            builder.AllowAnyHeader();
+            builder.AllowAnyMethod();
+            builder.AllowCredentials();
+          });
+      });
+
       services.AddApplication();
       services.AddInfrastructure(Configuration, Environment);
 
@@ -152,8 +155,7 @@ namespace Web
         superAdminService.SetupSuperUser();
       }
 
-      //TODO Handle cors
-      app.UseCors("AllowAll");
+      app.UseCors("CombyPolicy");
 
       app.UseSerilogRequestLogging();
       app.UseHealthChecks("/health");
