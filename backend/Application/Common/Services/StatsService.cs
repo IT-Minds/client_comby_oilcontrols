@@ -61,8 +61,6 @@ namespace Application.Common.Services
         .OrderByDescending(x => x.ActualDeliveryDate)
         .FirstOrDefault();
 
-
-
       var lastRefill = location.CompletedRefills
         .Where(x => x.ActualDeliveryDate > (refills == null || refills.Count() == 0 ? endDate : refills.First().ActualDeliveryDate))
         .OrderByDescending(x => x.ActualDeliveryDate)
@@ -84,7 +82,6 @@ namespace Application.Common.Services
 
       List<(DateTime StartDate, DateTime EndDate, double consumed)> consumptions = new List<(DateTime StartDate, DateTime EndDate, double consumed)>();
       DateTime prevRefillDate;
-      double daysInPeriod;
       double consumedPrDay;
 
       foreach (var refill in refills)
