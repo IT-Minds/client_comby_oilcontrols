@@ -1,3 +1,4 @@
+using Application.DailyTemperatures;
 using Application.DailyTemperatures.Commands.CreateDailyTemperature;
 using Domain.Enums;
 using FluentAssertions;
@@ -15,18 +16,21 @@ namespace Application.UnitTests.DailyTemperatures.Commands.CreateDailyTemperatur
     {
       var command = new CreateDailyTemperatureCommand
       {
-        RegionId = 1,
-        Date = new DateTime(2020, 12, 15),
-        Temperature = 5
+        Dto = new TemperatureDto
+        {
+          RegionId = 1,
+          Date = new DateTime(2020, 12, 15),
+          Temperature = 5
+        }
       };
 
-      var handler = new CreateDailyTemperatureCommand.CreateDailyTemperatureCommandHandler(Context);
+      var handler = new CreateDailyTemperatureCommand.CreateDailyTemperatureCommandHandler(Context, Mapper);
       var result = await handler.Handle(command, CancellationToken.None);
 
-      var entity = Context.RegionDailyTemps.Find(result);
+      var entity = Context.RegionDailyTemps.Find(result.Id);
       entity.Should().NotBeNull();
-      entity.RegionId.Should().Be(command.RegionId);
-      entity.Temperature.Should().Be(command.Temperature);
+      entity.RegionId.Should().Be(command.Dto.RegionId);
+      entity.Temperature.Should().Be(command.Dto.Temperature);
     }
 
     [Fact]
@@ -34,12 +38,15 @@ namespace Application.UnitTests.DailyTemperatures.Commands.CreateDailyTemperatur
     {
       var command = new CreateDailyTemperatureCommand
       {
-        RegionId = -100,
-        Date = new DateTime(2020, 12, 15),
-        Temperature = 5
+        Dto = new TemperatureDto
+        {
+          RegionId = -100,
+          Date = new DateTime(2020, 12, 15),
+          Temperature = 5
+        }
       };
 
-      var handler = new CreateDailyTemperatureCommand.CreateDailyTemperatureCommandHandler(Context);
+      var handler = new CreateDailyTemperatureCommand.CreateDailyTemperatureCommandHandler(Context, Mapper);
 
       await Assert.ThrowsAsync<ArgumentException>(
         async () => { await handler.Handle(command, CancellationToken.None); }
@@ -51,18 +58,26 @@ namespace Application.UnitTests.DailyTemperatures.Commands.CreateDailyTemperatur
     {
       var command1 = new CreateDailyTemperatureCommand
       {
-        RegionId = 1,
-        Date = new DateTime(2020, 12, 15),
-        Temperature = 5
+        Dto = new TemperatureDto
+        {
+          RegionId = 1,
+          Date = new DateTime(2020, 12, 15),
+          Temperature = 5
+        }
+
       };
       var command2 = new CreateDailyTemperatureCommand
       {
-        RegionId = 1,
-        Date = new DateTime(2020, 12, 15),
-        Temperature = 10
+        Dto = new TemperatureDto
+        {
+          RegionId = 1,
+          Date = new DateTime(2020, 12, 15),
+          Temperature = 10
+        }
+
       };
 
-      var handler = new CreateDailyTemperatureCommand.CreateDailyTemperatureCommandHandler(Context);
+      var handler = new CreateDailyTemperatureCommand.CreateDailyTemperatureCommandHandler(Context, Mapper);
       await handler.Handle(command1, CancellationToken.None);
       await Assert.ThrowsAsync<ArgumentException>(
         async () => { await handler.Handle(command2, CancellationToken.None); }

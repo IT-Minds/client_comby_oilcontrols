@@ -6,7 +6,6 @@ import {
   FormLabel,
   Input,
   InputGroup,
-  InputRightAddon,
   InputRightElement,
   Select,
   Stack,
@@ -15,8 +14,8 @@ import {
 import { Locale } from "i18n/Locale";
 import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useState } from "react";
-import { MdCheck, MdRotate90DegreesCcw } from "react-icons/md";
-import { ICreateDailyTemperatureCommand } from "services/backend/nswagts";
+import { MdCheck } from "react-icons/md";
+import { TemperatureDto } from "services/backend/nswagts";
 import DropdownType from "types/DropdownType";
 import { formatInputNumber, parseInputToNumber } from "utils/formatNumber";
 import { logger } from "utils/logger";
@@ -24,34 +23,30 @@ import { logger } from "utils/logger";
 import DatePicker from "../DatePicker/DatePicker";
 
 type Props = {
-  submitCallback: (addCouponForm: ICreateDailyTemperatureCommand) => void;
+  submitCallback: (addCouponForm: TemperatureDto) => void;
   regions: DropdownType[];
 };
 
 const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions = [] }) => {
-  const [
-    localAddDailyTemperatureForm,
-    setLocalAddDailyTemperatureForm
-  ] = useState<ICreateDailyTemperatureCommand>({
-    date: null,
-    regionId: null,
-    temperature: null
-  });
+  const [localAddDailyTemperatureForm, setLocalAddDailyTemperatureForm] = useState<TemperatureDto>(
+    new TemperatureDto({
+      date: null,
+      regionId: null,
+      temperature: null
+    })
+  );
 
   const { t } = useI18n<Locale>();
 
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
   const [date, setDate] = useState<Date>(new Date());
 
-  const updateLocalForm = useCallback(
-    (value: unknown, key: keyof ICreateDailyTemperatureCommand) => {
-      setLocalAddDailyTemperatureForm(form => {
-        (form[key] as unknown) = value;
-        return form;
-      });
-    },
-    []
-  );
+  const updateLocalForm = useCallback((value: unknown, key: keyof TemperatureDto) => {
+    setLocalAddDailyTemperatureForm(form => {
+      (form[key] as unknown) = value;
+      return new TemperatureDto(form);
+    });
+  }, []);
 
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
