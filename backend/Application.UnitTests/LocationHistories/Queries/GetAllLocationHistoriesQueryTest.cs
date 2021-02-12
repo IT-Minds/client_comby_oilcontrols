@@ -35,7 +35,7 @@ namespace Application.UnitTests.LocationHistories.GetAllLocationsHistories
       var handler = new GetAllLocationHistoriesQuery.GetAllLocationHistoriesQueryHandler(_context, _mapper);
       var result = await handler.Handle(query, CancellationToken.None);
       result.Should().BeOfType<PageResult<LocationHistoryDto>>();
-      result.Results.Count.Should().Be(22);
+      result.Results.Count.Should().Be(27);
       result.PagesRemaining.Should().Be(0);
     }
 
@@ -51,7 +51,7 @@ namespace Application.UnitTests.LocationHistories.GetAllLocationsHistories
       var handler = new GetAllLocationHistoriesQuery.GetAllLocationHistoriesQueryHandler(_context, _mapper);
       var result = await handler.Handle(query, CancellationToken.None);
       result.Should().BeOfType<PageResult<LocationHistoryDto>>();
-      result.Results.Count.Should().Be(18);
+      result.Results.Count.Should().Be(23);
       result.PagesRemaining.Should().Be(0);
     }
 
@@ -68,7 +68,7 @@ namespace Application.UnitTests.LocationHistories.GetAllLocationsHistories
       var result = await handler.Handle(query, CancellationToken.None);
       result.Should().BeOfType<PageResult<LocationHistoryDto>>();
       result.Results.Count.Should().Be(1);
-      result.PagesRemaining.Should().Be(19);
+      result.PagesRemaining.Should().Be(24);
     }
 
     [Fact]
@@ -100,7 +100,7 @@ namespace Application.UnitTests.LocationHistories.GetAllLocationsHistories
       var result = await handler.Handle(query, CancellationToken.None);
       result.Should().BeOfType<PageResult<LocationHistoryDto>>();
       result.Results.Count.Should().Be(1);
-      result.PagesRemaining.Should().Be(21);
+      result.PagesRemaining.Should().Be(26);
     }
   }
 }
