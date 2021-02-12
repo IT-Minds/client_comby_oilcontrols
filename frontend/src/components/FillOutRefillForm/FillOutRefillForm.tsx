@@ -71,7 +71,7 @@ const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) =>
             isRequired>
             <FormLabel>{t("mytruck.refill.selectCouponNumber")}</FormLabel>
             <Select onChange={e => updateLocalForm(e.target.value, "couponNumber")}>
-            {couponNumbers.map(path => (
+              {couponNumbers.map(path => (
                 <option key={path.id} value={path.name}>
                   {path.name}
                 </option>
