@@ -118,7 +118,7 @@ namespace Application.Refills.Commands.CompleteRefill
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        PostUniContaOrder(completingrefill);
+        await PostUniContaOrder(completingrefill);
 
         return refill.Id;
       }

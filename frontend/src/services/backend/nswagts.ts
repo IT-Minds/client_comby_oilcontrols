@@ -1696,8 +1696,8 @@ export class RoleClient extends ClientBase implements IRoleClient {
 
 export interface IStatsClient {
     getRefillOfYearFile(year?: number | undefined): Promise<FileResponse>;
-    getUsageHistoryFile(type?: TEMP_USAGE_HISTORY | undefined): Promise<FileResponse>;
-    getUsageHistory(type?: TEMP_USAGE_HISTORY | undefined): Promise<TEMP_DTO>;
+    getUsageHistoryFile(locationId?: number | undefined, interval?: Interval | undefined, startDate?: Date | undefined, endDate?: Date | undefined): Promise<FileResponse>;
+    getUsageHistory(locationId?: number | undefined, interval?: Interval | undefined, startDate?: Date | undefined, endDate?: Date | undefined): Promise<FuelConsumptionDto[]>;
 }
 
 export class StatsClient extends ClientBase implements IStatsClient {
@@ -1749,12 +1749,24 @@ export class StatsClient extends ClientBase implements IStatsClient {
         return Promise.resolve<FileResponse>(<any>null);
     }
 
-    getUsageHistoryFile(type?: TEMP_USAGE_HISTORY | undefined): Promise<FileResponse> {
+    getUsageHistoryFile(locationId?: number | undefined, interval?: Interval | undefined, startDate?: Date | undefined, endDate?: Date | undefined): Promise<FileResponse> {
         let url_ = this.baseUrl + "/api/Stats/usageHistoryFile?";
-        if (type === null)
-            throw new Error("The parameter 'type' cannot be null.");
-        else if (type !== undefined)
-            url_ += "type=" + encodeURIComponent("" + type) + "&";
+        if (locationId === null)
+            throw new Error("The parameter 'locationId' cannot be null.");
+        else if (locationId !== undefined)
+            url_ += "locationId=" + encodeURIComponent("" + locationId) + "&";
+        if (interval === null)
+            throw new Error("The parameter 'interval' cannot be null.");
+        else if (interval !== undefined)
+            url_ += "interval=" + encodeURIComponent("" + interval) + "&";
+        if (startDate === null)
+            throw new Error("The parameter 'startDate' cannot be null.");
+        else if (startDate !== undefined)
+            url_ += "startDate=" + encodeURIComponent(startDate ? "" + startDate.toJSON() : "") + "&";
+        if (endDate === null)
+            throw new Error("The parameter 'endDate' cannot be null.");
+        else if (endDate !== undefined)
+            url_ += "endDate=" + encodeURIComponent(endDate ? "" + endDate.toJSON() : "") + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -1787,12 +1799,24 @@ export class StatsClient extends ClientBase implements IStatsClient {
         return Promise.resolve<FileResponse>(<any>null);
     }
 
-    getUsageHistory(type?: TEMP_USAGE_HISTORY | undefined): Promise<TEMP_DTO> {
+    getUsageHistory(locationId?: number | undefined, interval?: Interval | undefined, startDate?: Date | undefined, endDate?: Date | undefined): Promise<FuelConsumptionDto[]> {
         let url_ = this.baseUrl + "/api/Stats/usageHistory?";
-        if (type === null)
-            throw new Error("The parameter 'type' cannot be null.");
-        else if (type !== undefined)
-            url_ += "type=" + encodeURIComponent("" + type) + "&";
+        if (locationId === null)
+            throw new Error("The parameter 'locationId' cannot be null.");
+        else if (locationId !== undefined)
+            url_ += "locationId=" + encodeURIComponent("" + locationId) + "&";
+        if (interval === null)
+            throw new Error("The parameter 'interval' cannot be null.");
+        else if (interval !== undefined)
+            url_ += "interval=" + encodeURIComponent("" + interval) + "&";
+        if (startDate === null)
+            throw new Error("The parameter 'startDate' cannot be null.");
+        else if (startDate !== undefined)
+            url_ += "startDate=" + encodeURIComponent(startDate ? "" + startDate.toJSON() : "") + "&";
+        if (endDate === null)
+            throw new Error("The parameter 'endDate' cannot be null.");
+        else if (endDate !== undefined)
+            url_ += "endDate=" + encodeURIComponent(endDate ? "" + endDate.toJSON() : "") + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -1809,14 +1833,18 @@ export class StatsClient extends ClientBase implements IStatsClient {
         });
     }
 
-    protected processGetUsageHistory(response: Response): Promise<TEMP_DTO> {
+    protected processGetUsageHistory(response: Response): Promise<FuelConsumptionDto[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = TEMP_DTO.fromJS(resultData200);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(FuelConsumptionDto.fromJS(item));
+            }
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -1824,7 +1852,7 @@ export class StatsClient extends ClientBase implements IStatsClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<TEMP_DTO>(<any>null);
+        return Promise.resolve<FuelConsumptionDto[]>(<any>null);
     }
 }
 
@@ -4333,16 +4361,20 @@ export interface IPageResultOfRoleDtoAndString {
     hasMore?: boolean;
 }
 
-export enum TEMP_USAGE_HISTORY {
-    MONTHLY = 0,
-    QUARTERLY = 1,
-    YEARLY = 2,
+export enum Interval {
+    WEEK = 0,
+    MONTH = 1,
+    YEAR = 2,
 }
 
-export class TEMP_DTO implements ITEMP_DTO {
-    data?: string | null;
+export class FuelConsumptionDto implements IFuelConsumptionDto {
+    address?: string | null;
+    locationId?: number;
+    startDate?: Date;
+    endDate?: Date;
+    fuelConsumed?: number;
 
-    constructor(data?: ITEMP_DTO) {
+    constructor(data?: IFuelConsumptionDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -4353,26 +4385,38 @@ export class TEMP_DTO implements ITEMP_DTO {
 
     init(_data?: any) {
         if (_data) {
-            this.data = _data["data"] !== undefined ? _data["data"] : <any>null;
+            this.address = _data["address"] !== undefined ? _data["address"] : <any>null;
+            this.locationId = _data["locationId"] !== undefined ? _data["locationId"] : <any>null;
+            this.startDate = _data["startDate"] ? new Date(_data["startDate"].toString()) : <any>null;
+            this.endDate = _data["endDate"] ? new Date(_data["endDate"].toString()) : <any>null;
+            this.fuelConsumed = _data["fuelConsumed"] !== undefined ? _data["fuelConsumed"] : <any>null;
         }
     }
 
-    static fromJS(data: any): TEMP_DTO {
+    static fromJS(data: any): FuelConsumptionDto {
         data = typeof data === 'object' ? data : {};
-        let result = new TEMP_DTO();
+        let result = new FuelConsumptionDto();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["data"] = this.data !== undefined ? this.data : <any>null;
+        data["address"] = this.address !== undefined ? this.address : <any>null;
+        data["locationId"] = this.locationId !== undefined ? this.locationId : <any>null;
+        data["startDate"] = this.startDate ? this.startDate.toISOString() : <any>null;
+        data["endDate"] = this.endDate ? this.endDate.toISOString() : <any>null;
+        data["fuelConsumed"] = this.fuelConsumed !== undefined ? this.fuelConsumed : <any>null;
         return data; 
     }
 }
 
-export interface ITEMP_DTO {
-    data?: string | null;
+export interface IFuelConsumptionDto {
+    address?: string | null;
+    locationId?: number;
+    startDate?: Date;
+    endDate?: Date;
+    fuelConsumed?: number;
 }
 
 export class PageResultOfStreetDtoAndString implements IPageResultOfStreetDtoAndString {

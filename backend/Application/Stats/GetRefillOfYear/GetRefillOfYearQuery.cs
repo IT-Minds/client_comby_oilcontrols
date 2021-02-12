@@ -9,11 +9,11 @@ using MediatR;
 
 namespace Application.Stats.GetRefillOfYear
 {
-  public class GetRefillOfYearQuery : IRequest<FileReponseDto>
+  public class GetRefillOfYearQuery : IRequest<FileResponseDto>
   {
     public int Year { get; set; }
 
-    public class GetRefillOfYearQueryHandler : IRequestHandler<GetRefillOfYearQuery, FileReponseDto>
+    public class GetRefillOfYearQueryHandler : IRequestHandler<GetRefillOfYearQuery, FileResponseDto>
     {
 
       private readonly StatsService _statsService;
@@ -23,7 +23,7 @@ namespace Application.Stats.GetRefillOfYear
         _statsService = statsService;
       }
 
-      public async Task<FileReponseDto> Handle(GetRefillOfYearQuery request, CancellationToken cancellationToken)
+      public async Task<FileResponseDto> Handle(GetRefillOfYearQuery request, CancellationToken cancellationToken)
       {
         var data = await _statsService.ReportRefillsOfYear(request.Year);
 
@@ -35,7 +35,7 @@ namespace Application.Stats.GetRefillOfYear
           csv.WriteRecords(data.ToList());
           writer.Flush();
 
-          return new FileReponseDto
+          return new FileResponseDto
           {
             Stream = memwriter.ToArray(),
             Filename = "refill-" + request.Year + ".csv"

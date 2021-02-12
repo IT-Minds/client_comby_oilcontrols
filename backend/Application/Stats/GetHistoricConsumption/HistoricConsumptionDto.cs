@@ -1,7 +1,7 @@
 using System;
 using Domain.Enums;
 
-namespace Application.Locations.Queries.GetHistoricConsumption
+namespace Application.Stats.GetHistoricConsumption
 {
     public class HistoricConsumptionDto 
     {

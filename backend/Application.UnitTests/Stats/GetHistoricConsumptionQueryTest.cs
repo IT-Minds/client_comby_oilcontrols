@@ -2,20 +2,20 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Common.Interfaces.Pagination;
-using Application.Locations.Queries.GetDebtorHistory;
-using Application.Locations.Queries.GetHistoricConsumption;
+using Application.Common.Services;
+using Application.Stats.GetHistoricConsumption;
 using AutoMapper;
 using FluentAssertions;
 using Infrastructure.Persistence;
 using Xunit;
 
-namespace Application.UnitTests.Locations.Queries
+namespace Application.UnitTests.Stats
 {
   [Collection("QueryTests")]
   public class GetHistoricConsumptionQueryTest
   {
 
+    private readonly StatsService _statsService;
     private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
 
@@ -23,6 +23,7 @@ namespace Application.UnitTests.Locations.Queries
     {
       _context = fixture.Context;
       _mapper = fixture.Mapper;
+      _statsService = new StatsService(_context);
     }
 
 
@@ -40,8 +41,8 @@ namespace Application.UnitTests.Locations.Queries
         }
       };
 
-      var handler = new GetHistoricConsumptionQuery.GetHistoricConsumptionQueryHandler(_context);
-      var result = await handler.Handle(query, CancellationToken.None);
+      var handler = new GetHistoricConsumptionQuery.GetHistoricConsumptionQueryHandler(_statsService);
+      var result = (await handler.Handle(query, CancellationToken.None)).ToList();
       result.Should().NotBeEmpty();
     }
 
@@ -59,8 +60,8 @@ namespace Application.UnitTests.Locations.Queries
         }
       };
 
-      var handler = new GetHistoricConsumptionQuery.GetHistoricConsumptionQueryHandler(_context);
-      var result = await handler.Handle(query, CancellationToken.None);
+      var handler = new GetHistoricConsumptionQuery.GetHistoricConsumptionQueryHandler(_statsService);
+      var result = (await handler.Handle(query, CancellationToken.None)).ToList();
       result.Should().NotBeEmpty();
       result.Count().Should().Be(5);
       Math.Round(result[2].FuelConsumed, 2).Should().Be(150.0);
@@ -82,9 +83,9 @@ namespace Application.UnitTests.Locations.Queries
         }
       };
 
-      var handler = new GetHistoricConsumptionQuery.GetHistoricConsumptionQueryHandler(_context);
+      var handler = new GetHistoricConsumptionQuery.GetHistoricConsumptionQueryHandler(_statsService);
       await Assert.ThrowsAsync<ArgumentException>(
-        async () => { await handler.Handle(query, CancellationToken.None); }
+        async () => { (await handler.Handle(query, CancellationToken.None)).ToList(); }
       );
     }
 
@@ -102,8 +103,8 @@ namespace Application.UnitTests.Locations.Queries
         }
       };
 
-      var handler = new GetHistoricConsumptionQuery.GetHistoricConsumptionQueryHandler(_context);
-      var result = await handler.Handle(query, CancellationToken.None);
+      var handler = new GetHistoricConsumptionQuery.GetHistoricConsumptionQueryHandler(_statsService);
+      var result = (await handler.Handle(query, CancellationToken.None)).ToList();
       result.Should().NotBeEmpty();
       result.Count().Should().Be(12);
       Math.Round(result[0].FuelConsumed, 2).Should().Be(465.0);
@@ -134,9 +135,9 @@ namespace Application.UnitTests.Locations.Queries
         }
       };
 
-      var handler = new GetHistoricConsumptionQuery.GetHistoricConsumptionQueryHandler(_context);
+      var handler = new GetHistoricConsumptionQuery.GetHistoricConsumptionQueryHandler(_statsService);
       await Assert.ThrowsAsync<ArgumentException>(
-        async () => { await handler.Handle(query, CancellationToken.None); }
+        async () => { (await handler.Handle(query, CancellationToken.None)).ToList(); }
       );
     }
 
@@ -154,8 +155,8 @@ namespace Application.UnitTests.Locations.Queries
         }
       };
 
-      var handler = new GetHistoricConsumptionQuery.GetHistoricConsumptionQueryHandler(_context);
-      var result = await handler.Handle(query, CancellationToken.None);
+      var handler = new GetHistoricConsumptionQuery.GetHistoricConsumptionQueryHandler(_statsService);
+      var result = (await handler.Handle(query, CancellationToken.None)).ToList();
       result.Should().NotBeEmpty();
       result.Count().Should().Be(12);
       Math.Round(result[0].FuelConsumed, 2).Should().Be(72.6);
@@ -186,8 +187,8 @@ namespace Application.UnitTests.Locations.Queries
         }
       };
 
-      var handler = new GetHistoricConsumptionQuery.GetHistoricConsumptionQueryHandler(_context);
-      var result = await handler.Handle(query, CancellationToken.None);
+      var handler = new GetHistoricConsumptionQuery.GetHistoricConsumptionQueryHandler(_statsService);
+      var result = (await handler.Handle(query, CancellationToken.None)).ToList();
       result.Should().NotBeEmpty();
       result.Count().Should().Be(6);
       Math.Round(result[0].FuelConsumed, 2).Should().Be(1000);

@@ -1,6 +1,6 @@
 using System;
 
-namespace Application.Locations.Queries.GetHistoricConsumption
+namespace Application.Stats.GetHistoricConsumption
 {
     public class LocationConsumptionDto 
     {
