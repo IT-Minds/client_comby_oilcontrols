@@ -23,7 +23,6 @@ namespace Application.UnitTests.Coupons.Commands.AssignCoupons
         {
           CouponNumber = 19991
         }
-
       };
 
       var handler = new UpdateCouponStatusCommand.UpdateCouponstatusCommandHandler(Context, Mapper);
