@@ -53,8 +53,10 @@ const TruckPage: NextPage = () => {
       const client = await genCouponsClient();
       await client.create(
         new AssignCouponsCommand({
-          truckId,
-          couponNumbers
+          dto: {
+            truckId: truckId,
+            couponNumbers: couponNumbers
+          }
         })
       );
       loadSingleTruck(truckId);

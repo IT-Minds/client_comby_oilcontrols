@@ -4,7 +4,7 @@ using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
 
-namespace Application.Coupons.Queries.GetCoupons
+namespace Application.Coupons
 {
   public class CouponDto : IAutoMap<Domain.Entities.Coupon>
   {

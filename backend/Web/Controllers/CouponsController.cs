@@ -1,10 +1,7 @@
-using Application.Common.Interfaces.Pagination;
+using Application.Coupons;
 using Application.Coupons.Commands.AssignCoupons;
 using Application.Coupons.Commands.UpdateCouponStatus;
-using Application.Coupons.Queries.GetCoupons;
-using Application.Coupons.Queries.GetCoupons.Truck;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -14,7 +11,7 @@ namespace Web.Controllers
   public class CouponsController : ApiControllerBase
   {
     [HttpPost]
-    public async Task<ActionResult<List<int>>> Create(AssignCouponsCommand command)
+    public async Task<IEnumerable<CouponIdDto>> Create(AssignCouponsCommand command)
     {
       return await Mediator.Send(command);
     }

@@ -15,6 +15,7 @@ using Application.Coupons.Queries.GetCoupons;
 using Application.TruckRefills.Commands.CreateTruckRefill;
 using Application.Refills.Queries;
 using Application.Refills;
+using Application.Coupons;
 
 namespace Web.Controllers
 {

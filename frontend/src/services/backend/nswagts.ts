@@ -275,7 +275,7 @@ export class AuthenticationClient extends ClientBase implements IAuthenticationC
 }
 
 export interface ICouponsClient {
-    create(command: AssignCouponsCommand): Promise<number[]>;
+    create(command: AssignCouponsCommand): Promise<CouponIdDto[]>;
     invalidateCoupon(couponNumber: number): Promise<number>;
 }
 
@@ -290,7 +290,7 @@ export class CouponsClient extends ClientBase implements ICouponsClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    create(command: AssignCouponsCommand): Promise<number[]> {
+    create(command: AssignCouponsCommand): Promise<CouponIdDto[]> {
         let url_ = this.baseUrl + "/api/Coupons";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -312,7 +312,7 @@ export class CouponsClient extends ClientBase implements ICouponsClient {
         });
     }
 
-    protected processCreate(response: Response): Promise<number[]> {
+    protected processCreate(response: Response): Promise<CouponIdDto[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -322,7 +322,7 @@ export class CouponsClient extends ClientBase implements ICouponsClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(item);
+                    result200!.push(CouponIdDto.fromJS(item));
             }
             return result200;
             });
@@ -331,7 +331,7 @@ export class CouponsClient extends ClientBase implements ICouponsClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<number[]>(<any>null);
+        return Promise.resolve<CouponIdDto[]>(<any>null);
     }
 
     invalidateCoupon(couponNumber: number): Promise<number> {
@@ -2689,11 +2689,131 @@ export interface IAssignTokenCommand {
     password?: string | null;
 }
 
+export class CouponDto implements ICouponDto {
+    couponNumber?: number;
+    truckId?: number;
+    status?: CouponStatus;
+
+    constructor(data?: ICouponDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.couponNumber = _data["couponNumber"] !== undefined ? _data["couponNumber"] : <any>null;
+            this.truckId = _data["truckId"] !== undefined ? _data["truckId"] : <any>null;
+            this.status = _data["status"] !== undefined ? _data["status"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): CouponDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CouponDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["couponNumber"] = this.couponNumber !== undefined ? this.couponNumber : <any>null;
+        data["truckId"] = this.truckId !== undefined ? this.truckId : <any>null;
+        data["status"] = this.status !== undefined ? this.status : <any>null;
+        return data; 
+    }
+}
+
+export interface ICouponDto {
+    couponNumber?: number;
+    truckId?: number;
+    status?: CouponStatus;
+}
+
+export class CouponIdDto extends CouponDto implements ICouponIdDto {
+    id?: number;
+
+    constructor(data?: ICouponIdDto) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): CouponIdDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CouponIdDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface ICouponIdDto extends ICouponDto {
+    id?: number;
+}
+
+export enum CouponStatus {
+    AVAILABLE = 0,
+    USED = 1,
+    DESTROYED = 2,
+}
+
 export class AssignCouponsCommand implements IAssignCouponsCommand {
+    dto?: AssignCouponDto | null;
+
+    constructor(data?: IAssignCouponsCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            this.dto = data.dto && !(<any>data.dto).toJSON ? new AssignCouponDto(data.dto) : <AssignCouponDto>this.dto; 
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.dto = _data["dto"] ? AssignCouponDto.fromJS(_data["dto"]) : <any>null;
+        }
+    }
+
+    static fromJS(data: any): AssignCouponsCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new AssignCouponsCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["dto"] = this.dto ? this.dto.toJSON() : <any>null;
+        return data; 
+    }
+}
+
+export interface IAssignCouponsCommand {
+    dto?: IAssignCouponDto | null;
+}
+
+export class AssignCouponDto implements IAssignCouponDto {
     truckId?: number;
     couponNumbers?: number[] | null;
 
-    constructor(data?: IAssignCouponsCommand) {
+    constructor(data?: IAssignCouponDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2713,9 +2833,9 @@ export class AssignCouponsCommand implements IAssignCouponsCommand {
         }
     }
 
-    static fromJS(data: any): AssignCouponsCommand {
+    static fromJS(data: any): AssignCouponDto {
         data = typeof data === 'object' ? data : {};
-        let result = new AssignCouponsCommand();
+        let result = new AssignCouponDto();
         result.init(data);
         return result;
     }
@@ -2732,7 +2852,7 @@ export class AssignCouponsCommand implements IAssignCouponsCommand {
     }
 }
 
-export interface IAssignCouponsCommand {
+export interface IAssignCouponDto {
     truckId?: number;
     couponNumbers?: number[] | null;
 }
@@ -4685,89 +4805,6 @@ export interface IPageResultOfCouponIdDtoAndDateTimeOffset {
     pagesRemaining?: number;
     results?: CouponIdDto[] | null;
     hasMore?: boolean;
-}
-
-export class CouponDto implements ICouponDto {
-    couponNumber?: number;
-    truckId?: number;
-    status?: CouponStatus;
-
-    constructor(data?: ICouponDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.couponNumber = _data["couponNumber"] !== undefined ? _data["couponNumber"] : <any>null;
-            this.truckId = _data["truckId"] !== undefined ? _data["truckId"] : <any>null;
-            this.status = _data["status"] !== undefined ? _data["status"] : <any>null;
-        }
-    }
-
-    static fromJS(data: any): CouponDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new CouponDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["couponNumber"] = this.couponNumber !== undefined ? this.couponNumber : <any>null;
-        data["truckId"] = this.truckId !== undefined ? this.truckId : <any>null;
-        data["status"] = this.status !== undefined ? this.status : <any>null;
-        return data; 
-    }
-}
-
-export interface ICouponDto {
-    couponNumber?: number;
-    truckId?: number;
-    status?: CouponStatus;
-}
-
-export class CouponIdDto extends CouponDto implements ICouponIdDto {
-    id?: number;
-
-    constructor(data?: ICouponIdDto) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
-        }
-    }
-
-    static fromJS(data: any): CouponIdDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new CouponIdDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id !== undefined ? this.id : <any>null;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface ICouponIdDto extends ICouponDto {
-    id?: number;
-}
-
-export enum CouponStatus {
-    AVAILABLE = 0,
-    USED = 1,
-    DESTROYED = 2,
 }
 
 export class PageResultOfTruckInfoIdDtoAndInteger implements IPageResultOfTruckInfoIdDtoAndInteger {

@@ -1,4 +1,5 @@
 using Application.Common.Interfaces.Pagination;
+using Application.Coupons;
 using Application.Coupons.Queries.GetCoupons;
 using Application.Coupons.Queries.GetCoupons.Truck;
 using AutoMapper;

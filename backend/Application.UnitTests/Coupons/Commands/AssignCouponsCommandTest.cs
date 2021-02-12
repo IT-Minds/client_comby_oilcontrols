@@ -17,13 +17,16 @@ namespace Application.UnitTests.Coupons.Commands.AssignCoupons
     {
       var command = new AssignCouponsCommand
       {
-        TruckId = 43,
-        CouponNumbers = new List<int> { 350, 351, 352, 353, 354 }
+        Dto = new AssignCouponDto
+        {
+          TruckId = 43,
+          CouponNumbers = new List<int> { 350, 351, 352, 353, 354 }
+        }
       };
       var countBefore = Context.Coupons.Where(x => x.Truck.Id == 43).ToList().Count;
       var total = countBefore + 5;
-      
-      var handler = new AssignCouponsCommand.AssignCouponsCommandCommandHandler(Context);
+
+      var handler = new AssignCouponsCommand.AssignCouponsCommandCommandHandler(Context, Mapper);
 
       var result = await handler.Handle(command, CancellationToken.None);
 
@@ -38,18 +41,21 @@ namespace Application.UnitTests.Coupons.Commands.AssignCoupons
     {
       var command = new AssignCouponsCommand
       {
-        TruckId = 43,
-        CouponNumbers = new List<int>()
+        Dto = new AssignCouponDto
+        {
+          TruckId = 43,
+          CouponNumbers = new List<int>()
+        }
       };
 
       var countBefore = Context.Coupons.Where(x => x.Truck.Id == 43).ToList().Count;
 
-      var handler = new AssignCouponsCommand.AssignCouponsCommandCommandHandler(Context);
+      var handler = new AssignCouponsCommand.AssignCouponsCommandCommandHandler(Context, Mapper);
 
       var result = await handler.Handle(command, CancellationToken.None);
 
       var entities = Context.Coupons.Where(x => x.Truck.Id == 43);
-      
+
       entities.Should().HaveCount(countBefore);
     }
   }
