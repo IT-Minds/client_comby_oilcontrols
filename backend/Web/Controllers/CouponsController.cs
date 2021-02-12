@@ -17,11 +17,14 @@ namespace Web.Controllers
     }
 
     [HttpPut("{couponNumber}/invalidate")]
-    public async Task<ActionResult<int>> InvalidateCoupon([FromRoute] int couponNumber)
+    public async Task<ActionResult<CouponIdDto>> InvalidateCoupon([FromRoute] int couponNumber)
     {
       return await Mediator.Send(new UpdateCouponStatusCommand
       {
-        CouponNumber = couponNumber
+        Dto = new CouponStatusDto
+        {
+          CouponNumber = couponNumber
+        }
       });
     }
   }

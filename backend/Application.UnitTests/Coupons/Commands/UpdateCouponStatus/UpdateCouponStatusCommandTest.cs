@@ -19,10 +19,14 @@ namespace Application.UnitTests.Coupons.Commands.AssignCoupons
     {
       var command = new UpdateCouponStatusCommand
       {
-        CouponNumber = 19991
+        Dto = new CouponStatusDto
+        {
+          CouponNumber = 19991
+        }
+
       };
 
-      var handler = new UpdateCouponStatusCommand.UpdateCouponstatusCommandHandler(Context);
+      var handler = new UpdateCouponStatusCommand.UpdateCouponstatusCommandHandler(Context, Mapper);
 
       var result = await handler.Handle(command, CancellationToken.None);
 
