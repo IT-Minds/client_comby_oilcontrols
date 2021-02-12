@@ -1,4 +1,14 @@
-import { Button, Container, Flex, Heading, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Container,
+  Flex,
+  Heading,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Text
+} from "@chakra-ui/react";
 import ConsumptionTableComp from "components/Consumption/ConsumptionTableComp";
 import { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
@@ -22,9 +32,9 @@ const LocalePage: NextPage<Props> = () => {
     downloadFile(result.data, result.fileName);
   }, []);
 
-  const downloadUsageHistory = useCallback(async () => {
+  const downloadUsageHistory = useCallback(async (type: number) => {
     const client = await genStatsClient();
-    const result = await client.getUsageHistoryFile();
+    const result = await client.getUsageHistoryFile(type);
     downloadFile(result.data, result.fileName);
   }, []);
 
@@ -39,7 +49,15 @@ const LocalePage: NextPage<Props> = () => {
           <Text fontSize="xl">Just some info text</Text>
           <Button onClick={download}>Download Refill</Button>
           <ConsumptionTableComp></ConsumptionTableComp>
-          <Button onClick={downloadUsageHistory}>Download Usage History</Button>
+
+          <Menu>
+            <MenuButton as={Button}>Download History</MenuButton>
+            <MenuList>
+              <MenuItem onClick={() => downloadUsageHistory(0)}>Måned</MenuItem>
+              <MenuItem onClick={() => downloadUsageHistory(1)}>Kvartal</MenuItem>
+              <MenuItem onClick={() => downloadUsageHistory(2)}>År</MenuItem>
+            </MenuList>
+          </Menu>
         </Container>
       </Flex>
     </main>
