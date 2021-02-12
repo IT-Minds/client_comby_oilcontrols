@@ -1,8 +1,9 @@
 import { Button, Container, Flex, Heading, Text } from "@chakra-ui/react";
+import ConsumptionTableComp from "components/Consumption/ConsumptionTableComp";
 import { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { I18nProps, useI18n } from "next-rosetta";
-import { useCallback } from "react";
+import React, { useCallback } from "react";
 import { genStatsClient } from "services/backend/apiClients";
 import { downloadFile } from "utils/downloadFile";
 
@@ -21,6 +22,12 @@ const LocalePage: NextPage<Props> = () => {
     downloadFile(result.data, result.fileName);
   }, []);
 
+  const downloadUsageHistory = useCallback(async () => {
+    const client = await genStatsClient();
+    const result = await client.getUsageHistoryFile();
+    downloadFile(result.data, result.fileName);
+  }, []);
+
   return (
     <main>
       <Head>
@@ -30,7 +37,9 @@ const LocalePage: NextPage<Props> = () => {
         <Container maxW="xl" centerContent>
           <Heading>{t("title")}</Heading>
           <Text fontSize="xl">Just some info text</Text>
-          <Button onClick={download}>CLICK</Button>
+          <Button onClick={download}>Download Refill</Button>
+          <ConsumptionTableComp></ConsumptionTableComp>
+          <Button onClick={downloadUsageHistory}>Download Usage History</Button>
         </Container>
       </Flex>
     </main>
