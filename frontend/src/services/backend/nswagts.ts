@@ -1694,6 +1694,140 @@ export class RoleClient extends ClientBase implements IRoleClient {
     }
 }
 
+export interface IStatsClient {
+    getRefillOfYearFile(year?: number | undefined): Promise<FileResponse>;
+    getUsageHistoryFile(type?: TEMP_USAGE_HISTORY | undefined): Promise<FileResponse>;
+    getUsageHistory(type?: TEMP_USAGE_HISTORY | undefined): Promise<TEMP_DTO>;
+}
+
+export class StatsClient extends ClientBase implements IStatsClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(configuration: AuthClient, baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super(configuration);
+        this.http = http ? http : <any>window;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    getRefillOfYearFile(year?: number | undefined): Promise<FileResponse> {
+        let url_ = this.baseUrl + "/api/Stats/refillHistoryFile?";
+        if (year === null)
+            throw new Error("The parameter 'year' cannot be null.");
+        else if (year !== undefined)
+            url_ += "year=" + encodeURIComponent("" + year) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/octet-stream"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetRefillOfYearFile(_response));
+        });
+    }
+
+    protected processGetRefillOfYearFile(response: Response): Promise<FileResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(<any>null);
+    }
+
+    getUsageHistoryFile(type?: TEMP_USAGE_HISTORY | undefined): Promise<FileResponse> {
+        let url_ = this.baseUrl + "/api/Stats/usageHistoryFile?";
+        if (type === null)
+            throw new Error("The parameter 'type' cannot be null.");
+        else if (type !== undefined)
+            url_ += "type=" + encodeURIComponent("" + type) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/octet-stream"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetUsageHistoryFile(_response));
+        });
+    }
+
+    protected processGetUsageHistoryFile(response: Response): Promise<FileResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(<any>null);
+    }
+
+    getUsageHistory(type?: TEMP_USAGE_HISTORY | undefined): Promise<TEMP_DTO> {
+        let url_ = this.baseUrl + "/api/Stats/usageHistory?";
+        if (type === null)
+            throw new Error("The parameter 'type' cannot be null.");
+        else if (type !== undefined)
+            url_ += "type=" + encodeURIComponent("" + type) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetUsageHistory(_response));
+        });
+    }
+
+    protected processGetUsageHistory(response: Response): Promise<TEMP_DTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TEMP_DTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<TEMP_DTO>(<any>null);
+    }
+}
+
 export interface IStreetClient {
     get(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfStreetDto>;
 }
@@ -3115,7 +3249,7 @@ export interface ILocationDto {
 
 export class LocationDetailsDto extends LocationDto implements ILocationDetailsDto {
     tankType?: TankType;
-    tankNumber?: number;
+    tankNumber?: string | null;
     tankCapacity?: number;
     minimumFuelAmount?: number;
     fuelType?: FuelType;
@@ -3156,7 +3290,7 @@ export class LocationDetailsDto extends LocationDto implements ILocationDetailsD
 
 export interface ILocationDetailsDto extends ILocationDto {
     tankType?: TankType;
-    tankNumber?: number;
+    tankNumber?: string | null;
     tankCapacity?: number;
     minimumFuelAmount?: number;
     fuelType?: FuelType;
@@ -4197,6 +4331,48 @@ export interface IPageResultOfRoleDtoAndString {
     pagesRemaining?: number;
     results?: IRoleDto[] | null;
     hasMore?: boolean;
+}
+
+export enum TEMP_USAGE_HISTORY {
+    MONTHLY = 0,
+    QUARTERLY = 1,
+    YEARLY = 2,
+}
+
+export class TEMP_DTO implements ITEMP_DTO {
+    data?: string | null;
+
+    constructor(data?: ITEMP_DTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.data = _data["data"] !== undefined ? _data["data"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): TEMP_DTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new TEMP_DTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["data"] = this.data !== undefined ? this.data : <any>null;
+        return data; 
+    }
+}
+
+export interface ITEMP_DTO {
+    data?: string | null;
 }
 
 export class PageResultOfStreetDtoAndString implements IPageResultOfStreetDtoAndString {

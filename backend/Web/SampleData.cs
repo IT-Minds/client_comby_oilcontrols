@@ -117,10 +117,10 @@ namespace Web
       );
       context.SaveChanges();
 
-      var fueltank1 = new FuelTank { TankNumber = 1000, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 10000, MinimumFuelAmount = 500 };
-      var fueltank2 = new FuelTank { TankNumber = 1001, FuelType = FuelType.OIL, TankType = TankType.SHIP, TankCapacity = 20000, MinimumFuelAmount = 450 };
-      var fueltank3 = new FuelTank { TankNumber = 1002, FuelType = FuelType.PETROLEUM, TankType = TankType.TANK, TankCapacity = 35000, MinimumFuelAmount = 300 };
-      var fueltank4 = new FuelTank { TankNumber = 1003, FuelType = FuelType.OTHER, TankType = TankType.BUILDING, TankCapacity = 30000, MinimumFuelAmount = 375 };
+      var fueltank1 = new FuelTank { TankNumber = "1000", FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 10000, MinimumFuelAmount = 500 };
+      var fueltank2 = new FuelTank { TankNumber = "1001", FuelType = FuelType.OIL, TankType = TankType.SHIP, TankCapacity = 20000, MinimumFuelAmount = 450 };
+      var fueltank3 = new FuelTank { TankNumber = "1002", FuelType = FuelType.PETROLEUM, TankType = TankType.TANK, TankCapacity = 35000, MinimumFuelAmount = 300 };
+      var fueltank4 = new FuelTank { TankNumber = "1003", FuelType = FuelType.OTHER, TankType = TankType.BUILDING, TankCapacity = 30000, MinimumFuelAmount = 375 };
 
       context.FuelTanks.AddRange(
         fueltank1,

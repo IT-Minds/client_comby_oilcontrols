@@ -129,17 +129,28 @@ namespace Domain.EntityExtensions
     }
     public static Debtor MainDebtor(this Location location)
     {
-      return location.Debtors.First(x => x.Type == Enums.LocationDebtorType.MAIN).Debtor;
+      return location.Debtors.FirstOrDefault(x => x.Type == Enums.LocationDebtorType.MAIN)?.Debtor;
     }
 
     public static Debtor BaseDebtor(this Location location)
     {
-      return location.Debtors.FirstOrDefault(x => x.Type == Enums.LocationDebtorType.BASE).Debtor;
+      return location.Debtors.FirstOrDefault(x => x.Type == Enums.LocationDebtorType.BASE)?.Debtor;
     }
 
     public static Debtor UpcomingDebtor(this Location location)
     {
-      return location.Debtors.FirstOrDefault(x => x.Type == Enums.LocationDebtorType.UPCOMING).Debtor;
+      return location.Debtors.FirstOrDefault(x => x.Type == Enums.LocationDebtorType.UPCOMING)?.Debtor;
+    }
+
+    public static Debtor ActiveDebtor(this Location location)
+    {
+      var baseDebtor = location.BaseDebtor();
+      if (baseDebtor != null) return baseDebtor;
+
+      var mainDebtor = location.MainDebtor();
+      if (mainDebtor != null) return mainDebtor;
+
+      return null;
     }
   }
 }

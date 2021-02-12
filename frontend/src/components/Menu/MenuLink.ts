@@ -52,18 +52,7 @@ export const testLinks: MenuLink[] = [
   {
     id: "debtor",
     title: "menu.debtors.debtors",
-    children: [
-      {
-        id: "debtor-list",
-        title: "menu.debtors.overview",
-        href: "/demo"
-      },
-      {
-        id: "debtor-create",
-        title: "menu.debtors.create",
-        href: "/demo"
-      }
-    ],
+    href: "/debtors",
 
     logo: MdAttachMoney
   },

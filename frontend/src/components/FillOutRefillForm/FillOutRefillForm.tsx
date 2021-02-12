@@ -27,7 +27,7 @@ const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) =>
     startliters: 0,
     endliters: 0,
     fuelType: null,
-    couponId: couponNumbers[0]?.id ?? "",
+    couponNumber: couponNumbers[0]?.name ?? "",
     isSpecialFill: false,
     image: ""
   });
@@ -66,13 +66,13 @@ const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) =>
             id="coupon-no"
             isInvalid={
               formSubmitAttempts > 0 &&
-              couponNumbers.every(cn => localReportForm.couponId !== cn.id)
+              couponNumbers.every(cn => localReportForm.couponNumber !== cn.id)
             }
             isRequired>
             <FormLabel>{t("mytruck.refill.selectCouponNumber")}</FormLabel>
-            <Select onChange={e => updateLocalForm(e.target.value, "couponId")}>
-              {couponNumbers.map(path => (
-                <option key={path.id} value={path.id}>
+            <Select onChange={e => updateLocalForm(e.target.value, "couponNumber")}>
+            {couponNumbers.map(path => (
+                <option key={path.id} value={path.name}>
                   {path.name}
                 </option>
               ))}

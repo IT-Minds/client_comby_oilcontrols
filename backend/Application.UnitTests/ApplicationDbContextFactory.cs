@@ -64,15 +64,15 @@ namespace Application.UnitTests
       );
 
       context.FuelTanks.AddRange(
-        new FuelTank { Id = 1, TankNumber = 443, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 2000.5, MinimumFuelAmount = 150.5 },
-        new FuelTank { Id = 2, TankNumber = 444, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 2000.5, MinimumFuelAmount = 150.5 },
-        new FuelTank { Id = 3, TankNumber = 445, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 2000.5, MinimumFuelAmount = 150.5 },
-        new FuelTank { Id = 4, TankNumber = 446, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 2000.5, MinimumFuelAmount = 150.5 },
-        new FuelTank { Id = 5, TankNumber = 447, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 2000.5, MinimumFuelAmount = 150.5 },
+        new FuelTank { Id = 1, TankNumber = "443", FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 2000.5, MinimumFuelAmount = 150.5 },
+        new FuelTank { Id = 2, TankNumber = "444", FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 2000.5, MinimumFuelAmount = 150.5 },
+        new FuelTank { Id = 3, TankNumber = "445", FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 2000.5, MinimumFuelAmount = 150.5 },
+        new FuelTank { Id = 4, TankNumber = "446", FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 2000.5, MinimumFuelAmount = 150.5 },
+        new FuelTank { Id = 5, TankNumber = "447", FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 2000.5, MinimumFuelAmount = 150.5 },
         new FuelTank { Id = 6, /* TankNumber */ FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 50 },
         new FuelTank { Id = 8, /* TankNumber */ FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 50 },
         new FuelTank { Id = 7, /* TankNumber */ FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 50 },
-        new FuelTank { Id = 100, TankType = TankType.BUILDING, FuelType = FuelType.GASOLINE, TankNumber = 1001, TankCapacity = 300, MinimumFuelAmount = 0 }
+        new FuelTank { Id = 100, TankType = TankType.BUILDING, FuelType = FuelType.GASOLINE, TankNumber = "1001", TankCapacity = 300, MinimumFuelAmount = 0 }
       );
 
       context.Locations.AddRange(
@@ -212,9 +212,9 @@ namespace Application.UnitTests
         new Region { Id = 301 }
       );
       context.FuelTanks.AddRange(
-        new FuelTank { Id = 300, TankNumber = 300, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
-        new FuelTank { Id = 301, TankNumber = 301, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
-        new FuelTank { Id = 302, TankNumber = 302, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 }
+        new FuelTank { Id = 300, TankNumber = "300", FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
+        new FuelTank { Id = 301, TankNumber = "301", FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
+        new FuelTank { Id = 302, TankNumber = "302", FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 }
       );
       context.Locations.AddRange(
         new Location { Id = 300, RegionId = 300, FuelTankId = 300, Address = "Address region 300.", Comments = "Location 300.", EstimateFuelConsumption = 100 },
@@ -264,9 +264,9 @@ namespace Application.UnitTests
       );
 
       context.FuelTanks.AddRange(
-        new FuelTank { Id = 200, TankNumber = 200, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
-        new FuelTank { Id = 201, TankNumber = 201, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
-        new FuelTank { Id = 202, TankNumber = 202, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 }
+        new FuelTank { Id = 200, TankNumber = "200", FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
+        new FuelTank { Id = 201, TankNumber = "201", FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
+        new FuelTank { Id = 202, TankNumber = "202", FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 }
       );
 
       context.Locations.AddRange(
@@ -295,10 +295,10 @@ namespace Application.UnitTests
         new Region { Id = 500 }
       );
       context.FuelTanks.AddRange(
-        new FuelTank { Id = 400, TankNumber = 400, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
-        new FuelTank { Id = 401, TankNumber = 401, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
-        new FuelTank { Id = 500, TankNumber = 500, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
-        new FuelTank { Id = 501, TankNumber = 501, FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 }
+        new FuelTank { Id = 400, TankNumber = "400", FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
+        new FuelTank { Id = 401, TankNumber = "401", FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
+        new FuelTank { Id = 500, TankNumber = "500", FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 },
+        new FuelTank { Id = 501, TankNumber = "501", FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 1000, MinimumFuelAmount = 100 }
       );
       context.Debtors.AddRange(
         new Debtor { Id = 1 },

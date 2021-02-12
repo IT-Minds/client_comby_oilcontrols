@@ -22,7 +22,7 @@ namespace Application.UnitTests.Refills.Commands.CreateRefill
         TankState = Domain.Enums.TankState.FULL,
       };
 
-      var handler = new CompleteRefillCommand.CompleteRefillCommandHandler(Context);
+      var handler = new CompleteRefillCommand.CompleteRefillCommandHandler(Context, null);
 
       var result = await handler.Handle(command, CancellationToken.None);
 
@@ -50,7 +50,7 @@ namespace Application.UnitTests.Refills.Commands.CreateRefill
         TankState = Domain.Enums.TankState.FULL
       };
 
-      var handler = new CompleteRefillCommand.CompleteRefillCommandHandler(Context);
+      var handler = new CompleteRefillCommand.CompleteRefillCommandHandler(Context, null);
 
       await Assert.ThrowsAsync<ArgumentException>(
         async () => { await handler.Handle(command, CancellationToken.None); }
@@ -70,7 +70,7 @@ namespace Application.UnitTests.Refills.Commands.CreateRefill
         TankState = Domain.Enums.TankState.FULL
       };
 
-      var handler = new CompleteRefillCommand.CompleteRefillCommandHandler(Context);
+      var handler = new CompleteRefillCommand.CompleteRefillCommandHandler(Context, null);
 
       await Assert.ThrowsAsync<ArgumentException>(
         async () => { await handler.Handle(command, CancellationToken.None); }

@@ -11,6 +11,7 @@ import {
   LocationClient,
   RefillClient,
   RoleClient,
+  StatsClient,
   StreetClient,
   TruckClient,
   UserClient
@@ -31,3 +32,4 @@ export const genAuthenticationClient = (): Promise<AuthenticationClient> =>
   api(AuthenticationClient);
 export const genRoleClient = (): Promise<RoleClient> => api(RoleClient);
 export const genDebtorClient = (): Promise<DebtorClient> => api(DebtorClient);
+export const genStatsClient = (): Promise<StatsClient> => api(StatsClient);

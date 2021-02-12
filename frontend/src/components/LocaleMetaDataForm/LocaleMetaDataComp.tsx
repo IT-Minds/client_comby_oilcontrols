@@ -58,7 +58,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
     minimumFuelAmount: 0,
     schedule: -1,
     tankCapacity: 0,
-    tankNumber: 0,
+    tankNumber: "0",
     tankType: -1,
     fuelType: -1,
     daysBetweenRefills: 0,

@@ -1,26 +1,40 @@
 import { Container, Flex, Heading, Text } from "@chakra-ui/react";
+import { useEffectAsync } from "hooks/useEffectAsync";
 import { Locale } from "i18n/Locale";
 import { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { I18nProps } from "next-rosetta";
+import { useState } from "react";
+import { genTruckClient } from "services/backend/apiClients";
+import { TruckInfoIdDto } from "services/backend/nswagts";
+
+import MyTruck from "./mytruck";
 
 type Props = {
   // buildTime: number;
 };
 
 const IndexPage: NextPage<Props> = () => {
+  const [trucks, setTrucks] = useState<TruckInfoIdDto[]>([]);
+
+  useEffectAsync(async () => {
+    const client = await genTruckClient();
+    const trucks = await client.getTrucks();
+
+    setTrucks(trucks.results);
+  }, []);
+
   return (
-    <main>
+    <>
       <Head>
         <title>Oil Control - landing page</title>
       </Head>
-      <Flex>
-        <Container maxW="xl" centerContent>
-          <Heading>Landing Page</Heading>
-          <Text fontSize="xl">Just some info text</Text>
-        </Container>
-      </Flex>
-    </main>
+      <Container maxW="8xl" centerContent>
+        {trucks.map(truck => (
+          <MyTruck key={truck.id} coupons={[]} truckInfo={truck} viewOnly={true} />
+        ))}
+      </Container>
+    </>
   );
 };
 

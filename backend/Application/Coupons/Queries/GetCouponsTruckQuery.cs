@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Application.Coupons.Queries.GetCoupons.Truck
 {
-  [AuthorizeAttribute(Domain.Enums.Action.GET_COUPONS)]
+  // [AuthorizeAttribute(Domain.Enums.Action.GET_COUPONS)]
   public class GetCouponsTruckQuery : IPageRequest<CouponIdDto, DateTimeOffset>, IPageBody<Coupon, DateTimeOffset>
   {
     public int Size { get; set; }

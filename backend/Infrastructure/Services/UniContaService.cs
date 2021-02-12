@@ -11,6 +11,7 @@ using Microsoft.Extensions.Options;
 using Application.Common.Interfaces;
 using Uniconta.DataModel;
 using UniContaDomain.Entities;
+using System.IO;
 
 namespace Infrastructure.Services
 {
@@ -32,6 +33,8 @@ namespace Infrastructure.Services
       session = new Session(connection);
       var loginResult = await session.LoginAsync(_options.ApiUser, _options.ApiPass, LoginType.API, new Guid(_options.ApiGuid));
 
+      System.Console.Write("UniConta login: " + loginResult);
+
       if (loginResult != ErrorCodes.Succes) return false;
 
       await InitializeCompany();
@@ -41,7 +44,12 @@ namespace Infrastructure.Services
     public async Task<IEnumerable<UniContaDebtor>> GetDebtors()
     {
       var api = new CrudAPI(session, defaultCompany);
+      var debtorsCached = await api.LoadCache<Uniconta.DataModel.Debtor>();
+      System.Console.Write("UniConta Debtors Cached: " + debtorsCached.Count());
+
       var debtors = await api.Query<Uniconta.DataModel.Debtor>();
+      System.Console.Write("UniConta Debtors: " + debtors.Count());
+
       return debtors.Select(x => new UniContaDebtor(x) );
     }
 
@@ -50,23 +58,49 @@ namespace Infrastructure.Services
       // If Session has a default company, use DefaultCompany as CurrentCompany
       if (session.DefaultCompany != null)
       {
-          defaultCompany = session.DefaultCompany;
-          return;
+        defaultCompany = session.DefaultCompany;
+        return;
       }
 
       //todo makes into config option
       defaultCompany = await session.OpenCompany(45182, true);
     }
 
-    public async Task<bool> CreateOrder(UniContaOrder order)
+    public async Task<bool> CreateOrder(UniContaOrder inputOrder)
     {
       var api = new CrudAPI(session, defaultCompany);
 
-      var result = await api.Insert(
-        order
-      );
+      var bytes = await File.ReadAllBytesAsync(@"[Path To File]"+inputOrder.CouponId);
+      var vc = new Uniconta.ClientTools.DataModel.VouchersClient
+      {
+        _Data = bytes,
+        Fileextension = FileextensionsTypes.PNG,
+      };
+      await api.Insert(vc);
 
-      if (result != ErrorCodes.Succes) return false;
+      var order = new Uniconta.DataModel.DebtorOrder
+      {
+        _DCAccount = inputOrder.DebtorId,
+        _ProdItem = inputOrder.ProductId,
+        _ProdQty = inputOrder.AmountFilled,
+        _DeliveryDate = inputOrder.Date
+      };
+
+      if (true) // check image saves
+      {
+        order.DocumentRef = vc.RowId;
+      }
+
+      await api.Insert(order);
+
+      var orderLine = new DebtorOrderLineUser
+      {
+        fltbygnr = inputOrder.BuildingId,
+        fltkuponnr = inputOrder.CouponNumber,
+        _OrderNumber = order.RowId
+      };
+
+      await api.Insert(orderLine);
 
       return true;
     }
