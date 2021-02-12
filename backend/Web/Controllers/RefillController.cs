@@ -38,12 +38,14 @@ namespace Web.Controllers
 
     [HttpPost("{id}/image")]
     [Consumes("multipart/form-data")]
-    public async Task<ActionResult<string>> SaveCouponImage([FromRoute] int id, IFormFile file)
+    public async Task<ActionResult<CouponImageInfoDto>> SaveCouponImage([FromRoute] int id, IFormFile file)
     {
       return await Mediator.Send(new SaveCouponImageCommand
       {
-        File = file,
-        RefillId = id
+        Dto = {
+          File = file,
+          RefillId = id
+        }
       });
     }
 

@@ -6,12 +6,12 @@ namespace Application.Coupons.Commands.SaveCouponImage
   {
     public SaveCouponImageCommandValidator()
     {
-      RuleFor(e => e.RefillId)
+      RuleFor(e => e.Dto.RefillId)
           .NotNull()
           .GreaterThanOrEqualTo(0);
-      RuleFor(e => e.File)
+      RuleFor(e => e.Dto.File)
           .NotEmpty();
-      RuleFor(e => e.File.ContentType)
+      RuleFor(e => e.Dto.File.ContentType)
         .NotEmpty()
         .Matches(@"(^image\/png$)|(^image\/webp$)");
     }

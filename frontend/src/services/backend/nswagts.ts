@@ -1324,7 +1324,7 @@ export interface IRefillClient {
     complete(id: number, command: CompleteRefillCommand): Promise<number>;
     get(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined, tankType?: TankType | null | undefined): Promise<PageResultOfRefillDto>;
     orderRefill(command: OrderRefillCommand): Promise<number>;
-    saveCouponImage(id: number, file?: FileParameter | null | undefined): Promise<string>;
+    saveCouponImage(id: number, file?: FileParameter | null | undefined): Promise<CouponImageInfoDto>;
 }
 
 export class RefillClient extends ClientBase implements IRefillClient {
@@ -1467,7 +1467,7 @@ export class RefillClient extends ClientBase implements IRefillClient {
         return Promise.resolve<number>(<any>null);
     }
 
-    saveCouponImage(id: number, file?: FileParameter | null | undefined): Promise<string> {
+    saveCouponImage(id: number, file?: FileParameter | null | undefined): Promise<CouponImageInfoDto> {
         let url_ = this.baseUrl + "/api/Refill/{id}/image";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -1493,14 +1493,14 @@ export class RefillClient extends ClientBase implements IRefillClient {
         });
     }
 
-    protected processSaveCouponImage(response: Response): Promise<string> {
+    protected processSaveCouponImage(response: Response): Promise<CouponImageInfoDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            result200 = CouponImageInfoDto.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -1508,7 +1508,7 @@ export class RefillClient extends ClientBase implements IRefillClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<string>(<any>null);
+        return Promise.resolve<CouponImageInfoDto>(<any>null);
     }
 }
 
@@ -4237,6 +4237,50 @@ export class PageResultOfRefillDto extends PageResultOfRefillDtoAndString implem
 }
 
 export interface IPageResultOfRefillDto extends IPageResultOfRefillDtoAndString {
+}
+
+export class CouponImageInfoDto implements ICouponImageInfoDto {
+    refillId?: number;
+    couponNumber?: number;
+    path?: string | null;
+
+    constructor(data?: ICouponImageInfoDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.refillId = _data["refillId"] !== undefined ? _data["refillId"] : <any>null;
+            this.couponNumber = _data["couponNumber"] !== undefined ? _data["couponNumber"] : <any>null;
+            this.path = _data["path"] !== undefined ? _data["path"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): CouponImageInfoDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CouponImageInfoDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["refillId"] = this.refillId !== undefined ? this.refillId : <any>null;
+        data["couponNumber"] = this.couponNumber !== undefined ? this.couponNumber : <any>null;
+        data["path"] = this.path !== undefined ? this.path : <any>null;
+        return data; 
+    }
+}
+
+export interface ICouponImageInfoDto {
+    refillId?: number;
+    couponNumber?: number;
+    path?: string | null;
 }
 
 export class OrderRefillCommand implements IOrderRefillCommand {
