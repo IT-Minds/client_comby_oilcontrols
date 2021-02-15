@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Common.Options;
+using Application.Common.Security;
 using MediatR;
 using Microsoft.Extensions.Options;
 
 namespace Application.Locations.Queries.GetLocationImage
 {
+  [AuthorizeAttribute(Domain.Enums.Action.GET_LOCATION)]
   public class GetLocationImageQuery : IRequest<List<ImageResponseDto>>
   {
     public int LocationdId { get; set; }
@@ -33,7 +35,7 @@ namespace Application.Locations.Queries.GetLocationImage
           throw new NotFoundException("No location with ID: " + request.LocationdId);
         }
 
-        var files = Directory.EnumerateFiles(_options.CouponPath, request.LocationdId + ".*");
+        var files = Directory.EnumerateFiles(_options.LocationPath, request.LocationdId + ".*");
 
         var result = new List<ImageResponseDto>();
         foreach (var file in files)

@@ -166,7 +166,7 @@ namespace Web.Controllers
     }
 
     [HttpGet("{id}/image")]
-    public async Task<List<ImageResponseDto>> GetCouponImage([FromRoute] int id)
+    public async Task<List<ImageResponseDto>> GetLocationImage([FromRoute] int id)
     {
       return await Mediator.Send(new GetLocationImageQuery
       {

@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Common.Options;
+using Application.Common.Security;
 using MediatR;
 using Microsoft.Extensions.Options;
 
 namespace Application.Coupons.Queries.GetCouponImage
 {
+  [AuthorizeAttribute(Domain.Enums.Action.GET_COUPONS)]
   public class GetCouponImageQuery : IRequest<List<ImageResponseDto>>
   {
     public int RefillId { get; set; }

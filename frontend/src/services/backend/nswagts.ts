@@ -833,7 +833,7 @@ export interface ILocationClient {
     getLocationHistory(id: number, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationHistoryDto>;
     getDebtorHistory(id: number, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationDebtorHistoryDtoAndDateTime>;
     getRefillHistory(id: number, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfRefillDtoAndDateTimeOffset>;
-    getCouponImage(id: number): Promise<ImageResponseDto[]>;
+    getLocationImage(id: number): Promise<ImageResponseDto[]>;
 }
 
 export class LocationClient extends ClientBase implements ILocationClient {
@@ -1320,7 +1320,7 @@ export class LocationClient extends ClientBase implements ILocationClient {
         return Promise.resolve<PageResultOfRefillDtoAndDateTimeOffset>(<any>null);
     }
 
-    getCouponImage(id: number): Promise<ImageResponseDto[]> {
+    getLocationImage(id: number): Promise<ImageResponseDto[]> {
         let url_ = this.baseUrl + "/api/Location/{id}/image";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -1337,11 +1337,11 @@ export class LocationClient extends ClientBase implements ILocationClient {
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.http.fetch(url_, transformedOptions_);
         }).then((_response: Response) => {
-            return this.transformResult(url_, _response, (_response: Response) => this.processGetCouponImage(_response));
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetLocationImage(_response));
         });
     }
 
-    protected processGetCouponImage(response: Response): Promise<ImageResponseDto[]> {
+    protected processGetLocationImage(response: Response): Promise<ImageResponseDto[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
