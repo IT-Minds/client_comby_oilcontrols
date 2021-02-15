@@ -1,5 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Application.Common.Services;
+using Application.Stats.GetHistoricConsumption;
 using Application.Stats.GetRefillOfYear;
+using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
@@ -9,34 +15,61 @@ namespace Web.Controllers
     [HttpGet("refillHistoryFile")]
     public async Task<FileContentResult> GetRefillOfYearFile([FromQuery] int year)
     {
-      var data = await Mediator.Send(new GetRefillOfYearQuery{
+      var data = await Mediator.Send(new GetRefillOfYearQuery
+      {
         Year = year
       });
 
       System.Net.Mime.ContentDisposition cd = new System.Net.Mime.ContentDisposition
       {
-            FileName = data.Filename,
-            Inline = false
+        FileName = data.Filename,
+        Inline = false
       };
       Response.Headers.Add("Content-Disposition", cd.ToString());
       Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
 
-      return File(data.Stream, "text/csv", data.Filename);;
+      return File(data.Stream, "text/csv", data.Filename); ;
     }
 
     [HttpGet("usageHistoryFile")]
-    public async Task<FileContentResult> GetUsageHistoryFile([FromQuery] TEMP_USAGE_HISTORY type)
+    public async Task<FileContentResult> GetUsageHistoryFile([FromQuery] int locationId, [FromQuery] Interval interval, [FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
     {
-      var data = new byte[] { };
+      var data = await Mediator.Send(new GetHistoricConsumptionCsvQuery
+      {
+        Dto = new HistoricConsumptionDto
+        {
+          LocationId = locationId,
+          Interval = interval,
+          StartDate = startDate,
+          EndDate = endDate
+        }
+      });
+      System.Net.Mime.ContentDisposition cd = new System.Net.Mime.ContentDisposition
+      {
+        FileName = data.Filename,
+        Inline = false
+      };
 
-      return File(data, "text/csv", "TEMP.csv");
+      Response.Headers.Add("Content-Disposition", cd.ToString());
+      Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
+
+      return File(data.Stream, "text/csv", data.Filename); ;
     }
 
     [HttpGet("usageHistory")]
-    public async Task<ActionResult<TEMP_DTO>> GetUsageHistory([FromQuery] TEMP_USAGE_HISTORY type)
+    public async Task<ActionResult<List<FuelConsumptionDto>>> GetUsageHistory([FromQuery] int locationId, [FromQuery] Interval interval, [FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
     {
-
-      return NoContent();
+      var data = await Mediator.Send(new GetHistoricConsumptionQuery
+      {
+        Dto = new HistoricConsumptionDto
+        {
+          LocationId = locationId,
+          Interval = interval,
+          StartDate = startDate,
+          EndDate = endDate
+        }
+      });
+      return data.ToList();
     }
   }
 

@@ -8,46 +8,50 @@ using System.Collections.Generic;
 using Application.Common.Exceptions;
 using System.Linq;
 using Application.Common.Security;
+using AutoMapper;
 
 namespace Application.Coupons.Commands.AssignCoupons
 {
   // The command assumes that all coupon numbers are handed out sequentially.
   [AuthorizeAttribute(Action.ASSIGN_COUPON)]
-  public class AssignCouponsCommand : IRequest<List<int>>
+  public class AssignCouponsCommand : IRequest<IEnumerable<CouponIdDto>>
   {
-    public int TruckId { get; set; }
-    public List<int> CouponNumbers { get; set; }
+    public AssignCouponDto Dto { get; set; }
 
-    public class AssignCouponsCommandCommandHandler : IRequestHandler<AssignCouponsCommand, List<int>>
+    public class AssignCouponsCommandCommandHandler : IRequestHandler<AssignCouponsCommand, IEnumerable<CouponIdDto>>
     {
       private readonly IApplicationDbContext _context;
+      private readonly IMapper _mapper;
 
-      public AssignCouponsCommandCommandHandler(IApplicationDbContext context)
+      public AssignCouponsCommandCommandHandler(IApplicationDbContext context, IMapper mapper)
       {
         _context = context;
+        _mapper = mapper;
       }
 
-      public async Task<List<int>> Handle(AssignCouponsCommand request, CancellationToken cancellationToken)
+      public async Task<IEnumerable<CouponIdDto>> Handle(AssignCouponsCommand request, CancellationToken cancellationToken)
       {
-        var Truck = await _context.Trucks.FindAsync(request.TruckId);
+        var Truck = await _context.Trucks.FindAsync(request.Dto.TruckId);
 
         if (Truck == null)
         {
-          throw new NotFoundException(nameof(Truck), request.TruckId);
+          throw new NotFoundException(nameof(Truck), request.Dto.TruckId);
         }
 
-        foreach (int numb in request.CouponNumbers)
+        List<Coupon> coupons = new List<Coupon>();
+
+        foreach (int numb in request.Dto.CouponNumbers)
         {
-          _context.Coupons.Add(new Coupon
+          coupons.Add(new Coupon
           {
             CouponNumber = numb,
             Truck = Truck
           });
         }
-
+        await _context.Coupons.AddRangeAsync(coupons);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return request.CouponNumbers;
+        return _mapper.Map<IEnumerable<Coupon>, IEnumerable<CouponIdDto>>(coupons);
       }
     }
   }

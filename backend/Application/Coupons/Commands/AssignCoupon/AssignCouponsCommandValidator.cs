@@ -2,13 +2,13 @@ using FluentValidation;
 
 namespace Application.Coupons.Commands.AssignCoupons
 {
-  public class CreateExampleEntityCommandValidator : AbstractValidator<AssignCouponsCommand>
+  public class AssignCouponsCommandValidator : AbstractValidator<AssignCouponsCommand>
   {
-    public CreateExampleEntityCommandValidator()
+    public AssignCouponsCommandValidator()
     {
-      RuleFor(e => e.TruckId)
+      RuleFor(e => e.Dto.TruckId)
           .NotNull();
-      RuleFor(e => e.CouponNumbers)
+      RuleFor(e => e.Dto.CouponNumbers)
           .NotEmpty();
     }
   }
