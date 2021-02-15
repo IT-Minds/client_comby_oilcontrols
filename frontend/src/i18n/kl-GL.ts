@@ -193,6 +193,13 @@ export const table: Locale = {
     endDate: "Slutdato"
   },
 
+  localePage: {
+    downloadHistory: "Download historik",
+    month: "Måned",
+    quarter: "Kvartal",
+    year: "År"
+  },
+
   trucks: {
     truckOverview: "Vogn overblik",
     overviewOfTruck: "Overblik over vogn {{id}}",

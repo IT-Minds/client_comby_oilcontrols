@@ -79,12 +79,12 @@ const LocalePage: NextPage<Props> = ({ locationId }) => {
               setIsOpen(false);
             }}>
             <MenuButton as={Button} rightIcon={isOpen ? <MdArrowDropUp /> : <MdArrowDropDown />}>
-              Download History
+              {t("localePage.downloadHistory")}
             </MenuButton>
             <MenuList>
-              <MenuItem onClick={() => downloadUsageHistory(0)}>Måned</MenuItem>
-              <MenuItem onClick={() => downloadUsageHistory(1)}>Kvartal</MenuItem>
-              <MenuItem onClick={() => downloadUsageHistory(2)}>År</MenuItem>
+              <MenuItem onClick={() => downloadUsageHistory(0)}>{t("localePage.month")}</MenuItem>
+              <MenuItem onClick={() => downloadUsageHistory(1)}>{t("localePage.quarter")}</MenuItem>
+              <MenuItem onClick={() => downloadUsageHistory(2)}>{t("localePage.year")}</MenuItem>
             </MenuList>
           </Menu>
         </Container>

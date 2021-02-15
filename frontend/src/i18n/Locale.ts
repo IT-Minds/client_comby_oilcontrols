@@ -223,6 +223,13 @@ export interface Locale {
     endDate: string;
   };
 
+  localePage: {
+    downloadHistory: string;
+    month: string;
+    quarter: string;
+    year: string;
+  };
+
   trucks: {
     truckOverview: string;
     overviewOfTruck: string;
