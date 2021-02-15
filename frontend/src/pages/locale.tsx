@@ -10,12 +10,14 @@ import {
   Text
 } from "@chakra-ui/react";
 import ConsumptionTableComp from "components/Consumption/ConsumptionTableComp";
+import { useEffectAsync } from "hooks/useEffectAsync";
 import { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { I18nProps, useI18n } from "next-rosetta";
 import React, { useCallback, useState } from "react";
 import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
 import { genStatsClient } from "services/backend/apiClients";
+import { FuelConsumptionDto } from "services/backend/nswagts";
 import { downloadFile } from "utils/downloadFile";
 
 import { Locale } from "../i18n/Locale";
@@ -28,6 +30,9 @@ const LocalePage: NextPage<Props> = ({ locationId }) => {
   const { t } = useI18n<Locale>();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [fuelConsumptionEntities, setFuelConsumptionEntities] = useState<FuelConsumptionDto[]>(
+    null
+  );
 
   const download = useCallback(async () => {
     const client = await genStatsClient();
@@ -46,6 +51,14 @@ const LocalePage: NextPage<Props> = ({ locationId }) => {
     downloadFile(result.data, result.fileName);
   }, []);
 
+  useEffectAsync(async () => {
+    const data = await genStatsClient().then(client =>
+      // How to set interval here?
+      client.getUsageHistory(locationId, 0, new Date(2020, 1), new Date())
+    );
+    setFuelConsumptionEntities(data);
+  }, []);
+
   return (
     <main>
       <Head>
@@ -56,7 +69,7 @@ const LocalePage: NextPage<Props> = ({ locationId }) => {
           <Heading>{t("title")}</Heading>
           <Text fontSize="xl">Just some info text</Text>
           <Button onClick={download}>Download Refill</Button>
-          <ConsumptionTableComp></ConsumptionTableComp>
+          <ConsumptionTableComp preLoadedData={fuelConsumptionEntities}></ConsumptionTableComp>
 
           <Menu
             onOpen={() => {
