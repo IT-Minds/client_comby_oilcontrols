@@ -41,13 +41,11 @@ const LocalePage: NextPage<Props> = ({ locationId }) => {
   }, []);
 
   const downloadUsageHistory = useCallback(async (type: number) => {
+    const previousYear = new Date();
+    previousYear.setFullYear(previousYear.getFullYear() - 1);
+
     const client = await genStatsClient();
-    const result = await client.getUsageHistoryFile(
-      locationId,
-      type,
-      new Date(2020, 1),
-      new Date()
-    );
+    const result = await client.getUsageHistoryFile(locationId, type, previousYear, new Date());
     downloadFile(result.data, result.fileName);
   }, []);
 
