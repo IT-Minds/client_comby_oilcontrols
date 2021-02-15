@@ -215,6 +215,14 @@ export interface Locale {
     coupon: string;
   };
 
+  consumptionTable: {
+    consumptionHistory: string;
+    address: string;
+    fuelConsumed: string;
+    startDate: string;
+    endDate: string;
+  };
+
   trucks: {
     truckOverview: string;
     overviewOfTruck: string;

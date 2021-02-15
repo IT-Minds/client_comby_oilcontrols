@@ -212,6 +212,14 @@ export const table: Locale = {
     coupon: "Kupon"
   },
 
+  consumptionTable: {
+    consumptionHistory: "Forbrugshistorik",
+    address: "Adresse",
+    fuelConsumed: "Brændstofforbrug",
+    startDate: "Startdato",
+    endDate: "Slutdato"
+  },
+
   trucks: {
     truckOverview: "Vogn overblik",
     overviewOfTruck: "Overblik over vogn {{id}}",
