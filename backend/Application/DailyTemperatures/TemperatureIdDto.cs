@@ -8,7 +8,7 @@ namespace Application.DailyTemperatures
   {
     public int Id { get; set; }
 
-    public void Mapping(Profile profile)
+    public new void Mapping(Profile profile)
     {
       profile.CreateMap<RegionDailyTemp, TemperatureIdDto>()
         .IncludeBase<RegionDailyTemp, TemperatureDto>();
