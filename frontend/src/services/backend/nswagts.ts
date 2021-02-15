@@ -833,6 +833,7 @@ export interface ILocationClient {
     getLocationHistory(id: number, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationHistoryDto>;
     getDebtorHistory(id: number, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationDebtorHistoryDtoAndDateTime>;
     getRefillHistory(id: number, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfRefillDtoAndDateTimeOffset>;
+    getCouponImage(id: number): Promise<ImageResponseDto[]>;
 }
 
 export class LocationClient extends ClientBase implements ILocationClient {
@@ -1318,6 +1319,49 @@ export class LocationClient extends ClientBase implements ILocationClient {
         }
         return Promise.resolve<PageResultOfRefillDtoAndDateTimeOffset>(<any>null);
     }
+
+    getCouponImage(id: number): Promise<ImageResponseDto[]> {
+        let url_ = this.baseUrl + "/api/Location/{id}/image";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetCouponImage(_response));
+        });
+    }
+
+    protected processGetCouponImage(response: Response): Promise<ImageResponseDto[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(ImageResponseDto.fromJS(item));
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ImageResponseDto[]>(<any>null);
+    }
 }
 
 export interface IRefillClient {
@@ -1325,7 +1369,7 @@ export interface IRefillClient {
     get(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined, tankType?: TankType | null | undefined): Promise<PageResultOfRefillDto>;
     orderRefill(command: OrderRefillCommand): Promise<number>;
     saveCouponImage(id: number, file?: FileParameter | null | undefined): Promise<CouponImageInfoDto>;
-    getCouponImage(id: number): Promise<ImageResponseDto[]>;
+    getCouponImage(id: number): Promise<ImageResponseDto2[]>;
 }
 
 export class RefillClient extends ClientBase implements IRefillClient {
@@ -1512,7 +1556,7 @@ export class RefillClient extends ClientBase implements IRefillClient {
         return Promise.resolve<CouponImageInfoDto>(<any>null);
     }
 
-    getCouponImage(id: number): Promise<ImageResponseDto[]> {
+    getCouponImage(id: number): Promise<ImageResponseDto2[]> {
         let url_ = this.baseUrl + "/api/Refill/{id}/image";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -1533,7 +1577,7 @@ export class RefillClient extends ClientBase implements IRefillClient {
         });
     }
 
-    protected processGetCouponImage(response: Response): Promise<ImageResponseDto[]> {
+    protected processGetCouponImage(response: Response): Promise<ImageResponseDto2[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -1543,7 +1587,7 @@ export class RefillClient extends ClientBase implements IRefillClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(ImageResponseDto.fromJS(item));
+                    result200!.push(ImageResponseDto2.fromJS(item));
             }
             return result200;
             });
@@ -1552,7 +1596,7 @@ export class RefillClient extends ClientBase implements IRefillClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<ImageResponseDto[]>(<any>null);
+        return Promise.resolve<ImageResponseDto2[]>(<any>null);
     }
 }
 
@@ -4163,6 +4207,46 @@ export interface IUpdateLocationMetaDataCommand {
     data?: ILocationDetailsDto | null;
 }
 
+export class ImageResponseDto implements IImageResponseDto {
+    locationId?: number;
+    stream?: string | null;
+
+    constructor(data?: IImageResponseDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.locationId = _data["locationId"] !== undefined ? _data["locationId"] : <any>null;
+            this.stream = _data["stream"] !== undefined ? _data["stream"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): ImageResponseDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ImageResponseDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["locationId"] = this.locationId !== undefined ? this.locationId : <any>null;
+        data["stream"] = this.stream !== undefined ? this.stream : <any>null;
+        return data; 
+    }
+}
+
+export interface IImageResponseDto {
+    locationId?: number;
+    stream?: string | null;
+}
+
 export class CompleteRefillCommand implements ICompleteRefillCommand {
     startAmount?: number;
     endAmount?: number;
@@ -4399,12 +4483,12 @@ export interface IOrderRefillCommand {
     truckId?: number;
 }
 
-export class ImageResponseDto implements IImageResponseDto {
+export class ImageResponseDto2 implements IImageResponseDto2 {
     stream?: string | null;
     refillId?: number;
     couponId?: number;
 
-    constructor(data?: IImageResponseDto) {
+    constructor(data?: IImageResponseDto2) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -4421,9 +4505,9 @@ export class ImageResponseDto implements IImageResponseDto {
         }
     }
 
-    static fromJS(data: any): ImageResponseDto {
+    static fromJS(data: any): ImageResponseDto2 {
         data = typeof data === 'object' ? data : {};
-        let result = new ImageResponseDto();
+        let result = new ImageResponseDto2();
         result.init(data);
         return result;
     }
@@ -4437,7 +4521,7 @@ export class ImageResponseDto implements IImageResponseDto {
     }
 }
 
-export interface IImageResponseDto {
+export interface IImageResponseDto2 {
     stream?: string | null;
     refillId?: number;
     couponId?: number;
