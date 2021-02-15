@@ -8,8 +8,6 @@ type Props = {
   preLoadedData?: FuelConsumptionDto[];
 };
 
-export const PAGE_SHOW_SIZE = 15;
-
 const ConsumptionTableComp: FC<Props> = ({ preLoadedData = [] }) => {
   const { t } = useI18n<Locale>();
 
