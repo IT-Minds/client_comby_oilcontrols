@@ -168,10 +168,10 @@ namespace Web
       );
       context.SaveChanges();
 
-      var refill1 = new CompletedRefill { CouponId = coupon1.Id, StartAmount = 200, EndAmount = 10000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2000, 5, 1), ActualDeliveryDate = new DateTime(2000, 5, 1), LocationId = location1.Id, TruckId = truck1.Id };
-      var refill2 = new CompletedRefill { CouponId = coupon2.Id, StartAmount = 1000, EndAmount = 10000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2000, 5, 10), ActualDeliveryDate = new DateTime(2000, 5, 10), LocationId = location1.Id, TruckId = truck1.Id };
-      var refill3 = new CompletedRefill { CouponId = coupon3.Id, StartAmount = 1000, EndAmount = 10000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2000, 5, 20), ActualDeliveryDate = new DateTime(2000, 5, 20), LocationId = location1.Id, TruckId = truck2.Id };
-      var refill4 = new OrderedRefill { ExpectedDeliveryDate = new DateTime(2000, 5, 1), LocationId = location1.Id };
+      var refill1 = new CompletedRefill { CouponId = coupon1.Id, StartAmount = 200, EndAmount = 10000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2000, 5, 1), ActualDeliveryDate = new DateTime(2000, 5, 1), LocationId = location1.Id, TruckId = truck1.Id, Created = DateTime.Now, LastModified = DateTime.Now };
+      var refill2 = new CompletedRefill { CouponId = coupon2.Id, StartAmount = 1000, EndAmount = 10000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2000, 5, 10), ActualDeliveryDate = new DateTime(2000, 5, 10), LocationId = location1.Id, TruckId = truck1.Id, Created = DateTime.Now, LastModified = DateTime.Now };
+      var refill3 = new CompletedRefill { CouponId = coupon3.Id, StartAmount = 1000, EndAmount = 10000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2000, 5, 20), ActualDeliveryDate = new DateTime(2000, 5, 20), LocationId = location1.Id, TruckId = truck2.Id, Created = DateTime.Now, LastModified = DateTime.Now };
+      var refill4 = new OrderedRefill { ExpectedDeliveryDate = new DateTime(2000, 5, 1), LocationId = location1.Id, Created = DateTime.Now, LastModified = DateTime.Now };
 
       context.CompletedRefills.AddRange(
         refill1,

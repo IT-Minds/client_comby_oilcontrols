@@ -1325,6 +1325,7 @@ export interface IRefillClient {
     get(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined, tankType?: TankType | null | undefined): Promise<PageResultOfRefillDto>;
     orderRefill(command: OrderRefillCommand): Promise<number>;
     saveCouponImage(id: number, file?: FileParameter | null | undefined): Promise<CouponImageInfoDto>;
+    getCouponImage(id: number): Promise<ImageResponseDto[]>;
 }
 
 export class RefillClient extends ClientBase implements IRefillClient {
@@ -1509,6 +1510,49 @@ export class RefillClient extends ClientBase implements IRefillClient {
             });
         }
         return Promise.resolve<CouponImageInfoDto>(<any>null);
+    }
+
+    getCouponImage(id: number): Promise<ImageResponseDto[]> {
+        let url_ = this.baseUrl + "/api/Refill/{id}/image";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetCouponImage(_response));
+        });
+    }
+
+    protected processGetCouponImage(response: Response): Promise<ImageResponseDto[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(ImageResponseDto.fromJS(item));
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ImageResponseDto[]>(<any>null);
     }
 }
 
@@ -4353,6 +4397,50 @@ export interface IOrderRefillCommand {
     expectedDeliveryDate?: Date;
     locationId?: number;
     truckId?: number;
+}
+
+export class ImageResponseDto implements IImageResponseDto {
+    stream?: string | null;
+    refillId?: number;
+    couponId?: number;
+
+    constructor(data?: IImageResponseDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.stream = _data["stream"] !== undefined ? _data["stream"] : <any>null;
+            this.refillId = _data["refillId"] !== undefined ? _data["refillId"] : <any>null;
+            this.couponId = _data["couponId"] !== undefined ? _data["couponId"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): ImageResponseDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ImageResponseDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["stream"] = this.stream !== undefined ? this.stream : <any>null;
+        data["refillId"] = this.refillId !== undefined ? this.refillId : <any>null;
+        data["couponId"] = this.couponId !== undefined ? this.couponId : <any>null;
+        return data; 
+    }
+}
+
+export interface IImageResponseDto {
+    stream?: string | null;
+    refillId?: number;
+    couponId?: number;
 }
 
 export class RoleIdDto extends RoleDto implements IRoleIdDto {
