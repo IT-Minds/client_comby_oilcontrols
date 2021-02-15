@@ -21,10 +21,10 @@ import { downloadFile } from "utils/downloadFile";
 import { Locale } from "../i18n/Locale";
 
 type Props = {
-  //
+  locationId: number;
 };
 
-const LocalePage: NextPage<Props> = () => {
+const LocalePage: NextPage<Props> = ({ locationId }) => {
   const { t } = useI18n<Locale>();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -37,7 +37,12 @@ const LocalePage: NextPage<Props> = () => {
 
   const downloadUsageHistory = useCallback(async (type: number) => {
     const client = await genStatsClient();
-    const result = await client.getUsageHistoryFile(type);
+    const result = await client.getUsageHistoryFile(
+      locationId,
+      type,
+      new Date(2020, 1),
+      new Date()
+    );
     downloadFile(result.data, result.fileName);
   }, []);
 
