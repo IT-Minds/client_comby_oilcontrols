@@ -5,7 +5,7 @@ import { GetStaticProps, NextPage } from "next";
 import { I18nProps } from "next-rosetta";
 import React, { useCallback } from "react";
 import { genRoleClient } from "services/backend/apiClients";
-import { CreateRoleCommand, RoleDto } from "services/backend/nswagts";
+import { CreateRoleCommand, IRoleDto } from "services/backend/nswagts";
 
 const DemoPage: NextPage = () => {
   const toast = useToast();
@@ -15,10 +15,10 @@ const DemoPage: NextPage = () => {
   const bg = useColorModeValue("gray.100", "gray.700");
 
   const createRole = useCallback(
-    async (form: RoleDto) => {
+    async (role: IRoleDto) => {
       awaitCallback(async () => {
         const client = await genRoleClient();
-        await client.createRole(new CreateRoleCommand({ role: form }));
+        await client.createRole(new CreateRoleCommand({ role }));
 
         toast({
           title: "Create role successful",
