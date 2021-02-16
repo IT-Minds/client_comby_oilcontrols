@@ -1,16 +1,6 @@
 import "ts-array-ext/sortByAttr";
 
-import {
-  Button,
-  Container,
-  Divider,
-  HStack,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  VStack
-} from "@chakra-ui/react";
+import { Button, Container, HStack, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { useI18n } from "next-rosetta";
 import React, { FC, useCallback, useState } from "react";
 import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
