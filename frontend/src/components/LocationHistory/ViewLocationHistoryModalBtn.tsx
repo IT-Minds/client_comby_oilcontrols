@@ -9,6 +9,7 @@ import {
   useDisclosure,
   useToast
 } from "@chakra-ui/react";
+import ConsumptionComp from "components/Consumption/ConsumptionComp";
 import RefillHistoryComp from "components/RefillHistory/RefillHistoryTable";
 import { FC } from "react";
 import { MdRemoveRedEye } from "react-icons/md";
@@ -43,6 +44,7 @@ const ViewLocationHistoryModalBtn: FC<Props> = ({ data }) => {
           <ModalBody>
             <RefillHistoryComp locationId={data.id} />
             <LocationHistoryComp locationId={data.id} />
+            <ConsumptionComp locationId={data.id} />
           </ModalBody>
         </ModalContent>
       </Modal>
