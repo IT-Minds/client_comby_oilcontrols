@@ -1,4 +1,4 @@
-import { Button, Container, Flex, Heading, HStack, Select } from "@chakra-ui/react";
+import { Button, Container, Heading, HStack, Select, Spacer, Text } from "@chakra-ui/react";
 import { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { I18nProps, useI18n } from "next-rosetta";
@@ -36,7 +36,8 @@ const LocalePage: NextPage = () => {
         <Heading textAlign="center" mb={4}>
           {t("localePage.title")}
         </Heading>
-        <HStack>
+        <Text> {t("localePage.infoText")}</Text>
+        <HStack mt={4}>
           <Select
             onChange={e => setRefillYear([Number(e.target.value)])}
             placeholder="Select refill year">
@@ -46,8 +47,11 @@ const LocalePage: NextPage = () => {
               </option>
             ))}
           </Select>
-          <Button disabled={!refillYear || refillYear == 0} onClick={downloadRefill}>
-            {t("localePage.downloadRefillHistory")}
+          <Button
+            colorScheme="green"
+            disabled={!refillYear || refillYear == 0}
+            onClick={downloadRefill}>
+            {t("localePage.download")}
           </Button>
         </HStack>
       </Container>
