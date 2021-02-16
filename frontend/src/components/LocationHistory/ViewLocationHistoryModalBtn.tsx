@@ -4,7 +4,6 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalHeader,
   ModalOverlay,
   useDisclosure,
   useToast
@@ -39,7 +38,6 @@ const ViewLocationHistoryModalBtn: FC<Props> = ({ data }) => {
       <Modal isOpen={isOpen} onClose={onClose} size="5xl">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>MY TITLE</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <RefillHistoryComp locationId={data.id} />
