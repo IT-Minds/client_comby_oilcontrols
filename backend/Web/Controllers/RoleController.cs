@@ -24,13 +24,13 @@ namespace Web.Controllers
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<RoleDto>> GetRole([FromRoute] int id)
+    public async Task<ActionResult<RoleIdDto>> GetRole([FromRoute] int id)
     {
       return await Mediator.Send(new GetRoleQuery { Id = id });
     }
 
     [HttpGet("AllRoles")]
-    public async Task<ActionResult<PageResult<RoleDto, string>>> GetAllRole(
+    public async Task<ActionResult<PageResult<RoleIdDto, string>>> GetAllRole(
       [FromQuery] string? needle = "", [FromQuery] int size = 1000, [FromQuery] int? skip = 0
     )
     {

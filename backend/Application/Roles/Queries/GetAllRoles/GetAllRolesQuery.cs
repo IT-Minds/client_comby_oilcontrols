@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Roles.Queries.GetAllRoles
 {
   [AuthorizeAttribute(Domain.Enums.Action.GET_ROLES)]
-  public class GetAllRolesQuery : IPageRequest<RoleDto>, IPageBody<Role, string>
+  public class GetAllRolesQuery : IPageRequest<RoleIdDto>, IPageBody<Role, string>
   {
     public int Size { get; set; }
     public int? Skip { get; set; }
@@ -47,7 +47,7 @@ namespace Application.Roles.Queries.GetAllRoles
             .Where(x => String.Compare(x.Name, Needle) > 0);
     }
 
-    public class GetAllRolesQueryHandler : IPageRequestHandler<GetAllRolesQuery, RoleDto>
+    public class GetAllRolesQueryHandler : IPageRequestHandler<GetAllRolesQuery, RoleIdDto>
     {
       private readonly IApplicationDbContext _context;
       private readonly IMapper _mapper;
@@ -58,9 +58,9 @@ namespace Application.Roles.Queries.GetAllRoles
         _mapper = mapper;
       }
 
-      public async Task<PageResult<RoleDto>> Handle(GetAllRolesQuery request, CancellationToken cancellationToken)
+      public async Task<PageResult<RoleIdDto>> Handle(GetAllRolesQuery request, CancellationToken cancellationToken)
       {
-        var page = new PageResult<RoleDto>();
+        var page = new PageResult<RoleIdDto>();
 
         var baseQuery = _context.Roles.Include(x => x.Actions);
         var query = request.PreparePage(baseQuery);
@@ -71,11 +71,12 @@ namespace Application.Roles.Queries.GetAllRoles
         page.PagesRemaining = pagesRemaining;
 
         var queryResult = await query.Take(request.Size).ToListAsync(cancellationToken);
-        var pageResult = new List<RoleDto>();
+        var pageResult = new List<RoleIdDto>();
         foreach (var role in queryResult)
         {
-          pageResult.Add(new RoleDto
+          pageResult.Add(new RoleIdDto
           {
+            Id = role.Id,
             Name = role.Name,
             Actions = role.Actions.Select(act => act.Action).ToList()
           });

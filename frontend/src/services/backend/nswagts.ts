@@ -1603,8 +1603,8 @@ export class RefillClient extends ClientBase implements IRefillClient {
 export interface IRoleClient {
     createRole(command: CreateRoleCommand): Promise<RoleIdDto>;
     updateRole(command: UpdateRoleCommand): Promise<RoleIdDto>;
-    getRole(id: number): Promise<RoleDto>;
-    getAllRole(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfRoleDtoAndString>;
+    getRole(id: number): Promise<RoleIdDto>;
+    getAllRole(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfRoleIdDtoAndString>;
 }
 
 export class RoleClient extends ClientBase implements IRoleClient {
@@ -1698,7 +1698,7 @@ export class RoleClient extends ClientBase implements IRoleClient {
         return Promise.resolve<RoleIdDto>(<any>null);
     }
 
-    getRole(id: number): Promise<RoleDto> {
+    getRole(id: number): Promise<RoleIdDto> {
         let url_ = this.baseUrl + "/api/Role/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -1719,14 +1719,14 @@ export class RoleClient extends ClientBase implements IRoleClient {
         });
     }
 
-    protected processGetRole(response: Response): Promise<RoleDto> {
+    protected processGetRole(response: Response): Promise<RoleIdDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = RoleDto.fromJS(resultData200);
+            result200 = RoleIdDto.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -1734,10 +1734,10 @@ export class RoleClient extends ClientBase implements IRoleClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<RoleDto>(<any>null);
+        return Promise.resolve<RoleIdDto>(<any>null);
     }
 
-    getAllRole(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfRoleDtoAndString> {
+    getAllRole(needle?: string | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfRoleIdDtoAndString> {
         let url_ = this.baseUrl + "/api/Role/AllRoles?";
         if (needle !== undefined && needle !== null)
             url_ += "needle=" + encodeURIComponent("" + needle) + "&";
@@ -1763,14 +1763,14 @@ export class RoleClient extends ClientBase implements IRoleClient {
         });
     }
 
-    protected processGetAllRole(response: Response): Promise<PageResultOfRoleDtoAndString> {
+    protected processGetAllRole(response: Response): Promise<PageResultOfRoleIdDtoAndString> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PageResultOfRoleDtoAndString.fromJS(resultData200);
+            result200 = PageResultOfRoleIdDtoAndString.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -1778,7 +1778,7 @@ export class RoleClient extends ClientBase implements IRoleClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<PageResultOfRoleDtoAndString>(<any>null);
+        return Promise.resolve<PageResultOfRoleIdDtoAndString>(<any>null);
     }
 }
 
@@ -2614,7 +2614,7 @@ export interface IUserTokenDto {
 export class UserDto implements IUserDto {
     username?: string | null;
     truckId?: number | null;
-    currentRole?: RoleDto | null;
+    currentRole?: RoleIdDto | null;
 
     constructor(data?: IUserDto) {
         if (data) {
@@ -2622,7 +2622,7 @@ export class UserDto implements IUserDto {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
-            this.currentRole = data.currentRole && !(<any>data.currentRole).toJSON ? new RoleDto(data.currentRole) : <RoleDto>this.currentRole; 
+            this.currentRole = data.currentRole && !(<any>data.currentRole).toJSON ? new RoleIdDto(data.currentRole) : <RoleIdDto>this.currentRole; 
         }
     }
 
@@ -2630,7 +2630,7 @@ export class UserDto implements IUserDto {
         if (_data) {
             this.username = _data["username"] !== undefined ? _data["username"] : <any>null;
             this.truckId = _data["truckId"] !== undefined ? _data["truckId"] : <any>null;
-            this.currentRole = _data["currentRole"] ? RoleDto.fromJS(_data["currentRole"]) : <any>null;
+            this.currentRole = _data["currentRole"] ? RoleIdDto.fromJS(_data["currentRole"]) : <any>null;
         }
     }
 
@@ -2653,7 +2653,7 @@ export class UserDto implements IUserDto {
 export interface IUserDto {
     username?: string | null;
     truckId?: number | null;
-    currentRole?: IRoleDto | null;
+    currentRole?: IRoleIdDto | null;
 }
 
 export class UserIdDto extends UserDto implements IUserIdDto {
@@ -2739,6 +2739,39 @@ export class RoleDto implements IRoleDto {
 export interface IRoleDto {
     name?: string | null;
     actions?: Action[] | null;
+}
+
+export class RoleIdDto extends RoleDto implements IRoleIdDto {
+    id?: number;
+
+    constructor(data?: IRoleIdDto) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): RoleIdDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new RoleIdDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IRoleIdDto extends IRoleDto {
+    id?: number;
 }
 
 export enum Action {
@@ -4527,39 +4560,6 @@ export interface IImageResponseDto2 {
     couponId?: number;
 }
 
-export class RoleIdDto extends RoleDto implements IRoleIdDto {
-    id?: number;
-
-    constructor(data?: IRoleIdDto) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
-        }
-    }
-
-    static fromJS(data: any): RoleIdDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new RoleIdDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id !== undefined ? this.id : <any>null;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IRoleIdDto extends IRoleDto {
-    id?: number;
-}
-
 export class CreateRoleCommand implements ICreateRoleCommand {
     role?: RoleDto | null;
 
@@ -4634,24 +4634,17 @@ export interface IUpdateRoleCommand {
     role?: IRoleDto | null;
 }
 
-export class PageResultOfRoleDtoAndString implements IPageResultOfRoleDtoAndString {
+export class PageResultOfRoleIdDtoAndString implements IPageResultOfRoleIdDtoAndString {
     newNeedle?: string | null;
     pagesRemaining?: number;
-    results?: RoleDto[] | null;
+    results?: RoleIdDto[] | null;
     hasMore?: boolean;
 
-    constructor(data?: IPageResultOfRoleDtoAndString) {
+    constructor(data?: IPageResultOfRoleIdDtoAndString) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
-            }
-            if (data.results) {
-                this.results = [];
-                for (let i = 0; i < data.results.length; i++) {
-                    let item = data.results[i];
-                    this.results[i] = item && !(<any>item).toJSON ? new RoleDto(item) : <RoleDto>item;
-                }
             }
         }
     }
@@ -4663,15 +4656,15 @@ export class PageResultOfRoleDtoAndString implements IPageResultOfRoleDtoAndStri
             if (Array.isArray(_data["results"])) {
                 this.results = [] as any;
                 for (let item of _data["results"])
-                    this.results!.push(RoleDto.fromJS(item));
+                    this.results!.push(RoleIdDto.fromJS(item));
             }
             this.hasMore = _data["hasMore"] !== undefined ? _data["hasMore"] : <any>null;
         }
     }
 
-    static fromJS(data: any): PageResultOfRoleDtoAndString {
+    static fromJS(data: any): PageResultOfRoleIdDtoAndString {
         data = typeof data === 'object' ? data : {};
-        let result = new PageResultOfRoleDtoAndString();
+        let result = new PageResultOfRoleIdDtoAndString();
         result.init(data);
         return result;
     }
@@ -4690,10 +4683,10 @@ export class PageResultOfRoleDtoAndString implements IPageResultOfRoleDtoAndStri
     }
 }
 
-export interface IPageResultOfRoleDtoAndString {
+export interface IPageResultOfRoleIdDtoAndString {
     newNeedle?: string | null;
     pagesRemaining?: number;
-    results?: IRoleDto[] | null;
+    results?: RoleIdDto[] | null;
     hasMore?: boolean;
 }
 

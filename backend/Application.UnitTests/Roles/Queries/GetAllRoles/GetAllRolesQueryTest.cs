@@ -36,7 +36,7 @@ namespace Application.UnitTests.Roles.Queryies.GetAllRoles
 
       var handler = new GetAllRolesQuery.GetAllRolesQueryHandler(_context, _mapper);
       var result = await handler.Handle(query, CancellationToken.None);
-      result.Should().BeOfType<PageResult<RoleDto>>();
+      result.Should().BeOfType<PageResult<RoleIdDto>>();
       result.Results.Count.Should().Be(numEntities);
     }
 
@@ -52,7 +52,7 @@ namespace Application.UnitTests.Roles.Queryies.GetAllRoles
 
       var handler = new GetAllRolesQuery.GetAllRolesQueryHandler(_context, _mapper);
       var result = await handler.Handle(query, CancellationToken.None);
-      result.Should().BeOfType<PageResult<RoleDto>>();
+      result.Should().BeOfType<PageResult<RoleIdDto>>();
       result.Results.Count.Should().Be(2);
       result.PagesRemaining.Should().Be(3);
     }
