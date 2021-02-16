@@ -185,6 +185,20 @@ export const table: Locale = {
     coupon: "Kupon"
   },
 
+  consumptionTable: {
+    consumptionHistory: "Forbrugshistorik",
+    address: "Adresse",
+    fuelConsumed: "Brændstofforbrug",
+    startDate: "Startdato",
+    endDate: "Slutdato"
+  },
+
+  localePage: {
+    tableInterval: "Vælg interval",
+    downloadHistory: "Download historik",
+    downloadRefillHistory: "Download påfyldningshistorik"
+  },
+
   trucks: {
     truckOverview: "Vogn overblik",
     overviewOfTruck: "Overblik over vogn {{id}}",
@@ -302,6 +316,11 @@ export const table: Locale = {
       "1": "Petroleum",
       "2": "Gasolin",
       "3": "Andet"
+    },
+    interval: {
+      "0": "Måned",
+      "1": "Kvartal",
+      "2": "År"
     }
   }
 };
