@@ -10,6 +10,8 @@ using Application.Coupons.Commands.SaveCouponImage;
 using Microsoft.AspNetCore.Http;
 using Application.Refills.Commands.OrderRefill;
 using Application.Refills;
+using Application.Coupons.Queries.GetCouponImage;
+using System.Collections.Generic;
 
 namespace Web.Controllers
 {
@@ -42,7 +44,8 @@ namespace Web.Controllers
     {
       return await Mediator.Send(new SaveCouponImageCommand
       {
-        Dto = {
+        Dto = new CouponImageDto
+        {
           File = file,
           RefillId = id
         }
@@ -53,6 +56,15 @@ namespace Web.Controllers
     public async Task<ActionResult<int>> OrderRefill(OrderRefillCommand command)
     {
       return await Mediator.Send(command);
+    }
+
+    [HttpGet("{id}/image")]
+    public async Task<List<ImageResponseDto>> GetCouponImage([FromRoute] int id)
+    {
+      return await Mediator.Send(new GetCouponImageQuery
+      {
+        RefillId = id
+      });
     }
   }
 }

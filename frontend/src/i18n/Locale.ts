@@ -215,6 +215,20 @@ export interface Locale {
     coupon: string;
   };
 
+  consumptionTable: {
+    consumptionHistory: string;
+    address: string;
+    fuelConsumed: string;
+    startDate: string;
+    endDate: string;
+  };
+
+  localePage: {
+    tableInterval: string;
+    downloadHistory: string;
+    downloadRefillHistory: string;
+  };
+
   trucks: {
     truckOverview: string;
     overviewOfTruck: string;
@@ -308,6 +322,11 @@ export interface Locale {
       1: string;
       2: string;
       3: string;
+    };
+    interval: {
+      0: string;
+      1: string;
+      2: string;
     };
   };
 }
