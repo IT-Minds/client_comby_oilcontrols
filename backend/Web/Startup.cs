@@ -54,6 +54,7 @@ namespace Web
 
 
       var corsOptions = Configuration.GetSection(CorsOptions.Cors).Get<CorsOptions>();
+      System.Console.WriteLine("Cors Policy " + string.Join(",", corsOptions.Origins));
       services.AddCors(options =>
       {
         options.AddPolicy("CombyPolicy",

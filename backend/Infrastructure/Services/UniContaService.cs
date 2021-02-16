@@ -43,12 +43,14 @@ namespace Infrastructure.Services
 
     public async Task<IEnumerable<UniContaDebtor>> GetDebtors()
     {
+      System.Console.WriteLine("UniConta Debtors Fetching... ");
       var api = new CrudAPI(session, defaultCompany);
+
       var debtorsCached = await api.LoadCache<Uniconta.DataModel.Debtor>();
-      System.Console.Write("UniConta Debtors Cached: " + debtorsCached.Count());
+      System.Console.WriteLine("UniConta Debtors Cached: " + debtorsCached.Count());
 
       var debtors = await api.Query<Uniconta.DataModel.Debtor>();
-      System.Console.Write("UniConta Debtors: " + debtors.Count());
+      System.Console.WriteLine("UniConta Debtors: " + debtors.Count());
 
       return debtors.Select(x => new UniContaDebtor(x) );
     }
@@ -63,20 +65,12 @@ namespace Infrastructure.Services
       }
 
       //todo makes into config option
-      defaultCompany = await session.OpenCompany(45182, true);
+      defaultCompany = await session.GetCompany(45182);
     }
 
     public async Task<bool> CreateOrder(UniContaOrder inputOrder)
     {
       var api = new CrudAPI(session, defaultCompany);
-
-      var bytes = await File.ReadAllBytesAsync(@"[Path To File]"+inputOrder.CouponId);
-      var vc = new Uniconta.ClientTools.DataModel.VouchersClient
-      {
-        _Data = bytes,
-        Fileextension = FileextensionsTypes.PNG,
-      };
-      await api.Insert(vc);
 
       var order = new Uniconta.DataModel.DebtorOrder
       {
@@ -86,9 +80,21 @@ namespace Infrastructure.Services
         _DeliveryDate = inputOrder.Date
       };
 
-      if (true) // check image saves
+      try
       {
+        // TODO: use options to get path
+        var bytes = await File.ReadAllBytesAsync(@"wwwroot\debugImages\coupons\" + inputOrder.CouponId + ".png");
+        var vc = new Uniconta.ClientTools.DataModel.VouchersClient
+        {
+          _Data = bytes,
+          Fileextension = FileextensionsTypes.PNG,
+        };
+        await api.Insert(vc);
+
         order.DocumentRef = vc.RowId;
+      } catch(Exception e) {
+        System.Console.WriteLine("No image!");
+        System.Console.WriteLine(e.Message);
       }
 
       await api.Insert(order);

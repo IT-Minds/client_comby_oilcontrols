@@ -15,9 +15,9 @@ namespace Application.Debtors.Queries
     {
       private readonly IApplicationDbContext _context;
       private readonly IMapper _mapper;
-      private readonly SyncroniceDebtorService _syncroniceDebtorService;
+      private readonly SynchronizeDebtorService _syncroniceDebtorService;
 
-      public GetDebtorQueryHandler(IApplicationDbContext context, IMapper mapper, IUniContaService uniContaService, SyncroniceDebtorService syncroniceDebtorService)
+      public GetDebtorQueryHandler(IApplicationDbContext context, IMapper mapper, IUniContaService uniContaService, SynchronizeDebtorService syncroniceDebtorService)
       {
         _context = context;
         _mapper = mapper;

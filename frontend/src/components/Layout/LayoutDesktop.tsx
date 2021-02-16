@@ -6,7 +6,7 @@ import {
   DrawerCloseButton,
   DrawerContent,
   DrawerOverlay,
-  Flex,
+  HStack,
   IconButton,
   useBreakpointValue,
   useDisclosure
@@ -19,9 +19,6 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { FC, useContext, useEffect } from "react";
 import { MdSort } from "react-icons/md";
-import { UserType } from "types/UserType";
-
-import styles from "./styles.module.css";
 
 const LayoutDesktop: FC = ({ children }) => {
   const displaymenu = useBreakpointValue({ base: false, md: true });
@@ -41,36 +38,14 @@ const LayoutDesktop: FC = ({ children }) => {
   }, [displaymenu]);
 
   return (
-    <Flex>
-      {displaymenu ? (
-        activeUser.isTrucker ? (
-          <>
-            <Box position="fixed" bottom={0} zIndex={99}>
-              <MyUserSnippet />
-            </Box>
-
-            <Box position="fixed" top={0} pl={2}>
-              <Image
-                src="/images/logo.webp"
-                alt="Main Logo"
-                width={200}
-                height={60}
-                quality={90}
-                objectFit="contain"
-              />
-            </Box>
-          </>
-        ) : (
-          <Box className={styles.desktop}>
-            <Menu links={testLinks} />
-          </Box>
-        )
-      ) : (
-        <Box className={styles.mobile} padding={2} position="absolute" left={1}>
+    <>
+      {/* MOBILE */}
+      {!displaymenu && (
+        <Box padding={2} position="absolute" left={1}>
           <IconButton
             size="sm"
             onClick={onOpen}
-            aria-label="Change color mode"
+            aria-label="Open Menu Drawer"
             icon={<MdSort />}
             _focus={{
               border: 0
@@ -78,15 +53,6 @@ const LayoutDesktop: FC = ({ children }) => {
           />
         </Box>
       )}
-
-      <Container
-        maxW="5xl"
-        centerContent
-        padding={displaymenu ? 1 : 2}
-        paddingTop={displaymenu ? 1 : 8}>
-        {children}
-      </Container>
-
       <Drawer isOpen={isOpen && !displaymenu} size="full" onClose={onClose} placement="top">
         <DrawerOverlay>
           <DrawerContent>
@@ -106,7 +72,47 @@ const LayoutDesktop: FC = ({ children }) => {
           </DrawerContent>
         </DrawerOverlay>
       </Drawer>
-    </Flex>
+
+      {/* DESKTOP TRUCK */}
+      {displaymenu && activeUser.isTrucker && (
+        <>
+          <Box position="fixed" bottom={0} zIndex={99}>
+            <MyUserSnippet />
+          </Box>
+
+          <Box position="fixed" top={0} pl={2}>
+            <Image
+              src="/images/logo.webp"
+              alt="Main Logo"
+              width={200}
+              height={60}
+              quality={90}
+              objectFit="contain"
+            />
+          </Box>
+        </>
+      )}
+
+      <HStack h="100vh">
+        {displaymenu && !activeUser.isTrucker && (
+          <Box h="100%" w="280px">
+            <Menu links={testLinks} />
+          </Box>
+        )}
+
+        <Container
+          maxW="unset"
+          w="100%"
+          h="100%"
+          flexShrink={1}
+          overflowY="auto"
+          centerContent
+          padding={displaymenu ? 1 : 2}
+          paddingTop={displaymenu ? 1 : 8}>
+          {children}
+        </Container>
+      </HStack>
+    </>
   );
 };
 

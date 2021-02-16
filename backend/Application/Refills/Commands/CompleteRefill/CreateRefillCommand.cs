@@ -38,12 +38,19 @@ namespace Application.Refills.Commands.CompleteRefill
         _uniContaService = uniContaService;
       }
 
-      private async Task PostUniContaOrder(CompletedRefill refill)
+      private async Task PostUniContaOrder(int refillId)
       {
         if (!await _uniContaService.Login())
         {
           // TODO throw exception???
         }
+
+        var refill = await _context.CompletedRefills
+          .Include(r => r.Location)
+            .ThenInclude(r => r.Debtors)
+              .ThenInclude(d => d.Debtor)
+          .Include(r => r.Coupon)
+          .FirstOrDefaultAsync(x => x.Id == refillId);
 
         var result = await _uniContaService.CreateOrder(new UniContaOrder
         {
@@ -118,7 +125,7 @@ namespace Application.Refills.Commands.CompleteRefill
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        await PostUniContaOrder(completingrefill);
+        await PostUniContaOrder(completingrefill.Id);
 
         return refill.Id;
       }

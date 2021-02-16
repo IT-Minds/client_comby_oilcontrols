@@ -88,9 +88,7 @@ const MyUserSnippet: FC<Props> = ({ forceOpen = false }) => {
 
           <Flex padding={1} paddingLeft={8} align="center">
             <Spacer />
-            <Box marginRight={2}>
-              <LanguageSelector />
-            </Box>
+            <Box marginRight={2}>{/* <LanguageSelector /> */}</Box>
             <Tooltip
               label={t("user.theme")}
               fontSize="md"

@@ -14,21 +14,22 @@ import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
 import { ActionRecord } from "services/backend/ext/enumConvertor";
-import { Action, RoleDto } from "services/backend/nswagts";
+import { Action, IRoleDto, IRoleIdDto } from "services/backend/nswagts";
 import { logger } from "utils/logger";
 
 type Props = {
-  submitCallback: (createUserForm: RoleDto) => void;
+  submitCallback: (createUserForm: IRoleIdDto | IRoleDto) => void;
+  value?: IRoleIdDto;
 };
 
-const CreateRoleComp: FC<Props> = ({ submitCallback }) => {
+const CreateRoleComp: FC<Props> = ({ submitCallback, value }) => {
   const { t } = useI18n<Locale>();
 
-  const [localForm, setLocalForm] = useState<RoleDto>(
-    new RoleDto({
+  const [localForm, setLocalForm] = useState<IRoleDto>(
+    value ?? {
       name: "",
       actions: []
-    })
+    }
   );
 
   const [localActions, setLocalActions] = useState<number[]>([]);

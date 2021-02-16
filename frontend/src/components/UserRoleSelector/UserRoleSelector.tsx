@@ -27,11 +27,13 @@ const UserRoleSelector: FC<Props> = ({ cb, preselectedValue }) => {
   return (
     <ComboSelect
       value={preselectedValue}
-      options={userRoles.map(s => ({
-        ...s,
-        id: s.name.toString(),
-        name: s.name
-      }))}
+      options={userRoles
+        .filter(x => x.name !== "SuperAdmin")
+        .map(s => ({
+          ...s,
+          id: s.name.toString(),
+          name: s.name
+        }))}
       isLoading={!done}
       placeholder="Select User Role"
       onSelect={x => cb(userRoles.find(s => s.name === x.name))}

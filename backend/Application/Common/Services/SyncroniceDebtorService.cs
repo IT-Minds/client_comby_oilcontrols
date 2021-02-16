@@ -7,7 +7,7 @@ using UniContaDomain.Entities;
 
 namespace Application.Common.Services
 {
-  public class SyncroniceDebtorService
+  public class SynchronizeDebtorService
   {
     private readonly IApplicationDbContext _context;
     private readonly IUniContaService _uniContaService;
@@ -15,7 +15,7 @@ namespace Application.Common.Services
 
     private IQueryable<Debtor> _debtors;
 
-    public SyncroniceDebtorService(IApplicationDbContext context, IUniContaService uniContaService)
+    public SynchronizeDebtorService(IApplicationDbContext context, IUniContaService uniContaService)
     {
       _context = context;
       _uniContaService = uniContaService;
@@ -56,8 +56,8 @@ namespace Application.Common.Services
     private List<Debtor> EnsureCreatedDebtors(IEnumerable<int> uniDebtorIds)
     {
       List<Debtor> dbDebtors;
-      lock (ensureCreatedLock)
-      {
+      // lock (ensureCreatedLock)
+      // {
         dbDebtors = _debtors
           .Where(x => uniDebtorIds.Contains(x.UnicontaId))
           .ToList();
@@ -73,7 +73,7 @@ namespace Application.Common.Services
           }
         }
         _context.SaveChanges();
-      }
+      // }
       return dbDebtors;
     }
   }
