@@ -1,4 +1,4 @@
-import { Container, Table, TableCaption, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { Container, Table, TableCaption, Tbody, Td, Th, Thead, Tr, VStack } from "@chakra-ui/react";
 import { useI18n } from "next-rosetta";
 import React, { FC, useEffect, useReducer } from "react";
 import ListReducer, { ListReducerActionType } from "react-list-reducer";
@@ -10,7 +10,6 @@ type Props = {
 
 const ConsumptionTableComp: FC<Props> = ({ preLoadedData = [] }) => {
   const { t } = useI18n<Locale>();
-
   const [data, dataDispatch] = useReducer(
     ListReducer<FuelConsumptionDto>("locationId"),
     preLoadedData ?? []
@@ -27,26 +26,29 @@ const ConsumptionTableComp: FC<Props> = ({ preLoadedData = [] }) => {
 
   return (
     <Container w="100%" maxW="unset">
-      <Table variant="striped" colorScheme="blue" size="sm">
-        <TableCaption placement="top">{t("consumptionTable.consumptionHistory")}</TableCaption>
-        <Thead></Thead>
-        <Tbody>
-          <Tr>
-            <Td>{t("consumptionTable.address")}</Td>
-            <Td>{t("consumptionTable.fuelConsumed")}</Td>
-            <Td>{t("consumptionTable.startDate")}</Td>
-            <Td>{t("consumptionTable.endDate")}</Td>
-          </Tr>
-          {data.map(fc => (
-            <Tr key={fc.locationId}>
-              <Td>{fc.address}</Td>
-              <Td>{fc.fuelConsumed}</Td>
-              <Td>{fc.startDate}</Td>
-              <Td>{fc.endDate}</Td>
+      <VStack>
+        <Table variant="striped" colorScheme="blue" size="sm">
+          <TableCaption placement="top">{t("consumptionTable.consumptionHistory")}</TableCaption>
+          <Thead>
+            <Tr>
+              <Th>{t("consumptionTable.address")}</Th>
+              <Th>{t("consumptionTable.fuelConsumed")}</Th>
+              <Th>{t("consumptionTable.startDate")}</Th>
+              <Th>{t("consumptionTable.endDate")}</Th>
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
+          </Thead>
+          <Tbody>
+            {data.map(fc => (
+              <Tr key={fc.locationId}>
+                <Td>{fc.address}</Td>
+                <Td>{fc.fuelConsumed}</Td>
+                <Td>{fc.startDate}</Td>
+                <Td>{fc.endDate}</Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </VStack>
     </Container>
   );
 };
