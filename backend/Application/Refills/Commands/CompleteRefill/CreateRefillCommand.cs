@@ -52,7 +52,7 @@ namespace Application.Refills.Commands.CompleteRefill
           .Include(r => r.Coupon)
           .FirstOrDefaultAsync(x => x.Id == refillId);
 
-        var result = await _uniContaService.CreateOrder(new UniContaOrder
+        (int OrderId, int OrderLineId) = await _uniContaService.CreateOrder(new UniContaOrder
         {
           AmountFilled = (int)Math.Ceiling(refill.AmountDelivered()),
           BuildingId = refill.LocationId.ToString(),
@@ -63,10 +63,7 @@ namespace Application.Refills.Commands.CompleteRefill
           ProductId = "1111"
         });
 
-        if (!result)
-        {
-          // TODO throw exception???
-        }
+        System.Console.WriteLine("");
       }
 
 

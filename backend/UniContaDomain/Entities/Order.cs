@@ -13,7 +13,7 @@ namespace UniContaDomain.Entities
     public int CouponId;
   }
 
-  public class DebtorOrderLineUser :  Uniconta.DataModel.DebtorOrderLine
+  public class DebtorOrderLineUser : Uniconta.ClientTools.DataModel.DebtorOrderLineClient
   {
     public string fltbygnr
     {

@@ -8,6 +8,6 @@ namespace Application.Common.Interfaces
   {
     Task<bool> Login();
     Task<IEnumerable<UniContaDebtor>> GetDebtors();
-    Task<bool> CreateOrder(UniContaOrder inputOrder);
+    Task<(int OrderId, int OrderLineId)> CreateOrder(UniContaOrder inputOrder);
   }
 }

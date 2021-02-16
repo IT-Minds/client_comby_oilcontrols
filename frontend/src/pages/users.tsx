@@ -1,34 +1,20 @@
-import { Divider, Heading, Text, useToast, VStack } from "@chakra-ui/react";
-import CreateRoleComp from "components/CreateRole/CreateRoleComp";
+import { Divider, Heading, HStack, Text, VStack } from "@chakra-ui/react";
+import CreateRole from "components/CreateRole/CreateRole";
+import CreateUser from "components/CreateUser/CreateUser";
 import UserDetailsTable from "components/UserDetails/UserDetailsTable";
 import { GetStaticProps, NextPage } from "next";
 import { I18nProps } from "next-rosetta";
-import { useCallback } from "react";
-import { genRoleClient } from "services/backend/apiClients";
-import { CreateRoleCommand, IRoleDto } from "services/backend/nswagts";
 
 const MyPage: NextPage = () => {
-  const toast = useToast();
-  const createRole = useCallback(async (form: IRoleDto) => {
-    const client = await genRoleClient();
-    await client.createRole(new CreateRoleCommand({ role: form }));
-
-    toast({
-      title: "Create role successful",
-      description: "Successful",
-      status: "success",
-      duration: 9000,
-      isClosable: true
-    });
-  }, []);
-
   return (
     <VStack w="100%">
       <Heading>USERS</Heading>
-      <UserDetailsTable />;
+      <HStack alignSelf="end">
+        <CreateUser />
+        <CreateRole />
+      </HStack>
+      <UserDetailsTable />
       <Divider />
-      <Text size="xl">CREATE ROLE</Text>
-      <CreateRoleComp submitCallback={createRole} />
     </VStack>
   );
 };
