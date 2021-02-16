@@ -68,11 +68,11 @@ namespace Infrastructure.Services
       defaultCompany = await session.GetCompany(45182);
     }
 
-    public async Task<bool> CreateOrder(UniContaOrder inputOrder)
+    public async Task<(int OrderId, int OrderLineId)> CreateOrder(UniContaOrder inputOrder)
     {
       var api = new CrudAPI(session, defaultCompany);
 
-      var order = new Uniconta.DataModel.DebtorOrder
+      var order = new Uniconta.ClientTools.DataModel.DebtorOrderClient
       {
         _DCAccount = inputOrder.DebtorId,
         _ProdItem = inputOrder.ProductId,
@@ -82,12 +82,12 @@ namespace Infrastructure.Services
 
       try
       {
-        // TODO: use options to get path
+        // ! NOTE: Not all refills have an image - we wrap in try catch for system error prevention should there not be one.
         var bytes = await File.ReadAllBytesAsync(@"wwwroot\debugImages\coupons\" + inputOrder.CouponId + ".png");
-        var vc = new Uniconta.ClientTools.DataModel.VouchersClient
+        var vc = new Uniconta.ClientTools.DataModel.UserDocsClient
         {
           _Data = bytes,
-          Fileextension = FileextensionsTypes.PNG,
+          _DocumentType = FileextensionsTypes.PNG,
         };
         await api.Insert(vc);
 
@@ -108,7 +108,7 @@ namespace Infrastructure.Services
 
       await api.Insert(orderLine);
 
-      return true;
+      return (order.RowId, orderLine.RowId);
     }
   }
 }

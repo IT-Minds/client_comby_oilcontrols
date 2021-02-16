@@ -3,24 +3,21 @@ import UserRoleSelector from "components/UserRoleSelector/UserRoleSelector";
 import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
-import { CreateUserCommand } from "services/backend/nswagts";
+import { CreateUserCommand, ICreateUserCommand } from "services/backend/nswagts";
 import { logger } from "utils/logger";
 
 type Props = {
-  submitCallback: (createUserForm: CreateUserCommand, role: string) => void;
+  submitCallback: (createUserForm: ICreateUserCommand) => void;
 };
 
 const CreateUserComp: FC<Props> = ({ submitCallback }) => {
   const { t } = useI18n<Locale>();
 
-  const [localForm, setLocalForm] = useState<CreateUserCommand>(
-    new CreateUserCommand({
-      userName: "",
-      password: ""
-    })
-  );
-
-  const [role, setRole] = useState(null);
+  const [localForm, setLocalForm] = useState<ICreateUserCommand>({
+    userName: "",
+    password: "",
+    roleId: 0
+  });
 
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
 
@@ -34,13 +31,10 @@ const CreateUserComp: FC<Props> = ({ submitCallback }) => {
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      if (role) {
-        logger.debug("Submitting form CreateUserComp");
-        submitCallback(localForm, role);
-      }
+      submitCallback(localForm);
       setFormSubmitAttempts(0);
     },
-    [localForm, role]
+    [localForm]
   );
 
   return (
@@ -69,13 +63,14 @@ const CreateUserComp: FC<Props> = ({ submitCallback }) => {
           <FormErrorMessage>{t("createUser.formErrors.enterPassword")}</FormErrorMessage>
         </FormControl>
 
-        <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !role}>
+        <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.roleId}>
           <FormLabel>{t("createUser.role")}</FormLabel>
 
           <UserRoleSelector
             cb={x => {
-              setRole(x.name);
-            }}></UserRoleSelector>
+              updateLocalForm(Number(x.id), "roleId");
+            }}
+          />
           <FormErrorMessage>{t("createUser.formErrors.chooseRole")}</FormErrorMessage>
         </FormControl>
         <Button
