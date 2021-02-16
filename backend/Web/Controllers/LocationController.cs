@@ -10,12 +10,14 @@ using Application.Locations.Commands.UpdateDebtorOnLocation;
 using Application.Locations.Commands.UpdateLocationMetaData;
 using Application.Locations.Queries.GetDebtorHistory;
 using Application.Locations.Queries.GetDebtors;
+using Application.Locations.Queries.GetLocationImage;
 using Application.Refills;
 using Application.Refills.Queries;
 using Domain.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Web.Controllers
@@ -160,6 +162,15 @@ namespace Web.Controllers
       {
         Picture = file,
         LocationId = id
+      });
+    }
+
+    [HttpGet("{id}/image")]
+    public async Task<List<ImageResponseDto>> GetLocationImage([FromRoute] int id)
+    {
+      return await Mediator.Send(new GetLocationImageQuery
+      {
+        LocationdId = id
       });
     }
   }
