@@ -29,7 +29,6 @@ type Props = {
 const LocalePage: NextPage<Props> = ({ locationId }) => {
   const { t } = useI18n<Locale>();
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [fuelConsumptionEntities, setFuelConsumptionEntities] = useState<FuelConsumptionDto[]>(
     null
   );
@@ -49,10 +48,9 @@ const LocalePage: NextPage<Props> = ({ locationId }) => {
     downloadFile(result.data, result.fileName);
   }, []);
 
-  useEffectAsync(async () => {
+  const getTableData = useCallback(async (interval: number) => {
     const data = await genStatsClient().then(client =>
-      // How to set interval here?
-      client.getUsageHistory(locationId, 0, new Date(2020, 1), new Date())
+      client.getUsageHistory(locationId, interval, new Date(2020, 1), new Date())
     );
     setFuelConsumptionEntities(data);
   }, []);
@@ -67,23 +65,46 @@ const LocalePage: NextPage<Props> = ({ locationId }) => {
           <Heading>{t("title")}</Heading>
           <Text fontSize="xl">Just some info text</Text>
           <Button onClick={download}>Download Refill</Button>
+
+          <Menu>
+            {({ isOpen }) => (
+              <>
+                <MenuButton
+                  as={Button}
+                  rightIcon={isOpen ? <MdArrowDropUp /> : <MdArrowDropDown />}>
+                  {t("localePage.tableInterval")}
+                </MenuButton>
+                <MenuList>
+                  <MenuItem onClick={() => getTableData(0)}>{t("localePage.month")}</MenuItem>
+                  <MenuItem onClick={() => getTableData(1)}>{t("localePage.quarter")}</MenuItem>
+                  <MenuItem onClick={() => getTableData(2)}>{t("localePage.year")}</MenuItem>
+                </MenuList>
+              </>
+            )}
+          </Menu>
           <ConsumptionTableComp preLoadedData={fuelConsumptionEntities}></ConsumptionTableComp>
 
-          <Menu
-            onOpen={() => {
-              setIsOpen(true);
-            }}
-            onClose={() => {
-              setIsOpen(false);
-            }}>
-            <MenuButton as={Button} rightIcon={isOpen ? <MdArrowDropUp /> : <MdArrowDropDown />}>
-              {t("localePage.downloadHistory")}
-            </MenuButton>
-            <MenuList>
-              <MenuItem onClick={() => downloadUsageHistory(0)}>{t("localePage.month")}</MenuItem>
-              <MenuItem onClick={() => downloadUsageHistory(1)}>{t("localePage.quarter")}</MenuItem>
-              <MenuItem onClick={() => downloadUsageHistory(2)}>{t("localePage.year")}</MenuItem>
-            </MenuList>
+          <Menu>
+            {({ isOpen }) => (
+              <>
+                <MenuButton
+                  as={Button}
+                  rightIcon={isOpen ? <MdArrowDropUp /> : <MdArrowDropDown />}>
+                  {t("localePage.downloadHistory")}
+                </MenuButton>
+                <MenuList>
+                  <MenuItem onClick={() => downloadUsageHistory(0)}>
+                    {t("localePage.month")}
+                  </MenuItem>
+                  <MenuItem onClick={() => downloadUsageHistory(1)}>
+                    {t("localePage.quarter")}
+                  </MenuItem>
+                  <MenuItem onClick={() => downloadUsageHistory(2)}>
+                    {t("localePage.year")}
+                  </MenuItem>
+                </MenuList>
+              </>
+            )}
           </Menu>
         </Container>
       </Flex>
