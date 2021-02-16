@@ -10,18 +10,17 @@ import {
   Text
 } from "@chakra-ui/react";
 import ConsumptionTableComp from "components/Consumption/ConsumptionTableComp";
-import { useEffectAsync } from "hooks/useEffectAsync";
 import { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { I18nProps, useI18n } from "next-rosetta";
 import React, { useCallback, useState } from "react";
 import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
 import { genStatsClient } from "services/backend/apiClients";
+import { IntervalRecord } from "services/backend/ext/enumConvertor";
 import { FuelConsumptionDto } from "services/backend/nswagts";
 import { downloadFile } from "utils/downloadFile";
 
 import { Locale } from "../i18n/Locale";
-import { IntervalRecord } from "services/backend/ext/enumConvertor";
 
 type Props = {
   locationId: number;
@@ -76,7 +75,9 @@ const LocalePage: NextPage<Props> = ({ locationId }) => {
                 <MenuButton
                   as={Button}
                   rightIcon={isOpen ? <MdArrowDropUp /> : <MdArrowDropDown />}>
-                  {t("localePage.tableInterval")}
+                  {interval != null
+                    ? t("enums.interval." + interval)
+                    : t("localePage.tableInterval")}
                 </MenuButton>
                 <MenuList>
                   {Object.entries(IntervalRecord).map(([a, b]) => (
