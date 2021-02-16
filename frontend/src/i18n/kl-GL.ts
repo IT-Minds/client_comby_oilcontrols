@@ -194,6 +194,7 @@ export const table: Locale = {
   },
 
   localePage: {
+    title: "Reports",
     tableInterval: "Vælg interval",
     downloadHistory: "Download historik",
     downloadRefillHistory: "Download påfyldningshistorik"
