@@ -227,7 +227,8 @@ export interface Locale {
     title: string;
     tableInterval: string;
     downloadHistory: string;
-    downloadRefillHistory: string;
+    download: string;
+    infoText: string;
   };
 
   trucks: {
