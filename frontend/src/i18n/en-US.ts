@@ -224,7 +224,8 @@ export const table: Locale = {
     title: "Reports",
     tableInterval: "Vælg interval",
     downloadHistory: "Download historik",
-    downloadRefillHistory: "Download påfyldningshistorik"
+    download: "Download",
+    infoText: "Vælg et påfyldningsår for at downloade historikken"
   },
 
   trucks: {
