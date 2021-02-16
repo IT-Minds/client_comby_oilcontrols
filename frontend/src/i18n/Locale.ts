@@ -226,9 +226,6 @@ export interface Locale {
   localePage: {
     tableInterval: string;
     downloadHistory: string;
-    month: string;
-    quarter: string;
-    year: string;
   };
 
   trucks: {
@@ -324,6 +321,11 @@ export interface Locale {
       1: string;
       2: string;
       3: string;
+    };
+    interval: {
+      0: string;
+      1: string;
+      2: string;
     };
   };
 }

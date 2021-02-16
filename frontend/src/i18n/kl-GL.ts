@@ -195,10 +195,7 @@ export const table: Locale = {
 
   localePage: {
     tableInterval: "Vælg interval",
-    downloadHistory: "Download historik",
-    month: "Måned",
-    quarter: "Kvartal",
-    year: "År"
+    downloadHistory: "Download historik"
   },
 
   trucks: {
@@ -318,6 +315,11 @@ export const table: Locale = {
       "1": "Petroleum",
       "2": "Gasolin",
       "3": "Andet"
+    },
+    interval: {
+      "0": "Måned",
+      "1": "Kvartal",
+      "2": "År"
     }
   }
 };
