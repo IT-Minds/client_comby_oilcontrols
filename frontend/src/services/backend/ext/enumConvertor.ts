@@ -2,6 +2,7 @@ import {
   Action,
   CouponStatus,
   FuelType,
+  Interval,
   LocationDebtorType,
   RefillSchedule,
   TankState,
@@ -15,7 +16,8 @@ type AllEnums =
   | typeof FuelType
   | typeof TankState
   | typeof LocationDebtorType
-  | typeof Action;
+  | typeof Action
+  | typeof Interval;
 
 const enumConvertor = <U extends AllEnums>(enumType: U): Record<keyof U, U[keyof U]> => {
   const filterAmount = Object.values(enumType).length / 2;
@@ -36,3 +38,4 @@ export const FuelTypeRecord = enumConvertor(FuelType);
 export const TankStateRecord = enumConvertor(TankState);
 export const LocationDebtorTypeRecord = enumConvertor(LocationDebtorType);
 export const ActionRecord = enumConvertor(Action);
+export const IntervalRecord = enumConvertor(Interval);

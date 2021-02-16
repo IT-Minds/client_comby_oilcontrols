@@ -21,6 +21,7 @@ import { FuelConsumptionDto } from "services/backend/nswagts";
 import { downloadFile } from "utils/downloadFile";
 
 import { Locale } from "../i18n/Locale";
+import { IntervalRecord } from "services/backend/ext/enumConvertor";
 
 type Props = {
   locationId: number;
@@ -28,6 +29,8 @@ type Props = {
 
 const LocalePage: NextPage<Props> = ({ locationId }) => {
   const { t } = useI18n<Locale>();
+
+  const [interval, setInterval] = useState(null);
 
   const [fuelConsumptionEntities, setFuelConsumptionEntities] = useState<FuelConsumptionDto[]>(
     null
@@ -49,6 +52,7 @@ const LocalePage: NextPage<Props> = ({ locationId }) => {
   }, []);
 
   const getTableData = useCallback(async (interval: number) => {
+    setInterval(interval);
     const data = await genStatsClient().then(client =>
       client.getUsageHistory(locationId, interval, new Date(2020, 1), new Date())
     );
@@ -75,9 +79,11 @@ const LocalePage: NextPage<Props> = ({ locationId }) => {
                   {t("localePage.tableInterval")}
                 </MenuButton>
                 <MenuList>
-                  <MenuItem onClick={() => getTableData(0)}>{t("localePage.month")}</MenuItem>
-                  <MenuItem onClick={() => getTableData(1)}>{t("localePage.quarter")}</MenuItem>
-                  <MenuItem onClick={() => getTableData(2)}>{t("localePage.year")}</MenuItem>
+                  {Object.entries(IntervalRecord).map(([a, b]) => (
+                    <MenuItem key={b} onClick={() => getTableData(b)}>
+                      {t("enums.interval." + b)}
+                    </MenuItem>
+                  ))}
                 </MenuList>
               </>
             )}
@@ -92,16 +98,13 @@ const LocalePage: NextPage<Props> = ({ locationId }) => {
                   rightIcon={isOpen ? <MdArrowDropUp /> : <MdArrowDropDown />}>
                   {t("localePage.downloadHistory")}
                 </MenuButton>
+
                 <MenuList>
-                  <MenuItem onClick={() => downloadUsageHistory(0)}>
-                    {t("localePage.month")}
-                  </MenuItem>
-                  <MenuItem onClick={() => downloadUsageHistory(1)}>
-                    {t("localePage.quarter")}
-                  </MenuItem>
-                  <MenuItem onClick={() => downloadUsageHistory(2)}>
-                    {t("localePage.year")}
-                  </MenuItem>
+                  {Object.entries(IntervalRecord).map(([a, b]) => (
+                    <MenuItem key={b} onClick={() => downloadUsageHistory(b)}>
+                      {t("enums.interval." + b)}
+                    </MenuItem>
+                  ))}
                 </MenuList>
               </>
             )}
