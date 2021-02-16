@@ -226,6 +226,7 @@ export interface Locale {
   localePage: {
     tableInterval: string;
     downloadHistory: string;
+    downloadRefillHistory: string;
   };
 
   trucks: {
