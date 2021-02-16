@@ -31,21 +31,21 @@ namespace Application.Refills.Queries
 
     public IQueryable<CompletedRefill> PreparePage(IQueryable<CompletedRefill> query)
     {
-      if (Skip.HasValue)
-      {
-        return query
-            .OrderBy(x => x.Created)
-            .Where(x => x.Created > Needle)
-            .Skip((int)(Skip * Size));
-      }
-      return query
+      var partial = query
             .OrderBy(x => x.Created)
             .Where(x => x.Created > Needle);
+
+      if (Skip.HasValue)
+      {
+        return partial.Skip((int)(Skip * Size));
+      }
+      return partial;
     }
 
     public async Task<int> PagesRemaining(IQueryable<CompletedRefill> query)
     {
       var count = await query.CountAsync();
+      if (count == 0) return 0;
       var pagesLeft = (int)(Math.Ceiling((float)count / (float)Size)) - 1;
 
       return pagesLeft;

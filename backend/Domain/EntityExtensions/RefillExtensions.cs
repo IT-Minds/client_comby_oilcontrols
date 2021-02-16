@@ -7,7 +7,7 @@ namespace Domain.EntityExtensions
   {
     public static double AmountDelivered(this CompletedRefill refill)
     {
-      return refill.EndAmount - refill.StartAmount;
+      return refill.StartAmount - refill.EndAmount;
     }
   }
 }
