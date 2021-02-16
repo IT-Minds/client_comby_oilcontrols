@@ -224,6 +224,7 @@ export interface Locale {
   };
 
   localePage: {
+    title: string;
     tableInterval: string;
     downloadHistory: string;
     downloadRefillHistory: string;
