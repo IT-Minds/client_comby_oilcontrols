@@ -3,16 +3,16 @@ import { usePagedFetched } from "hooks/usePagedFetched";
 import { FC, useReducer } from "react";
 import ListReducer from "react-list-reducer";
 import { genRoleClient } from "services/backend/apiClients";
-import { RoleDto } from "services/backend/nswagts";
+import { IRoleIdDto } from "services/backend/nswagts";
 import DropdownType from "types/DropdownType";
 
 type Props = {
-  cb: (s: RoleDto) => void;
+  cb: (s: IRoleIdDto) => void;
   preselectedValue?: DropdownType;
 };
 
 const UserRoleSelector: FC<Props> = ({ cb, preselectedValue }) => {
-  const [userRoles, dispatchUserRoles] = useReducer(ListReducer<RoleDto>("name"), []);
+  const [userRoles, dispatchUserRoles] = useReducer(ListReducer<IRoleIdDto>("id"), []);
 
   const { done } = usePagedFetched(
     "NOT_USED",
@@ -31,7 +31,7 @@ const UserRoleSelector: FC<Props> = ({ cb, preselectedValue }) => {
         .filter(x => x.name !== "SuperAdmin")
         .map(s => ({
           ...s,
-          id: s.name.toString(),
+          id: s.id.toString(),
           name: s.name
         }))}
       isLoading={!done}
