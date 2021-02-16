@@ -29,14 +29,15 @@ const ConsumptionTableComp: FC<Props> = ({ preLoadedData = [] }) => {
     <Container w="100%" maxW="unset">
       <Table variant="striped" colorScheme="blue" size="sm">
         <TableCaption placement="top">{t("consumptionTable.consumptionHistory")}</TableCaption>
-        <Thead></Thead>
-        <Tbody>
+        <Thead>
           <Tr>
-            <Td>{t("consumptionTable.address")}</Td>
-            <Td>{t("consumptionTable.fuelConsumed")}</Td>
-            <Td>{t("consumptionTable.startDate")}</Td>
-            <Td>{t("consumptionTable.endDate")}</Td>
+            <Th>{t("consumptionTable.address")}</Th>
+            <Th>{t("consumptionTable.fuelConsumed")}</Th>
+            <Th>{t("consumptionTable.startDate")}</Th>
+            <Th>{t("consumptionTable.endDate")}</Th>
           </Tr>
+        </Thead>
+        <Tbody>
           {data.map(fc => (
             <Tr key={fc.locationId}>
               <Td>{fc.address}</Td>
