@@ -39,6 +39,9 @@ const LocalePage: NextPage<Props> = ({ locationId }) => {
     refillYears.push(i);
   }
 
+  const previousYear = new Date();
+  previousYear.setFullYear(previousYear.getFullYear() - 1);
+
   const [fuelConsumptionEntities, setFuelConsumptionEntities] = useState<FuelConsumptionDto[]>(
     null
   );
@@ -50,9 +53,6 @@ const LocalePage: NextPage<Props> = ({ locationId }) => {
   }, [refillYear]);
 
   const downloadUsageHistory = useCallback(async (type: number) => {
-    const previousYear = new Date();
-    previousYear.setFullYear(previousYear.getFullYear() - 1);
-
     const client = await genStatsClient();
     const result = await client.getUsageHistoryFile(locationId, type, previousYear, new Date());
     downloadFile(result.data, result.fileName);
@@ -61,7 +61,7 @@ const LocalePage: NextPage<Props> = ({ locationId }) => {
   const getTableData = useCallback(async (interval: number) => {
     setInterval(interval);
     const data = await genStatsClient().then(client =>
-      client.getUsageHistory(locationId, interval, new Date(2020, 1), new Date())
+      client.getUsageHistory(locationId, interval, previousYear, new Date())
     );
     setFuelConsumptionEntities(data);
   }, []);
