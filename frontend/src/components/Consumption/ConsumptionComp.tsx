@@ -1,11 +1,22 @@
 import "ts-array-ext/sortByAttr";
 
-import { Button, Container, Menu, MenuButton, MenuItem, MenuList, VStack } from "@chakra-ui/react";
+import {
+  Button,
+  Container,
+  Divider,
+  HStack,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  VStack
+} from "@chakra-ui/react";
 import { useI18n } from "next-rosetta";
-import React, { FC, useCallback } from "react";
+import React, { FC, useCallback, useState } from "react";
 import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
 import { genStatsClient } from "services/backend/apiClients";
 import { IntervalRecord } from "services/backend/ext/enumConvertor";
+import { FuelConsumptionDto } from "services/backend/nswagts";
 import { downloadFile } from "utils/downloadFile";
 
 import ConsumptionTableComp from "./ConsumptionTableComp";
@@ -16,6 +27,12 @@ type Props = {
 
 const ConsumptionComp: FC<Props> = ({ locationId }) => {
   const { t } = useI18n<Locale>();
+
+  const [interval, setInterval] = useState(null);
+  const [fuelConsumptionEntities, setFuelConsumptionEntities] = useState<FuelConsumptionDto[]>(
+    null
+  );
+
   const previousYear = new Date();
   previousYear.setFullYear(previousYear.getFullYear() - 1);
 
@@ -25,10 +42,34 @@ const ConsumptionComp: FC<Props> = ({ locationId }) => {
     downloadFile(result.data, result.fileName);
   }, []);
 
+  const getTableData = useCallback(async (interval: number) => {
+    setInterval(interval);
+    const data = await genStatsClient().then(client =>
+      client.getUsageHistory(locationId, interval, previousYear, new Date())
+    );
+    setFuelConsumptionEntities(data);
+  }, []);
+
   return (
-    <Container w="100%" maxW="unset" paddingLeft={0} paddingRight={0}>
-      <VStack>
-        <ConsumptionTableComp locationId={locationId}></ConsumptionTableComp>
+    <Container w="100%" maxW="unset" paddingLeft={0} paddingRight={0} mt={4}>
+      <HStack pl={4}>
+        <Menu>
+          {({ isOpen }) => (
+            <>
+              <MenuButton as={Button} rightIcon={isOpen ? <MdArrowDropUp /> : <MdArrowDropDown />}>
+                {interval != null ? t("enums.interval." + interval) : t("localePage.tableInterval")}
+              </MenuButton>
+              <MenuList>
+                {Object.entries(IntervalRecord).map(([a, b]) => (
+                  <MenuItem key={b} onClick={() => getTableData(b)}>
+                    {t("enums.interval." + b)}
+                  </MenuItem>
+                ))}
+              </MenuList>
+            </>
+          )}
+        </Menu>
+
         <Menu>
           {({ isOpen }) => (
             <>
@@ -46,7 +87,8 @@ const ConsumptionComp: FC<Props> = ({ locationId }) => {
             </>
           )}
         </Menu>
-      </VStack>
+      </HStack>
+      <ConsumptionTableComp preLoadedData={fuelConsumptionEntities}></ConsumptionTableComp>
     </Container>
   );
 };
