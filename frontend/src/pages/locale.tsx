@@ -1,4 +1,4 @@
-import { Button, Container, Heading, HStack, Select, Spacer, Text } from "@chakra-ui/react";
+import { Button, Container, Heading, HStack, Select, Text } from "@chakra-ui/react";
 import { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { I18nProps, useI18n } from "next-rosetta";
