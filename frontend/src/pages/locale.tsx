@@ -7,7 +7,9 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  Text
+  Select,
+  Text,
+  VStack
 } from "@chakra-ui/react";
 import ConsumptionTableComp from "components/Consumption/ConsumptionTableComp";
 import { GetStaticProps, NextPage } from "next";
@@ -30,16 +32,22 @@ const LocalePage: NextPage<Props> = ({ locationId }) => {
   const { t } = useI18n<Locale>();
 
   const [interval, setInterval] = useState(null);
+  const [refillYear, setRefillYear] = useState(null);
+
+  const refillYears: number[] = [];
+  for (let i = new Date().getFullYear() - 15; i < new Date().getFullYear() + 1; i++) {
+    refillYears.push(i);
+  }
 
   const [fuelConsumptionEntities, setFuelConsumptionEntities] = useState<FuelConsumptionDto[]>(
     null
   );
 
-  const download = useCallback(async () => {
+  const downloadRefill = useCallback(async () => {
     const client = await genStatsClient();
-    const result = await client.getRefillOfYearFile(2000);
+    const result = await client.getRefillOfYearFile(refillYear);
     downloadFile(result.data, result.fileName);
-  }, []);
+  }, [refillYear]);
 
   const downloadUsageHistory = useCallback(async (type: number) => {
     const previousYear = new Date();
@@ -67,7 +75,21 @@ const LocalePage: NextPage<Props> = ({ locationId }) => {
         <Container maxW="xl" centerContent>
           <Heading>{t("title")}</Heading>
           <Text fontSize="xl">Just some info text</Text>
-          <Button onClick={download}>Download Refill</Button>
+
+          <VStack>
+            <Select
+              onChange={e => setRefillYear([Number(e.target.value)])}
+              placeholder="Select refill year">
+              {refillYears.map(year => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </Select>
+            <Button disabled={!refillYear || refillYear == 0} onClick={downloadRefill}>
+              {t("localePage.downloadRefillHistory")}
+            </Button>
+          </VStack>
 
           <Menu>
             {({ isOpen }) => (
