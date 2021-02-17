@@ -11,6 +11,7 @@ import {
   Textarea,
   VStack
 } from "@chakra-ui/react";
+import UserSelector from "components/UserSelector/UserSelector";
 import { Locale } from "i18n/Locale";
 import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useEffect, useState } from "react";
@@ -30,7 +31,8 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
       truckIdentifier: "0",
       description: "",
       name: "",
-      tankCapacity: 0
+      tankCapacity: 0,
+      driverId: null
     })
   );
 
@@ -55,7 +57,9 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
     (event: FormEvent<HTMLFormElement>) => {
       logger.debug("Submitting form AddTruckMetaDataForm");
 
-      submitCallback(localTruckMetaDataForm);
+      if (localTruckMetaDataForm.driverId) {
+        submitCallback(localTruckMetaDataForm);
+      }
       setFormSubmitAttempts(0);
       event.preventDefault();
     },
@@ -65,6 +69,19 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
   return (
     <form onSubmit={handleSubmit}>
       <VStack align="center" justify="center">
+        <FormControl
+          isRequired
+          isInvalid={formSubmitAttempts > 0 && !localTruckMetaDataForm.driverId}>
+          <FormLabel>{t("truckMetaData.driver")}</FormLabel>
+
+          <UserSelector
+            cb={x => {
+              updateLocalForm(x.id, "driverId");
+            }}
+            value={localTruckMetaDataForm.driverId ? localTruckMetaDataForm.driverId : 77}
+          />
+          <FormErrorMessage>{t("truckMetaData.formError.driver")}</FormErrorMessage>
+        </FormControl>
         <FormControl>
           <FormLabel>{t("truckMetaData.startNumber")}</FormLabel>
           <Input
@@ -72,7 +89,6 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
             onChange={e => updateLocalForm(e.target.value, "refillNumber")}
           />
         </FormControl>
-
         <FormControl
           isRequired
           isInvalid={formSubmitAttempts > 0 && !localTruckMetaDataForm.truckIdentifier}>
@@ -83,7 +99,6 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
           />
           <FormErrorMessage>{t("truckMetaData.formError.carNumber")}</FormErrorMessage>
         </FormControl>
-
         <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localTruckMetaDataForm.name}>
           <FormLabel>{t("truckMetaData.carName")}</FormLabel>
           <Input
@@ -94,7 +109,6 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
           />
           <FormErrorMessage>{t("truckMetaData.formError.carName")}</FormErrorMessage>
         </FormControl>
-
         <FormControl
           isRequired
           isInvalid={formSubmitAttempts > 0 && !localTruckMetaDataForm.description}>
@@ -106,7 +120,6 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
             }}></Textarea>
           <FormErrorMessage>{t("truckMetaData.formError.description")}</FormErrorMessage>
         </FormControl>
-
         <FormControl
           isRequired
           isInvalid={formSubmitAttempts > 0 && !localTruckMetaDataForm.tankCapacity}>
@@ -125,7 +138,6 @@ const AddTruckMetaData: FC<Props> = ({ submitCallback, truckMetaData }) => {
           </InputGroup>
           <FormErrorMessage>{t("truckMetaData.formError.tankSize")}</FormErrorMessage>
         </FormControl>
-
         <Button
           colorScheme="green"
           type="submit"

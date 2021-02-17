@@ -26,29 +26,37 @@ const ConsumptionTableComp: FC<Props> = ({ preLoadedData = [] }) => {
 
   return (
     <Container w="100%" maxW="unset">
-      <VStack>
-        <Table variant="striped" colorScheme="blue" size="sm">
-          <TableCaption placement="top">{t("consumptionTable.consumptionHistory")}</TableCaption>
-          <Thead>
-            <Tr>
-              <Th>{t("consumptionTable.address")}</Th>
-              <Th>{t("consumptionTable.fuelConsumed")}</Th>
-              <Th>{t("consumptionTable.startDate")}</Th>
-              <Th>{t("consumptionTable.endDate")}</Th>
+      <Table variant="striped" colorScheme="blue" size="sm">
+        <TableCaption placement="top">{t("consumptionTable.consumptionHistory")}</TableCaption>
+        <Thead>
+          <Tr>
+            <Th>{t("consumptionTable.address")}</Th>
+            <Th>{t("consumptionTable.fuelConsumed")}</Th>
+            <Th>{t("consumptionTable.startDate")}</Th>
+            <Th>{t("consumptionTable.endDate")}</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {data.map(fc => (
+            <Tr key={fc.locationId}>
+              <Td>{fc.address}</Td>
+              <Td>{fc.fuelConsumed}</Td>
+              <Td>{fc.startDate}</Td>
+              <Td>{fc.endDate}</Td>
             </Tr>
-          </Thead>
-          <Tbody>
-            {data.map(fc => (
-              <Tr key={fc.locationId}>
-                <Td>{fc.address}</Td>
-                <Td>{fc.fuelConsumed}</Td>
-                <Td>{fc.startDate}</Td>
-                <Td>{fc.endDate}</Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </VStack>
+          ))}
+        </Tbody>
+        <Tbody>
+          {data.map(fc => (
+            <Tr key={fc.locationId}>
+              <Td>{fc.address}</Td>
+              <Td>{fc.fuelConsumed}</Td>
+              <Td>{fc.startDate}</Td>
+              <Td>{fc.endDate}</Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
     </Container>
   );
 };
