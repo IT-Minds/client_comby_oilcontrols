@@ -129,7 +129,7 @@ namespace Application.Common.Services
             Address = location.Address,
             StartDate = intervalStart,
             EndDate = intervalEnd,
-            FuelConsumed = consumps.Aggregate(
+            FuelConsumed = Math.Abs(consumps.Aggregate(
               0.0,
               (sum, curr) =>
               {
@@ -141,7 +141,7 @@ namespace Application.Common.Services
                 var dateDiff = (calcEnd - calcStart).TotalDays;
                 return (curr.consumed * dateDiff) + sum;
               }
-            )
+            ))
           }
         );
 

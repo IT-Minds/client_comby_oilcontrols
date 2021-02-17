@@ -24,7 +24,8 @@ namespace Application.UnitTests.Trucks.Commands.UpdateTruck
           TankCapacity = Math.PI,
           RefillNumber = 700,
           Id = 100,
-          TruckIdentifier = "7ruck"
+          TruckIdentifier = "7ruck",
+          DriverId = 1
         }
       };
 
