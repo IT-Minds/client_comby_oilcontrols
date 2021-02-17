@@ -54,14 +54,16 @@ export const table: Locale = {
   },
 
   truckMetaData: {
+    driver: "Driver",
     startNumber: "Start number",
     carNumber: "Car number",
     carName: "Car name",
     description: "Description",
     tankSize: "Tank size",
     liters: "Liter",
-    submit: "Indsend",
+    submit: "Submit",
     formError: {
+      driver: "Please select a driver",
       carNumber: "Please enter a car number",
       carName: "Please specify a car name",
       description: "Please specify a description",
