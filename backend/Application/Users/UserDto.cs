@@ -11,7 +11,7 @@ namespace Application.Users
     public string Username { get; set; }
     public int? TruckId { get; set; }
 
-    public RoleDto CurrentRole { get; set; }
+    public RoleIdDto CurrentRole { get; set; }
 
 
     public void Mapping(Profile profile)

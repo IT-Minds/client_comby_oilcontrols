@@ -54,16 +54,16 @@ namespace Application.Refills.Commands.CompleteRefill
 
         (int OrderId, int OrderLineId) = await _uniContaService.CreateOrder(new UniContaOrder
         {
-          AmountFilled = (int)Math.Ceiling(refill.AmountDelivered()),
+          AmountFilled = refill.AmountDelivered(),
           BuildingId = refill.LocationId.ToString(),
           CouponId = refill.CouponId,
           CouponNumber = refill.Coupon.CouponNumber.ToString(),
           Date = refill.ActualDeliveryDate,
-          DebtorId = refill.Location.ActiveDebtor().UnicontaId.ToString(),
+          DebtorId = refill.Location.ActiveDebtor().UnicontaId,
           ProductId = "1111"
         });
 
-        System.Console.WriteLine("");
+        System.Console.WriteLine("CREATED ORDER "+OrderId + " WITH OL "+ OrderLineId);
       }
 
 
@@ -111,7 +111,6 @@ namespace Application.Refills.Commands.CompleteRefill
         completingrefill.TankState = request.TankState;
         completingrefill.CouponId = coupon.Id;
         completingrefill.RefillNumber = truck.RefillNumber++;
-        // completingrefill.RefillState = RefillState.COMPLETED;
 
         coupon.Status = CouponStatus.USED;
 

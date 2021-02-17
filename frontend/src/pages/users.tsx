@@ -8,13 +8,12 @@ import { I18nProps } from "next-rosetta";
 const MyPage: NextPage = () => {
   return (
     <VStack w="100%">
-      <Heading>USERS</Heading>
+      <Heading>Users</Heading>
       <HStack alignSelf="end">
         <CreateUser />
         <CreateRole />
       </HStack>
       <UserDetailsTable />
-      <Divider />
     </VStack>
   );
 };

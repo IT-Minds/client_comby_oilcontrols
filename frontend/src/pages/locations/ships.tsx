@@ -20,7 +20,6 @@ const LocationPage: NextPage = () => {
 
   return (
     <>
-      <h1>Hello World</h1>
       <AddLocationTriggerBtn tankType={type} />
       <LocationList data={locations} />
     </>

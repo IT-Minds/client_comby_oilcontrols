@@ -4,10 +4,10 @@ namespace UniContaDomain.Entities
 {
   public class UniContaOrder
   {
-    public string DebtorId;
+    public int DebtorId;
     public string BuildingId;
     public string ProductId;
-    public int AmountFilled;
+    public double AmountFilled;
     public DateTime Date;
     public string CouponNumber;
     public int CouponId;

@@ -11,11 +11,11 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Roles.Queries.GetRole
 {
   [AuthorizeAttribute(Domain.Enums.Action.GET_ROLES)]
-  public class GetRoleQuery : IRequest<RoleDto>
+  public class GetRoleQuery : IRequest<RoleIdDto>
   {
     public int Id { get; set; }
 
-    public class GetRoleQueryHandler : IRequestHandler<GetRoleQuery, RoleDto>
+    public class GetRoleQueryHandler : IRequestHandler<GetRoleQuery, RoleIdDto>
     {
       private readonly IApplicationDbContext _context;
       private readonly IMapper _mapper;
@@ -26,7 +26,7 @@ namespace Application.Roles.Queries.GetRole
         _mapper = mapper;
       }
 
-      public async Task<RoleDto> Handle(GetRoleQuery request, CancellationToken cancellationToken)
+      public async Task<RoleIdDto> Handle(GetRoleQuery request, CancellationToken cancellationToken)
       {
         var role = await _context.Roles
           .Include(x => x.Actions)
@@ -37,8 +37,9 @@ namespace Application.Roles.Queries.GetRole
         {
           throw new ArgumentException("No role named: " + request.Id);
         }
-        return new RoleDto
+        return new RoleIdDto
         {
+          Id = role.Id,
           Name = role.Name,
           Actions = role.Actions.Select(act => act.Action).ToList()
         };

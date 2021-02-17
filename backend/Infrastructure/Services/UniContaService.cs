@@ -55,6 +55,16 @@ namespace Infrastructure.Services
       return debtors.Select(x => new UniContaDebtor(x) );
     }
 
+    public async Task<UniContaDebtor> GetDebtor(int id)
+    {
+      var api = new CrudAPI(session, defaultCompany);
+
+      var debtor = new Uniconta.DataModel.Debtor { RowId = id };
+      await api.Read(debtor);
+
+      return new UniContaDebtor(debtor);
+    }
+
     private async Task InitializeCompany()
     {
       // If Session has a default company, use DefaultCompany as CurrentCompany
@@ -72,12 +82,12 @@ namespace Infrastructure.Services
     {
       var api = new CrudAPI(session, defaultCompany);
 
+      var debtor = await GetDebtor(inputOrder.DebtorId);
+
       var order = new Uniconta.ClientTools.DataModel.DebtorOrderClient
       {
-        _DCAccount = inputOrder.DebtorId,
-        _ProdItem = inputOrder.ProductId,
-        _ProdQty = inputOrder.AmountFilled,
-        _DeliveryDate = inputOrder.Date
+        _DCAccount = debtor.AccountNumber,
+        CompanyId = 45182
       };
 
       try
@@ -97,16 +107,22 @@ namespace Infrastructure.Services
         System.Console.WriteLine(e.Message);
       }
 
-      await api.Insert(order);
+      var result = await api.Insert(order);
+      System.Console.WriteLine("Order Code: " + result);
 
       var orderLine = new DebtorOrderLineUser
       {
+        Item = inputOrder.ProductId,
+        Qty = inputOrder.AmountFilled,
+        Date = inputOrder.Date,
+        Text = "Automatisk oprettet efter påfyldning",
         fltbygnr = inputOrder.BuildingId,
         fltkuponnr = inputOrder.CouponNumber,
-        _OrderNumber = order.RowId
+        OrderNumber = order.RowId.ToString()
       };
 
-      await api.Insert(orderLine);
+      result = await api.Insert(orderLine);
+      System.Console.WriteLine("Order Line Code: " + result);
 
       return (order.RowId, orderLine.RowId);
     }

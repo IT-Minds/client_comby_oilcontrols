@@ -4,22 +4,30 @@
 
 ### Prerequisites
 
-The following is required to be installed on the windows server
+To complete the application's installation on the windows server, it must meet the following needs:
 
 - [iisnode](https://github.com/Azure/iisnode)
 - [.NET 5 hosting bundle](https://dotnet.microsoft.com/download/dotnet/5.0)
 
 ### Steps
 
-Create to Sites.
--> Backend
--> Frontend
+1. Create two Sites.
+   -> Backend
+   -> Frontend
 
-Set the Application pool to unmanaged.
+2. Set the Application pool to unmanaged.
 
-Import Applications into corresponding sites.
+3. Import the zip file into the relative sites.
 
-Setup environment variables. See [Configuration](#Configuration)
+4. Setup environment variables. See [Configuration](#Configuration)
+
+5. Restart both applications
+
+## Updating the applications
+
+Follow **only** step 3 from [Initial installation.](#Initial%20installation)
+
+Beware: do not overwrite the site files unless you have a backup of all saved static content.
 
 ## Configuration
 
