@@ -44,19 +44,19 @@ const ConsumptionTableComp: FC<Props> = ({ preLoadedData = [] }) => {
               <Td>{fc.startDate}</Td>
               <Td>{fc.endDate}</Td>
             </Tr>
-          </Thead>
-          <Tbody>
-            {data.map(fc => (
-              <Tr key={fc.locationId}>
-                <Td>{fc.address}</Td>
-                <Td>{fc.fuelConsumed}</Td>
-                <Td>{fc.startDate}</Td>
-                <Td>{fc.endDate}</Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </VStack>
+          ))}
+        </Tbody>
+        <Tbody>
+          {data.map(fc => (
+            <Tr key={fc.locationId}>
+              <Td>{fc.address}</Td>
+              <Td>{fc.fuelConsumed}</Td>
+              <Td>{fc.startDate}</Td>
+              <Td>{fc.endDate}</Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
     </Container>
   );
 };
