@@ -38,7 +38,7 @@ const UserSelector: FC<Props> = ({ cb, value }) => {
       }))}
       isLoading={!done}
       placeholder="Select User"
-      onSelect={x => cb(users.find(s => s.id === Number.parseInt(x.id)))}
+      onSelect={x => cb(users.find(s => s.id === Number(x.id)))}
       value={existingUser ? existingUser : null}
     />
   );

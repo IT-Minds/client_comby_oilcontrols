@@ -31,7 +31,7 @@ const InvalidateCouponBtn: FC<Props> = ({ coupons, triggered = false }) => {
   const invalidateActions = useCallback(async () => {
     onClose();
     const client = await genCouponsClient();
-    await client.invalidateCoupon(Number.parseInt(chosenCoupon));
+    await client.invalidateCoupon(Number(chosenCoupon));
   }, [chosenCoupon]);
 
   useEffect(() => {

@@ -27,7 +27,7 @@ export const usePagedFetched = <
   sortBy: string,
   callback: Callback<T, U>,
   dataDispatch: Dispatch<AllListActions<V>>,
-  initSettings: Settings<U>
+  initSettings: Settings<U> = {}
 ): Return<U> => {
   const settings = useMemo<Settings<U>>(() => Object.assign(defaultSettings, initSettings), []);
   const [done, setDone] = useState(!settings.autoStart);
