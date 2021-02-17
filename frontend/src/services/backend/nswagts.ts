@@ -823,7 +823,7 @@ export class HealthClient extends ClientBase implements IHealthClient {
 
 export interface ILocationClient {
     addNewLocation(command: CreateLocationCommand): Promise<number>;
-    getAll(locationType?: TankType | null | undefined, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationDetailsIdDtoAndDateTime>;
+    getAll(locationType?: TankType | null | undefined, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationDetailsIdDtoAndDateTimeOffset>;
     addDebtor(command: AddDebtorToLocationCommand): Promise<number>;
     updateDebtor(command: UpdateDebtorOnLocationCommand): Promise<number>;
     removeDebtor(command: RemoveDebtorFromLocationCommand): Promise<number>;
@@ -887,7 +887,7 @@ export class LocationClient extends ClientBase implements ILocationClient {
         return Promise.resolve<number>(<any>null);
     }
 
-    getAll(locationType?: TankType | null | undefined, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationDetailsIdDtoAndDateTime> {
+    getAll(locationType?: TankType | null | undefined, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationDetailsIdDtoAndDateTimeOffset> {
         let url_ = this.baseUrl + "/api/Location?";
         if (locationType !== undefined && locationType !== null)
             url_ += "locationType=" + encodeURIComponent("" + locationType) + "&";
@@ -915,14 +915,14 @@ export class LocationClient extends ClientBase implements ILocationClient {
         });
     }
 
-    protected processGetAll(response: Response): Promise<PageResultOfLocationDetailsIdDtoAndDateTime> {
+    protected processGetAll(response: Response): Promise<PageResultOfLocationDetailsIdDtoAndDateTimeOffset> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PageResultOfLocationDetailsIdDtoAndDateTime.fromJS(resultData200);
+            result200 = PageResultOfLocationDetailsIdDtoAndDateTimeOffset.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -930,7 +930,7 @@ export class LocationClient extends ClientBase implements ILocationClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<PageResultOfLocationDetailsIdDtoAndDateTime>(<any>null);
+        return Promise.resolve<PageResultOfLocationDetailsIdDtoAndDateTimeOffset>(<any>null);
     }
 
     addDebtor(command: AddDebtorToLocationCommand): Promise<number> {
@@ -3730,13 +3730,13 @@ export interface IRemoveDebtorFromLocationCommand {
     debtorId?: number;
 }
 
-export class PageResultOfLocationDetailsIdDtoAndDateTime implements IPageResultOfLocationDetailsIdDtoAndDateTime {
+export class PageResultOfLocationDetailsIdDtoAndDateTimeOffset implements IPageResultOfLocationDetailsIdDtoAndDateTimeOffset {
     newNeedle?: Date;
     pagesRemaining?: number;
     results?: LocationDetailsIdDto[] | null;
     hasMore?: boolean;
 
-    constructor(data?: IPageResultOfLocationDetailsIdDtoAndDateTime) {
+    constructor(data?: IPageResultOfLocationDetailsIdDtoAndDateTimeOffset) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -3758,9 +3758,9 @@ export class PageResultOfLocationDetailsIdDtoAndDateTime implements IPageResultO
         }
     }
 
-    static fromJS(data: any): PageResultOfLocationDetailsIdDtoAndDateTime {
+    static fromJS(data: any): PageResultOfLocationDetailsIdDtoAndDateTimeOffset {
         data = typeof data === 'object' ? data : {};
-        let result = new PageResultOfLocationDetailsIdDtoAndDateTime();
+        let result = new PageResultOfLocationDetailsIdDtoAndDateTimeOffset();
         result.init(data);
         return result;
     }
@@ -3779,7 +3779,7 @@ export class PageResultOfLocationDetailsIdDtoAndDateTime implements IPageResultO
     }
 }
 
-export interface IPageResultOfLocationDetailsIdDtoAndDateTime {
+export interface IPageResultOfLocationDetailsIdDtoAndDateTimeOffset {
     newNeedle?: Date;
     pagesRemaining?: number;
     results?: LocationDetailsIdDto[] | null;
