@@ -16,6 +16,7 @@ namespace Domain.Entities
     public int FuelTankId { get; set; }
     public RefillSchedule Schedule { get; set; }
     public string Address { get; set; }
+    public string AddressExtra { get; set; }
     public string Comments { get; set; }
     public ICollection<OrderedRefill> Refills { get; set; }
     public virtual IEnumerable<AssignedRefill> AssignedRefills { get

@@ -150,7 +150,9 @@ const RunListTable: FC<Props> = ({ truckId, refillCb }) => {
             <Td hidden={!isPrinting && cols < 4}>{row.locationId}</Td>
             <Td hidden={!isPrinting && cols < 4}>DATA MISSING</Td>
             <Td hidden={!isPrinting && cols < 4}>{row.debtorBlocked.toString()}</Td>
-            <Td>{row.address}</Td>
+            <Td>
+              {row.address} {row.addressExtra}
+            </Td>
             <Td hidden={!isPrinting && cols < 3}>{capitalize(RefillSchedule[row.schedule])}</Td>
             <Td hidden={!isPrinting && cols < 2}>{capitalize(FuelType[row.fuelType])}</Td>
             <Td>{row.expectedDeliveryDate.toLocaleDateString(locale)}</Td>

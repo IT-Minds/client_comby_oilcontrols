@@ -5,11 +5,13 @@ const { readdirSync } = require("fs");
 
 const startPath = join(process.cwd(), "src", "i18n");
 
-const locales = readdirSync(startPath)
-  .filter(x => !/^Locale\.ts$/.test(x))
-  .map(x => {
-    return /^([a-z]{2}-[A-Z]{2})\.ts$/.exec(x)[1];
-  });
+// const locales = readdirSync(startPath)
+//   .filter(x => !/^Locale\.ts$/.test(x))
+//   .map(x => {
+//     return /^([a-z]{2}-[A-Z]{2})\.ts$/.exec(x)[1];
+//   });
+
+const locales = ["da-DK"];
 
 const defaultLocale = "da-DK";
 

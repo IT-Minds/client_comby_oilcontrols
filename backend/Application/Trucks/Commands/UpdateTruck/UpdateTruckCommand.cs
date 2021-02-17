@@ -37,12 +37,21 @@ namespace Application.Trucks.Commands.UpdateTruck
         {
           throw new ArgumentException("No truck with Truck Id: " + request.Id + ".");
         }
+        var driver = await _context.Users.FindAsync(request.TruckInfo.DriverId);
+        if (driver == null)
+        {
+          throw new ArgumentException("No user with User Id: " + request.TruckInfo.DriverId + ".");
+        }
+
 
         truck.TruckIdentifier = request.TruckInfo.TruckIdentifier;
         truck.Description = request.TruckInfo.Description;
         truck.TankCapacity = request.TruckInfo.TankCapacity;
         truck.Name = request.TruckInfo.Name;
         truck.RefillNumber = request.TruckInfo.RefillNumber;
+        truck.Driver = driver;
+
+        _context.Trucks.Update(truck);
 
         await _context.SaveChangesAsync(cancellationToken);
         return _mapper.Map<TruckInfoIdDto>(truck);

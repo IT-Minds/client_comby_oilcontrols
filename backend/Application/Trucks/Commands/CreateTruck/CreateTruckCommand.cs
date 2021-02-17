@@ -4,6 +4,7 @@ using Application.Common.Security;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,9 +29,10 @@ namespace Application.Trucks.Commands.CreateTruck
       public async Task<TruckInfoIdDto> Handle(CreateTruckCommand request, CancellationToken cancellationToken)
       {
         var driver = await _context.Users.FindAsync(request.TruckInfo.DriverId);
-
-        // TODO check driver isn't null
-        // TODO check if driver doesn't have role
+        if (driver == null)
+        {
+          throw new ArgumentException("No user with User Id: " + request.TruckInfo.DriverId + ".");
+        }
         // TODO check driver doesn't driver another truck
 
         var truck = new Truck

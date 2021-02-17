@@ -24,7 +24,7 @@ export const table: Locale = {
       create: "Opret ny debitor"
     },
     users: "Brugerstyring",
-    statistics: "Statestikker"
+    statistics: "Rapporter"
   },
   user: {
     editInfo: "Redigér info",
