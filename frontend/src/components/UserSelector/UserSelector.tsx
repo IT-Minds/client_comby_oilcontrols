@@ -1,6 +1,6 @@
 import ComboSelect from "components/SortFilter/ComboSelect";
 import { usePagedFetched } from "hooks/usePagedFetched";
-import { FC, useEffect, useMemo, useReducer, useState } from "react";
+import { FC, useEffect, useReducer, useState } from "react";
 import ListReducer from "react-list-reducer";
 import { genUserClient } from "services/backend/apiClients";
 import { IUserIdDto } from "services/backend/nswagts";
