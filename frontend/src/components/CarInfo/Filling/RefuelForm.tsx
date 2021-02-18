@@ -53,7 +53,7 @@ const RefuelForm: FC<Props> = ({ fillData }) => {
   }, []);
 
   const addFilling = useCallback(() => {
-    if (localFillingForm.fillAmount && localFillingForm.cardNumber) {
+    if (localFillingForm.fillAmount && localFillingForm.cardNumber && localFillingForm.fuelType) {
       fillData(localFillingForm);
       onClose();
     }
