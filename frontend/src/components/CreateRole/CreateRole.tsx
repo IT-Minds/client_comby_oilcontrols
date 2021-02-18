@@ -9,6 +9,7 @@ import {
   useDisclosure,
   useToast
 } from "@chakra-ui/react";
+import { useI18n } from "next-rosetta";
 import React, { FC, useCallback } from "react";
 import { MdAdd } from "react-icons/md";
 import { genRoleClient } from "services/backend/apiClients";
@@ -17,6 +18,7 @@ import { CreateRoleCommand, IRoleDto } from "services/backend/nswagts";
 import CreateRoleComp from "./CreateRoleComp";
 
 const CreateRole: FC = () => {
+  const { t } = useI18n<Locale>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
@@ -41,13 +43,13 @@ const CreateRole: FC = () => {
         aria-label={"Create Role"}
         onClick={onOpen}
         rightIcon={<MdAdd size={30} />}>
-        Create Role
+        {t("users.createRole")}
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>{t("users.createRole")}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <CreateRoleComp submitCallback={createRole} />

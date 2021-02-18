@@ -3,12 +3,14 @@ import CreateRole from "components/CreateRole/CreateRole";
 import CreateUser from "components/CreateUser/CreateUser";
 import UserDetailsTable from "components/UserDetails/UserDetailsTable";
 import { GetStaticProps, NextPage } from "next";
-import { I18nProps } from "next-rosetta";
+import { I18nProps, useI18n } from "next-rosetta";
 
 const MyPage: NextPage = () => {
+  const { t } = useI18n<Locale>();
+
   return (
     <VStack w="100%">
-      <Heading>Users</Heading>
+      <Heading>{t("users.users")}</Heading>
       <HStack alignSelf="end">
         <CreateUser />
         <CreateRole />
