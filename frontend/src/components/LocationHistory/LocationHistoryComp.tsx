@@ -149,7 +149,9 @@ const LocationHistoryComp: FC<Props> = ({
         <Tbody>
           {dataSplitter.data.map(lh => (
             <Tr key={lh.id}>
-              <Td>{lh.address}</Td>
+              <Td>
+                {lh.address} {lh.addressExtra}
+              </Td>
               <Td>{lh.comments}</Td>
               <Td>{lh.regionId}</Td>
               <Td>{lh.schedule}</Td>

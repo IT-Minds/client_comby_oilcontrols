@@ -34,7 +34,9 @@ const LocationList: FC<Props> = ({ data }) => {
             _hover={{
               bg: hoverBg
             }}>
-            <Td>{dat.address}</Td>
+            <Td>
+              {dat.address} {dat.addressExtra}
+            </Td>
             <Td>{dat.regionId}</Td>
             <Td>{RefillSchedule[dat.schedule]}</Td>
             <Td>

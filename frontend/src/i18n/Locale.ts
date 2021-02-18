@@ -57,6 +57,7 @@ export interface Locale {
   };
 
   truckMetaData: {
+    driver: string;
     startNumber: string;
     carNumber: string;
     carName: string;
@@ -65,6 +66,7 @@ export interface Locale {
     liters: string;
     submit: string;
     formError: {
+      driver: string;
       carNumber: string;
       carName: string;
       description: string;

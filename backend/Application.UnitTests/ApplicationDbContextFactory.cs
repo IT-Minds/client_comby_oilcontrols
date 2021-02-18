@@ -104,18 +104,18 @@ namespace Application.UnitTests
       );
 
       context.CompletedRefills.AddRange(
-        new CompletedRefill { Id = 1, CouponId = 1, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, ExpectedDeliveryDate = new DateTime(2020, 12, 12), LocationId = 1, Created = new DateTime(2020, 1, 1) },
-        new CompletedRefill { Id = 2, CouponId = 2, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, ExpectedDeliveryDate = new DateTime(2020, 12, 13), LocationId = 2, Created = new DateTime(2020, 1, 2) },
-        new CompletedRefill { Id = 3, CouponId = 3, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, ExpectedDeliveryDate = new DateTime(2020, 12, 14), LocationId = 3, Created = new DateTime(2020, 1, 3) },
-        new CompletedRefill { Id = 4, CouponId = 4, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, ExpectedDeliveryDate = new DateTime(2020, 12, 15), LocationId = 1, Created = new DateTime(2020, 1, 6) },
-        new CompletedRefill { Id = 5, CouponId = 5, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, ExpectedDeliveryDate = new DateTime(2020, 12, 16), LocationId = 1, Created = new DateTime(2020, 1, 8) },
-        new CompletedRefill { Id = 7, CouponId = 6, StartAmount = 10.5, EndAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, ExpectedDeliveryDate = new DateTime(2020, 12, 17), LocationId = 4, Created = new DateTime(2020, 1, 9) },
-        new CompletedRefill { Id = 8, CouponId = 8, StartAmount = 100, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1990, 5, 1), ActualDeliveryDate = new DateTime(1990, 5, 1), LocationId = 5 },
-        new CompletedRefill { Id = 9, CouponId = 9, StartAmount = 200, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1990, 5, 1), ActualDeliveryDate = new DateTime(1990, 5, 5), LocationId = 5 },
-        new CompletedRefill { Id = 11, CouponId = 11, StartAmount = 200, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1990, 5, 9), ActualDeliveryDate = new DateTime(1990, 5, 9), LocationId = 5 },
-        new CompletedRefill { Id = 12, CouponId = 12, StartAmount = 200, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2000, 5, 1), ActualDeliveryDate = new DateTime(2000, 5, 9), LocationId = 7 },
-        new CompletedRefill { Id = 13, CouponId = 13, StartAmount = 200, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2000, 5, 1), ActualDeliveryDate = new DateTime(2000, 5, 9), LocationId = 7 },
-        new CompletedRefill { Id = 10, CouponId = 10, StartAmount = 200, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2000, 5, 1), ActualDeliveryDate = new DateTime(2000, 5, 9), LocationId = 7 }
+        new CompletedRefill { Id = 1, CouponId = 1, EndAmount = 10.5, StartAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, ExpectedDeliveryDate = new DateTime(2020, 12, 12), LocationId = 1, Created = new DateTime(2020, 1, 1) },
+        new CompletedRefill { Id = 2, CouponId = 2, EndAmount = 10.5, StartAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, ExpectedDeliveryDate = new DateTime(2020, 12, 13), LocationId = 2, Created = new DateTime(2020, 1, 2) },
+        new CompletedRefill { Id = 3, CouponId = 3, EndAmount = 10.5, StartAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, ExpectedDeliveryDate = new DateTime(2020, 12, 14), LocationId = 3, Created = new DateTime(2020, 1, 3) },
+        new CompletedRefill { Id = 4, CouponId = 4, EndAmount = 10.5, StartAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, ExpectedDeliveryDate = new DateTime(2020, 12, 15), LocationId = 1, Created = new DateTime(2020, 1, 6) },
+        new CompletedRefill { Id = 5, CouponId = 5, EndAmount = 10.5, StartAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, ExpectedDeliveryDate = new DateTime(2020, 12, 16), LocationId = 1, Created = new DateTime(2020, 1, 8) },
+        new CompletedRefill { Id = 7, CouponId = 6, EndAmount = 10.5, StartAmount = 15.5, TankState = TankState.PARTIALLY_FILLED, ExpectedDeliveryDate = new DateTime(2020, 12, 17), LocationId = 4, Created = new DateTime(2020, 1, 9) },
+        new CompletedRefill { Id = 8, CouponId = 8, EndAmount = 100, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1990, 5, 1), ActualDeliveryDate = new DateTime(1990, 5, 1), LocationId = 5 },
+        new CompletedRefill { Id = 9, CouponId = 9, EndAmount = 200, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1990, 5, 1), ActualDeliveryDate = new DateTime(1990, 5, 5), LocationId = 5 },
+        new CompletedRefill { Id = 11, CouponId = 11, EndAmount = 200, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1990, 5, 9), ActualDeliveryDate = new DateTime(1990, 5, 9), LocationId = 5 },
+        new CompletedRefill { Id = 12, CouponId = 12, EndAmount = 200, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2000, 5, 1), ActualDeliveryDate = new DateTime(2000, 5, 9), LocationId = 7 },
+        new CompletedRefill { Id = 13, CouponId = 13, EndAmount = 200, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2000, 5, 1), ActualDeliveryDate = new DateTime(2000, 5, 9), LocationId = 7 },
+        new CompletedRefill { Id = 10, CouponId = 10, EndAmount = 200, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2000, 5, 1), ActualDeliveryDate = new DateTime(2000, 5, 9), LocationId = 7 }
       );
 
       context.Regions.AddRange(
@@ -172,9 +172,9 @@ namespace Application.UnitTests
       );
 
       //START: Test data for the truck evening fuel amount entity extension.
-      var refill100 = new CompletedRefill { Id = 100, CouponId = 100, StartAmount = 100, EndAmount = 300, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 1, 1), ActualDeliveryDate = new DateTime(2020, 1, 1, 9, 0, 0), LocationId = 100 };
-      var refill101 = new CompletedRefill { Id = 101, CouponId = 101, StartAmount = 200, EndAmount = 300, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 1, 1), ActualDeliveryDate = new DateTime(2020, 1, 1, 10, 0, 0), LocationId = 100 };
-      var refill102 = new CompletedRefill { Id = 102, CouponId = 102, StartAmount = 200, EndAmount = 300, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 1, 1), ActualDeliveryDate = new DateTime(2020, 1, 2, 10, 0, 0), LocationId = 100 };
+      var refill100 = new CompletedRefill { Id = 100, CouponId = 100, EndAmount = 100, StartAmount = 300, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 1, 1), ActualDeliveryDate = new DateTime(2020, 1, 1, 9, 0, 0), LocationId = 100 };
+      var refill101 = new CompletedRefill { Id = 101, CouponId = 101, EndAmount = 200, StartAmount = 300, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 1, 1), ActualDeliveryDate = new DateTime(2020, 1, 1, 10, 0, 0), LocationId = 100 };
+      var refill102 = new CompletedRefill { Id = 102, CouponId = 102, EndAmount = 200, StartAmount = 300, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 1, 1), ActualDeliveryDate = new DateTime(2020, 1, 2, 10, 0, 0), LocationId = 100 };
 
       var driver3 = new User { Username = "Driver3", Password = "Password" };
       context.Users.AddRange(
@@ -223,9 +223,9 @@ namespace Application.UnitTests
       );
 
       context.CompletedRefills.AddRange(
-        new CompletedRefill { Id = 300, CouponId = 300, StartAmount = 100, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1950, 5, 1), ActualDeliveryDate = new DateTime(1950, 5, 1), LocationId = 301 },
-        new CompletedRefill { Id = 301, CouponId = 301, StartAmount = 100, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1950, 5, 10), ActualDeliveryDate = new DateTime(1950, 5, 10), LocationId = 301 },
-        new CompletedRefill { Id = 302, CouponId = 302, StartAmount = 100, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1950, 5, 10), ActualDeliveryDate = new DateTime(1950, 5, 20), LocationId = 301 }
+        new CompletedRefill { Id = 300, CouponId = 300, EndAmount = 100, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1950, 5, 1), ActualDeliveryDate = new DateTime(1950, 5, 1), LocationId = 301 },
+        new CompletedRefill { Id = 301, CouponId = 301, EndAmount = 100, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1950, 5, 10), ActualDeliveryDate = new DateTime(1950, 5, 10), LocationId = 301 },
+        new CompletedRefill { Id = 302, CouponId = 302, EndAmount = 100, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1950, 5, 10), ActualDeliveryDate = new DateTime(1950, 5, 20), LocationId = 301 }
       );
 
       DateTime period = new DateTime(1944, 1, 1);
@@ -276,9 +276,9 @@ namespace Application.UnitTests
       );
 
       context.CompletedRefills.AddRange(
-        new CompletedRefill { Id = 200, CouponId = 200, StartAmount = 100, EndAmount = 200, TankState = TankState.PARTIALLY_FILLED, ExpectedDeliveryDate = new DateTime(1990, 5, 1), ActualDeliveryDate = new DateTime(1990, 5, 1), LocationId = 200, Created = new DateTime(1990, 5, 1) },
-        new CompletedRefill { Id = 201, CouponId = 201, StartAmount = 100, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1990, 5, 1), ActualDeliveryDate = new DateTime(1990, 5, 1), LocationId = 201, Created = new DateTime(1990, 5, 1) },
-        new CompletedRefill { Id = 202, CouponId = 202, StartAmount = 200, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1990, 5, 4), ActualDeliveryDate = new DateTime(1990, 5, 4), LocationId = 201, Created = new DateTime(1990, 5, 4) }
+        new CompletedRefill { Id = 200, CouponId = 200, EndAmount = 100, StartAmount = 200, TankState = TankState.PARTIALLY_FILLED, ExpectedDeliveryDate = new DateTime(1990, 5, 1), ActualDeliveryDate = new DateTime(1990, 5, 1), LocationId = 200, Created = new DateTime(1990, 5, 1) },
+        new CompletedRefill { Id = 201, CouponId = 201, EndAmount = 100, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1990, 5, 1), ActualDeliveryDate = new DateTime(1990, 5, 1), LocationId = 201, Created = new DateTime(1990, 5, 1) },
+        new CompletedRefill { Id = 202, CouponId = 202, EndAmount = 200, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(1990, 5, 4), ActualDeliveryDate = new DateTime(1990, 5, 4), LocationId = 201, Created = new DateTime(1990, 5, 4) }
       );
 
       //END
@@ -389,24 +389,24 @@ namespace Application.UnitTests
       );
 
       context.CompletedRefills.AddRange(
-        new CompletedRefill { Id = 601, CouponId = 601, StartAmount = 100, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 12, 20), ActualDeliveryDate = new DateTime(2020, 12, 20), LocationId = 600, Created = new DateTime(2020, 12, 20) },
-        new CompletedRefill { Id = 600, CouponId = 600, StartAmount = 100, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2021, 1, 1), ActualDeliveryDate = new DateTime(2021, 1, 1), LocationId = 600, Created = new DateTime(2021, 1, 1) },
-        new CompletedRefill { Id = 604, CouponId = 604, StartAmount = 100, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2021, 2, 2), ActualDeliveryDate = new DateTime(2021, 2, 2), LocationId = 600, Created = new DateTime(2021, 2, 2) },
-        new CompletedRefill { Id = 605, CouponId = 605, StartAmount = 100, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 1, 1), ActualDeliveryDate = new DateTime(2020, 1, 1), LocationId = 601, Created = new DateTime(2020, 1, 1) },
-        new CompletedRefill { Id = 606, CouponId = 606, StartAmount = 100, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 3, 1), ActualDeliveryDate = new DateTime(2020, 3, 1), LocationId = 601, Created = new DateTime(2020, 3, 1) },
-        new CompletedRefill { Id = 607, CouponId = 607, StartAmount = 100, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 5, 1), ActualDeliveryDate = new DateTime(2020, 5, 1), LocationId = 601, Created = new DateTime(2020, 5, 1) },
-        new CompletedRefill { Id = 608, CouponId = 608, StartAmount = 500, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 7, 1), ActualDeliveryDate = new DateTime(2020, 7, 1), LocationId = 601, Created = new DateTime(2020, 7, 1) },
-        new CompletedRefill { Id = 609, CouponId = 609, StartAmount = 200, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 9, 1), ActualDeliveryDate = new DateTime(2020, 9, 1), LocationId = 601, Created = new DateTime(2020, 9, 1) },
-        new CompletedRefill { Id = 610, CouponId = 610, StartAmount = 400, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 11, 1), ActualDeliveryDate = new DateTime(2020, 11, 1), LocationId = 601, Created = new DateTime(2020, 11, 1) },
-        new CompletedRefill { Id = 611, CouponId = 611, StartAmount = 1, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 1, 1), ActualDeliveryDate = new DateTime(2020, 1, 1), LocationId = 602, Created = new DateTime(2020, 1, 1) },
-        new CompletedRefill { Id = 612, CouponId = 612, StartAmount = 100, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2019, 12, 1), ActualDeliveryDate = new DateTime(2019, 12, 1), LocationId = 603, Created = new DateTime(2019, 12, 1) },
-        new CompletedRefill { Id = 613, CouponId = 613, StartAmount = 0, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2021, 1, 31), ActualDeliveryDate = new DateTime(2021, 1, 31), LocationId = 603, Created = new DateTime(2021, 1, 31) },
+        new CompletedRefill { Id = 601, CouponId = 601, EndAmount = 100, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 12, 20), ActualDeliveryDate = new DateTime(2020, 12, 20), LocationId = 600, Created = new DateTime(2020, 12, 20) },
+        new CompletedRefill { Id = 600, CouponId = 600, EndAmount = 100, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2021, 1, 1), ActualDeliveryDate = new DateTime(2021, 1, 1), LocationId = 600, Created = new DateTime(2021, 1, 1) },
+        new CompletedRefill { Id = 604, CouponId = 604, EndAmount = 100, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2021, 2, 2), ActualDeliveryDate = new DateTime(2021, 2, 2), LocationId = 600, Created = new DateTime(2021, 2, 2) },
+        new CompletedRefill { Id = 605, CouponId = 605, EndAmount = 100, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 1, 1), ActualDeliveryDate = new DateTime(2020, 1, 1), LocationId = 601, Created = new DateTime(2020, 1, 1) },
+        new CompletedRefill { Id = 606, CouponId = 606, EndAmount = 100, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 3, 1), ActualDeliveryDate = new DateTime(2020, 3, 1), LocationId = 601, Created = new DateTime(2020, 3, 1) },
+        new CompletedRefill { Id = 607, CouponId = 607, EndAmount = 100, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 5, 1), ActualDeliveryDate = new DateTime(2020, 5, 1), LocationId = 601, Created = new DateTime(2020, 5, 1) },
+        new CompletedRefill { Id = 608, CouponId = 608, EndAmount = 500, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 7, 1), ActualDeliveryDate = new DateTime(2020, 7, 1), LocationId = 601, Created = new DateTime(2020, 7, 1) },
+        new CompletedRefill { Id = 609, CouponId = 609, EndAmount = 200, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 9, 1), ActualDeliveryDate = new DateTime(2020, 9, 1), LocationId = 601, Created = new DateTime(2020, 9, 1) },
+        new CompletedRefill { Id = 610, CouponId = 610, EndAmount = 400, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 11, 1), ActualDeliveryDate = new DateTime(2020, 11, 1), LocationId = 601, Created = new DateTime(2020, 11, 1) },
+        new CompletedRefill { Id = 611, CouponId = 611, EndAmount = 1, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2020, 1, 1), ActualDeliveryDate = new DateTime(2020, 1, 1), LocationId = 602, Created = new DateTime(2020, 1, 1) },
+        new CompletedRefill { Id = 612, CouponId = 612, EndAmount = 100, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2019, 12, 1), ActualDeliveryDate = new DateTime(2019, 12, 1), LocationId = 603, Created = new DateTime(2019, 12, 1) },
+        new CompletedRefill { Id = 613, CouponId = 613, EndAmount = 0, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2021, 1, 31), ActualDeliveryDate = new DateTime(2021, 1, 31), LocationId = 603, Created = new DateTime(2021, 1, 31) },
         //
-        new CompletedRefill { Id = 614, CouponId = 614, StartAmount = 0, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2015, 1, 1), ActualDeliveryDate = new DateTime(2015, 1, 1), LocationId = 604, Created = new DateTime(2015, 1, 1) },
-        new CompletedRefill { Id = 615, CouponId = 615, StartAmount = 0, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2016, 1, 1), ActualDeliveryDate = new DateTime(2016, 1, 1), LocationId = 604, Created = new DateTime(2016, 1, 1) },
-        new CompletedRefill { Id = 616, CouponId = 616, StartAmount = 0, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2017, 1, 1), ActualDeliveryDate = new DateTime(2017, 1, 1), LocationId = 604, Created = new DateTime(2017, 1, 1) },
-        new CompletedRefill { Id = 617, CouponId = 617, StartAmount = 0, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2018, 1, 1), ActualDeliveryDate = new DateTime(2018, 1, 1), LocationId = 604, Created = new DateTime(2018, 1, 1) },
-        new CompletedRefill { Id = 618, CouponId = 618, StartAmount = 0, EndAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2019, 1, 1), ActualDeliveryDate = new DateTime(2019, 1, 1), LocationId = 604, Created = new DateTime(2019, 1, 1) }
+        new CompletedRefill { Id = 614, CouponId = 614, EndAmount = 0, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2015, 1, 1), ActualDeliveryDate = new DateTime(2015, 1, 1), LocationId = 604, Created = new DateTime(2015, 1, 1) },
+        new CompletedRefill { Id = 615, CouponId = 615, EndAmount = 0, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2016, 1, 1), ActualDeliveryDate = new DateTime(2016, 1, 1), LocationId = 604, Created = new DateTime(2016, 1, 1) },
+        new CompletedRefill { Id = 616, CouponId = 616, EndAmount = 0, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2017, 1, 1), ActualDeliveryDate = new DateTime(2017, 1, 1), LocationId = 604, Created = new DateTime(2017, 1, 1) },
+        new CompletedRefill { Id = 617, CouponId = 617, EndAmount = 0, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2018, 1, 1), ActualDeliveryDate = new DateTime(2018, 1, 1), LocationId = 604, Created = new DateTime(2018, 1, 1) },
+        new CompletedRefill { Id = 618, CouponId = 618, EndAmount = 0, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2019, 1, 1), ActualDeliveryDate = new DateTime(2019, 1, 1), LocationId = 604, Created = new DateTime(2019, 1, 1) }
       );
       //END
       context.SaveChanges();

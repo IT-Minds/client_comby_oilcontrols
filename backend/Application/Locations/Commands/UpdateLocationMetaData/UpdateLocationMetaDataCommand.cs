@@ -43,6 +43,7 @@ namespace Application.Locations.Commands.UpdateLocationMetaData
         }
 
         location.Address = request.Data.Address;
+        location.AddressExtra = request.Data.AddressExtra;
         location.Comments = request.Data.Comments;
         location.Schedule = request.Data.Schedule;
         location.EstimateFuelConsumption = request.Data.EstimateFuelConsumption;

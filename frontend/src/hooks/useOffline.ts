@@ -11,6 +11,7 @@ type SavedCallback = {
 type Return = {
   awaitCallback: (cb: Callback, id: string) => void;
   isOnline: boolean;
+  savedCallbacks: SavedCallback[];
 };
 
 export const useOffline = (): Return => {
@@ -76,5 +77,5 @@ export const useOffline = (): Return => {
     });
   }, []);
 
-  return { awaitCallback, isOnline };
+  return { awaitCallback, isOnline, savedCallbacks };
 };

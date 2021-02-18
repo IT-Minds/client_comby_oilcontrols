@@ -11,6 +11,7 @@ namespace Domain.Entities
     public Region Region { get; set; }
     public RefillSchedule Schedule { get; set; }
     public string Address { get; set; }
+    public string AddressExtra { get; set; }
     public string Comments { get; set; }
     public int LocationId { get; set; }
     public Location Location { get; set; }

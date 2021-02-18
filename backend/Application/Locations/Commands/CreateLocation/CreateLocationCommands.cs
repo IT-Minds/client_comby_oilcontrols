@@ -37,6 +37,7 @@ namespace Application.Locations.Commands.CreateLocation
         var location = new Location
         {
           Address = request.Data.Address,
+          AddressExtra = request.Data.AddressExtra,
           Comments = request.Data.Comments,
           Schedule = request.Data.Schedule,
           RegionId = request.Data.RegionId,

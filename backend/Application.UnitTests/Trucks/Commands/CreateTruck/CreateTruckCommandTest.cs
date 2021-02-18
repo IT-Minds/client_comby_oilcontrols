@@ -19,7 +19,8 @@ namespace Application.UnitTests.Trucks.Commands.CreateTruck
           TruckIdentifier = "Truck123",
           Description = "Absolutely a truck.",
           Name = "Trucky",
-          TankCapacity = 10.5
+          TankCapacity = 10.5,
+          DriverId = 1
         }
       };
 

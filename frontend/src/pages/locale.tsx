@@ -1,7 +1,8 @@
-import { Button, Center, Heading, HStack, Select, Text } from "@chakra-ui/react";
+import { Button, Center, Heading, HStack, Select, Text, VStack } from "@chakra-ui/react";
 import { GetStaticProps, NextPage } from "next";
 import { I18nProps, useI18n } from "next-rosetta";
 import React, { useCallback, useMemo, useState } from "react";
+import { MdArchive } from "react-icons/md";
 import { genStatsClient } from "services/backend/apiClients";
 import { downloadFile } from "utils/downloadFile";
 
@@ -27,7 +28,7 @@ const LocalePage: NextPage = () => {
   }, [refillYear]);
 
   return (
-    <Center>
+    <VStack>
       <Heading textAlign="center" mb={4}>
         {t("localePage.title")}
       </Heading>
@@ -46,11 +47,13 @@ const LocalePage: NextPage = () => {
           colorScheme="green"
           disabled={!refillYear || refillYear == 0}
           onClick={downloadRefill}
-          p={1}>
+          rightIcon={<MdArchive />}
+          pr={6}
+          pl={6}>
           {t("localePage.download")}
         </Button>
       </HStack>
-    </Center>
+    </VStack>
   );
 };
 
