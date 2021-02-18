@@ -1,5 +1,6 @@
 import ComboSelect from "components/SortFilter/ComboSelect";
 import { usePagedFetched } from "hooks/usePagedFetched";
+import { useI18n } from "next-rosetta";
 import { FC, useMemo, useReducer } from "react";
 import ListReducer from "react-list-reducer";
 import { genStreetClient } from "services/backend/apiClients";
@@ -11,6 +12,7 @@ type Props = {
 };
 
 const StreetSelector: FC<Props> = ({ cb, value }) => {
+  const { t } = useI18n<Locale>();
   const [streets, dispatchStreets] = useReducer(ListReducer<StreetDto>("id"), []);
 
   const { done } = usePagedFetched(
@@ -31,17 +33,17 @@ const StreetSelector: FC<Props> = ({ cb, value }) => {
     <ComboSelect
       options={streets.map(s => ({
         ...s,
-        id: s.id.toString(),
+        id: s.id,
         name: s.name
       }))}
       isLoading={!done}
-      placeholder="Select Street"
-      onSelect={x => cb(streets.find(s => s.id === Number.parseInt(x.id)))}
+      placeholder={t("streetSelector.selectStreet") as string}
+      onSelect={x => cb(streets.find(s => s.id === Number(x.id)))}
       value={
         existingStreet
           ? {
               ...existingStreet,
-              id: existingStreet.id.toString(),
+              id: existingStreet.id,
               name: existingStreet.name
             }
           : null

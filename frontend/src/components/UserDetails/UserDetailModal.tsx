@@ -109,7 +109,7 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
                   type={showPassword ? "text" : "password"}
                   mb={4}
                   onChange={e => setNewPassword(e.target.value)}
-                  placeholder="Password"
+                  placeholder={t("users.userDetailsTable.userDetailsModal.password") as string}
                 />
 
                 <InputRightElement width="4.5rem">
@@ -132,7 +132,9 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
                 <Input
                   type={showRepeatPassword ? "text" : "password"}
                   onChange={e => setRepeateNewPassword(e.target.value)}
-                  placeholder="Repeat password"
+                  placeholder={
+                    t("users.userDetailsTable.userDetailsModal.repeatPassword") as string
+                  }
                 />
                 <InputRightElement width="4.5rem">
                   <Button

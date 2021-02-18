@@ -5,8 +5,14 @@ import ViewLocationHistoryModalBtn from "components/LocationHistory/ViewLocation
 import OrderRefillComp from "components/OrderRefill/OrderRefillComp";
 import { useColors } from "hooks/useColors";
 import { useI18n } from "next-rosetta";
-import { FC } from "react";
-import { LocationDetailsIdDto, RefillSchedule } from "services/backend/nswagts";
+import { FC, useCallback } from "react";
+import { genRefillClient } from "services/backend/apiClients";
+import {
+  IOrderRefillCommand,
+  LocationDetailsIdDto,
+  OrderRefillCommand,
+  RefillSchedule
+} from "services/backend/nswagts";
 
 type Props = {
   data: LocationDetailsIdDto[];
@@ -16,6 +22,11 @@ const LocationList: FC<Props> = ({ data }) => {
   const { t } = useI18n<Locale>();
 
   const { hoverBg } = useColors();
+
+  const orderRefill = useCallback(async (orderRefillForm: IOrderRefillCommand) => {
+    const client = await genRefillClient();
+    await client.orderRefill(new OrderRefillCommand(orderRefillForm));
+  }, []);
 
   return (
     <Table size="sm">
@@ -45,7 +56,7 @@ const LocationList: FC<Props> = ({ data }) => {
 
                 <ViewLocationHistoryModalBtn data={dat} />
 
-                <OrderRefillComp locationId={dat.id} submitCallback={null} />
+                <OrderRefillComp locationId={dat.id} submitCallback={orderRefill} />
 
                 <RefillModalBtn />
               </HStack>
