@@ -1,5 +1,6 @@
 import ComboSelect from "components/SortFilter/ComboSelect";
 import { usePagedFetched } from "hooks/usePagedFetched";
+import { useI18n } from "next-rosetta";
 import { FC, useReducer } from "react";
 import ListReducer from "react-list-reducer";
 import { genRoleClient } from "services/backend/apiClients";
@@ -12,6 +13,7 @@ type Props = {
 };
 
 const UserRoleSelector: FC<Props> = ({ cb, preselectedValue }) => {
+  const { t } = useI18n<Locale>();
   const [userRoles, dispatchUserRoles] = useReducer(ListReducer<IRoleIdDto>("id"), []);
 
   const { done } = usePagedFetched(
@@ -35,7 +37,7 @@ const UserRoleSelector: FC<Props> = ({ cb, preselectedValue }) => {
           name: s.name
         }))}
       isLoading={!done}
-      placeholder="Select User Role"
+      placeholder={t("userRoleSelector.selectUserRole") as string}
       onSelect={x => cb(userRoles.find(s => s.name === x.name))}
     />
   );

@@ -71,7 +71,7 @@ const CreateRoleComp: FC<Props> = ({ submitCallback, value }) => {
         <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.name}>
           <FormLabel>{t("createRole.roleName")}</FormLabel>
           <Input
-            placeholder="Role name"
+            placeholder={t("createRole.roleName") as string}
             onChange={e => {
               updateLocalForm(e.target.value, "name");
             }}
@@ -83,7 +83,7 @@ const CreateRoleComp: FC<Props> = ({ submitCallback, value }) => {
           <FormLabel>{t("createRole.roleAction")}</FormLabel>
           {Object.entries(ActionRecord).map(([a, b]) => (
             <HStack key={b}>
-              <Text>{Action[Number(b)]}</Text>
+              <Text>{t("enums.action." + b)}</Text>
               <Spacer></Spacer>
               <Checkbox onChange={e => setRole(b)}></Checkbox>
             </HStack>
