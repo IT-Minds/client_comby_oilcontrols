@@ -23,6 +23,9 @@ export const table: Locale = {
       debtors: "Debitorer",
       create: "Opret ny debitor"
     },
+    temperature: {
+      temperature: "Temperaturer"
+    },
     users: "Brugerstyring",
     statistics: "Rapporter"
   },
@@ -72,6 +75,7 @@ export const table: Locale = {
   },
 
   dailyTemperature: {
+    addDailyTemperature: "Tilføj temperatur",
     selectRegion: "Vælg region",
     temperature: "Temperatur",
     selectDate: "Vælg en dato",

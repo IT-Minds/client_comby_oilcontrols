@@ -25,6 +25,9 @@ export interface Locale {
       overview: string;
       create: string;
     };
+    temperature: {
+      temperature: string;
+    };
     users: string;
     statistics: string;
   };
@@ -75,6 +78,7 @@ export interface Locale {
   };
 
   dailyTemperature: {
+    addDailyTemperature: string;
     selectRegion: string;
     temperature: string;
     selectDate: string;
