@@ -4,7 +4,7 @@
 
 ### Prerequisites
 
-To complete the application's installation on the windows server, it must meet the following needs:
+To complete the application's installation on the windows server, the server must have the following dependencies installed:
 
 - [iisnode](https://github.com/Azure/iisnode)
 - [.NET 5 hosting bundle](https://dotnet.microsoft.com/download/dotnet/5.0)

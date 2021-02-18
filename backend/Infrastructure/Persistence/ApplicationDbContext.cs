@@ -122,6 +122,7 @@ namespace Infrastructure.Persistence
             RegionId = (entity.Entity as Location).RegionId,
             Schedule = (entity.Entity as Location).Schedule,
             Address = (entity.Entity as Location).Address,
+            AddressExtra = (entity.Entity as Location).AddressExtra,
             Comments = (entity.Entity as Location).Comments,
             Location = (entity.Entity as Location),
             CreatedBy = _currentUserService.UserId,

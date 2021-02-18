@@ -1,5 +1,6 @@
 import { IconType } from "react-icons";
 import { MdArchive, MdAttachMoney, MdDirectionsBus, MdLocationOn, MdPeople } from "react-icons/md";
+import { Action } from "services/backend/nswagts";
 
 export interface ChildLink {
   id: string;
@@ -16,6 +17,7 @@ export interface MenuLink {
   children?: ChildLink[];
 
   href?: string;
+  access: Action;
 }
 
 export const testLinks: MenuLink[] = [
@@ -24,7 +26,8 @@ export const testLinks: MenuLink[] = [
     title: "menu.trucks.trucks",
     href: "/trucks",
 
-    logo: MdDirectionsBus
+    logo: MdDirectionsBus,
+    access: Action.GET_TRUCK
   },
   {
     id: "locations",
@@ -47,27 +50,31 @@ export const testLinks: MenuLink[] = [
       }
     ],
 
-    logo: MdLocationOn
+    logo: MdLocationOn,
+    access: Action.GET_LOCATION
   },
   {
     id: "debtor",
     title: "menu.debtors.debtors",
     href: "/debtors",
 
-    logo: MdAttachMoney
+    logo: MdAttachMoney,
+    access: Action.GET_DEBTOR
   },
   {
     id: "users",
     title: "menu.users",
     href: "/users",
 
-    logo: MdPeople
+    logo: MdPeople,
+    access: Action.GET_ROLES
   },
   {
     id: "stats",
     title: "menu.statistics",
     href: "/locale",
 
-    logo: MdArchive
+    logo: MdArchive,
+    access: Action.GET_DEBTOR
   }
 ];

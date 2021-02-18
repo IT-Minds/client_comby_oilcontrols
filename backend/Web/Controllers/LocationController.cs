@@ -49,19 +49,19 @@ namespace Web.Controllers
     }
 
     [HttpGet]
-    public async Task<ActionResult<PageResult<LocationDetailsIdDto, DateTime>>> GetAll(
+    public async Task<ActionResult<PageResult<LocationDetailsIdDto, DateTimeOffset>>> GetAll(
     [FromQuery] TankType? locationType,
-    [FromQuery] DateTime? needle = null, [FromQuery] int size = 1000, [FromQuery] int? skip = 0)
+    [FromQuery] DateTimeOffset? needle = null, [FromQuery] int size = 1000, [FromQuery] int? skip = 0)
     {
       if (!needle.HasValue)
       {
-        needle = DateTime.MaxValue;
+        needle = DateTimeOffset.MaxValue;
       }
 
       return await Mediator.Send(new GetDebtorsQuery
       {
         TankType = locationType,
-        Needle = (DateTime)needle,
+        Needle = (DateTimeOffset)needle,
         Size = size,
         Skip = skip
       });

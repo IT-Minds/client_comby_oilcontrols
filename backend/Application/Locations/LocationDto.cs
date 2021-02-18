@@ -8,6 +8,7 @@ namespace Application.Locations
   public class LocationDto: IAutoMap<Location>
   {
     public string Address { get; set; }
+    public string AddressExtra { get; set; }
     public string Comments { get; set; }
     public int RegionId { get; set; }
     public RefillSchedule Schedule { get; set; }

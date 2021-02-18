@@ -56,6 +56,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
 
   const [localForm, setLocalForm] = useState<ILocationDetailsDto>({
     address: "",
+    addressExtra: "",
     comments: "",
     estimateFuelConsumption: 0,
     regionId: null,
@@ -148,12 +149,22 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
 
             <StreetSelector
               cb={x => {
-                updateLocalForm(x.id, "address");
+                updateLocalForm(x.name, "address");
                 updateLocalForm(x.regionId, "regionId" as keyof typeof localForm);
               }}
               value={localForm.address}
             />
             <FormErrorMessage>{t("localeMetaData.formErrors.enterAddress")}</FormErrorMessage>
+          </FormControl>
+          <FormControl>
+            <FormLabel>{t("localeMetaData.address")}</FormLabel>
+            <Input
+              placeholder="#"
+              onChange={e => {
+                updateLocalForm(e.target.value, "addressExtra");
+              }}
+              value={localForm.addressExtra}
+            />
           </FormControl>
 
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.schedule}>

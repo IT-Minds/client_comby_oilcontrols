@@ -16,6 +16,7 @@ namespace Application.Locations
     public TankType LocationType { get; set; }
     public FuelType FuelType { get; set; }
     public string Address { get; set; }
+    public string AddressExtra { get; set; }
     public DateTime ExpectedDeliveryDate { get; set; }
     public bool DebtorBlocked { get; set; } = false; // TODO map real data
 
@@ -30,6 +31,7 @@ namespace Application.Locations
       .ForMember(dest => dest.Schedule, map => map.MapFrom(from => from.Location.Schedule))
 
       .ForMember(dest => dest.Address, map => map.MapFrom(from => from.Location.Address))
+      .ForMember(dest => dest.AddressExtra, map => map.MapFrom(from => from.Location.AddressExtra))
 
       .ForMember(dest => dest.LocationType,
           map => map.MapFrom(from => from.Location.FuelTank.TankType))

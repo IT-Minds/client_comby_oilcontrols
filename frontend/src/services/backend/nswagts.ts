@@ -823,7 +823,7 @@ export class HealthClient extends ClientBase implements IHealthClient {
 
 export interface ILocationClient {
     addNewLocation(command: CreateLocationCommand): Promise<number>;
-    getAll(locationType?: TankType | null | undefined, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationDetailsIdDtoAndDateTime>;
+    getAll(locationType?: TankType | null | undefined, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationDetailsIdDtoAndDateTimeOffset>;
     addDebtor(command: AddDebtorToLocationCommand): Promise<number>;
     updateDebtor(command: UpdateDebtorOnLocationCommand): Promise<number>;
     removeDebtor(command: RemoveDebtorFromLocationCommand): Promise<number>;
@@ -887,7 +887,7 @@ export class LocationClient extends ClientBase implements ILocationClient {
         return Promise.resolve<number>(<any>null);
     }
 
-    getAll(locationType?: TankType | null | undefined, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationDetailsIdDtoAndDateTime> {
+    getAll(locationType?: TankType | null | undefined, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfLocationDetailsIdDtoAndDateTimeOffset> {
         let url_ = this.baseUrl + "/api/Location?";
         if (locationType !== undefined && locationType !== null)
             url_ += "locationType=" + encodeURIComponent("" + locationType) + "&";
@@ -915,14 +915,14 @@ export class LocationClient extends ClientBase implements ILocationClient {
         });
     }
 
-    protected processGetAll(response: Response): Promise<PageResultOfLocationDetailsIdDtoAndDateTime> {
+    protected processGetAll(response: Response): Promise<PageResultOfLocationDetailsIdDtoAndDateTimeOffset> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PageResultOfLocationDetailsIdDtoAndDateTime.fromJS(resultData200);
+            result200 = PageResultOfLocationDetailsIdDtoAndDateTimeOffset.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -930,7 +930,7 @@ export class LocationClient extends ClientBase implements ILocationClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<PageResultOfLocationDetailsIdDtoAndDateTime>(<any>null);
+        return Promise.resolve<PageResultOfLocationDetailsIdDtoAndDateTimeOffset>(<any>null);
     }
 
     addDebtor(command: AddDebtorToLocationCommand): Promise<number> {
@@ -3462,6 +3462,7 @@ export interface ICreateLocationCommand {
 
 export class LocationDto implements ILocationDto {
     address?: string | null;
+    addressExtra?: string | null;
     comments?: string | null;
     regionId?: number;
     schedule?: RefillSchedule;
@@ -3480,6 +3481,7 @@ export class LocationDto implements ILocationDto {
     init(_data?: any) {
         if (_data) {
             this.address = _data["address"] !== undefined ? _data["address"] : <any>null;
+            this.addressExtra = _data["addressExtra"] !== undefined ? _data["addressExtra"] : <any>null;
             this.comments = _data["comments"] !== undefined ? _data["comments"] : <any>null;
             this.regionId = _data["regionId"] !== undefined ? _data["regionId"] : <any>null;
             this.schedule = _data["schedule"] !== undefined ? _data["schedule"] : <any>null;
@@ -3498,6 +3500,7 @@ export class LocationDto implements ILocationDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["address"] = this.address !== undefined ? this.address : <any>null;
+        data["addressExtra"] = this.addressExtra !== undefined ? this.addressExtra : <any>null;
         data["comments"] = this.comments !== undefined ? this.comments : <any>null;
         data["regionId"] = this.regionId !== undefined ? this.regionId : <any>null;
         data["schedule"] = this.schedule !== undefined ? this.schedule : <any>null;
@@ -3509,6 +3512,7 @@ export class LocationDto implements ILocationDto {
 
 export interface ILocationDto {
     address?: string | null;
+    addressExtra?: string | null;
     comments?: string | null;
     regionId?: number;
     schedule?: RefillSchedule;
@@ -3726,13 +3730,13 @@ export interface IRemoveDebtorFromLocationCommand {
     debtorId?: number;
 }
 
-export class PageResultOfLocationDetailsIdDtoAndDateTime implements IPageResultOfLocationDetailsIdDtoAndDateTime {
+export class PageResultOfLocationDetailsIdDtoAndDateTimeOffset implements IPageResultOfLocationDetailsIdDtoAndDateTimeOffset {
     newNeedle?: Date;
     pagesRemaining?: number;
     results?: LocationDetailsIdDto[] | null;
     hasMore?: boolean;
 
-    constructor(data?: IPageResultOfLocationDetailsIdDtoAndDateTime) {
+    constructor(data?: IPageResultOfLocationDetailsIdDtoAndDateTimeOffset) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -3754,9 +3758,9 @@ export class PageResultOfLocationDetailsIdDtoAndDateTime implements IPageResultO
         }
     }
 
-    static fromJS(data: any): PageResultOfLocationDetailsIdDtoAndDateTime {
+    static fromJS(data: any): PageResultOfLocationDetailsIdDtoAndDateTimeOffset {
         data = typeof data === 'object' ? data : {};
-        let result = new PageResultOfLocationDetailsIdDtoAndDateTime();
+        let result = new PageResultOfLocationDetailsIdDtoAndDateTimeOffset();
         result.init(data);
         return result;
     }
@@ -3775,7 +3779,7 @@ export class PageResultOfLocationDetailsIdDtoAndDateTime implements IPageResultO
     }
 }
 
-export interface IPageResultOfLocationDetailsIdDtoAndDateTime {
+export interface IPageResultOfLocationDetailsIdDtoAndDateTimeOffset {
     newNeedle?: Date;
     pagesRemaining?: number;
     results?: LocationDetailsIdDto[] | null;
@@ -3910,6 +3914,7 @@ export class LocationHistoryDto implements ILocationHistoryDto {
     regionId?: number;
     schedule?: RefillSchedule;
     address?: string | null;
+    addressExtra?: string | null;
     comments?: string | null;
     locationId?: number;
     timeOfChange?: Date;
@@ -3929,6 +3934,7 @@ export class LocationHistoryDto implements ILocationHistoryDto {
             this.regionId = _data["regionId"] !== undefined ? _data["regionId"] : <any>null;
             this.schedule = _data["schedule"] !== undefined ? _data["schedule"] : <any>null;
             this.address = _data["address"] !== undefined ? _data["address"] : <any>null;
+            this.addressExtra = _data["addressExtra"] !== undefined ? _data["addressExtra"] : <any>null;
             this.comments = _data["comments"] !== undefined ? _data["comments"] : <any>null;
             this.locationId = _data["locationId"] !== undefined ? _data["locationId"] : <any>null;
             this.timeOfChange = _data["timeOfChange"] ? new Date(_data["timeOfChange"].toString()) : <any>null;
@@ -3948,6 +3954,7 @@ export class LocationHistoryDto implements ILocationHistoryDto {
         data["regionId"] = this.regionId !== undefined ? this.regionId : <any>null;
         data["schedule"] = this.schedule !== undefined ? this.schedule : <any>null;
         data["address"] = this.address !== undefined ? this.address : <any>null;
+        data["addressExtra"] = this.addressExtra !== undefined ? this.addressExtra : <any>null;
         data["comments"] = this.comments !== undefined ? this.comments : <any>null;
         data["locationId"] = this.locationId !== undefined ? this.locationId : <any>null;
         data["timeOfChange"] = this.timeOfChange ? this.timeOfChange.toISOString() : <any>null;
@@ -3960,6 +3967,7 @@ export interface ILocationHistoryDto {
     regionId?: number;
     schedule?: RefillSchedule;
     address?: string | null;
+    addressExtra?: string | null;
     comments?: string | null;
     locationId?: number;
     timeOfChange?: Date;
@@ -5198,6 +5206,7 @@ export class LocationRefillDto implements ILocationRefillDto {
     locationType?: TankType;
     fuelType?: FuelType;
     address?: string | null;
+    addressExtra?: string | null;
     expectedDeliveryDate?: Date;
     debtorBlocked?: boolean;
 
@@ -5219,6 +5228,7 @@ export class LocationRefillDto implements ILocationRefillDto {
             this.locationType = _data["locationType"] !== undefined ? _data["locationType"] : <any>null;
             this.fuelType = _data["fuelType"] !== undefined ? _data["fuelType"] : <any>null;
             this.address = _data["address"] !== undefined ? _data["address"] : <any>null;
+            this.addressExtra = _data["addressExtra"] !== undefined ? _data["addressExtra"] : <any>null;
             this.expectedDeliveryDate = _data["expectedDeliveryDate"] ? new Date(_data["expectedDeliveryDate"].toString()) : <any>null;
             this.debtorBlocked = _data["debtorBlocked"] !== undefined ? _data["debtorBlocked"] : <any>null;
         }
@@ -5240,6 +5250,7 @@ export class LocationRefillDto implements ILocationRefillDto {
         data["locationType"] = this.locationType !== undefined ? this.locationType : <any>null;
         data["fuelType"] = this.fuelType !== undefined ? this.fuelType : <any>null;
         data["address"] = this.address !== undefined ? this.address : <any>null;
+        data["addressExtra"] = this.addressExtra !== undefined ? this.addressExtra : <any>null;
         data["expectedDeliveryDate"] = this.expectedDeliveryDate ? this.expectedDeliveryDate.toISOString() : <any>null;
         data["debtorBlocked"] = this.debtorBlocked !== undefined ? this.debtorBlocked : <any>null;
         return data; 
@@ -5254,6 +5265,7 @@ export interface ILocationRefillDto {
     locationType?: TankType;
     fuelType?: FuelType;
     address?: string | null;
+    addressExtra?: string | null;
     expectedDeliveryDate?: Date;
     debtorBlocked?: boolean;
 }

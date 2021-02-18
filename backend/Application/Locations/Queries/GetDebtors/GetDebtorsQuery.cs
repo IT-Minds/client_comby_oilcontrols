@@ -12,17 +12,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Locations.Queries.GetDebtors
 {
-  public class GetDebtorsQuery : IPageRequest<LocationDetailsIdDto, DateTime>, IPageBody<Location, DateTime>
+  public class GetDebtorsQuery : IPageRequest<LocationDetailsIdDto, DateTimeOffset>, IPageBody<Location, DateTimeOffset>
   {
     public TankType? TankType { get; set; }
 
     public int Size { get; set; }
     public int? Skip { get; set; }
-    public DateTime Needle { get; set; }
+    public DateTimeOffset Needle { get; set; }
 
-    public DateTime GetNewNeedle(IQueryable<Location> query)
+    public DateTimeOffset GetNewNeedle(IQueryable<Location> query)
     {
-      return query.Select(x => x.LastModified).Take(Size).LastOrDefault().DateTime;
+      return query.Select(x => x.LastModified).Take(Size).LastOrDefault();
     }
 
     public async Task<int> PagesRemaining(IQueryable<Location> query)
@@ -54,7 +54,7 @@ namespace Application.Locations.Queries.GetDebtors
       return partial;
     }
 
-    public class GetDebtorsQueryHandler : IPageRequestHandler<GetDebtorsQuery, LocationDetailsIdDto, DateTime>
+    public class GetDebtorsQueryHandler : IPageRequestHandler<GetDebtorsQuery, LocationDetailsIdDto, DateTimeOffset>
     {
       private readonly IApplicationDbContext _context;
       private readonly IMapper _mapper;
@@ -65,9 +65,9 @@ namespace Application.Locations.Queries.GetDebtors
         _mapper = mapper;
       }
 
-      public async Task<PageResult<LocationDetailsIdDto, DateTime>> Handle(GetDebtorsQuery request, CancellationToken cancellationToken)
+      public async Task<PageResult<LocationDetailsIdDto, DateTimeOffset>> Handle(GetDebtorsQuery request, CancellationToken cancellationToken)
       {
-        var page = new PageResult<LocationDetailsIdDto, DateTime>();
+        var page = new PageResult<LocationDetailsIdDto, DateTimeOffset>();
 
         var query = request.PreparePage(_context.Locations.Include(x => x.FuelTank));
         var pagesRemaining = await request.PagesRemaining(query);

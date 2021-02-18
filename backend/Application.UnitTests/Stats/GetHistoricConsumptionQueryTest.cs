@@ -111,12 +111,12 @@ namespace Application.UnitTests.Stats
       Math.Round(result[1].FuelConsumed, 2).Should().Be(435.0);
       Math.Round(result[2].FuelConsumed, 2).Should().Be(457.38);
       Math.Round(result[3].FuelConsumed, 2).Should().Be(442.62);
-      Math.Round(result[4].FuelConsumed, 2).Should().Be(254.1);
-      Math.Round(result[5].FuelConsumed, 2).Should().Be(245.90);
-      Math.Round(result[6].FuelConsumed, 2).Should().Be(400.0);
-      Math.Round(result[7].FuelConsumed, 2).Should().Be(400.0);
-      Math.Round(result[8].FuelConsumed, 2).Should().Be(295.08);
-      Math.Round(result[9].FuelConsumed, 2).Should().Be(304.92);
+      Math.Round(result[4].FuelConsumed, 2).Should().Be(457.38); // Used to assert 254.1
+      Math.Round(result[5].FuelConsumed, 2).Should().Be(442.62); // Used to assert 245.90
+      Math.Round(result[6].FuelConsumed, 2).Should().Be(250.0); // Used to assert 400
+      Math.Round(result[7].FuelConsumed, 2).Should().Be(250.0); // Used to assert 400
+      Math.Round(result[8].FuelConsumed, 2).Should().Be(393.44); // Used to assert 295.08
+      Math.Round(result[9].FuelConsumed, 2).Should().Be(406.56); // Used to assert 304.92
       Math.Round(result[10].FuelConsumed, 2).Should().Be(0.0);
       Math.Round(result[11].FuelConsumed, 2).Should().Be(0.0);
     }
@@ -159,18 +159,18 @@ namespace Application.UnitTests.Stats
       var result = (await handler.Handle(query, CancellationToken.None)).ToList();
       result.Should().NotBeEmpty();
       result.Count().Should().Be(12);
-      Math.Round(result[0].FuelConsumed, 2).Should().Be(72.6);
-      Math.Round(result[1].FuelConsumed, 2).Should().Be(67.92);
-      Math.Round(result[2].FuelConsumed, 2).Should().Be(72.6);
-      Math.Round(result[3].FuelConsumed, 2).Should().Be(70.26);
-      Math.Round(result[4].FuelConsumed, 2).Should().Be(72.6);
-      Math.Round(result[5].FuelConsumed, 2).Should().Be(70.26);
-      Math.Round(result[6].FuelConsumed, 2).Should().Be(72.6);
-      Math.Round(result[7].FuelConsumed, 2).Should().Be(72.6);
-      Math.Round(result[8].FuelConsumed, 2).Should().Be(70.26);
-      Math.Round(result[9].FuelConsumed, 2).Should().Be(72.6);
-      Math.Round(result[10].FuelConsumed, 2).Should().Be(70.26);
-      Math.Round(result[11].FuelConsumed, 2).Should().Be(72.6);
+      Math.Round(result[0].FuelConsumed, 2).Should().Be(65.34); // Used to assert 72.6
+      Math.Round(result[1].FuelConsumed, 2).Should().Be(61.12); // Used to assert 67.92
+      Math.Round(result[2].FuelConsumed, 2).Should().Be(65.34);
+      Math.Round(result[3].FuelConsumed, 2).Should().Be(63.23);  // Used to assert 70.26
+      Math.Round(result[4].FuelConsumed, 2).Should().Be(65.34);
+      Math.Round(result[5].FuelConsumed, 2).Should().Be(63.23);
+      Math.Round(result[6].FuelConsumed, 2).Should().Be(65.34);
+      Math.Round(result[7].FuelConsumed, 2).Should().Be(65.34);
+      Math.Round(result[8].FuelConsumed, 2).Should().Be(63.23);
+      Math.Round(result[9].FuelConsumed, 2).Should().Be(65.34);
+      Math.Round(result[10].FuelConsumed, 2).Should().Be(63.23);
+      Math.Round(result[11].FuelConsumed, 2).Should().Be(65.34);
     }
 
     [Fact]
