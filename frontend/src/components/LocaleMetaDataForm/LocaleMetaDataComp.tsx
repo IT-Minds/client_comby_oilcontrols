@@ -234,7 +234,12 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
             <Input
               placeholder="Tank Number"
               onChange={e => {
-                updateLocalForm(parseInt(e.target.value), "tankNumber");
+                const value = parseInt(e.target.value);
+                if (isNaN(value)) {
+                  updateLocalForm("", "tankNumber");
+                } else {
+                  updateLocalForm(value, "tankNumber");
+                }
               }}
               value={localForm.tankNumber}
             />
@@ -246,8 +251,13 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
             <InputGroup>
               <NumberInput
                 placeholder="Tank capacity"
-                onChange={value => {
-                  updateLocalForm(parseInt(value), "tankCapacity");
+                onChange={e => {
+                  const value = parseInt(e);
+                  if (isNaN(value)) {
+                    updateLocalForm("", "tankCapacity");
+                  } else {
+                    updateLocalForm(value, "tankCapacity");
+                  }
                 }}
                 value={localForm.tankCapacity}>
                 <NumberInputField />
@@ -264,8 +274,13 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
             <InputGroup>
               <NumberInput
                 placeholder="Min. fuel amount"
-                onChange={value => {
-                  updateLocalForm(parseInt(value), "minimumFuelAmount");
+                onChange={e => {
+                  const value = parseInt(e);
+                  if (isNaN(value)) {
+                    updateLocalForm("", "minimumFuelAmount");
+                  } else {
+                    updateLocalForm(value, "minimumFuelAmount");
+                  }
                 }}
                 value={localForm.minimumFuelAmount}>
                 <NumberInputField />
@@ -282,8 +297,13 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
             <InputGroup>
               <NumberInput
                 placeholder="Est. fuel consumption"
-                onChange={value => {
-                  updateLocalForm(parseInt(value), "estimateFuelConsumption");
+                onChange={e => {
+                  const value = parseInt(e);
+                  if (isNaN(value)) {
+                    updateLocalForm("", "estimateFuelConsumption");
+                  } else {
+                    updateLocalForm(value, "estimateFuelConsumption");
+                  }
                 }}
                 value={localForm.estimateFuelConsumption}>
                 <NumberInputField />
