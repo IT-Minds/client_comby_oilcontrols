@@ -49,6 +49,16 @@ export interface Locale {
     submit: string;
   };
 
+  toast: {
+    successful: string;
+    updateDebtor: string;
+    createTruck: string;
+    createLocation: string;
+    updateLocation: string;
+    updatePassword: string;
+    updateRole: string;
+  };
+
   coupons: {
     invalidate: {
       invalidate: string;
@@ -139,6 +149,8 @@ export interface Locale {
       name: string;
       accountNumber: string;
       blocked: string;
+      yes: string;
+      no: string;
       couponIsRequired: string;
     };
   };
@@ -151,6 +163,7 @@ export interface Locale {
     selectRefillSchedule: string;
     refillSchedule: string;
     daysBetweenRefill: string;
+    numberOfDays: string;
     comment: string;
     comments: string;
     selectAnImage: string;
@@ -299,6 +312,8 @@ export interface Locale {
       };
     };
     runlist: {
+      comments: string;
+      debtorBlocked: string;
       locationType: string;
       address: string;
       agreementType: string;
@@ -343,10 +358,19 @@ export interface Locale {
 
   debtorSelector: {
     selectDebtor: string;
+    noDebtor: string;
   };
 
   userRoleSelector: {
     selectUserRole: string;
+  };
+
+  userSelector: {
+    selectUser: string;
+  };
+
+  truckSelector: {
+    selectTruck: string;
   };
 
   enums: {

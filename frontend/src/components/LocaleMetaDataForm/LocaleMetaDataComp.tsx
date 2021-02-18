@@ -194,7 +194,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
             }>
             <FormLabel>{t("localeMetaData.daysBetweenRefill")}</FormLabel>
             <Input
-              placeholder="# of days"
+              placeholder={t("localeMetaData.numberOfDays") as string}
               type="number"
               onChange={e => {
                 updateLocalForm(e.target.value, "daysBetweenRefills");
@@ -232,9 +232,13 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.tankNumber}>
             <FormLabel>{t("localeMetaData.tankNumber")}</FormLabel>
             <Input
-              placeholder="Tank Number"
               onChange={e => {
-                updateLocalForm(parseInt(e.target.value), "tankNumber");
+                const value = parseInt(e.target.value);
+                if (isNaN(value)) {
+                  updateLocalForm("", "tankNumber");
+                } else {
+                  updateLocalForm(value, "tankNumber");
+                }
               }}
               value={localForm.tankNumber}
             />
@@ -245,9 +249,13 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
             <FormLabel>{t("localeMetaData.tankCapacity")}</FormLabel>
             <InputGroup>
               <NumberInput
-                placeholder="Tank capacity"
-                onChange={value => {
-                  updateLocalForm(parseInt(value), "tankCapacity");
+                onChange={e => {
+                  const value = parseInt(e);
+                  if (isNaN(value)) {
+                    updateLocalForm("", "tankCapacity");
+                  } else {
+                    updateLocalForm(value, "tankCapacity");
+                  }
                 }}
                 value={localForm.tankCapacity}>
                 <NumberInputField />
@@ -263,9 +271,13 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
             <FormLabel>{t("localeMetaData.minFuelAmount")}</FormLabel>
             <InputGroup>
               <NumberInput
-                placeholder="Min. fuel amount"
-                onChange={value => {
-                  updateLocalForm(parseInt(value), "minimumFuelAmount");
+                onChange={e => {
+                  const value = parseInt(e);
+                  if (isNaN(value)) {
+                    updateLocalForm("", "minimumFuelAmount");
+                  } else {
+                    updateLocalForm(value, "minimumFuelAmount");
+                  }
                 }}
                 value={localForm.minimumFuelAmount}>
                 <NumberInputField />
@@ -281,9 +293,13 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
             <FormLabel>{t("localeMetaData.dailyFuelConsumptionEstimate")}</FormLabel>
             <InputGroup>
               <NumberInput
-                placeholder="Est. fuel consumption"
-                onChange={value => {
-                  updateLocalForm(parseInt(value), "estimateFuelConsumption");
+                onChange={e => {
+                  const value = parseInt(e);
+                  if (isNaN(value)) {
+                    updateLocalForm("", "estimateFuelConsumption");
+                  } else {
+                    updateLocalForm(value, "estimateFuelConsumption");
+                  }
                 }}
                 value={localForm.estimateFuelConsumption}>
                 <NumberInputField />
@@ -296,11 +312,11 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
           </FormControl>
 
           <FormControl isInvalid={formSubmitAttempts > 0 && localForm.fuelType <= -1} isRequired>
-            <FormLabel id="fuel-type">{t("localeMetaData.selectFuelType")}</FormLabel>
+            <FormLabel id="fuel-type">{t("localeMetaData.selectFuelType")}:</FormLabel>
             <Select
               onChange={e => updateLocalForm(e.target.value, "fuelType")}
               value={localForm.fuelType}
-              placeholder="Select option">
+              placeholder={t("localeMetaData.selectFuelType") as string}>
               {Object.entries(FuelTypeRecord).map(([a, b]) => (
                 <option key={b} value={b}>
                   {t("enums.fuelType." + b)}

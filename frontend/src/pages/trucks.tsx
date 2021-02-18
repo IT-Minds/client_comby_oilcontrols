@@ -62,7 +62,7 @@ const TruckPage: NextPage = () => {
       loadSingleTruck(truckId);
       toast({
         title: "Coupons Saved",
-        description: "Successful",
+        description: t("toast.successful"),
         status: "success",
         duration: 9000,
         isClosable: true
@@ -88,7 +88,7 @@ const TruckPage: NextPage = () => {
 
     toast({
       title: "Truck Meta Data Saved",
-      description: "Successful",
+      description: t("toast.successful"),
       status: "success",
       duration: 9000,
       isClosable: true
