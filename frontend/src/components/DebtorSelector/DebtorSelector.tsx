@@ -1,5 +1,6 @@
 import ComboSelect from "components/SortFilter/ComboSelect";
 import { useEffectAsync } from "hooks/useEffectAsync";
+import { useI18n } from "next-rosetta";
 import { FC, useState } from "react";
 import { genDebtorClient } from "services/backend/apiClients";
 import { DebtorDto } from "services/backend/nswagts";
@@ -10,6 +11,7 @@ type Props = {
 };
 
 const DebtorSelector: FC<Props> = ({ cb }) => {
+  const { t } = useI18n<Locale>();
   const [debtors, setDebtors] = useState<DebtorDto[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -34,7 +36,7 @@ const DebtorSelector: FC<Props> = ({ cb }) => {
         }))
       ]}
       isLoading={isLoading}
-      placeholder="Select debtor"
+      placeholder={t("debtorSelector.selectDebtor") as string}
       onSelect={x => {
         const dto = debtors.find(s => s.dbId == Number.parseInt(x.id));
         cb(dto);

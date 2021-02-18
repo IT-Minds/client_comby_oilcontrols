@@ -146,9 +146,12 @@ export interface Locale {
   localeMetaData: {
     location: string;
     locationType: string;
+    selectALocation: string;
     address: string;
+    selectRefillSchedule: string;
     refillSchedule: string;
     daysBetweenRefill: string;
+    comment: string;
     comments: string;
     selectAnImage: string;
     selectImage: string;
@@ -234,6 +237,7 @@ export interface Locale {
     downloadHistory: string;
     download: string;
     infoText: string;
+    selectRefillYear: string;
   };
 
   trucks: {
@@ -314,6 +318,8 @@ export interface Locale {
         manageUser: string;
         newPassword: string;
         updatePassword: string;
+        password: string;
+        repeatPassword: string;
         userRole: string;
         updateRole: string;
         hide: string;
@@ -329,6 +335,18 @@ export interface Locale {
   locationOverview: {
     addNew: string;
     location: string;
+  };
+
+  streetSelector: {
+    selectStreet: string;
+  };
+
+  debtorSelector: {
+    selectDebtor: string;
+  };
+
+  userRoleSelector: {
+    selectUserRole: string;
   };
 
   enums: {

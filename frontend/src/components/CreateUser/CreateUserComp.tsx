@@ -43,7 +43,7 @@ const CreateUserComp: FC<Props> = ({ submitCallback }) => {
         <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.userName}>
           <FormLabel>{t("createUser.userName")}</FormLabel>
           <Input
-            placeholder="Username"
+            placeholder={t("createUser.userName") as string}
             onChange={e => {
               updateLocalForm(e.target.value, "userName");
             }}
@@ -55,7 +55,7 @@ const CreateUserComp: FC<Props> = ({ submitCallback }) => {
           <FormLabel>{t("createUser.password")}</FormLabel>
           <Input
             type="password"
-            placeholder="Password"
+            placeholder={t("createUser.password") as string}
             onChange={e => {
               updateLocalForm(e.target.value, "password");
             }}

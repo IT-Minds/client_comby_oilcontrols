@@ -132,7 +132,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && localForm.tankType <= -1}>
             <FormLabel>{t("localeMetaData.locationType")}</FormLabel>
             <Select
-              placeholder="Select location type"
+              placeholder={t("localeMetaData.selectALocation") as string}
               onChange={e => updateLocalForm(e.target.value, "tankType")}
               value={localForm.tankType}>
               {Object.entries(TankTypeRecord).map(([a, b]) => (
@@ -170,7 +170,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.schedule}>
             <FormLabel>{t("localeMetaData.refillSchedule")}</FormLabel>
             <Select
-              placeholder="Refill Schedule"
+              placeholder={t("localeMetaData.selectRefillSchedule") as string}
               onChange={e => updateLocalForm(e.target.value, "schedule")}
               value={localForm.schedule}>
               {Object.entries(RefillScheduleRecord).map(([key, value]) => (
@@ -207,7 +207,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
           <FormControl>
             <FormLabel>{t("localeMetaData.comments")}</FormLabel>
             <Input
-              placeholder="Comment"
+              placeholder={t("localeMetaData.comment") as string}
               onChange={e => {
                 updateLocalForm(e.target.value, "comments");
               }}

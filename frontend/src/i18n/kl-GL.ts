@@ -114,9 +114,12 @@ export const table: Locale = {
   localeMetaData: {
     location: "Lokation",
     locationType: "Lokationstype:",
+    selectALocation: "Vælg en lokation",
     address: "Adresse:",
+    selectRefillSchedule: "Vælg genopfyldningsplan",
     refillSchedule: "Genopfyldningsplan:",
     daysBetweenRefill: "Dage mellem genopfyldninger:",
+    comment: "Kommentar",
     comments: "Kommentarer:",
     selectAnImage: "Vælg et billede af tanklokationen",
     selectImage: "Vælg billede",
@@ -201,7 +204,8 @@ export const table: Locale = {
     tableInterval: "Vælg interval",
     downloadHistory: "Download historik",
     download: "Download",
-    infoText: "Vælg et påfyldningsår for at downloade historikken"
+    infoText: "Vælg et påfyldningsår for at downloade historikken",
+    selectRefillYear: "Vælg påfyldningsår"
   },
 
   trucks: {
@@ -309,6 +313,8 @@ export const table: Locale = {
         manageUser: "Administrer bruger {{user}}",
         newPassword: "Nyt kodeord",
         updatePassword: "Opdatér kodeord",
+        password: "Kodeord",
+        repeatPassword: "Gentag kodeord",
         userRole: "Brugerrolle",
         updateRole: "Opdatér rolle",
         hide: "Skjul",
@@ -324,6 +330,18 @@ export const table: Locale = {
   locationOverview: {
     addNew: "Tilføj ny",
     location: "lokation"
+  },
+
+  streetSelector: {
+    selectStreet: "Vælg en adresse"
+  },
+
+  debtorSelector: {
+    selectDebtor: "Vælg debitor"
+  },
+
+  userRoleSelector: {
+    selectUserRole: "Vælg brugerrolle"
   },
 
   enums: {

@@ -71,7 +71,7 @@ const CreateRoleComp: FC<Props> = ({ submitCallback, value }) => {
         <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.name}>
           <FormLabel>{t("createRole.roleName")}</FormLabel>
           <Input
-            placeholder="Role name"
+            placeholder={t("createRole.roleName") as string}
             onChange={e => {
               updateLocalForm(e.target.value, "name");
             }}

@@ -36,7 +36,7 @@ const LocalePage: NextPage = () => {
       <HStack mt={4}>
         <Select
           onChange={e => setRefillYear([Number(e.target.value)])}
-          placeholder="Select refill year">
+          placeholder={t("localePage.selectRefillYear") as string}>
           {refillYears.map(year => (
             <option key={year} value={year}>
               {year}
