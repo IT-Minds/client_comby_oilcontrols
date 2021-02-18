@@ -19,7 +19,6 @@ import {
   LocationDetailsDto,
   TankType
 } from "services/backend/nswagts";
-import { lowerCase } from "utils/lowercaseAnyString";
 
 import LocaleMetaDataComp from "./LocaleMetaDataComp";
 
