@@ -121,7 +121,6 @@ const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
               }
               isRequired={!localCoupons || localCoupons.length < 1}>
               <NumberInput
-                placeholder="From"
                 onChange={e => {
                   const value = parseFloat(e);
                   if (isNaN(value)) {
@@ -140,7 +139,6 @@ const AddCouponComp: FC<Props> = ({ submitCallback, coupons }) => {
               }
               isRequired={!localCoupons || localCoupons.length < 1}>
               <NumberInput
-                placeholder="To"
                 onChange={e => {
                   const value = parseFloat(e);
                   if (isNaN(value)) {
