@@ -27,7 +27,7 @@ const DebtorSelector: FC<Props> = ({ cb }) => {
       options={[
         {
           id: "",
-          name: "No Debtor"
+          name: t("debtorSelector.noDebtor") as string
         },
         ...debtors.map(s => ({
           ...s,

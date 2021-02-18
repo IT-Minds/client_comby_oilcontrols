@@ -316,11 +316,11 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
           </FormControl>
 
           <FormControl isInvalid={formSubmitAttempts > 0 && localForm.fuelType <= -1} isRequired>
-            <FormLabel id="fuel-type">{t("localeMetaData.selectFuelType")}</FormLabel>
+            <FormLabel id="fuel-type">{t("localeMetaData.selectFuelType")}:</FormLabel>
             <Select
               onChange={e => updateLocalForm(e.target.value, "fuelType")}
               value={localForm.fuelType}
-              placeholder="Select option">
+              placeholder={t("localeMetaData.selectFuelType") as string}>
               {Object.entries(FuelTypeRecord).map(([a, b]) => (
                 <option key={b} value={b}>
                   {t("enums.fuelType." + b)}

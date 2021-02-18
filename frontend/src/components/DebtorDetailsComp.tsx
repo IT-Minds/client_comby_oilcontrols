@@ -29,8 +29,8 @@ const DebtorDetailsComp: FC<Props> = ({ debtorData }) => {
       setDebtor({ ...debtor, couponRequired: isRequired });
       debtorUpdated({ ...debtor, couponRequired: isRequired });
       toast({
-        title: "Debtor Updated",
-        description: "Successful",
+        title: t("toast.updateDebtor"),
+        description: t("toast.successful"),
         status: "success",
         duration: 9000,
         isClosable: true
@@ -54,7 +54,11 @@ const DebtorDetailsComp: FC<Props> = ({ debtorData }) => {
 
         <HStack>
           <Text fontWeight="bold">{t("debtorTable.debtorDetails.blocked")}</Text>
-          <Text>{debtor.blocked ? "true" : "false"}</Text>
+          <Text>
+            {debtor.blocked
+              ? t("debtorTable.debtorDetails.yes")
+              : t("debtorTable.debtorDetails.no")}
+          </Text>
         </HStack>
 
         <HStack>
