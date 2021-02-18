@@ -364,6 +364,10 @@ export interface Locale {
     selectUserRole: string;
   };
 
+  userSelector: {
+    selectUser: string;
+  };
+
   enums: {
     fuelType: {
       0: string;

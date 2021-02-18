@@ -359,6 +359,10 @@ export const table: Locale = {
     selectUserRole: "Vælg brugerrolle"
   },
 
+  userSelector: {
+    selectUser: "Vælg bruger"
+  },
+
   enums: {
     fuelType: {
       "0": "Benzin",
