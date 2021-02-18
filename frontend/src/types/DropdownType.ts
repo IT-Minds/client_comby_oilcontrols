@@ -1,4 +1,6 @@
+import { ReactText } from "react";
+
 export default interface DropdownType {
   name: string;
-  id: string;
+  id: ReactText;
 }

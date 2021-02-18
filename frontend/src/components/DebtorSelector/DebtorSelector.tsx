@@ -38,7 +38,7 @@ const DebtorSelector: FC<Props> = ({ cb }) => {
       isLoading={isLoading}
       placeholder={t("debtorSelector.selectDebtor") as string}
       onSelect={x => {
-        const dto = debtors.find(s => s.dbId == Number.parseInt(x.id));
+        const dto = debtors.find(s => s.dbId == Number(x.id));
         cb(dto);
       }}
     />

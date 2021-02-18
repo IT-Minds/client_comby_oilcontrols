@@ -33,17 +33,17 @@ const StreetSelector: FC<Props> = ({ cb, value }) => {
     <ComboSelect
       options={streets.map(s => ({
         ...s,
-        id: s.id.toString(),
+        id: s.id,
         name: s.name
       }))}
       isLoading={!done}
       placeholder={t("streetSelector.selectStreet") as string}
-      onSelect={x => cb(streets.find(s => s.id === Number.parseInt(x.id)))}
+      onSelect={x => cb(streets.find(s => s.id === Number(x.id)))}
       value={
         existingStreet
           ? {
               ...existingStreet,
-              id: existingStreet.id.toString(),
+              id: existingStreet.id,
               name: existingStreet.name
             }
           : null

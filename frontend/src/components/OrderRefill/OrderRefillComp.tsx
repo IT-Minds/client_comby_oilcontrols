@@ -6,16 +6,17 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
-  Container,
   IconButton,
-  useDisclosure
+  useDisclosure,
+  VStack
 } from "@chakra-ui/react";
 import DatePicker from "components/DatePicker/DatePicker";
+import TruckSelector from "components/TruckSelector/TruckSelector";
 import { Locale } from "i18n/Locale";
 import { useI18n } from "next-rosetta";
 import React, { FC, useCallback, useRef, useState } from "react";
 import { MdInput } from "react-icons/md";
-import { IOrderRefillCommand } from "services/backend/nswagts";
+import { IOrderRefillCommand, ITruckInfoIdDto } from "services/backend/nswagts";
 import { logger } from "utils/logger";
 
 type Props = {
@@ -28,6 +29,7 @@ const OrderRefillComp: FC<Props> = ({ submitCallback, locationId }) => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [refillDate, setRefillDate] = useState<Date>(new Date());
+  const [truck, setTruck] = useState<ITruckInfoIdDto>(null);
 
   const { t } = useI18n<Locale>();
 
@@ -36,10 +38,10 @@ const OrderRefillComp: FC<Props> = ({ submitCallback, locationId }) => {
     submitCallback({
       locationId,
       expectedDeliveryDate: refillDate,
-      truckId: 0
+      truckId: truck.id
     });
     onClose();
-  }, [refillDate]);
+  }, [refillDate, truck]);
 
   return (
     <>
@@ -59,11 +61,14 @@ const OrderRefillComp: FC<Props> = ({ submitCallback, locationId }) => {
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              <DatePicker
-                selectedDate={refillDate}
-                onChange={(date: Date) => setRefillDate(date)}
-                showPopperArrow={false}
-              />
+              <VStack align="left">
+                <TruckSelector cb={setTruck} />
+                <DatePicker
+                  selectedDate={refillDate}
+                  onChange={(date: Date) => setRefillDate(date)}
+                  showPopperArrow={false}
+                />
+              </VStack>
             </AlertDialogBody>
 
             <AlertDialogFooter>

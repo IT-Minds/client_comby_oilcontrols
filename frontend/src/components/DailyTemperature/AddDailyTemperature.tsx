@@ -71,7 +71,7 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions =
           <FormControl
             isInvalid={
               formSubmitAttempts > 0 &&
-              regions.every(r => localAddDailyTemperatureForm.regionId !== Number.parseInt(r.id))
+              regions.every(r => localAddDailyTemperatureForm.regionId !== Number(r.id))
             }
             isRequired>
             <FormLabel>{t("dailyTemperature.selectRegion")}:</FormLabel>
