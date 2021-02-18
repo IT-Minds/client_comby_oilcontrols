@@ -13,11 +13,13 @@ namespace Application.Trucks
     public double TankCapacity { get; set; }
     public int RefillNumber { get; set; }
 
-    public int DriverId { get; set; }
+    public int? DriverId { get; set; }
 
     public void Mapping(Profile profile)
     {
-      profile.CreateMap<Truck, TruckInfoDto>();
+      profile.CreateMap<Truck, TruckInfoDto>()
+        .ForMember(dest => dest.DriverId,
+          map => map.MapFrom(from => from.Driver.Id));
     }
   }
 }

@@ -4896,7 +4896,7 @@ export class TruckInfoDto implements ITruckInfoDto {
     description?: string | null;
     tankCapacity?: number;
     refillNumber?: number;
-    driverId?: number;
+    driverId?: number | null;
 
     constructor(data?: ITruckInfoDto) {
         if (data) {
@@ -4943,7 +4943,7 @@ export interface ITruckInfoDto {
     description?: string | null;
     tankCapacity?: number;
     refillNumber?: number;
-    driverId?: number;
+    driverId?: number | null;
 }
 
 export class TruckInfoIdDto extends TruckInfoDto implements ITruckInfoIdDto {
