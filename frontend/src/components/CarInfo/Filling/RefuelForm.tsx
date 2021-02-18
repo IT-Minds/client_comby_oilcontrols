@@ -94,9 +94,7 @@ const RefuelForm: FC<Props> = ({ fillData }) => {
               isInvalid={formSubmitAttempts > 0 && !localFillingForm.fillAmount}
               isRequired>
               <FormLabel>{t("mytruck.refuel.fillingAmount")}</FormLabel>
-              <NumberInput
-                placeholder="Fill amount"
-                onChange={value => updateLocalForm(value, "fillAmount")}>
+              <NumberInput onChange={value => updateLocalForm(value, "fillAmount")}>
                 <NumberInputField />
               </NumberInput>
               <FormErrorMessage>
@@ -107,9 +105,7 @@ const RefuelForm: FC<Props> = ({ fillData }) => {
               isInvalid={formSubmitAttempts > 0 && !localFillingForm.cardNumber}
               isRequired>
               <FormLabel>{t("mytruck.refuel.cardNumber")}</FormLabel>
-              <NumberInput
-                placeholder="Card number"
-                onChange={value => updateLocalForm(value, "cardNumber")}>
+              <NumberInput onChange={value => updateLocalForm(value, "cardNumber")}>
                 <NumberInputField />
               </NumberInput>
               <FormErrorMessage>{t("mytruck.refuel.formErrors.enterCardNumber")}</FormErrorMessage>
