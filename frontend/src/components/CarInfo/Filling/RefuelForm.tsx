@@ -74,17 +74,12 @@ const RefuelForm: FC<Props> = ({ fillData }) => {
           <ModalCloseButton />
           <ModalBody>
             <FormControl
-              isInvalid={
-                formSubmitAttempts > 0 &&
-                Object.values(FuelTypeRecord).every(
-                  key => localFillingForm.fuelType !== (FuelType[key] as unknown)
-                )
-              }
+              isInvalid={formSubmitAttempts > 0 && !localFillingForm.fuelType}
               isRequired>
               <FormLabel id="fuel-type">{t("mytruck.refuel.selectFuelType")}</FormLabel>
               <Select
                 onChange={e => updateLocalForm(FuelType[Number(e.target.value)], "fuelType")}
-                placeholder="Select option">
+                placeholder={t("mytruck.refuel.selectFuelType") as string}>
                 {Object.entries(FuelTypeRecord).map(([a, b]) => (
                   <option key={b} value={b}>
                     {t("enums.fuelType." + b)}
