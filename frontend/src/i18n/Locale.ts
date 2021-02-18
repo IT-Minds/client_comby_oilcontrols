@@ -144,12 +144,15 @@ export interface Locale {
   };
 
   localeMetaData: {
+    location: string;
     locationType: string;
     address: string;
     refillSchedule: string;
     daysBetweenRefill: string;
     comments: string;
     selectAnImage: string;
+    selectImage: string;
+    reSelectImage: string;
     tankNumber: string;
     tankCapacity: string;
     liters: string;
@@ -301,6 +304,9 @@ export interface Locale {
   };
 
   users: {
+    users: string;
+    createUser: string;
+    createRole: string;
     userDetailsTable: {
       userName: string;
       role: string;
@@ -320,6 +326,11 @@ export interface Locale {
     };
   };
 
+  locationOverview: {
+    addNew: string;
+    location: string;
+  };
+
   enums: {
     fuelType: {
       0: string;
@@ -328,6 +339,18 @@ export interface Locale {
       3: string;
     };
     interval: {
+      0: string;
+      1: string;
+      2: string;
+    };
+
+    tankType: {
+      0: string;
+      1: string;
+      2: string;
+    };
+
+    refillSchedule: {
       0: string;
       1: string;
       2: string;

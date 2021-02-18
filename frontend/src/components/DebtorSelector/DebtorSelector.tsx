@@ -20,10 +20,6 @@ const DebtorSelector: FC<Props> = ({ cb }) => {
     setIsLoading(false);
   }, []);
 
-  // const existingStreet = useMemo(() => {
-  //   return debtors.find(s => value.indexOf(s.name) === 0);
-  // }, [streets]);
-
   return (
     <ComboSelect
       options={[
@@ -38,7 +34,7 @@ const DebtorSelector: FC<Props> = ({ cb }) => {
         }))
       ]}
       isLoading={isLoading}
-      placeholder="Select Street"
+      placeholder="Select debtor"
       onSelect={x => {
         const dto = debtors.find(s => s.dbId == Number.parseInt(x.id));
         cb(dto);

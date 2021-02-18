@@ -21,7 +21,11 @@ import StreetSelector from "components/StreetSelector/StreetSelector";
 import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
-import { FuelTypeRecord, RefillScheduleRecord } from "services/backend/ext/enumConvertor";
+import {
+  FuelTypeRecord,
+  RefillScheduleRecord,
+  TankTypeRecord
+} from "services/backend/ext/enumConvertor";
 import {
   AddDebtorToLocationCommand,
   ILocationDetailsDto,
@@ -122,20 +126,19 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
       <HStack alignItems="top">
         <Box>
           <Heading size="md" mb={4}>
-            Location
+            {t("localeMetaData.location")}
           </Heading>
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && localForm.tankType <= -1}>
             <FormLabel>{t("localeMetaData.locationType")}</FormLabel>
             <Select
-              placeholder="Location Type"
+              placeholder="Select location type"
               onChange={e => updateLocalForm(e.target.value, "tankType")}
               value={localForm.tankType}>
-              {
-                //TODO: translation
-              }
-              <option value={TankType.BUILDING}>Building</option>
-              <option value={TankType.SHIP}>Ship</option>
-              <option value={TankType.TANK}>Tank</option>
+              {Object.entries(TankTypeRecord).map(([a, b]) => (
+                <option key={b} value={b}>
+                  {t("enums.tankType." + b)}
+                </option>
+              ))}
             </Select>
             <FormErrorMessage>{t("localeMetaData.formErrors.selectLocationType")}</FormErrorMessage>
           </FormControl>
@@ -161,7 +164,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
               value={localForm.schedule}>
               {Object.entries(RefillScheduleRecord).map(([key, value]) => (
                 <option key={key} value={value}>
-                  {capitalize(key)}
+                  {t("enums.refillSchedule." + value)}
                 </option>
               ))}
             </Select>
@@ -205,7 +208,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
           <FormControl>
             <FormLabel>{t("localeMetaData.selectAnImage")}</FormLabel>
             <Button colorScheme="blue" onClick={saveImage}>
-              {image ? "Re-select image" : "Select image"}
+              {image ? t("localeMetaData.reSelectImage") : t("localeMetaData.selectImage")}
             </Button>
             <FormErrorMessage>{t("localeMetaData.formErrors.selectAnImage")}</FormErrorMessage>
           </FormControl>
@@ -289,7 +292,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
               placeholder="Select option">
               {Object.entries(FuelTypeRecord).map(([a, b]) => (
                 <option key={b} value={b}>
-                  {capitalize(a)}
+                  {t("enums.fuelType." + b)}
                 </option>
               ))}
             </Select>

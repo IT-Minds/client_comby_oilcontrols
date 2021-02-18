@@ -9,6 +9,7 @@ import {
   useDisclosure,
   useToast
 } from "@chakra-ui/react";
+import { useI18n } from "next-rosetta";
 import React, { FC, useCallback } from "react";
 import { genLocationClient } from "services/backend/apiClients";
 import {
@@ -18,6 +19,7 @@ import {
   LocationDetailsDto,
   TankType
 } from "services/backend/nswagts";
+import { lowerCase } from "utils/lowercaseAnyString";
 
 import LocaleMetaDataComp from "./LocaleMetaDataComp";
 
@@ -27,6 +29,7 @@ type Props = {
 
 const AddLocationTriggerBtn: FC<Props> = ({ tankType = null }) => {
   const toast = useToast();
+  const { t } = useI18n<Locale>();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -69,20 +72,22 @@ const AddLocationTriggerBtn: FC<Props> = ({ tankType = null }) => {
 
   return (
     <>
-      {
-        //TODO: translation
-      }
       <Button colorScheme="green" onClick={onOpen}>
-        Add new {tankType != null ? TankType[tankType] : "Location"}
+        {t("locationOverview.addNew")}{" "}
+        {tankType != null
+          ? (t("enums.tankType." + tankType) as string).toLowerCase()
+          : t("locationOverview.location")}
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} size="5xl">
         <ModalOverlay />
         <ModalContent>
-          {
-            //TODO: translation
-          }
-          <ModalHeader>Add new {tankType != null ? TankType[tankType] : "Location"}</ModalHeader>
+          <ModalHeader>
+            {t("locationOverview.addNew")}{" "}
+            {tankType != null
+              ? (t("enums.tankType." + tankType) as string).toLowerCase()
+              : t("locationOverview.location")}
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <LocaleMetaDataComp submitCallback={createLocation} localeMetaData={{ tankType }} />

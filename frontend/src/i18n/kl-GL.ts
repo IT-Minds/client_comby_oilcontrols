@@ -112,12 +112,15 @@ export const table: Locale = {
   },
 
   localeMetaData: {
+    location: "Lokation",
     locationType: "Lokationstype:",
     address: "Adresse:",
     refillSchedule: "Genopfyldningsplan:",
     daysBetweenRefill: "Dage mellem genopfyldninger:",
     comments: "Kommentarer:",
-    selectAnImage: "Vælg et billede a tanklokationen",
+    selectAnImage: "Vælg et billede af tanklokationen",
+    selectImage: "Vælg billede",
+    reSelectImage: "Vælg et andet billede",
     tankNumber: "Tanknummer:",
     tankCapacity: "Tankkapacitet:",
     liters: "Liter",
@@ -296,6 +299,9 @@ export const table: Locale = {
     }
   },
   users: {
+    users: "Brugere",
+    createUser: "Opret bruger",
+    createRole: "Opret rolle",
     userDetailsTable: {
       userName: "Brugernavn",
       role: "Rolle",
@@ -314,6 +320,12 @@ export const table: Locale = {
       }
     }
   },
+
+  locationOverview: {
+    addNew: "Tilføj ny",
+    location: "lokation"
+  },
+
   enums: {
     fuelType: {
       "0": "Benzin",
@@ -325,6 +337,16 @@ export const table: Locale = {
       "0": "Måned",
       "1": "Kvartal",
       "2": "År"
+    },
+    tankType: {
+      "0": "Bygning",
+      "1": "Skib",
+      "2": "Tank"
+    },
+    refillSchedule: {
+      "0": "Automatisk",
+      "1": "Interval",
+      "2": "Manuelt"
     }
   }
 };
