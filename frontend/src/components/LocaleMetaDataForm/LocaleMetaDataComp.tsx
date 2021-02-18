@@ -232,7 +232,6 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.tankNumber}>
             <FormLabel>{t("localeMetaData.tankNumber")}</FormLabel>
             <Input
-              placeholder="Tank Number"
               onChange={e => {
                 const value = parseInt(e.target.value);
                 if (isNaN(value)) {
@@ -250,7 +249,6 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
             <FormLabel>{t("localeMetaData.tankCapacity")}</FormLabel>
             <InputGroup>
               <NumberInput
-                placeholder="Tank capacity"
                 onChange={e => {
                   const value = parseInt(e);
                   if (isNaN(value)) {
@@ -273,7 +271,6 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
             <FormLabel>{t("localeMetaData.minFuelAmount")}</FormLabel>
             <InputGroup>
               <NumberInput
-                placeholder="Min. fuel amount"
                 onChange={e => {
                   const value = parseInt(e);
                   if (isNaN(value)) {
@@ -296,7 +293,6 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
             <FormLabel>{t("localeMetaData.dailyFuelConsumptionEstimate")}</FormLabel>
             <InputGroup>
               <NumberInput
-                placeholder="Est. fuel consumption"
                 onChange={e => {
                   const value = parseInt(e);
                   if (isNaN(value)) {
