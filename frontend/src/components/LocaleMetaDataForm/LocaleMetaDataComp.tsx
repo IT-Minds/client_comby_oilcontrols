@@ -194,7 +194,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
             }>
             <FormLabel>{t("localeMetaData.daysBetweenRefill")}</FormLabel>
             <Input
-              placeholder="# of days"
+              placeholder={t("localeMetaData.numberOfDays") as string}
               type="number"
               onChange={e => {
                 updateLocalForm(e.target.value, "daysBetweenRefills");

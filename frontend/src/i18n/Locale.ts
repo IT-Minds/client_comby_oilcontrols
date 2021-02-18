@@ -163,6 +163,7 @@ export interface Locale {
     selectRefillSchedule: string;
     refillSchedule: string;
     daysBetweenRefill: string;
+    numberOfDays: string;
     comment: string;
     comments: string;
     selectAnImage: string;
@@ -366,6 +367,10 @@ export interface Locale {
 
   userSelector: {
     selectUser: string;
+  };
+
+  truckSelector: {
+    selectTruck: string;
   };
 
   enums: {

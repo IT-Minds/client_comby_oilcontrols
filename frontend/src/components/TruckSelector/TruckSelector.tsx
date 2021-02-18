@@ -1,5 +1,6 @@
 import ComboSelect from "components/SortFilter/ComboSelect";
 import { usePagedFetched } from "hooks/usePagedFetched";
+import { useI18n } from "next-rosetta";
 import { FC, useMemo, useReducer } from "react";
 import ListReducer from "react-list-reducer";
 import { genTruckClient } from "services/backend/apiClients";
@@ -11,6 +12,7 @@ type Props = {
 };
 
 const TruckSelector: FC<Props> = ({ cb, value }) => {
+  const { t } = useI18n<Locale>();
   const [trucks, dispatchData] = useReducer(ListReducer<ITruckInfoIdDto>("id"), []);
 
   const { done } = usePagedFetched<number>(
@@ -32,7 +34,7 @@ const TruckSelector: FC<Props> = ({ cb, value }) => {
         name: s.name
       }))}
       isLoading={!done}
-      placeholder="Select Truck"
+      placeholder={t("truckSelector.selectTruck") as string}
       onSelect={x => cb(trucks.find(s => s.id === Number(x.id)))}
       value={
         existingTruck

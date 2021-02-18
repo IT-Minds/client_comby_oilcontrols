@@ -131,6 +131,7 @@ export const table: Locale = {
     selectRefillSchedule: "Vælg genopfyldningsplan",
     refillSchedule: "Genopfyldningsplan:",
     daysBetweenRefill: "Dage mellem genopfyldninger:",
+    numberOfDays: "# dage",
     comment: "Kommentar",
     comments: "Kommentarer:",
     selectAnImage: "Vælg et billede af tanklokationen",
@@ -361,6 +362,10 @@ export const table: Locale = {
 
   userSelector: {
     selectUser: "Vælg bruger"
+  },
+
+  truckSelector: {
+    selectTruck: "Vælg vogn"
   },
 
   enums: {
