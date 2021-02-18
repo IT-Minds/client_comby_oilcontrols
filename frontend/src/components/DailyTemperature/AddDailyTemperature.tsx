@@ -15,8 +15,8 @@ import {
 import { Locale } from "i18n/Locale";
 import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useState } from "react";
-import { MdCheck, MdRotate90DegreesCcw } from "react-icons/md";
-import { ICreateDailyTemperatureCommand } from "services/backend/nswagts";
+import { MdCheck } from "react-icons/md";
+import { ICreateDailyTemperatureCommand, LocationDetailsIdDto } from "services/backend/nswagts";
 import DropdownType from "types/DropdownType";
 import { formatInputNumber, parseInputToNumber } from "utils/formatNumber";
 import { logger } from "utils/logger";
@@ -34,7 +34,7 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions =
     setLocalAddDailyTemperatureForm
   ] = useState<ICreateDailyTemperatureCommand>({
     date: null,
-    regionId: null,
+    regionId: 1,
     temperature: null
   });
 
@@ -68,7 +68,7 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions =
     <Container>
       <form onSubmit={handleSubmit}>
         <VStack align="center" justify="center">
-          <FormControl
+          {/* <FormControl
             isInvalid={
               formSubmitAttempts > 0 &&
               regions.every(r => localAddDailyTemperatureForm.regionId !== Number(r.id))
@@ -84,6 +84,12 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions =
                 </option>
               ))}
             </Select>
+            <FormErrorMessage>{t("dailyTemperature.formErrors.selectRegion")}</FormErrorMessage>
+          </FormControl> */}
+
+          <FormControl isRequired isInvalid={formSubmitAttempts > 0}>
+            <FormLabel>{t("dailyTemperature.selectRegion")}</FormLabel>
+            <Input disabled={true} value="1" />
             <FormErrorMessage>{t("dailyTemperature.formErrors.selectRegion")}</FormErrorMessage>
           </FormControl>
 
