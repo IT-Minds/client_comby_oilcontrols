@@ -365,6 +365,29 @@ export const table: Locale = {
       "0": "Automatisk",
       "1": "Interval",
       "2": "Manuelt"
+    },
+    action: {
+      "0": "Tildel kupon",
+      "1": "Gem kuponbillede",
+      "2": "Opdater kuponstatus",
+      "3": "Hent kuponer",
+      "4": "Sæt temperatur",
+      "5": "Hent debitor",
+      "6": "Hent lokationshistorik",
+      "7": "Opret lokation",
+      "8": "Opdater lokation",
+      "9": "Hent lokation",
+      "10": "Opret påfyldning",
+      "11": "Bestil påfyldning",
+      "12": "Hent påfyldninger",
+      "13": "Hent adresser",
+      "14": "Opret vognpåfyldning",
+      "15": "Opret vogn",
+      "16": "Opdater vogn",
+      "17": "Hent vogne",
+      "18": "Opdater vogne",
+      "19": "Opdater brugere",
+      "20": "Hent alle brugere"
     }
   }
 };

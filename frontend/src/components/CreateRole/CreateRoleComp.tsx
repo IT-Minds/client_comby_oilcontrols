@@ -83,7 +83,7 @@ const CreateRoleComp: FC<Props> = ({ submitCallback, value }) => {
           <FormLabel>{t("createRole.roleAction")}</FormLabel>
           {Object.entries(ActionRecord).map(([a, b]) => (
             <HStack key={b}>
-              <Text>{Action[Number(b)]}</Text>
+              <Text>{t("enums.action." + b)}</Text>
               <Spacer></Spacer>
               <Checkbox onChange={e => setRole(b)}></Checkbox>
             </HStack>
