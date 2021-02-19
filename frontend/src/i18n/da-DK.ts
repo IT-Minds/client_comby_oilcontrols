@@ -311,7 +311,7 @@ export const table: Locale = {
     runlist: {
       comments: "Kommentarer",
       debtorBlocked: "Debitor blokkeret",
-      locationType: "Lokationstype",
+      bstNumber: "B/S/T nummer",
       address: "Adresse",
       agreementType: "Aftaletype",
       fuelType: "Brændstofstype",

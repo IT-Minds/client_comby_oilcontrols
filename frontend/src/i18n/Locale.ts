@@ -314,7 +314,7 @@ export interface Locale {
     runlist: {
       comments: string;
       debtorBlocked: string;
-      locationType: string;
+      bstNumber: string;
       address: string;
       agreementType: string;
       fuelType: string;
