@@ -353,6 +353,11 @@ export interface Locale {
     selectUserRole: string;
   };
 
+  regionSelector: {
+    selectRegion: string;
+    region: string;
+  };
+
   enums: {
     fuelType: {
       0: string;

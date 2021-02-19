@@ -80,7 +80,7 @@ export const table: Locale = {
     temperature: "Temperatur",
     selectDate: "Vælg en dato",
     formErrors: {
-      selectRegion: "Vælg en temperatur",
+      selectRegion: "Vælg en region",
       inputTemperature: "Indtast en temperatur"
     }
   },
@@ -348,6 +348,11 @@ export const table: Locale = {
 
   userRoleSelector: {
     selectUserRole: "Vælg brugerrolle"
+  },
+
+  regionSelector: {
+    region: "Region",
+    selectRegion: "Vælg region"
   },
 
   enums: {
