@@ -1,5 +1,6 @@
 import ComboSelect from "components/SortFilter/ComboSelect";
 import { usePagedFetched } from "hooks/usePagedFetched";
+import { useI18n } from "next-rosetta";
 import { FC, useEffect, useReducer, useState } from "react";
 import ListReducer from "react-list-reducer";
 import { genUserClient } from "services/backend/apiClients";
@@ -12,6 +13,8 @@ type Props = {
 };
 
 const UserSelector: FC<Props> = ({ cb, value }) => {
+  const { t } = useI18n<Locale>();
+
   const [users, dispatchUsers] = useReducer(ListReducer<IUserIdDto>("id"), []);
   const [existingUser, setExistingUser] = useState<DropdownType>({ id: null, name: null });
 
@@ -37,7 +40,7 @@ const UserSelector: FC<Props> = ({ cb, value }) => {
         name: s.username
       }))}
       isLoading={!done}
-      placeholder="Select User"
+      placeholder={t("userSelector.selectUser") as string}
       onSelect={x => cb(users.find(s => s.id === Number(x.id)))}
       value={existingUser ? existingUser : null}
     />

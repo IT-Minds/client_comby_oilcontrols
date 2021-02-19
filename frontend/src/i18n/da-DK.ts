@@ -48,6 +48,16 @@ export const table: Locale = {
     submit: "Send"
   },
 
+  toast: {
+    successful: "Vellykket",
+    updateDebtor: "Opdater debtor",
+    createTruck: "Opret vogn",
+    createLocation: "Opret lokation",
+    updateLocation: "Opdater lokation",
+    updatePassword: "Opdater kodeord",
+    updateRole: "Opdater rolle"
+  },
+
   coupons: {
     invalidate: {
       invalidate: "Marker kupon ugyldig",
@@ -140,6 +150,8 @@ export const table: Locale = {
       name: "Navn:",
       accountNumber: "Kontonummer:",
       blocked: "Blokkeret:",
+      yes: "Ja",
+      no: "Nej",
       couponIsRequired: "Kupon er påkrævet:"
     }
   },
@@ -152,6 +164,7 @@ export const table: Locale = {
     selectRefillSchedule: "Vælg genopfyldningsplan",
     refillSchedule: "Genopfyldningsplan:",
     daysBetweenRefill: "Dage mellem genopfyldninger:",
+    numberOfDays: "# dage",
     comment: "Kommentar",
     comments: "Kommentarer:",
     selectAnImage: "Vælg et billede af tanklokationen",
@@ -162,7 +175,7 @@ export const table: Locale = {
     liters: "Liter",
     minFuelAmount: "Minimum brændstofmængde:",
     dailyFuelConsumptionEstimate: "Daglig forventet brændstofforbrug:",
-    selectFuelType: "Vælg brændstoftype:",
+    selectFuelType: "Vælg brændstoftype",
     debtor: "Debitor",
     main: "Hoved",
     base: "Base",
@@ -282,7 +295,7 @@ export const table: Locale = {
     },
     refill: {
       selectCouponNumber: "Vælg kuponnummer:",
-      selectFuelType: "Vælg brændstofstype:",
+      selectFuelType: "Vælg brændstofstype",
       fuelInTankAfterRefill: "Brændstof i tanken EFTER påfyldning:",
       fuelInTankBeforeRefill: "Brændstof i tanken FØR påfyldning",
       liters: "liter",
@@ -300,6 +313,8 @@ export const table: Locale = {
       }
     },
     runlist: {
+      comments: "Kommentarer",
+      debtorBlocked: "Debitor blokkeret",
       locationType: "Lokationstype",
       address: "Adresse",
       agreementType: "Aftaletype",
@@ -343,11 +358,20 @@ export const table: Locale = {
   },
 
   debtorSelector: {
-    selectDebtor: "Vælg debitor"
+    selectDebtor: "Vælg debitor",
+    noDebtor: "Ingen debitor"
   },
 
   userRoleSelector: {
     selectUserRole: "Vælg brugerrolle"
+  },
+
+  userSelector: {
+    selectUser: "Vælg bruger"
+  },
+
+  truckSelector: {
+    selectTruck: "Vælg vogn"
   },
 
   regionSelector: {

@@ -27,8 +27,8 @@ const CreateUser: FC = () => {
     await client.createUser(new CreateUserCommand(createUserForm));
 
     toast({
-      title: "Success",
-      description: "Created user successfully",
+      title: t("users.createUser"),
+      description: t("toast.successful"),
       status: "success",
       duration: 9000,
       isClosable: true

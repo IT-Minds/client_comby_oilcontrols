@@ -89,14 +89,14 @@ const RunListTable: FC<Props> = ({ truckId, refillCb }) => {
           </Th>
           <Th hidden={!isPrinting && cols < 4}>
             <HStack spacing={1}>
-              <Text>Comments</Text>
+              <Text>{t("mytruck.runlist.comments")}</Text>
               <Spacer />
               <QuerySortBtn queryKey="???" sortCb={sortCb} />
             </HStack>
           </Th>
           <Th hidden={!isPrinting && cols < 4}>
             <HStack spacing={1}>
-              <Text>Debtor Blocked</Text>
+              <Text>{t("mytruck.runlist.debtorBlocked")}</Text>
               <Spacer />
               <QuerySortBtn queryKey="locationType" sortCb={sortCb} />
             </HStack>
