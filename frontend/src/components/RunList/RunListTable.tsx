@@ -83,9 +83,6 @@ const RunListTable: FC<Props> = ({ truckId, refillCb }) => {
             <HStack spacing={1}>
               <Text>{t("mytruck.runlist.bstNumber")}</Text>
               <Spacer />
-              {
-                //TODO: change to BST number when backend is ready
-              }
               <QuerySortBtn queryKey="locationId" sortCb={sortCb} />
             </HStack>
           </Th>
