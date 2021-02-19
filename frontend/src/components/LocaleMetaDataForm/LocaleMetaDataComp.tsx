@@ -63,7 +63,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
     minimumFuelAmount: 0,
     schedule: -1,
     tankCapacity: 0,
-    tankNumber: "0", //TODO: Change to bstNumber when backend is ready
+    bstNumber: "0", //TODO: Change to bstNumber when backend is ready
     tankType: -1,
     fuelType: -1,
     daysBetweenRefills: 0,
@@ -170,18 +170,18 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
           {
             //TODO: Change tankNumber to bstNumber when backend is ready
           }
-          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.tankNumber}>
+          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.bstNumber}>
             <FormLabel>{t("localeMetaData.bstNumber")}</FormLabel>
             <Input
               onChange={e => {
                 const value = parseInt(e.target.value);
                 if (isNaN(value)) {
-                  updateLocalForm("", "tankNumber");
+                  updateLocalForm("", "bstNumber");
                 } else {
-                  updateLocalForm(value, "tankNumber");
+                  updateLocalForm(value, "bstNumber");
                 }
               }}
-              value={localForm.tankNumber}
+              value={localForm.bstNumber}
             />
             <FormErrorMessage>{t("localeMetaData.formErrors.bstNumber")}</FormErrorMessage>
           </FormControl>

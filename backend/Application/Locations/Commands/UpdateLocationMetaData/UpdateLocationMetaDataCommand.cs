@@ -49,7 +49,7 @@ namespace Application.Locations.Commands.UpdateLocationMetaData
         location.EstimateFuelConsumption = request.Data.EstimateFuelConsumption;
         location.DaysBetweenRefills = request.Data.DaysBetweenRefills;
         location.TankType = request.Data.TankType;
-        location.TankNumber = request.Data.TankNumber;
+        location.TankNumber = request.Data.BSTNumber;
 
         var tank = location.FuelTank;
         tank.TankCapacity = request.Data.TankCapacity;

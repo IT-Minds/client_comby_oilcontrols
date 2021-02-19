@@ -27,7 +27,7 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
           Comments = "This is comment.",
           Schedule = RefillSchedule.AUTOMATIC,
           TankType = TankType.BUILDING,
-          TankNumber = "443",
+          BSTNumber = "443",
           TankCapacity = 4005.1,
           MinimumFuelAmount = 50.5,
           EstimateFuelConsumption = 10,
@@ -50,7 +50,7 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
       entity.DaysBetweenRefills.Should().Be(command.Data.DaysBetweenRefills);
       entity.EstimateFuelConsumption.Should().Be(command.Data.EstimateFuelConsumption);
       entity.TankType.Should().Be(command.Data.TankType);
-      entity.TankNumber.Should().Be(command.Data.TankNumber);
+      entity.TankNumber.Should().Be(command.Data.BSTNumber);
       entity.FuelTank.TankCapacity.Should().Be(command.Data.TankCapacity);
       entity.FuelTank.MinimumFuelAmount.Should().Be(command.Data.MinimumFuelAmount);
       entity.FuelTank.FuelType.Should().Be(command.Data.FuelType);
@@ -77,7 +77,7 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
           Comments = "This is comment.",
           Schedule = RefillSchedule.AUTOMATIC,
           TankType = TankType.BUILDING,
-          TankNumber = "443",
+          BSTNumber = "443",
           TankCapacity = 4005.1,
           MinimumFuelAmount = 50.5,
           EstimateFuelConsumption = 10,
@@ -105,7 +105,7 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
           Comments = "This is comment.",
           Schedule = RefillSchedule.AUTOMATIC,
           TankType = TankType.BUILDING,
-          TankNumber = "443",
+          BSTNumber = "443",
           TankCapacity = 4005.1,
           MinimumFuelAmount = 50.5,
           EstimateFuelConsumption = 10

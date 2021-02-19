@@ -45,7 +45,7 @@ namespace Application.Locations.Commands.CreateLocation
           EstimateFuelConsumption = request.Data.EstimateFuelConsumption,
           DaysBetweenRefills = request.Data.DaysBetweenRefills,
           TankType = request.Data.TankType,
-          TankNumber = request.Data.TankNumber,
+          TankNumber = request.Data.BSTNumber,
         };
         _context.Locations.Add(location);
 
