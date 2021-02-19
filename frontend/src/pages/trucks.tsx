@@ -20,6 +20,7 @@ import AddTruckTriggerBtn from "components/TruckMetaData/AddTruckTriggerBtn";
 import { useEffectAsync } from "hooks/useEffectAsync";
 import { useOffline } from "hooks/useOffline";
 import { Locale } from "i18n/Locale";
+import { runTimeTable } from "i18n/runTimeTable";
 import { GetStaticProps, NextPage } from "next";
 import { I18nProps, useI18n } from "next-rosetta";
 import React, { useCallback, useState } from "react";
@@ -179,7 +180,8 @@ const TruckPage: NextPage = () => {
 export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context => {
   const locale = context.locale || context.defaultLocale;
 
-  const { table = {} } = await import(`../i18n/${locale}`);
+  let { table = {} } = await import(`../i18n/${locale}`);
+  table = runTimeTable(locale, table);
 
   return {
     props: {

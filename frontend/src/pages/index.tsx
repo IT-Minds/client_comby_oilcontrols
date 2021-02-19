@@ -1,6 +1,7 @@
 import { Container, Flex, Heading, Text } from "@chakra-ui/react";
 import { useEffectAsync } from "hooks/useEffectAsync";
 import { Locale } from "i18n/Locale";
+import { runTimeTable } from "i18n/runTimeTable";
 import { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { I18nProps } from "next-rosetta";
@@ -41,7 +42,8 @@ const IndexPage: NextPage<Props> = () => {
 export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context => {
   const locale = context.locale || context.defaultLocale;
 
-  const { table = {} } = await import(`../i18n/${locale}`);
+  let { table = {} } = await import(`../i18n/${locale}`);
+  table = runTimeTable(locale, table);
   return { props: { table } };
 };
 
