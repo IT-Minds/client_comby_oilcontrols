@@ -169,7 +169,7 @@ export interface Locale {
     selectAnImage: string;
     selectImage: string;
     reSelectImage: string;
-    tankNumber: string;
+    bstNumber: string;
     tankCapacity: string;
     liters: string;
     minFuelAmount: string;
@@ -188,7 +188,7 @@ export interface Locale {
       daysBetween: string;
       enterComment: string;
       selectAnImage: string;
-      tankNumber: string;
+      bstNumber: string;
       tankCapacity: string;
       minFuelAmount: string;
       dailyFuelConsumptionEstimate: string;
@@ -349,6 +349,7 @@ export interface Locale {
 
   locationOverview: {
     addNew: string;
+    editLocation: string;
     location: string;
   };
 
