@@ -3,11 +3,13 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
+using Application.Common.Security;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Debtors.PrintCouponRequired
 {
+  [AuthorizeAttribute(Domain.Enums.Action.SET_DEBTOR_COUPON_REQUIRED)]
   public class PrintCouponRequiredCommand : IRequest<int>
   {
     [JsonIgnore]
