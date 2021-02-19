@@ -1,14 +1,12 @@
-import { Heading, toast, useToast, VStack } from "@chakra-ui/react";
+import { Heading, useToast, VStack } from "@chakra-ui/react";
 import AddDailyTemperatureComp from "components/DailyTemperature/AddDailyTemperature";
-import { useEffectAsync } from "hooks/useEffectAsync";
 import { GetStaticProps, NextPage } from "next";
 import { I18nProps, useI18n } from "next-rosetta";
-import { useCallback, useState } from "react";
-import { genDailyTemperatureClient, genLocationClient } from "services/backend/apiClients";
+import { useCallback } from "react";
+import { genDailyTemperatureClient } from "services/backend/apiClients";
 import {
   CreateDailyTemperatureCommand,
-  ICreateDailyTemperatureCommand,
-  LocationDetailsIdDto
+  ICreateDailyTemperatureCommand
 } from "services/backend/nswagts";
 
 const MyPage: NextPage = () => {
@@ -27,8 +25,8 @@ const MyPage: NextPage = () => {
       );
 
       toast({
-        title: "Coupons Saved",
-        description: "Successful",
+        title: t("toast.createTemperature"),
+        description: t("toast.successful"),
         status: "success",
         duration: 9000,
         isClosable: true
@@ -42,7 +40,6 @@ const MyPage: NextPage = () => {
       <VStack>
         <Heading>{t("dailyTemperature.addDailyTemperature")}</Heading>
         <AddDailyTemperatureComp
-          regions={[{ id: "0", name: "123" }]}
           submitCallback={x => {
             saveDailyTemperature(x);
           }}

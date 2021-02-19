@@ -60,6 +60,7 @@ export interface Locale {
     updateLocation: string;
     updatePassword: string;
     updateRole: string;
+    createTemperature: string;
   };
 
   coupons: {

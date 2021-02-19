@@ -55,7 +55,8 @@ export const table: Locale = {
     createLocation: "Opret lokation",
     updateLocation: "Opdater lokation",
     updatePassword: "Opdater kodeord",
-    updateRole: "Opdater rolle"
+    updateRole: "Opdater rolle",
+    createTemperature: "Opret temperatur"
   },
 
   coupons: {
