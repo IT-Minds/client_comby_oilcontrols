@@ -167,6 +167,25 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
             />
           </FormControl>
 
+          {
+            //TODO: Change tankNumber to bstNumber when backend is ready
+          }
+          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.tankNumber}>
+            <FormLabel>{t("localeMetaData.bstNumber")}</FormLabel>
+            <Input
+              onChange={e => {
+                const value = parseInt(e.target.value);
+                if (isNaN(value)) {
+                  updateLocalForm("", "tankNumber");
+                } else {
+                  updateLocalForm(value, "tankNumber");
+                }
+              }}
+              value={localForm.tankNumber}
+            />
+            <FormErrorMessage>{t("localeMetaData.formErrors.bstNumber")}</FormErrorMessage>
+          </FormControl>
+
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.schedule}>
             <FormLabel>{t("localeMetaData.refillSchedule")}</FormLabel>
             <Select
@@ -215,36 +234,12 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
             />
             <FormErrorMessage>{t("localeMetaData.formErrors.enterComment")}</FormErrorMessage>
           </FormControl>
-
-          <FormControl>
-            <FormLabel>{t("localeMetaData.selectAnImage")}</FormLabel>
-            <Button colorScheme="blue" onClick={saveImage}>
-              {image ? t("localeMetaData.reSelectImage") : t("localeMetaData.selectImage")}
-            </Button>
-            <FormErrorMessage>{t("localeMetaData.formErrors.selectAnImage")}</FormErrorMessage>
-          </FormControl>
         </Box>
         <Spacer />
         <Box>
           <Heading size="md" mb={4}>
             Tank
           </Heading>
-          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.tankNumber}>
-            <FormLabel>{t("localeMetaData.tankNumber")}</FormLabel>
-            <Input
-              onChange={e => {
-                const value = parseInt(e.target.value);
-                if (isNaN(value)) {
-                  updateLocalForm("", "tankNumber");
-                } else {
-                  updateLocalForm(value, "tankNumber");
-                }
-              }}
-              value={localForm.tankNumber}
-            />
-            <FormErrorMessage>{t("localeMetaData.formErrors.tankNumber")}</FormErrorMessage>
-          </FormControl>
-
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.tankCapacity}>
             <FormLabel>{t("localeMetaData.tankCapacity")}</FormLabel>
             <InputGroup>
@@ -324,6 +319,13 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
               ))}
             </Select>
             <FormErrorMessage>{t("localeMetaData.formErrors.allowedFuelType")}</FormErrorMessage>
+          </FormControl>
+          <FormControl>
+            <FormLabel>{t("localeMetaData.selectAnImage")}</FormLabel>
+            <Button colorScheme="blue" onClick={saveImage}>
+              {image ? t("localeMetaData.reSelectImage") : t("localeMetaData.selectImage")}
+            </Button>
+            <FormErrorMessage>{t("localeMetaData.formErrors.selectAnImage")}</FormErrorMessage>
           </FormControl>
         </Box>
         <Spacer />
