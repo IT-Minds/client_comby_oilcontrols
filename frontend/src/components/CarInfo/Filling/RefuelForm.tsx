@@ -53,7 +53,7 @@ const RefuelForm: FC<Props> = ({ fillData }) => {
   }, []);
 
   const addFilling = useCallback(() => {
-    if (localFillingForm.fillAmount && localFillingForm.cardNumber) {
+    if (localFillingForm.fillAmount && localFillingForm.cardNumber && localFillingForm.fuelType) {
       fillData(localFillingForm);
       onClose();
     }
@@ -74,17 +74,12 @@ const RefuelForm: FC<Props> = ({ fillData }) => {
           <ModalCloseButton />
           <ModalBody>
             <FormControl
-              isInvalid={
-                formSubmitAttempts > 0 &&
-                Object.values(FuelTypeRecord).every(
-                  key => localFillingForm.fuelType !== (FuelType[key] as unknown)
-                )
-              }
+              isInvalid={formSubmitAttempts > 0 && !localFillingForm.fuelType}
               isRequired>
               <FormLabel id="fuel-type">{t("mytruck.refuel.selectFuelType")}</FormLabel>
               <Select
                 onChange={e => updateLocalForm(FuelType[Number(e.target.value)], "fuelType")}
-                placeholder="Select option">
+                placeholder={t("mytruck.refuel.selectFuelType") as string}>
                 {Object.entries(FuelTypeRecord).map(([a, b]) => (
                   <option key={b} value={b}>
                     {t("enums.fuelType." + b)}
@@ -99,9 +94,7 @@ const RefuelForm: FC<Props> = ({ fillData }) => {
               isInvalid={formSubmitAttempts > 0 && !localFillingForm.fillAmount}
               isRequired>
               <FormLabel>{t("mytruck.refuel.fillingAmount")}</FormLabel>
-              <NumberInput
-                placeholder="Fill amount"
-                onChange={value => updateLocalForm(value, "fillAmount")}>
+              <NumberInput onChange={value => updateLocalForm(value, "fillAmount")}>
                 <NumberInputField />
               </NumberInput>
               <FormErrorMessage>
@@ -112,9 +105,7 @@ const RefuelForm: FC<Props> = ({ fillData }) => {
               isInvalid={formSubmitAttempts > 0 && !localFillingForm.cardNumber}
               isRequired>
               <FormLabel>{t("mytruck.refuel.cardNumber")}</FormLabel>
-              <NumberInput
-                placeholder="Card number"
-                onChange={value => updateLocalForm(value, "cardNumber")}>
+              <NumberInput onChange={value => updateLocalForm(value, "cardNumber")}>
                 <NumberInputField />
               </NumberInput>
               <FormErrorMessage>{t("mytruck.refuel.formErrors.enterCardNumber")}</FormErrorMessage>
