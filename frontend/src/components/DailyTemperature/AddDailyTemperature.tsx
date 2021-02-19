@@ -6,9 +6,7 @@ import {
   FormLabel,
   Input,
   InputGroup,
-  InputRightAddon,
   InputRightElement,
-  Select,
   Stack,
   VStack
 } from "@chakra-ui/react";
@@ -16,11 +14,10 @@ import RegionSelector from "components/RegionSelector/RegionSelector";
 import { useEffectAsync } from "hooks/useEffectAsync";
 import { Locale } from "i18n/Locale";
 import { useI18n } from "next-rosetta";
-import React, { FC, FormEvent, useCallback, useEffect, useState } from "react";
+import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
 import { genStreetClient } from "services/backend/apiClients";
-import { ICreateDailyTemperatureCommand, LocationDetailsIdDto } from "services/backend/nswagts";
-import DropdownType from "types/DropdownType";
+import { ICreateDailyTemperatureCommand } from "services/backend/nswagts";
 import { formatInputNumber, parseInputToNumber } from "utils/formatNumber";
 import { logger } from "utils/logger";
 
