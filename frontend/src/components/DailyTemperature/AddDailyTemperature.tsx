@@ -15,7 +15,7 @@ import { Locale } from "i18n/Locale";
 import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
-import { TemperatureDto } from "services/backend/nswagts";
+import { ITemperatureDto, TemperatureDto } from "services/backend/nswagts";
 import DropdownType from "types/DropdownType";
 import { formatInputNumber, parseInputToNumber } from "utils/formatNumber";
 import { logger } from "utils/logger";
@@ -23,17 +23,17 @@ import { logger } from "utils/logger";
 import DatePicker from "../DatePicker/DatePicker";
 
 type Props = {
-  submitCallback: (addCouponForm: TemperatureDto) => void;
+  submitCallback: (addCouponForm: ITemperatureDto) => void;
   regions: DropdownType[];
 };
 
 const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions = [] }) => {
-  const [localAddDailyTemperatureForm, setLocalAddDailyTemperatureForm] = useState<TemperatureDto>(
-    new TemperatureDto({
+  const [localAddDailyTemperatureForm, setLocalAddDailyTemperatureForm] = useState<ITemperatureDto>(
+    {
       date: null,
       regionId: null,
       temperature: null
-    })
+    }
   );
 
   const { t } = useI18n<Locale>();
@@ -41,7 +41,7 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions =
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
   const [date, setDate] = useState<Date>(new Date());
 
-  const updateLocalForm = useCallback((value: unknown, key: keyof TemperatureDto) => {
+  const updateLocalForm = useCallback((value: unknown, key: keyof ITemperatureDto) => {
     setLocalAddDailyTemperatureForm(form => {
       (form[key] as unknown) = value;
       return new TemperatureDto(form);
@@ -52,7 +52,7 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions =
     (event: FormEvent<HTMLFormElement>) => {
       logger.debug("Submitting form AddDailyTemperatureComp");
       localAddDailyTemperatureForm.date = date;
-      submitCallback(localAddDailyTemperatureForm);
+      submitCallback(new TemperatureDto(localAddDailyTemperatureForm));
       setFormSubmitAttempts(0);
       event.preventDefault();
     },
