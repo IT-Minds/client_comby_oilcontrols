@@ -1,8 +1,8 @@
 # Actions
 
-List of actions and their related commands.
+List of actions defined under `Domain.Enums.Action` and their related commands.
 
-### `ASSIGN_COUPON`
+### ASSIGN_COUPON
 
 - `AssignCouponsCommand`
 
