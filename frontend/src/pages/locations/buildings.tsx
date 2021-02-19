@@ -1,6 +1,7 @@
 import AddLocationTriggerBtn from "components/LocaleMetaDataForm/AddLocationTriggerBtn";
 import LocationList from "components/LocationList/LocationList";
 import { useEffectAsync } from "hooks/useEffectAsync";
+import { runTimeTable } from "i18n/runTimeTable";
 import { GetStaticProps, NextPage } from "next";
 import { I18nProps } from "next-rosetta";
 import { useState } from "react";
@@ -28,7 +29,8 @@ const LocationPage: NextPage = () => {
 
 export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context => {
   const locale = context.locale || context.defaultLocale;
-  const { table = {} } = await import(`../../i18n/${locale}`);
+  let { table = {} } = await import(`../../i18n/${locale}`);
+  table = runTimeTable(locale, table);
 
   return {
     props: {

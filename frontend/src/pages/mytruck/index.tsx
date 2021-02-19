@@ -17,6 +17,7 @@ import InvalidateCouponBtn from "components/InvalidateCouponBtn/InvalidateCoupon
 import RunListTable from "components/RunList/RunListTable";
 import { TOKEN_STORAGE_KEY } from "hooks/useAuth";
 import { useOffline } from "hooks/useOffline";
+import { runTimeTable } from "i18n/runTimeTable";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -225,7 +226,8 @@ export const getServerSideProps: GetServerSideProps<Props & I18nProps<Locale>> =
     () => []
   );
 
-  const { table = {} } = await import(`../../i18n/${locale}`);
+  let { table = {} } = await import(`../../i18n/${locale}`);
+  table = runTimeTable(locale, table);
 
   // return { props: { table, truckInfo, coupons }, revalidate: 5 };
   return { props: { table, truckInfo, coupons } };
