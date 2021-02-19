@@ -88,10 +88,10 @@ const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) =>
               )
             }
             isRequired>
-            <FormLabel id="fuel-type">{t("mytruck.refill.selectFuelType")}</FormLabel>
+            <FormLabel id="fuel-type">{t("mytruck.refill.selectFuelType")}:</FormLabel>
             <Select
               onChange={e => updateLocalForm(FuelType[Number(e.target.value)], "fuelType")}
-              placeholder="Select option">
+              placeholder={t("mytruck.refill.selectFuelType") as string}>
               {Object.entries(FuelTypeRecord).map(([a, b]) => (
                 <option key={b} value={b}>
                   {capitalize(a)}

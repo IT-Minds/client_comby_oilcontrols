@@ -29,8 +29,8 @@ const AddTruckTriggerBtn: FC = () => {
     );
 
     toast({
-      title: "Truck successfully created",
-      description: "Successful",
+      title: t("toast.createTruck"),
+      description: t("toast.successful"),
       status: "success",
       duration: 9000,
       isClosable: true
