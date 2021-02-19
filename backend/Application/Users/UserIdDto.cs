@@ -14,7 +14,7 @@ namespace Application.Users
 
     public bool IsTrucker { get => TruckId.HasValue; }
 
-    public void Mapping(Profile profile)
+    public new void Mapping(Profile profile)
     {
       profile.CreateMap<User, UserIdDto>()
         .IncludeBase<User, UserDto>();

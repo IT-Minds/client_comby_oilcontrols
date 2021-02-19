@@ -5,11 +5,11 @@ using Domain.Enums;
 
 namespace Application.Locations
 {
-  public class LocationDetailsIdDto: LocationDetailsDto, IAutoMap<Location>
+  public class LocationDetailsIdDto : LocationDetailsDto, IAutoMap<Location>
   {
     public int Id { get; set; }
 
-    public void Mapping(Profile profile)
+    public new void Mapping(Profile profile)
     {
       profile.CreateMap<Location, LocationDetailsIdDto>()
         .IncludeBase<Location, LocationDetailsDto>();
