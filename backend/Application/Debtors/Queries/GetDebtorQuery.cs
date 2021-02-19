@@ -28,15 +28,16 @@ namespace Application.Debtors.Queries
       {
         _syncroniceDebtorService.SetDebtorQuery(
           _context.Debtors
-            // .Include(x => x.Locations)
+        // .Include(x => x.Locations)
         );
 
         var result = await _syncroniceDebtorService.SyncroniceDebtor();
 
         var debtorDtos = new List<DebtorDto>();
-        foreach (var (a,b) in result)
+        foreach (var (a, b) in result)
         {
-          debtorDtos.Add(new DebtorDto {
+          debtorDtos.Add(new DebtorDto
+          {
             DbId = b.Id,
             UnicontaId = a.RowId,
             Blocked = a.Blocked,

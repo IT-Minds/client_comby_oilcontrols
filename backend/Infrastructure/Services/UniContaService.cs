@@ -15,7 +15,7 @@ using System.IO;
 
 namespace Infrastructure.Services
 {
-  public class UniContaService: IUniContaService
+  public class UniContaService : IUniContaService
   {
     private UnicontaConnection connection { get; set; }
     private Session session { get; set; }
@@ -52,7 +52,7 @@ namespace Infrastructure.Services
       var debtors = await api.Query<Uniconta.DataModel.Debtor>();
       System.Console.WriteLine("UniConta Debtors: " + debtors.Count());
 
-      return debtors.Select(x => new UniContaDebtor(x) );
+      return debtors.Select(x => new UniContaDebtor(x));
     }
 
     public async Task<UniContaDebtor> GetDebtor(int id)
@@ -102,7 +102,9 @@ namespace Infrastructure.Services
         await api.Insert(vc);
 
         order.DocumentRef = vc.RowId;
-      } catch(Exception e) {
+      }
+      catch (Exception e)
+      {
         System.Console.WriteLine("No image!");
         System.Console.WriteLine(e.Message);
       }
