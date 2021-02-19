@@ -8,7 +8,7 @@ namespace Application.Roles
   {
     public int Id { get; set; }
 
-    public void Mapping(Profile profile)
+    public new void Mapping(Profile profile)
     {
       profile.CreateMap<Role, RoleIdDto>()
         .IncludeBase<Role, RoleDto>();

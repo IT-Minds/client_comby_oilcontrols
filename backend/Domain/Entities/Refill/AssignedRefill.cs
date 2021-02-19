@@ -7,7 +7,7 @@ namespace Domain.Entities.Refills
     public int TruckId { get; set; }
     public Truck Truck { get; set; }
 
-    public RefillState RefillState { get; set; } = RefillState.ASSIGNED;
+    public new RefillState RefillState { get; set; } = RefillState.ASSIGNED;
 
     public AssignedRefill() { }
     public AssignedRefill(OrderedRefill obj)

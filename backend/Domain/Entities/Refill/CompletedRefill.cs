@@ -14,7 +14,7 @@ namespace Domain.Entities.Refills
     public double EndAmount { get; set; }
     public TankState TankState { get; set; }
 
-    public RefillState RefillState { get; set; } = RefillState.COMPLETED;
+    public new RefillState RefillState { get; set; } = RefillState.COMPLETED;
 
     public CompletedRefill() { }
     public CompletedRefill(AssignedRefill obj)

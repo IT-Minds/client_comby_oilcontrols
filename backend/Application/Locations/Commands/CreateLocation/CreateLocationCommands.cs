@@ -26,9 +26,9 @@ namespace Application.Locations.Commands.CreateLocation
       {
         var tank = new FuelTank
         {
-          TankType = request.Data.TankType,
+
           TankCapacity = request.Data.TankCapacity,
-          TankNumber = request.Data.TankNumber,
+
           MinimumFuelAmount = request.Data.MinimumFuelAmount,
           FuelType = request.Data.FuelType
         };
@@ -43,7 +43,9 @@ namespace Application.Locations.Commands.CreateLocation
           RegionId = request.Data.RegionId,
           FuelTank = tank,
           EstimateFuelConsumption = request.Data.EstimateFuelConsumption,
-          DaysBetweenRefills = request.Data.DaysBetweenRefills
+          DaysBetweenRefills = request.Data.DaysBetweenRefills,
+          TankType = request.Data.TankType,
+          TankNumber = request.Data.TankNumber,
         };
         _context.Locations.Add(location);
 

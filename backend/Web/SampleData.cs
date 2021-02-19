@@ -117,10 +117,10 @@ namespace Web
       );
       context.SaveChanges();
 
-      var fueltank1 = new FuelTank { TankNumber = "1000", FuelType = FuelType.GASOLINE, TankType = TankType.BUILDING, TankCapacity = 10000, MinimumFuelAmount = 500 };
-      var fueltank2 = new FuelTank { TankNumber = "1001", FuelType = FuelType.OIL, TankType = TankType.SHIP, TankCapacity = 20000, MinimumFuelAmount = 450 };
-      var fueltank3 = new FuelTank { TankNumber = "1002", FuelType = FuelType.PETROLEUM, TankType = TankType.TANK, TankCapacity = 35000, MinimumFuelAmount = 300 };
-      var fueltank4 = new FuelTank { TankNumber = "1003", FuelType = FuelType.OTHER, TankType = TankType.BUILDING, TankCapacity = 30000, MinimumFuelAmount = 375 };
+      var fueltank1 = new FuelTank { FuelType = FuelType.GASOLINE, TankCapacity = 10000, MinimumFuelAmount = 500 };
+      var fueltank2 = new FuelTank { FuelType = FuelType.OIL, TankCapacity = 20000, MinimumFuelAmount = 450 };
+      var fueltank3 = new FuelTank { FuelType = FuelType.PETROLEUM, TankCapacity = 35000, MinimumFuelAmount = 300 };
+      var fueltank4 = new FuelTank { FuelType = FuelType.OTHER, TankCapacity = 30000, MinimumFuelAmount = 375 };
 
       context.FuelTanks.AddRange(
         fueltank1,
@@ -130,10 +130,10 @@ namespace Web
       );
       context.SaveChanges();
 
-      var location1 = new Location { Address = "StreetName 1", Comments = "This is location", EstimateFuelConsumption = 5, FuelTankId = fueltank1.Id, RegionId = region1.Id, Schedule = RefillSchedule.AUTOMATIC, DaysBetweenRefills = 14 };
-      var location2 = new Location { Address = "StreetName 2", Comments = "This is another location", EstimateFuelConsumption = 5, FuelTankId = fueltank1.Id, RegionId = region1.Id, Schedule = RefillSchedule.INTERVAL, DaysBetweenRefills = 10 };
-      var location3 = new Location { Address = "Another Street 35", Comments = "This is the location", EstimateFuelConsumption = 5, FuelTankId = fueltank1.Id, RegionId = region1.Id, Schedule = RefillSchedule.MANUAL, DaysBetweenRefills = 300 };
-      var location4 = new Location { Address = "The First Street 43", Comments = "This is yet another location", EstimateFuelConsumption = 5, FuelTankId = fueltank1.Id, RegionId = region1.Id, Schedule = RefillSchedule.AUTOMATIC, DaysBetweenRefills = 45 };
+      var location1 = new Location { Address = "StreetName 1", Comments = "This is location", EstimateFuelConsumption = 5, FuelTankId = fueltank1.Id, RegionId = region1.Id, Schedule = RefillSchedule.AUTOMATIC, DaysBetweenRefills = 14, TankNumber = "1000", TankType = TankType.BUILDING };
+      var location2 = new Location { Address = "StreetName 2", Comments = "This is another location", EstimateFuelConsumption = 5, FuelTankId = fueltank1.Id, RegionId = region1.Id, Schedule = RefillSchedule.INTERVAL, DaysBetweenRefills = 10, TankNumber = "1000", TankType = TankType.BUILDING };
+      var location3 = new Location { Address = "Another Street 35", Comments = "This is the location", EstimateFuelConsumption = 5, FuelTankId = fueltank1.Id, RegionId = region1.Id, Schedule = RefillSchedule.MANUAL, DaysBetweenRefills = 300, TankNumber = "1000", TankType = TankType.BUILDING };
+      var location4 = new Location { Address = "The First Street 43", Comments = "This is yet another location", EstimateFuelConsumption = 5, FuelTankId = fueltank1.Id, RegionId = region1.Id, Schedule = RefillSchedule.AUTOMATIC, DaysBetweenRefills = 45, TankNumber = "1000", TankType = TankType.BUILDING };
 
       context.Locations.AddRange(
         location1,

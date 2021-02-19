@@ -10,13 +10,13 @@ namespace Application.Trucks
     public double CurrentTankLevel { get; set; }
 
 
-    public void Mapping(Profile profile)
+    public new void Mapping(Profile profile)
     {
       profile.CreateMap<Truck, TruckInfoDetailsDto>()
         .IncludeBase<Truck, TruckInfoIdDto>()
 
         .ForMember(dest => dest.CurrentTankLevel,
-          opts => opts.MapFrom(source => source.GetCurrentTankLevel() ));
+          opts => opts.MapFrom(source => source.GetCurrentTankLevel()));
       ;
     }
   }

@@ -21,7 +21,8 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
       var command = new UpdateLocationMetaDataCommand
       {
         Id = 1,
-        Data= new LocationDetailsDto {
+        Data = new LocationDetailsDto
+        {
           Address = "This is address 23",
           Comments = "This is comment.",
           Schedule = RefillSchedule.AUTOMATIC,
@@ -48,8 +49,8 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
       entity.Schedule.Should().Be(command.Data.Schedule);
       entity.DaysBetweenRefills.Should().Be(command.Data.DaysBetweenRefills);
       entity.EstimateFuelConsumption.Should().Be(command.Data.EstimateFuelConsumption);
-      entity.FuelTank.TankType.Should().Be(command.Data.TankType);
-      entity.FuelTank.TankNumber.Should().Be(command.Data.TankNumber);
+      entity.TankType.Should().Be(command.Data.TankType);
+      entity.TankNumber.Should().Be(command.Data.TankNumber);
       entity.FuelTank.TankCapacity.Should().Be(command.Data.TankCapacity);
       entity.FuelTank.MinimumFuelAmount.Should().Be(command.Data.MinimumFuelAmount);
       entity.FuelTank.FuelType.Should().Be(command.Data.FuelType);
@@ -70,7 +71,8 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
       var command = new UpdateLocationMetaDataCommand
       {
         Id = -1,
-        Data= new LocationDetailsDto {
+        Data = new LocationDetailsDto
+        {
           Address = "This is address 23",
           Comments = "This is comment.",
           Schedule = RefillSchedule.AUTOMATIC,
@@ -97,7 +99,8 @@ namespace Application.UnitTests.Locations.Commands.UpdateLocationMetaData
       var command = new UpdateLocationMetaDataCommand
       {
         Id = 1,
-        Data= new LocationDetailsDto {
+        Data = new LocationDetailsDto
+        {
           Address = "This is address 23",
           Comments = "This is comment.",
           Schedule = RefillSchedule.AUTOMATIC,

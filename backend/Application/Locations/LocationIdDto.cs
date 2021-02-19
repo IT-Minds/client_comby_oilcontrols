@@ -4,12 +4,12 @@ using Domain.Entities;
 
 namespace Application.Locations
 {
-  public class LocationIdDto: LocationDto, IAutoMap<Location>
+  public class LocationIdDto : LocationDto, IAutoMap<Location>
   {
     public int Id { get; set; }
 
 
-    public void Mapping(Profile profile)
+    public new void Mapping(Profile profile)
     {
       profile.CreateMap<Location, LocationIdDto>()
         .IncludeBase<Location, LocationDto>();

@@ -8,7 +8,7 @@ namespace Application.Trucks
   {
     public int Id { get; set; }
 
-    public void Mapping(Profile profile)
+    public new void Mapping(Profile profile)
     {
       profile.CreateMap<Truck, TruckInfoIdDto>()
         .IncludeBase<Truck, TruckInfoDto>();

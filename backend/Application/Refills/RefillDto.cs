@@ -26,7 +26,7 @@ namespace Application.Refills
         .ForMember(dest => dest.TruckId,
           map => map.MapFrom(from => from.TruckId))
         .ForMember(dest => dest.LocationType,
-          map => map.MapFrom(from => from.Location.FuelTank.TankType));
+          map => map.MapFrom(from => from.Location.TankType));
     }
   }
 }
