@@ -375,7 +375,7 @@ export class CouponsClient extends ClientBase implements ICouponsClient {
 }
 
 export interface IDailyTemperatureClient {
-    create(command: CreateDailyTemperatureCommand): Promise<number>;
+    create(command: CreateDailyTemperatureCommand): Promise<TemperatureIdDto>;
 }
 
 export class DailyTemperatureClient extends ClientBase implements IDailyTemperatureClient {
@@ -389,7 +389,7 @@ export class DailyTemperatureClient extends ClientBase implements IDailyTemperat
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    create(command: CreateDailyTemperatureCommand): Promise<number> {
+    create(command: CreateDailyTemperatureCommand): Promise<TemperatureIdDto> {
         let url_ = this.baseUrl + "/api/DailyTemperature";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -411,14 +411,14 @@ export class DailyTemperatureClient extends ClientBase implements IDailyTemperat
         });
     }
 
-    protected processCreate(response: Response): Promise<number> {
+    protected processCreate(response: Response): Promise<TemperatureIdDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            result200 = TemperatureIdDto.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -426,7 +426,7 @@ export class DailyTemperatureClient extends ClientBase implements IDailyTemperat
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<number>(<any>null);
+        return Promise.resolve<TemperatureIdDto>(<any>null);
     }
 }
 
@@ -3006,12 +3006,12 @@ export interface IAssignCouponDto {
     couponNumbers?: number[] | null;
 }
 
-export class CreateDailyTemperatureCommand implements ICreateDailyTemperatureCommand {
+export class TemperatureDto implements ITemperatureDto {
     regionId?: number;
     date?: Date;
     temperature?: number;
 
-    constructor(data?: ICreateDailyTemperatureCommand) {
+    constructor(data?: ITemperatureDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -3028,9 +3028,9 @@ export class CreateDailyTemperatureCommand implements ICreateDailyTemperatureCom
         }
     }
 
-    static fromJS(data: any): CreateDailyTemperatureCommand {
+    static fromJS(data: any): TemperatureDto {
         data = typeof data === 'object' ? data : {};
-        let result = new CreateDailyTemperatureCommand();
+        let result = new TemperatureDto();
         result.init(data);
         return result;
     }
@@ -3044,10 +3044,80 @@ export class CreateDailyTemperatureCommand implements ICreateDailyTemperatureCom
     }
 }
 
-export interface ICreateDailyTemperatureCommand {
+export interface ITemperatureDto {
     regionId?: number;
     date?: Date;
     temperature?: number;
+}
+
+export class TemperatureIdDto extends TemperatureDto implements ITemperatureIdDto {
+    id?: number;
+
+    constructor(data?: ITemperatureIdDto) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): TemperatureIdDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TemperatureIdDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface ITemperatureIdDto extends ITemperatureDto {
+    id?: number;
+}
+
+export class CreateDailyTemperatureCommand implements ICreateDailyTemperatureCommand {
+    dto?: TemperatureDto | null;
+
+    constructor(data?: ICreateDailyTemperatureCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            this.dto = data.dto && !(<any>data.dto).toJSON ? new TemperatureDto(data.dto) : <TemperatureDto>this.dto; 
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.dto = _data["dto"] ? TemperatureDto.fromJS(_data["dto"]) : <any>null;
+        }
+    }
+
+    static fromJS(data: any): CreateDailyTemperatureCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateDailyTemperatureCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["dto"] = this.dto ? this.dto.toJSON() : <any>null;
+        return data; 
+    }
+}
+
+export interface ICreateDailyTemperatureCommand {
+    dto?: ITemperatureDto | null;
 }
 
 export class DebtorDto implements IDebtorDto {
