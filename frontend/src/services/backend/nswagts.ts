@@ -3522,7 +3522,7 @@ export interface ILocationDto {
 
 export class LocationDetailsDto extends LocationDto implements ILocationDetailsDto {
     tankType?: TankType;
-    tankNumber?: string | null;
+    bstNumber?: string | null;
     tankCapacity?: number;
     minimumFuelAmount?: number;
     fuelType?: FuelType;
@@ -3535,7 +3535,7 @@ export class LocationDetailsDto extends LocationDto implements ILocationDetailsD
         super.init(_data);
         if (_data) {
             this.tankType = _data["tankType"] !== undefined ? _data["tankType"] : <any>null;
-            this.tankNumber = _data["tankNumber"] !== undefined ? _data["tankNumber"] : <any>null;
+            this.bstNumber = _data["bstNumber"] !== undefined ? _data["bstNumber"] : <any>null;
             this.tankCapacity = _data["tankCapacity"] !== undefined ? _data["tankCapacity"] : <any>null;
             this.minimumFuelAmount = _data["minimumFuelAmount"] !== undefined ? _data["minimumFuelAmount"] : <any>null;
             this.fuelType = _data["fuelType"] !== undefined ? _data["fuelType"] : <any>null;
@@ -3552,7 +3552,7 @@ export class LocationDetailsDto extends LocationDto implements ILocationDetailsD
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["tankType"] = this.tankType !== undefined ? this.tankType : <any>null;
-        data["tankNumber"] = this.tankNumber !== undefined ? this.tankNumber : <any>null;
+        data["bstNumber"] = this.bstNumber !== undefined ? this.bstNumber : <any>null;
         data["tankCapacity"] = this.tankCapacity !== undefined ? this.tankCapacity : <any>null;
         data["minimumFuelAmount"] = this.minimumFuelAmount !== undefined ? this.minimumFuelAmount : <any>null;
         data["fuelType"] = this.fuelType !== undefined ? this.fuelType : <any>null;
@@ -3563,7 +3563,7 @@ export class LocationDetailsDto extends LocationDto implements ILocationDetailsD
 
 export interface ILocationDetailsDto extends ILocationDto {
     tankType?: TankType;
-    tankNumber?: string | null;
+    bstNumber?: string | null;
     tankCapacity?: number;
     minimumFuelAmount?: number;
     fuelType?: FuelType;
