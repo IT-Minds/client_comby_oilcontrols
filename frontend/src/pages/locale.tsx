@@ -1,5 +1,5 @@
 import { Button, Center, Heading, HStack, Select, Text, VStack } from "@chakra-ui/react";
-import { runTimeTable } from "i18n/runTimeTable";
+import { runTimeTable } from "i18n/runtimeTable";
 import { GetStaticProps, NextPage } from "next";
 import { I18nProps, useI18n } from "next-rosetta";
 import React, { useCallback, useMemo, useState } from "react";

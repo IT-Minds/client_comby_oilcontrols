@@ -17,7 +17,7 @@ import InvalidateCouponBtn from "components/InvalidateCouponBtn/InvalidateCoupon
 import RunListTable from "components/RunList/RunListTable";
 import { TOKEN_STORAGE_KEY } from "hooks/useAuth";
 import { useOffline } from "hooks/useOffline";
-import { runTimeTable } from "i18n/runTimeTable";
+import { runTimeTable } from "i18n/runtimeTable";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
