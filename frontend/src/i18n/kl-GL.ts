@@ -23,6 +23,9 @@ export const table: Locale = {
       debtors: "Debitorer",
       create: "Opret ny debitor"
     },
+    temperature: {
+      temperature: "Temperaturer"
+    },
     users: "Brugerstyring",
     statistics: "Statestikker"
   },
@@ -51,7 +54,8 @@ export const table: Locale = {
     createLocation: "Opret lokation",
     updateLocation: "Opdater lokation",
     updatePassword: "Opdater kodeord",
-    updateRole: "Opdater rolle"
+    updateRole: "Opdater rolle",
+    createTemperature: "Opret temperatur"
   },
 
   coupons: {
@@ -256,6 +260,7 @@ export const table: Locale = {
   },
 
   dailyTemperature: {
+    addDailyTemperature: "Tilføj temperatur",
     selectRegion: "Vælg region",
     temperature: "Temperatur",
     selectDate: "Vælg en dato",
@@ -367,6 +372,11 @@ export const table: Locale = {
 
   truckSelector: {
     selectTruck: "Vælg vogn"
+  },
+
+  regionSelector: {
+    region: "Region",
+    selectRegion: "Vælg region"
   },
 
   enums: {

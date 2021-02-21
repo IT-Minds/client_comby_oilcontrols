@@ -25,6 +25,9 @@ export interface Locale {
       overview: string;
       create: string;
     };
+    temperature: {
+      temperature: string;
+    };
     users: string;
     statistics: string;
   };
@@ -57,6 +60,7 @@ export interface Locale {
     updateLocation: string;
     updatePassword: string;
     updateRole: string;
+    createTemperature: string;
   };
 
   coupons: {
@@ -85,6 +89,7 @@ export interface Locale {
   };
 
   dailyTemperature: {
+    addDailyTemperature: string;
     selectRegion: string;
     temperature: string;
     selectDate: string;
@@ -372,6 +377,11 @@ export interface Locale {
 
   truckSelector: {
     selectTruck: string;
+  };
+
+  regionSelector: {
+    selectRegion: string;
+    region: string;
   };
 
   enums: {

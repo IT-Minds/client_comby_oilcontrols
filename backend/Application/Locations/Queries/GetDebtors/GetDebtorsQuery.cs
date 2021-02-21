@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
 using Application.Common.Interfaces.Pagination;
+using Application.Common.Security;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Entities;
@@ -12,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Locations.Queries.GetDebtors
 {
+  [AuthorizeAttribute(Domain.Enums.Action.GET_DEBTOR)]
   public class GetDebtorsQuery : IPageRequest<LocationDetailsIdDto, DateTimeOffset>, IPageBody<Location, DateTimeOffset>
   {
     public TankType? TankType { get; set; }

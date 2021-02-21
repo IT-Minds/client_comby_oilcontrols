@@ -2,11 +2,13 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
+using Application.Common.Security;
 using Domain.Entities;
 using MediatR;
 
 namespace Application.Users.Commands.CreateUser
 {
+  [AuthorizeAttribute(Domain.Enums.Action.CREATE_USER)]
   public class CreateUserCommand : IRequest<int>
   {
     public string UserName { get; set; }

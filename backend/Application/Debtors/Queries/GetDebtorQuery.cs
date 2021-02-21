@@ -2,13 +2,14 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
+using Application.Common.Security;
 using Application.Common.Services;
 using AutoMapper;
 using MediatR;
 
 namespace Application.Debtors.Queries
 {
-  // [AuthorizeAttribute(Domain.Enums.Action.GET_DEBTOR)]
+  [AuthorizeAttribute(Domain.Enums.Action.GET_DEBTOR)]
   public class GetDebtorQuery : IRequest<List<DebtorDto>>
   {
     public class GetDebtorQueryHandler : IRequestHandler<GetDebtorQuery, List<DebtorDto>>
