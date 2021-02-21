@@ -1,7 +1,7 @@
 import AddLocationTriggerBtn from "components/LocaleMetaDataForm/AddLocationTriggerBtn";
 import LocationList from "components/LocationList/LocationList";
 import { useEffectAsync } from "hooks/useEffectAsync";
-import { runTimeTable } from "i18n/runTimeTable";
+import { runTimeTable } from "i18n/runtimeTable";
 import { GetStaticProps, NextPage } from "next";
 import { I18nProps } from "next-rosetta";
 import { useState } from "react";

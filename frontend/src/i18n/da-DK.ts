@@ -171,7 +171,7 @@ export const table: Locale = {
     selectAnImage: "Vælg et billede af tanklokationen",
     selectImage: "Vælg billede",
     reSelectImage: "Vælg et andet billede",
-    tankNumber: "Tanknummer:",
+    bstNumber: "B/S/T nummer:",
     tankCapacity: "Tankkapacitet:",
     liters: "Liter",
     minFuelAmount: "Minimum brændstofmængde:",
@@ -190,7 +190,7 @@ export const table: Locale = {
       daysBetween: "Vælg dage mellem genopfyldninger",
       enterComment: "Angiv en kommentar",
       selectAnImage: "Vælg et billede",
-      tankNumber: "Indtast tanknummer",
+      bstNumber: "Indtast B/S/T nummer",
       tankCapacity: "Indtast tankkapacitet",
       minFuelAmount: "Indtast minimum brændstofmængde",
       dailyFuelConsumptionEstimate: "Indtast det forventede daglige brændstofforbrug",
@@ -316,7 +316,7 @@ export const table: Locale = {
     runlist: {
       comments: "Kommentarer",
       debtorBlocked: "Debitor blokkeret",
-      locationType: "Lokationstype",
+      bstNumber: "B/S/T nummer",
       address: "Adresse",
       agreementType: "Aftaletype",
       fuelType: "Brændstofstype",
@@ -351,6 +351,7 @@ export const table: Locale = {
 
   locationOverview: {
     addNew: "Tilføj ny",
+    editLocation: "Rediger lokation",
     location: "lokation"
   },
 

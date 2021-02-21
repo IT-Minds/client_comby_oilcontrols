@@ -77,7 +77,7 @@ const EditLocationTriggerBtn: FC<Props> = ({ data = null }) => {
       <Modal isOpen={isOpen} onClose={onClose} size="5xl">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Edit Location</ModalHeader>
+          <ModalHeader>{t("locationOverview.editLocation")}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <LocaleMetaDataComp submitCallback={createLocation} localeMetaData={data} />

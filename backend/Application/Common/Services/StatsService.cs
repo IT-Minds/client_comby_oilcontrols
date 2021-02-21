@@ -35,7 +35,7 @@ namespace Application.Common.Services
       var result = refills.Select(x => new CsvDto
       {
         Date = x.ActualDeliveryDate,
-        TankNumber = x.Location.FuelTank.TankNumber,
+        TankNumber = x.Location.TankNumber,
         Address = x.Location.Address,
         Name = x.Location.ActiveDebtor()?.UnicontaId.ToString() ?? "",
         Amount = x.AmountDelivered()
@@ -135,7 +135,7 @@ namespace Application.Common.Services
               {
                 var calcStart = (curr.StartDate < intervalStart ? intervalStart : curr.StartDate);
                 var calcEnd = (curr.EndDate > intervalEnd ? intervalEnd : curr.EndDate);
-                //Ensure that the last day of the reqeust period is included.
+                //Ensure that the last day of the request period is included.
                 if (calcEnd.Equals(endDate))
                   calcEnd = calcEnd.AddDays(1);
                 var dateDiff = (calcEnd - calcStart).TotalDays;

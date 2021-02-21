@@ -2,7 +2,7 @@ import { Divider, Heading, HStack, Text, VStack } from "@chakra-ui/react";
 import CreateRole from "components/CreateRole/CreateRole";
 import CreateUser from "components/CreateUser/CreateUser";
 import UserDetailsTable from "components/UserDetails/UserDetailsTable";
-import { runTimeTable } from "i18n/runTimeTable";
+import { runTimeTable } from "i18n/runtimeTable";
 import { GetStaticProps, NextPage } from "next";
 import { I18nProps, useI18n } from "next-rosetta";
 

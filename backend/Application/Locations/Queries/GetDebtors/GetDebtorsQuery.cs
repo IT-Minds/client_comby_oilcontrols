@@ -46,7 +46,7 @@ namespace Application.Locations.Queries.GetDebtors
       {
         partial = partial
           .Include(x => x.FuelTank)
-          .Where(x => x.FuelTank.TankType == TankType);
+          .Where(x => x.TankType == TankType);
       }
 
       if (Skip.HasValue)

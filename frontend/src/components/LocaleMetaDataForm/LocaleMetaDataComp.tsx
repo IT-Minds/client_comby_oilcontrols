@@ -30,10 +30,8 @@ import {
   AddDebtorToLocationCommand,
   ILocationDetailsDto,
   LocationDebtorType,
-  RefillSchedule,
-  TankType
+  RefillSchedule
 } from "services/backend/nswagts";
-import { capitalize } from "utils/capitalizeAnyString";
 import { logger } from "utils/logger";
 
 type Props = {
@@ -63,7 +61,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
     minimumFuelAmount: 0,
     schedule: -1,
     tankCapacity: 0,
-    tankNumber: "0",
+    bstNumber: "0",
     tankType: -1,
     fuelType: -1,
     daysBetweenRefills: 0,
@@ -135,7 +133,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
               placeholder={t("localeMetaData.selectALocation") as string}
               onChange={e => updateLocalForm(e.target.value, "tankType")}
               value={localForm.tankType}>
-              {Object.entries(TankTypeRecord).map(([a, b]) => (
+              {Object.entries(TankTypeRecord).map(([, b]) => (
                 <option key={b} value={b}>
                   {t("enums.tankType." + b)}
                 </option>
@@ -165,6 +163,14 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
               }}
               value={localForm.addressExtra}
             />
+          </FormControl>
+          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.bstNumber}>
+            <FormLabel>{t("localeMetaData.bstNumber")}</FormLabel>
+            <Input
+              onChange={e => updateLocalForm(e.target.value, "bstNumber")}
+              value={localForm.bstNumber}
+            />
+            <FormErrorMessage>{t("localeMetaData.formErrors.bstNumber")}</FormErrorMessage>
           </FormControl>
 
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.schedule}>
@@ -215,36 +221,12 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
             />
             <FormErrorMessage>{t("localeMetaData.formErrors.enterComment")}</FormErrorMessage>
           </FormControl>
-
-          <FormControl>
-            <FormLabel>{t("localeMetaData.selectAnImage")}</FormLabel>
-            <Button colorScheme="blue" onClick={saveImage}>
-              {image ? t("localeMetaData.reSelectImage") : t("localeMetaData.selectImage")}
-            </Button>
-            <FormErrorMessage>{t("localeMetaData.formErrors.selectAnImage")}</FormErrorMessage>
-          </FormControl>
         </Box>
         <Spacer />
         <Box>
           <Heading size="md" mb={4}>
             Tank
           </Heading>
-          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.tankNumber}>
-            <FormLabel>{t("localeMetaData.tankNumber")}</FormLabel>
-            <Input
-              onChange={e => {
-                const value = parseInt(e.target.value);
-                if (isNaN(value)) {
-                  updateLocalForm("", "tankNumber");
-                } else {
-                  updateLocalForm(value, "tankNumber");
-                }
-              }}
-              value={localForm.tankNumber}
-            />
-            <FormErrorMessage>{t("localeMetaData.formErrors.tankNumber")}</FormErrorMessage>
-          </FormControl>
-
           <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.tankCapacity}>
             <FormLabel>{t("localeMetaData.tankCapacity")}</FormLabel>
             <InputGroup>
@@ -317,13 +299,20 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
               onChange={e => updateLocalForm(e.target.value, "fuelType")}
               value={localForm.fuelType}
               placeholder={t("localeMetaData.selectFuelType") as string}>
-              {Object.entries(FuelTypeRecord).map(([a, b]) => (
+              {Object.entries(FuelTypeRecord).map(([, b]) => (
                 <option key={b} value={b}>
                   {t("enums.fuelType." + b)}
                 </option>
               ))}
             </Select>
             <FormErrorMessage>{t("localeMetaData.formErrors.allowedFuelType")}</FormErrorMessage>
+          </FormControl>
+          <FormControl>
+            <FormLabel>{t("localeMetaData.selectAnImage")}</FormLabel>
+            <Button colorScheme="blue" onClick={saveImage}>
+              {image ? t("localeMetaData.reSelectImage") : t("localeMetaData.selectImage")}
+            </Button>
+            <FormErrorMessage>{t("localeMetaData.formErrors.selectAnImage")}</FormErrorMessage>
           </FormControl>
         </Box>
         <Spacer />

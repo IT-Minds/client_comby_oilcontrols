@@ -9,15 +9,16 @@ namespace Application.Trucks
   {
     public double CurrentTankLevel { get; set; }
 
-
+#pragma warning disable 0108
     public void Mapping(Profile profile)
     {
       profile.CreateMap<Truck, TruckInfoDetailsDto>()
         .IncludeBase<Truck, TruckInfoIdDto>()
 
         .ForMember(dest => dest.CurrentTankLevel,
-          opts => opts.MapFrom(source => source.GetCurrentTankLevel() ));
+          opts => opts.MapFrom(source => source.GetCurrentTankLevel()));
       ;
     }
+#pragma warning restore 0108
   }
 }

@@ -4,20 +4,13 @@
 
 ```plantuml
 @startuml
-class AuditableEntity {
-    + CreatedBy : string <<get>> <<set>>
-    + LastModifiedBy : string <<get>> <<set>>
-    + ModifiedCount : int <<get>> <<set>>
-    + Created : DateTimeOffset <<get>> <<set>>
-    + LastModified : DateTimeOffset <<get>> <<set>>
-}
+
 class Coupon {
     + Id : int <<get>> <<set>>
     + CouponNumber : int <<get>> <<set>>
     + TruckId : int <<get>> <<set>>
     + RefillId : int <<get>> <<set>>
 }
-AuditableEntity <|-- Coupon
 Coupon --> "Truck" Truck
 Coupon --> "Status" CouponStatus
 Coupon --> "Refill" CompletedRefill
@@ -26,8 +19,6 @@ class Debtor {
     + UnicontaId : int <<get>> <<set>>
     + CouponRequired : bool <<get>> <<set>>
 }
-
-AuditableEntity <|-- Debtor
 Debtor --> "Locations" LocationDebtor
 Debtor --> "LocationsHistory" LocationDebtorHistory
 
@@ -37,7 +28,6 @@ class FuelTank {
     + TankCapacity : double <<get>> <<set>>
     + MinimumFuelAmount : double <<get>> <<set>>
 }
-AuditableEntity <|-- FuelTank
 FuelTank --> "TankType" TankType
 FuelTank --> "FuelType" FuelType
 class Location {
@@ -50,12 +40,10 @@ class Location {
     + DaysBetweenRefills : int <<get>> <<set>>
     + EstimateFuelConsumption : double <<get>> <<set>>
 }
-
-
-AuditableEntity <|-- Location
 Location --> "Region" Region
 Location --> "FuelTank" FuelTank
 Location --> "Schedule" RefillSchedule
+Location --> "ScheduleExtra" Interval
 Location --> "Refills" OrderedRefill
 Location --> "AssignedRefills<>" AssignedRefill
 Location --> "CompletedRefills<>" CompletedRefill
@@ -68,7 +56,6 @@ class LocationDebtor {
     + DebtorId : int <<get>> <<set>>
     + DebtorChangeDate : DateTime? <<get>> <<set>>
 }
-AuditableEntity <|-- LocationDebtor
 LocationDebtor --> "Type" LocationDebtorType
 LocationDebtor --> "Location" Location
 LocationDebtor --> "Debtor" Debtor
@@ -78,7 +65,6 @@ class LocationDebtorHistory {
     + LocationId : int <<get>> <<set>>
     + DebtorId : int <<get>> <<set>>
 }
-AuditableEntity <|-- LocationDebtorHistory
 LocationDebtorHistory --> "Type" LocationDebtorType
 LocationDebtorHistory --> "Location" Location
 LocationDebtorHistory --> "Debtor" Debtor
@@ -92,15 +78,12 @@ class LocationHistory {
     + DaysBetweenRefills : int <<get>> <<set>>
     + EstimateFuelConsumption : double <<get>> <<set>>
 }
-AuditableEntity <|-- LocationHistory
 LocationHistory --> "Region" Region
 LocationHistory --> "Schedule" RefillSchedule
 LocationHistory --> "Location" Location
 class Region {
     + Id : int <<get>> <<set>>
 }
-
-AuditableEntity <|-- Region
 Region --> "Locations" Location
 Region --> "DailyTemperatures" RegionDailyTemp
 Region --> "Streets" Street
@@ -110,20 +93,17 @@ class RegionDailyTemp {
     + Temperature : double <<get>> <<set>>
     + Date : DateTime <<get>> <<set>>
 }
-AuditableEntity <|-- RegionDailyTemp
+
 RegionDailyTemp --> "Region" Region
 class Role {
     + Id : int <<get>> <<set>>
     + Name : string <<get>> <<set>>
 }
-
-AuditableEntity <|-- Role
 Role --> "Actions" RoleAction
 Role --> "Users" UserRole
 class RoleAction {
     + RoleId : int <<get>> <<set>>
 }
-AuditableEntity <|-- RoleAction
 RoleAction --> "Role" Role
 RoleAction --> "Action" Action
 class Street {
@@ -131,7 +111,6 @@ class Street {
     + Name : string <<get>> <<set>>
     + RegionId : int <<get>> <<set>>
 }
-AuditableEntity <|-- Street
 Street --> "Region" Region
 class Truck {
     + Id : int <<get>> <<set>>
@@ -141,9 +120,6 @@ class Truck {
     + TankCapacity : double <<get>> <<set>>
     + RefillNumber : int <<get>> <<set>>
 }
-
-
-AuditableEntity <|-- Truck
 Truck --> "DailyStates" TruckDailyState
 Truck --> "Refills" AssignedRefill
 Truck --> "CompletedRefills" CompletedRefill
@@ -155,8 +131,6 @@ class TruckDailyState {
     + EveningQuantity : double <<get>> <<set>>
     + Date : DateTime <<get>> <<set>>
 }
-
-AuditableEntity <|-- TruckDailyState
 TruckDailyState --> "Truck" Truck
 TruckDailyState --> "TruckRefills" TruckRefill
 class TruckRefill {
@@ -166,7 +140,6 @@ class TruckRefill {
     + TruckDailyStateId : int <<get>> <<set>>
     + TimeStamp : DateTime <<get>> <<set>>
 }
-AuditableEntity <|-- TruckRefill
 TruckRefill --> "FuelType" FuelType
 TruckRefill --> "TruckDailyState" TruckDailyState
 class User {
@@ -175,8 +148,6 @@ class User {
     + Username : string <<get>> <<set>>
     + Password : string <<get>> <<set>>
 }
-
-AuditableEntity <|-- User
 User --> "Truck" Truck
 User --> "Roles" UserRole
 class UserRole {
@@ -184,10 +155,8 @@ class UserRole {
     + UserId : int <<get>> <<set>>
     + RoleId : int <<get>> <<set>>
 }
-AuditableEntity <|-- UserRole
 UserRole --> "User" User
 UserRole --> "Role" Role
-
 enum Action {
     ASSIGN_COUPON= 0,
     SAVE_COUPON_IMAGE= 1,
@@ -216,7 +185,6 @@ enum CouponStatus {
     USED= 1,
     DESTROYED= 2,
 }
-
 enum FuelType {
     OIL= 0,
     PETROLEUM= 1,
@@ -274,7 +242,6 @@ class OrderedRefill {
     + LocationId : int <<get>> <<set>>
     + ExpectedDeliveryDate : DateTime <<get>> <<set>>
 }
-AuditableEntity <|-- OrderedRefill
 OrderedRefill --> "Location" Location
 OrderedRefill o-> "RefillState" RefillState
 enum RefillState {
@@ -283,5 +250,4 @@ enum RefillState {
     COMPLETED= 2,
 }
 @enduml
-
 ```
