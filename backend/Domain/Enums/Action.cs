@@ -23,5 +23,9 @@ namespace Domain.Enums
     GET_ROLES = 18,
     UPDATE_USER = 19,
     GET_ALL_USERS = 20,
+    SET_DEBTOR_COUPON_REQUIRED = 21,
+    CREATE_ROLE = 22,
+    UPDATE_ROLE = 23,
+    CREATE_USER = 25
   }
 }

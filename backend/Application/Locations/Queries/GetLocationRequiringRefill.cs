@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
+using Application.Common.Security;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Entities.Refills;
@@ -16,7 +17,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Locations.Queries
 {
-  //[AuthorizeAttribute(Domain.Enums.Action.GET_LOCATION)]
+  [AuthorizeAttribute(Domain.Enums.Action.GET_LOCATION)]
   public class GetLocationRequiringRefill : IRequest<List<LocationRefillDto>>
   {
     public int TruckId { get; set; }

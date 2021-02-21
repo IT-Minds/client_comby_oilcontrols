@@ -10,9 +10,11 @@ using System.IO;
 using CsvHelper;
 using Application.Common.Services;
 using System.Globalization;
+using Application.Common.Security;
 
 namespace Application.Stats.GetHistoricConsumption
 {
+  [AuthorizeAttribute(Domain.Enums.Action.GET_LOCATION)]
   public class GetHistoricConsumptionCsvQuery : IRequest<FileResponseDto>
   {
     public HistoricConsumptionDto Dto { get; set; }
