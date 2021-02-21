@@ -34,13 +34,10 @@
     },
     "editor.formatOnSave": true,
     "files.eol": "\n",
-    "cSpell.words": [
-      "nswagts",
-      "signalr",
-      "testid",
-      "trucky",
-      "unfetch",
-      "xunit"
-    ]
+    "cSpell.words": ["nswagts", "signalr", "testid", "unfetch"],
+    "csharp2plantuml.inputPath": "../backend/Domain",
+    "csharp2plantuml.outputPath": "../docs",
+    "csharp2plantuml.createAssociation": true,
+    "csharp2plantuml.allInOne": true
   }
 }

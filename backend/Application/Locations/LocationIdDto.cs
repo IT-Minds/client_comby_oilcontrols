@@ -8,12 +8,12 @@ namespace Application.Locations
   {
     public int Id { get; set; }
 
-
-    public new void Mapping(Profile profile)
+#pragma warning disable 0108
+    public void Mapping(Profile profile)
     {
       profile.CreateMap<Location, LocationIdDto>()
         .IncludeBase<Location, LocationDto>();
     }
-
+#pragma warning restore 0108
   }
 }

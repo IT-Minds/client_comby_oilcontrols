@@ -13,7 +13,8 @@ namespace Application.Locations
     public double MinimumFuelAmount { get; set; }
     public FuelType FuelType { get; set; }
 
-    public new void Mapping(Profile profile)
+#pragma warning disable 0108
+    public void Mapping(Profile profile)
     {
       profile.CreateMap<Location, LocationDetailsDto>()
         .IncludeBase<Location, LocationDto>()
@@ -25,6 +26,6 @@ namespace Application.Locations
         .ForMember(x => x.FuelType, opts => opts.MapFrom(from => from.FuelTank.FuelType))
         ;
     }
-
+#pragma warning restore 0108
   }
 }

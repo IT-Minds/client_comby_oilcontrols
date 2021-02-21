@@ -8,11 +8,13 @@ namespace Application.Roles
   {
     public int Id { get; set; }
 
-    public new void Mapping(Profile profile)
+#pragma warning disable 0108
+    public void Mapping(Profile profile)
     {
       profile.CreateMap<Role, RoleIdDto>()
         .IncludeBase<Role, RoleDto>();
       ;
     }
+#pragma warning restore 0108
   }
 }
