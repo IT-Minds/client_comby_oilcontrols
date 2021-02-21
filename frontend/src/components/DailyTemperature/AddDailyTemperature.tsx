@@ -6,18 +6,18 @@ import {
   FormLabel,
   Input,
   InputGroup,
-  InputRightAddon,
   InputRightElement,
-  Select,
   Stack,
   VStack
 } from "@chakra-ui/react";
+import RegionSelector from "components/RegionSelector/RegionSelector";
+import { useEffectAsync } from "hooks/useEffectAsync";
 import { Locale } from "i18n/Locale";
 import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useState } from "react";
-import { MdCheck, MdRotate90DegreesCcw } from "react-icons/md";
+import { MdCheck } from "react-icons/md";
+import { genStreetClient } from "services/backend/apiClients";
 import { ICreateDailyTemperatureCommand } from "services/backend/nswagts";
-import DropdownType from "types/DropdownType";
 import { formatInputNumber, parseInputToNumber } from "utils/formatNumber";
 import { logger } from "utils/logger";
 
@@ -25,10 +25,9 @@ import DatePicker from "../DatePicker/DatePicker";
 
 type Props = {
   submitCallback: (addCouponForm: ICreateDailyTemperatureCommand) => void;
-  regions: DropdownType[];
 };
 
-const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions = [] }) => {
+const AddDailyTemperatureComp: FC<Props> = ({ submitCallback }) => {
   const [
     localAddDailyTemperatureForm,
     setLocalAddDailyTemperatureForm
@@ -42,6 +41,12 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions =
 
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
   const [date, setDate] = useState<Date>(new Date());
+
+  useEffectAsync(async () => {
+    const client = await genStreetClient();
+    const data = await client.get();
+    console.log(data.results);
+  }, []);
 
   const updateLocalForm = useCallback(
     (value: unknown, key: keyof ICreateDailyTemperatureCommand) => {
@@ -57,7 +62,9 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions =
     (event: FormEvent<HTMLFormElement>) => {
       logger.debug("Submitting form AddDailyTemperatureComp");
       localAddDailyTemperatureForm.date = date;
-      submitCallback(localAddDailyTemperatureForm);
+      if (localAddDailyTemperatureForm.regionId) {
+        submitCallback(localAddDailyTemperatureForm);
+      }
       setFormSubmitAttempts(0);
       event.preventDefault();
     },
@@ -68,22 +75,18 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback, regions: regions =
     <Container>
       <form onSubmit={handleSubmit}>
         <VStack align="center" justify="center">
-          <FormControl
-            isInvalid={
-              formSubmitAttempts > 0 &&
-              regions.every(r => localAddDailyTemperatureForm.regionId !== Number(r.id))
-            }
-            isRequired>
-            <FormLabel>{t("dailyTemperature.selectRegion")}:</FormLabel>
-            <Select
-              placeholder={t("dailyTemperature.selectRegion")}
-              onChange={e => updateLocalForm(Number.parseInt(e.target.value), "regionId")}>
-              {regions.map(region => (
-                <option key={region.id} value={region.id}>
-                  {region.name}
-                </option>
-              ))}
-            </Select>
+          <FormControl isRequired isInvalid={formSubmitAttempts > 0}>
+            <FormLabel>{t("dailyTemperature.selectRegion")}</FormLabel>
+
+            <RegionSelector
+              cb={x => {
+                updateLocalForm(
+                  x.regionId,
+                  "regionId" as keyof typeof localAddDailyTemperatureForm
+                );
+              }}
+              value={localAddDailyTemperatureForm.regionId}
+            />
             <FormErrorMessage>{t("dailyTemperature.formErrors.selectRegion")}</FormErrorMessage>
           </FormControl>
 
