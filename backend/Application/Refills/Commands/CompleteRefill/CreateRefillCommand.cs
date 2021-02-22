@@ -121,7 +121,15 @@ namespace Application.Refills.Commands.CompleteRefill
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        await PostUniContaOrder(completingrefill.Id);
+        try
+        {
+          await PostUniContaOrder(completingrefill.Id);
+        }
+        catch (System.FormatException e)
+        {
+          throw new ArgumentException("Couldn't access Uniconta.");
+        }
+
 
         return refill.Id;
       }
