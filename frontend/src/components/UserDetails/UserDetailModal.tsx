@@ -54,6 +54,9 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
         password: newPassword
       })
     );
+
+    onClose();
+
     toast({
       title: t("toast.updatePassword"),
       description: t("toast.successful"),
@@ -67,6 +70,9 @@ const UserDetailModal: FC<Props> = ({ user, userCallback }) => {
     if (role) {
       const client = await genUserClient();
       await client.updateUserRoles(user.id, new UpdateUserRolesCommand({ role: role.name }));
+
+      onClose();
+
       toast({
         title: t("toast.updateRole"),
         description: t("toast.successful"),
