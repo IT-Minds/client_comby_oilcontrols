@@ -30,7 +30,7 @@ const TruckListComp: FC<Props> = ({ preLoadedData = [], truckId }) => {
         data: preLoadedData
       });
     }
-  });
+  }, [preLoadedData]);
 
   return (
     <Table size="sm">
@@ -38,7 +38,7 @@ const TruckListComp: FC<Props> = ({ preLoadedData = [], truckId }) => {
         <Tr>
           <Th>{t("trucks.truckList.truckName")}</Th>
           <Th>{t("trucks.truckList.truckDescription")}</Th>
-          <Th>{t("trucks.truckList.id")}</Th>
+          <Th>{t("trucks.truckList.driver")}</Th>
           <Th></Th>
         </Tr>
       </Thead>
@@ -51,7 +51,7 @@ const TruckListComp: FC<Props> = ({ preLoadedData = [], truckId }) => {
             }}>
             <Td>{data.name}</Td>
             <Td>{data.description}</Td>
-            <Td>{data.id}</Td>
+            <Td>{data.driverId ?? "N/A"}</Td>
             <Td>
               <IconButton
                 size="sm"
