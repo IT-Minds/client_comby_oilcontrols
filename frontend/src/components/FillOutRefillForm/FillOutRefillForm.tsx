@@ -66,7 +66,7 @@ const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) =>
             id="coupon-no"
             isInvalid={
               formSubmitAttempts > 0 &&
-              couponNumbers.every(cn => localReportForm.couponNumber !== cn.id)
+              couponNumbers.every(cn => localReportForm.couponNumber !== cn.name)
             }
             isRequired>
             <FormLabel>{t("mytruck.refill.selectCouponNumber")}</FormLabel>

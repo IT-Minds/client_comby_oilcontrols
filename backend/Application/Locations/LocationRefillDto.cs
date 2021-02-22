@@ -19,6 +19,7 @@ namespace Application.Locations
     public string AddressExtra { get; set; }
     public DateTime ExpectedDeliveryDate { get; set; }
     public bool DebtorBlocked { get; set; } = false; // TODO map real data
+    public string BstNumber { get; set; }
 
 
     public void Mapping(Profile profile)
@@ -40,6 +41,8 @@ namespace Application.Locations
           map => map.MapFrom(from => from.Location.FuelTank.FuelType))
 
       .ForMember(dest => dest.DebtorBlocked, map => map.Ignore())
+
+      .ForMember(dest => dest.BstNumber, map => map.MapFrom(from => from.Location.TankNumber))
 
       ;
     }

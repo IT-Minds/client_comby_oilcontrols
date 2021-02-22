@@ -83,7 +83,7 @@ const RunListTable: FC<Props> = ({ truckId, refillCb }) => {
             <HStack spacing={1}>
               <Text>{t("mytruck.runlist.bstNumber")}</Text>
               <Spacer />
-              <QuerySortBtn queryKey="locationId" sortCb={sortCb} />
+              <QuerySortBtn queryKey="bstNumber" sortCb={sortCb} />
             </HStack>
           </Th>
           <Th hidden={!isPrinting && cols < 4}>
@@ -146,7 +146,7 @@ const RunListTable: FC<Props> = ({ truckId, refillCb }) => {
       <Tbody>
         {refills.sort(sort).map(row => (
           <Tr key={row.refillId}>
-            <Td hidden={!isPrinting && cols < 4}>{row.locationId}</Td>
+            <Td hidden={!isPrinting && cols < 4}>{row.bstNumber}</Td>
             <Td hidden={!isPrinting && cols < 4}>DATA MISSING</Td>
             <Td hidden={!isPrinting && cols < 4}>{row.debtorBlocked.toString()}</Td>
             <Td>
