@@ -1,5 +1,6 @@
 import { Heading, useToast, VStack } from "@chakra-ui/react";
 import AddDailyTemperatureComp from "components/DailyTemperature/AddDailyTemperature";
+import { runTimeTable } from "i18n/runtimeTable";
 import { GetStaticProps, NextPage } from "next";
 import { I18nProps, useI18n } from "next-rosetta";
 import { useCallback } from "react";
@@ -37,14 +38,8 @@ const MyPage: NextPage = () => {
 
   return (
     <VStack w="100%">
-      <VStack>
-        <Heading>{t("dailyTemperature.addDailyTemperature")}</Heading>
-        <AddDailyTemperatureComp
-          submitCallback={x => {
-            saveDailyTemperature(x);
-          }}
-        />
-      </VStack>
+      <Heading>{t("dailyTemperature.addDailyTemperature")}</Heading>
+      <AddDailyTemperatureComp submitCallback={saveDailyTemperature} />
     </VStack>
   );
 };
@@ -52,7 +47,8 @@ const MyPage: NextPage = () => {
 export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context => {
   const locale = context.locale || context.defaultLocale;
 
-  const { table = {} } = await import(`../i18n/${locale}`);
+  let { table = {} } = await import(`../i18n/${locale}`);
+  table = runTimeTable(locale, table);
 
   return {
     props: {

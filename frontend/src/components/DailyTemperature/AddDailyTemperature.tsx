@@ -11,13 +11,14 @@ import {
   VStack
 } from "@chakra-ui/react";
 import RegionSelector from "components/RegionSelector/RegionSelector";
+import { authGuardHOC } from "hoc/authGuardHOC";
 import { useEffectAsync } from "hooks/useEffectAsync";
 import { Locale } from "i18n/Locale";
 import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
 import { genStreetClient } from "services/backend/apiClients";
-import { ICreateDailyTemperatureCommand } from "services/backend/nswagts";
+import { Action, ICreateDailyTemperatureCommand } from "services/backend/nswagts";
 import { formatInputNumber, parseInputToNumber } from "utils/formatNumber";
 import { logger } from "utils/logger";
 
@@ -45,7 +46,6 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback }) => {
   useEffectAsync(async () => {
     const client = await genStreetClient();
     const data = await client.get();
-    console.log(data.results);
   }, []);
 
   const updateLocalForm = useCallback(
@@ -134,4 +134,4 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback }) => {
   );
 };
 
-export default AddDailyTemperatureComp;
+export default authGuardHOC(AddDailyTemperatureComp, Action.SET_TEMPERATURE);

@@ -1,11 +1,14 @@
 import { Center, Code, useToast, VisuallyHidden } from "@chakra-ui/react";
+import { UserTypeContext } from "contexts/UserTypeContext";
 import { useRouter } from "next/router";
-import { FC, useCallback, useMemo, useRef } from "react";
+import { FC, useCallback, useContext, useMemo, useRef } from "react";
 
 const AppVersion: FC = () => {
   const copyInput = useRef<HTMLInputElement>(null);
   const toast = useToast();
   const router = useRouter();
+  const { activeUser } = useContext(UserTypeContext);
+
   const copy = useCallback(() => {
     copyInput.current.select();
     copyInput.current.setSelectionRange(0, 99999);
@@ -30,9 +33,10 @@ const AppVersion: FC = () => {
       _navigator,
       _screen,
       _router: { ...router, components: undefined },
-      _version: process.env.NEXT_PUBLIC_APP_VERSION
+      _version: process.env.NEXT_PUBLIC_APP_VERSION,
+      _user: activeUser
     });
-  }, [router]);
+  }, [router, activeUser]);
 
   return (
     <Center>
