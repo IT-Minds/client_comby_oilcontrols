@@ -234,7 +234,7 @@ export const table: Locale = {
     truckList: {
       truckName: "Vognnavn",
       truckDescription: "Vognbeskrivelse",
-      id: "ID"
+      driver: "Chauffør"
     },
     addTruckTrigger: {
       addNewTruck: "Tilføj ny vogn"

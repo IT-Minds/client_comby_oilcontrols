@@ -267,7 +267,7 @@ export interface Locale {
     truckList: {
       truckName: string;
       truckDescription: string;
-      id: string;
+      driver: string;
     };
     addTruckTrigger: {
       addNewTruck: string;
