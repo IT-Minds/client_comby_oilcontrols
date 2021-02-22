@@ -26,6 +26,8 @@ const CreateRole: FC = () => {
     const client = await genRoleClient();
     await client.createRole(new CreateRoleCommand({ role: form }));
 
+    onClose();
+
     toast({
       title: t("users.createRole"),
       description: t("toast.successful"),
