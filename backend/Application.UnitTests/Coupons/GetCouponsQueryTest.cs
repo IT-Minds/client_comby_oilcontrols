@@ -31,12 +31,12 @@ namespace Application.UnitTests.Coupons.Queries.GetCoupons
       var query = new GetCouponsTruckQuery
       {
         Size = 500,
-        Needle = new System.DateTimeOffset(new System.DateTime(2019, 12, 31)),
+        Needle = 0,
         TruckId = 44
       };
       var handler = new GetCouponsTruckQuery.GetCouponsTruckQueryHandler(_context, _mapper);
       var result = await handler.Handle(query, CancellationToken.None);
-      result.Should().BeOfType<PageResult<CouponIdDto, DateTimeOffset>>();
+      result.Should().BeOfType<PageResult<CouponIdDto, int>>();
       result.Results.Count.Should().Be(2);
     }
   }
