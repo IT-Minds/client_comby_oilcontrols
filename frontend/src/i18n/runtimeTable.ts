@@ -7,7 +7,6 @@ export const runTimeTable = (locale: string, table: Locale): Locale => {
   try {
     const postsDirectory = join(process.cwd(), "src", "i18n");
     const filenames = readdirSync(postsDirectory);
-    console.log(postsDirectory, filenames);
     const localeFile = filenames.find(x => x === locale + ".json");
 
     let runTimeTable: Partial<Locale> = {};

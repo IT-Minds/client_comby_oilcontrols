@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
+using Application.Common.Security;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Entities.Refills;
@@ -16,7 +17,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Locations.Queries
 {
-  //[AuthorizeAttribute(Domain.Enums.Action.GET_LOCATION)]
+  [AuthorizeAttribute(Domain.Enums.Action.GET_LOCATION)]
   public class GetLocationRequiringRefill : IRequest<List<LocationRefillDto>>
   {
     public int TruckId { get; set; }
@@ -47,10 +48,11 @@ namespace Application.Locations.Queries
           .Where(x => DateTimeOffset.Compare(x.PredictDayReachingMinimumFuelLevel(7), nextWeek) <= 0)
           .Where(l => l.AssignedRefills.Count() <= 0); // Can't have an upcoming Refill.
 
-        var refills = locationToRefill.Select(x => new AssignedRefill
+        var refills = locationToRefill.Select(location => new AssignedRefill
         {
-          LocationId = x.Id,
-          ExpectedDeliveryDate = x.PredictDayReachingMinimumFuelLevel(7)
+          Location = location,
+          ExpectedDeliveryDate = location.PredictDayReachingMinimumFuelLevel(7),
+          RefillState = RefillState.ASSIGNED
         }).ToList();
 
         return refills;
@@ -74,10 +76,11 @@ namespace Application.Locations.Queries
             ).Days // The days between now and last refill must be greater than the
           );
 
-        var refills = locationToRefill.Select(x => new AssignedRefill
+        var refills = locationToRefill.Select(location => new AssignedRefill
         {
-          LocationId = x.Id,
-          ExpectedDeliveryDate = now.AddDays(x.DaysBetweenRefills).DateTime
+          Location = location,
+          ExpectedDeliveryDate = now.AddDays(location.DaysBetweenRefills).DateTime,
+          RefillState = RefillState.ASSIGNED
         }).ToList();
 
         return refills;
@@ -97,10 +100,11 @@ namespace Application.Locations.Queries
             l.AssignedRefills.Count() <= 0 // Can't have an upcoming Refill.
           );
 
-        var refills = locationToRefill.Select(x => new AssignedRefill
+        var refills = locationToRefill.Select(location => new AssignedRefill
         {
-          LocationId = x.Id,
-          ExpectedDeliveryDate = now.AddDays(x.DaysBetweenRefills).DateTime
+          Location = location,
+          ExpectedDeliveryDate = now.AddDays(location.DaysBetweenRefills).DateTime,
+          RefillState = RefillState.ASSIGNED
         }).ToList();
 
         return refills;

@@ -23,6 +23,9 @@ export const table: Locale = {
       debtors: "Debitorer",
       create: "Opret ny debitor"
     },
+    temperature: {
+      temperature: "Temperaturer"
+    },
     users: "Brugerstyring",
     statistics: "Rapporter"
   },
@@ -52,7 +55,8 @@ export const table: Locale = {
     createLocation: "Opret lokation",
     updateLocation: "Opdater lokation",
     updatePassword: "Opdater kodeord",
-    updateRole: "Opdater rolle"
+    updateRole: "Opdater rolle",
+    createTemperature: "Opret temperatur"
   },
 
   coupons: {
@@ -82,11 +86,12 @@ export const table: Locale = {
   },
 
   dailyTemperature: {
+    addDailyTemperature: "Tilføj temperatur",
     selectRegion: "Vælg region",
     temperature: "Temperatur",
     selectDate: "Vælg en dato",
     formErrors: {
-      selectRegion: "Vælg en temperatur",
+      selectRegion: "Vælg en region",
       inputTemperature: "Indtast en temperatur"
     }
   },
@@ -166,7 +171,7 @@ export const table: Locale = {
     selectAnImage: "Vælg et billede af tanklokationen",
     selectImage: "Vælg billede",
     reSelectImage: "Vælg et andet billede",
-    tankNumber: "Tanknummer:",
+    bstNumber: "B/S/T nummer:",
     tankCapacity: "Tankkapacitet:",
     liters: "Liter",
     minFuelAmount: "Minimum brændstofmængde:",
@@ -185,7 +190,7 @@ export const table: Locale = {
       daysBetween: "Vælg dage mellem genopfyldninger",
       enterComment: "Angiv en kommentar",
       selectAnImage: "Vælg et billede",
-      tankNumber: "Indtast tanknummer",
+      bstNumber: "Indtast B/S/T nummer",
       tankCapacity: "Indtast tankkapacitet",
       minFuelAmount: "Indtast minimum brændstofmængde",
       dailyFuelConsumptionEstimate: "Indtast det forventede daglige brændstofforbrug",
@@ -311,7 +316,7 @@ export const table: Locale = {
     runlist: {
       comments: "Kommentarer",
       debtorBlocked: "Debitor blokkeret",
-      locationType: "Lokationstype",
+      bstNumber: "B/S/T nummer",
       address: "Adresse",
       agreementType: "Aftaletype",
       fuelType: "Brændstofstype",
@@ -346,6 +351,7 @@ export const table: Locale = {
 
   locationOverview: {
     addNew: "Tilføj ny",
+    editLocation: "Rediger lokation",
     location: "lokation"
   },
 
@@ -368,6 +374,11 @@ export const table: Locale = {
 
   truckSelector: {
     selectTruck: "Vælg vogn"
+  },
+
+  regionSelector: {
+    region: "Region",
+    selectRegion: "Vælg region"
   },
 
   enums: {

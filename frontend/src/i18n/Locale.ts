@@ -25,6 +25,9 @@ export interface Locale {
       overview: string;
       create: string;
     };
+    temperature: {
+      temperature: string;
+    };
     users: string;
     statistics: string;
   };
@@ -57,6 +60,7 @@ export interface Locale {
     updateLocation: string;
     updatePassword: string;
     updateRole: string;
+    createTemperature: string;
   };
 
   coupons: {
@@ -85,6 +89,7 @@ export interface Locale {
   };
 
   dailyTemperature: {
+    addDailyTemperature: string;
     selectRegion: string;
     temperature: string;
     selectDate: string;
@@ -169,7 +174,7 @@ export interface Locale {
     selectAnImage: string;
     selectImage: string;
     reSelectImage: string;
-    tankNumber: string;
+    bstNumber: string;
     tankCapacity: string;
     liters: string;
     minFuelAmount: string;
@@ -188,7 +193,7 @@ export interface Locale {
       daysBetween: string;
       enterComment: string;
       selectAnImage: string;
-      tankNumber: string;
+      bstNumber: string;
       tankCapacity: string;
       minFuelAmount: string;
       dailyFuelConsumptionEstimate: string;
@@ -314,7 +319,7 @@ export interface Locale {
     runlist: {
       comments: string;
       debtorBlocked: string;
-      locationType: string;
+      bstNumber: string;
       address: string;
       agreementType: string;
       fuelType: string;
@@ -349,6 +354,7 @@ export interface Locale {
 
   locationOverview: {
     addNew: string;
+    editLocation: string;
     location: string;
   };
 
@@ -371,6 +377,11 @@ export interface Locale {
 
   truckSelector: {
     selectTruck: string;
+  };
+
+  regionSelector: {
+    selectRegion: string;
+    region: string;
   };
 
   enums: {

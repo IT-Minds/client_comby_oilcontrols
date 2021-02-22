@@ -34,7 +34,7 @@ namespace Application.Locations
       .ForMember(dest => dest.AddressExtra, map => map.MapFrom(from => from.Location.AddressExtra))
 
       .ForMember(dest => dest.LocationType,
-          map => map.MapFrom(from => from.Location.FuelTank.TankType))
+          map => map.MapFrom(from => from.Location.TankType))
 
       .ForMember(dest => dest.FuelType,
           map => map.MapFrom(from => from.Location.FuelTank.FuelType))

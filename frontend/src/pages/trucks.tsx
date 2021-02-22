@@ -20,7 +20,7 @@ import AddTruckTriggerBtn from "components/TruckMetaData/AddTruckTriggerBtn";
 import { useEffectAsync } from "hooks/useEffectAsync";
 import { useOffline } from "hooks/useOffline";
 import { Locale } from "i18n/Locale";
-import { runTimeTable } from "i18n/runTimeTable";
+import { runTimeTable } from "i18n/runtimeTable";
 import { GetStaticProps, NextPage } from "next";
 import { I18nProps, useI18n } from "next-rosetta";
 import React, { useCallback, useState } from "react";

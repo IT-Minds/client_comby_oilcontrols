@@ -3,11 +3,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
+using Application.Common.Security;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Locations.Commands.RemoveDebtorFromLocation
 {
+  [AuthorizeAttribute(Domain.Enums.Action.UPDATE_LOCATION)]
   public class RemoveDebtorFromLocationCommand : IRequest<int>
   {
     public int LocationId { get; set; }

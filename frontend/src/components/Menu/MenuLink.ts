@@ -1,5 +1,6 @@
 import { IconType } from "react-icons";
 import { MdArchive, MdAttachMoney, MdDirectionsBus, MdLocationOn, MdPeople } from "react-icons/md";
+import { WiDaySnow } from "react-icons/wi";
 import { Action } from "services/backend/nswagts";
 
 export interface ChildLink {
@@ -60,6 +61,14 @@ export const testLinks: MenuLink[] = [
 
     logo: MdAttachMoney,
     access: Action.GET_DEBTOR
+  },
+  {
+    id: "debtor",
+    title: "menu.temperature.temperature",
+    href: "/temperature",
+
+    logo: WiDaySnow,
+    access: Action.SET_TEMPERATURE
   },
   {
     id: "users",

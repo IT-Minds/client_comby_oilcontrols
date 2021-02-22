@@ -24,7 +24,6 @@ type Props = {
 const defaultSort = (a: ILocationRefillDto, b: ILocationRefillDto) =>
   a.refillId > b.refillId ? 1 : -1;
 
-// TODO i18n;
 const RunListTable: FC<Props> = ({ truckId, refillCb }) => {
   const { t } = useI18n<Locale>();
 
@@ -82,7 +81,7 @@ const RunListTable: FC<Props> = ({ truckId, refillCb }) => {
         <Tr>
           <Th hidden={!isPrinting && cols < 4}>
             <HStack spacing={1}>
-              <Text>{t("mytruck.runlist.locationType")}</Text>
+              <Text>{t("mytruck.runlist.bstNumber")}</Text>
               <Spacer />
               <QuerySortBtn queryKey="locationId" sortCb={sortCb} />
             </HStack>
