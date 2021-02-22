@@ -120,7 +120,6 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback }) => {
             </Stack>
             <FormErrorMessage>{t("dailyTemperature.formErrors.inputTemperature")}</FormErrorMessage>
           </FormControl>
-
           <Button
             colorScheme="green"
             type="submit"

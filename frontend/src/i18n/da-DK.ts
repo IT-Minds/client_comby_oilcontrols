@@ -424,7 +424,11 @@ export const table: Locale = {
       "17": "Hent vogne",
       "18": "Opdater vogne",
       "19": "Opdater brugere",
-      "20": "Hent alle brugere"
+      "20": "Hent alle brugere",
+      "21": "Juster debitor kuponkrav",
+      "22": "Opret brugerroller",
+      "23": "Opdater brugerroller",
+      "24": "Opret brugere"
     }
   }
 };
