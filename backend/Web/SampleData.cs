@@ -65,10 +65,19 @@ namespace Web
       );
 
       context.RoleActions.AddRange(
-        new RoleAction { Role = role1, Action = Domain.Enums.Action.ASSIGN_COUPON }
+        new RoleAction { Role = role1, Action = Domain.Enums.Action.ASSIGN_COUPON },
+        new RoleAction { Role = role2, Action = Domain.Enums.Action.GET_COUPONS },
+        new RoleAction { Role = role2, Action = Domain.Enums.Action.UPDATE_COUPON_STATUS },
+        new RoleAction { Role = role2, Action = Domain.Enums.Action.SAVE_COUPON_IMAGE },
+        new RoleAction { Role = role2, Action = Domain.Enums.Action.GET_TRUCK },
+        new RoleAction { Role = role2, Action = Domain.Enums.Action.GET_REFILLS },
+        new RoleAction { Role = role2, Action = Domain.Enums.Action.CREATE_REFILL },
+        new RoleAction { Role = role2, Action = Domain.Enums.Action.CREATE_TRUCK_REFILL },
+        new RoleAction { Role = role2, Action = Domain.Enums.Action.GET_LOCATION }
       );
       context.UserRoles.AddRange(
-        new UserRole { Role = role1, UserId = user3.Id }
+        new UserRole { Role = role1, UserId = user3.Id },
+        new UserRole { Role = role2, UserId = user1.Id }
       );
 
       context.Roles.AddRange(
