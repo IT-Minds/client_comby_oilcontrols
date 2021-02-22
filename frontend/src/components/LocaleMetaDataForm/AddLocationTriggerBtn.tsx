@@ -9,8 +9,9 @@ import {
   useDisclosure,
   useToast
 } from "@chakra-ui/react";
+import { RefetchDataContext } from "contexts/RefetchDataContext";
 import { useI18n } from "next-rosetta";
-import React, { FC, useCallback } from "react";
+import React, { FC, useCallback, useContext } from "react";
 import { genLocationClient } from "services/backend/apiClients";
 import {
   AddDebtorToLocationCommand,
@@ -31,6 +32,7 @@ const AddLocationTriggerBtn: FC<Props> = ({ tankType = null }) => {
   const { t } = useI18n<Locale>();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { refetchData } = useContext(RefetchDataContext);
 
   const createLocation = useCallback(
     async (reportForm: ILocationDetailsDto, debtors: AddDebtorToLocationCommand[], image: File) => {
@@ -55,6 +57,8 @@ const AddLocationTriggerBtn: FC<Props> = ({ tankType = null }) => {
           client.addDebtor(new AddDebtorToLocationCommand({ ...x, locationId: newId }))
         )
       );
+
+      refetchData();
 
       toast({
         title: t("toast.createLocation"),
