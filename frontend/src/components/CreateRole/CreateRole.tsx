@@ -27,8 +27,8 @@ const CreateRole: FC = () => {
     await client.createRole(new CreateRoleCommand({ role: form }));
 
     toast({
-      title: "Create role successful",
-      description: "Successful",
+      title: t("users.createRole"),
+      description: t("toast.successful"),
       status: "success",
       duration: 9000,
       isClosable: true

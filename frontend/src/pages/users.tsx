@@ -2,6 +2,7 @@ import { Divider, Heading, HStack, Text, VStack } from "@chakra-ui/react";
 import CreateRole from "components/CreateRole/CreateRole";
 import CreateUser from "components/CreateUser/CreateUser";
 import UserDetailsTable from "components/UserDetails/UserDetailsTable";
+import { runTimeTable } from "i18n/runtimeTable";
 import { GetStaticProps, NextPage } from "next";
 import { I18nProps, useI18n } from "next-rosetta";
 
@@ -23,7 +24,8 @@ const MyPage: NextPage = () => {
 export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context => {
   const locale = context.locale || context.defaultLocale;
 
-  const { table = {} } = await import(`../i18n/${locale}`);
+  let { table = {} } = await import(`../i18n/${locale}`);
+  table = runTimeTable(locale, table);
 
   return {
     props: {

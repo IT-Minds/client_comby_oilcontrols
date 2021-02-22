@@ -1,6 +1,7 @@
 import { Container, Heading, Spinner } from "@chakra-ui/react";
 import DebtorTableComp from "components/DebtorTable/DebtorTableComp";
 import { useEffectAsync } from "hooks/useEffectAsync";
+import { runTimeTable } from "i18n/runtimeTable";
 import { GetStaticProps, NextPage } from "next";
 import { I18nProps } from "next-rosetta";
 import { useState } from "react";
@@ -26,7 +27,8 @@ const Debtors: NextPage = () => {
 export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context => {
   const locale = context.locale || context.defaultLocale;
 
-  const { table = {} } = await import(`../i18n/${locale}`);
+  let { table = {} } = await import(`../i18n/${locale}`);
+  table = runTimeTable(locale, table);
   return { props: { table } };
 };
 

@@ -9,6 +9,7 @@ import {
   useDisclosure,
   useToast
 } from "@chakra-ui/react";
+import { useI18n } from "next-rosetta";
 import React, { FC, useCallback } from "react";
 import { MdModeEdit } from "react-icons/md";
 import { genLocationClient } from "services/backend/apiClients";
@@ -26,7 +27,7 @@ type Props = {
 
 const EditLocationTriggerBtn: FC<Props> = ({ data = null }) => {
   const toast = useToast();
-
+  const { t } = useI18n<Locale>();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const createLocation = useCallback(async (reportForm: ILocationDetailsIdDto) => {
@@ -53,8 +54,8 @@ const EditLocationTriggerBtn: FC<Props> = ({ data = null }) => {
     // );
 
     toast({
-      title: "Truck successfully created",
-      description: "Successful",
+      title: t("toast.updateLocation"),
+      description: t("toast.successful"),
       status: "success",
       duration: 9000,
       isClosable: true
@@ -76,7 +77,7 @@ const EditLocationTriggerBtn: FC<Props> = ({ data = null }) => {
       <Modal isOpen={isOpen} onClose={onClose} size="5xl">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Edit Location</ModalHeader>
+          <ModalHeader>{t("locationOverview.editLocation")}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <LocaleMetaDataComp submitCallback={createLocation} localeMetaData={data} />

@@ -3,12 +3,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
+using Application.Common.Security;
 using Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Locations.Commands.UpdateDebtorOnLocation
 {
+  [AuthorizeAttribute(Domain.Enums.Action.UPDATE_LOCATION)]
   public class UpdateDebtorOnLocationCommand : IRequest<int>
   {
     public int LocationId { get; set; }

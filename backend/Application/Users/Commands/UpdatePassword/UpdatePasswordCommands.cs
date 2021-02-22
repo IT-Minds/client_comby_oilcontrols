@@ -2,12 +2,14 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
+using Application.Common.Security;
 using Domain.Entities;
 using MediatR;
 using Newtonsoft.Json;
 
 namespace Application.Users.Commands.UpdatePassword
 {
+  [AuthorizeAttribute(Domain.Enums.Action.UPDATE_USER)]
   public class UpdatePasswordCommand : IRequest<int>
   {
     [JsonIgnore]

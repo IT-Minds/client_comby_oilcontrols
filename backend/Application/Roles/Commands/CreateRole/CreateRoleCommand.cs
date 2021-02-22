@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
+using Application.Common.Security;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
@@ -11,6 +12,7 @@ using MediatR;
 
 namespace Application.Roles.Commands.CreateRole
 {
+  [AuthorizeAttribute(Domain.Enums.Action.CREATE_ROLE)]
   public class CreateRoleCommand : IRequest<RoleIdDto>
   {
     public RoleDto Role { get; set; }
@@ -28,7 +30,7 @@ namespace Application.Roles.Commands.CreateRole
 
       public async Task<RoleIdDto> Handle(CreateRoleCommand request, CancellationToken cancellationToken)
       {
-        if(request.Role.Actions == null)
+        if (request.Role.Actions == null)
         {
           request.Role.Actions = new List<Domain.Enums.Action>();
         }

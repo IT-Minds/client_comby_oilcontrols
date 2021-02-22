@@ -16,7 +16,7 @@ using UniContaDomain.Entities;
 
 namespace Application.Refills.Commands.CompleteRefill
 {
-  //[AuthorizeAttribute(Domain.Enums.Action.CREATE_REFILL)]
+  [AuthorizeAttribute(Domain.Enums.Action.CREATE_REFILL)]
   public class CompleteRefillCommand : IRequest<int>
   {
     [JsonIgnore]
@@ -63,7 +63,7 @@ namespace Application.Refills.Commands.CompleteRefill
           ProductId = "1111"
         });
 
-        System.Console.WriteLine("CREATED ORDER "+OrderId + " WITH OL "+ OrderLineId);
+        System.Console.WriteLine("CREATED ORDER " + OrderId + " WITH OL " + OrderLineId);
       }
 
 

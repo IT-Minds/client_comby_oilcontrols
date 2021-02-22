@@ -23,6 +23,9 @@ export const table: Locale = {
       debtors: "Debitorer",
       create: "Opret ny debitor"
     },
+    temperature: {
+      temperature: "Temperaturer"
+    },
     users: "Brugerstyring",
     statistics: "Statestikker"
   },
@@ -42,6 +45,17 @@ export const table: Locale = {
     delete: "Slet",
     invalidate: "Ugyldiggøre",
     submit: "Send"
+  },
+
+  toast: {
+    successful: "Vellykket",
+    updateDebtor: "Opdater debtor",
+    createTruck: "Opret vogn",
+    createLocation: "Opret lokation",
+    updateLocation: "Opdater lokation",
+    updatePassword: "Opdater kodeord",
+    updateRole: "Opdater rolle",
+    createTemperature: "Opret temperatur"
   },
 
   coupons: {
@@ -107,6 +121,8 @@ export const table: Locale = {
       name: "Navn:",
       accountNumber: "Kontonummer:",
       blocked: "Blokkeret:",
+      yes: "Ja",
+      no: "Nej",
       couponIsRequired: "Kupon er påkrævet:"
     }
   },
@@ -119,17 +135,18 @@ export const table: Locale = {
     selectRefillSchedule: "Vælg genopfyldningsplan",
     refillSchedule: "Genopfyldningsplan:",
     daysBetweenRefill: "Dage mellem genopfyldninger:",
+    numberOfDays: "# dage",
     comment: "Kommentar",
     comments: "Kommentarer:",
     selectAnImage: "Vælg et billede af tanklokationen",
     selectImage: "Vælg billede",
     reSelectImage: "Vælg et andet billede",
-    tankNumber: "Tanknummer:",
+    bstNumber: "B/S/T nummer:",
     tankCapacity: "Tankkapacitet:",
     liters: "Liter",
     minFuelAmount: "Minimum brændstofmængde:",
     dailyFuelConsumptionEstimate: "Daglig forventet brændstofforbrug:",
-    selectFuelType: "Vælg brændstoftype:",
+    selectFuelType: "Vælg brændstoftype",
     debtor: "Debitor",
     main: "Hoved",
     base: "Base",
@@ -143,7 +160,7 @@ export const table: Locale = {
       daysBetween: "Vælg dage mellem genopfyldninger",
       enterComment: "Angiv en kommentar",
       selectAnImage: "Vælg et billede",
-      tankNumber: "Indtast tanknummer",
+      bstNumber: "Indtast B/S/T nummer",
       tankCapacity: "Indtast tankkapacitet",
       minFuelAmount: "Indtast minimum brændstofmængde",
       dailyFuelConsumptionEstimate: "Indtast det forventede daglige brændstofforbrug",
@@ -243,6 +260,7 @@ export const table: Locale = {
   },
 
   dailyTemperature: {
+    addDailyTemperature: "Tilføj temperatur",
     selectRegion: "Vælg region",
     temperature: "Temperatur",
     selectDate: "Vælg en dato",
@@ -277,7 +295,7 @@ export const table: Locale = {
     },
     refill: {
       selectCouponNumber: "Vælg kuponnummer:",
-      selectFuelType: "Vælg brændstofstype:",
+      selectFuelType: "Vælg brændstofstype",
       fuelInTankAfterRefill: "Brændstof i tanken EFTER påfyldning:",
       fuelInTankBeforeRefill: "Brændstof i tanken FØR påfyldning",
       liters: "liter",
@@ -295,7 +313,9 @@ export const table: Locale = {
       }
     },
     runlist: {
-      locationType: "Lokationstype",
+      comments: "Kommentarer",
+      debtorBlocked: "Debitor blokkeret",
+      bstNumber: "B/S/T nummer",
       address: "Adresse",
       agreementType: "Aftaletype",
       fuelType: "Brændstofstype",
@@ -329,6 +349,7 @@ export const table: Locale = {
 
   locationOverview: {
     addNew: "Tilføj ny",
+    editLocation: "Rediger lokation",
     location: "lokation"
   },
 
@@ -337,11 +358,25 @@ export const table: Locale = {
   },
 
   debtorSelector: {
-    selectDebtor: "Vælg debitor"
+    selectDebtor: "Vælg debitor",
+    noDebtor: "Ingen debitor"
   },
 
   userRoleSelector: {
     selectUserRole: "Vælg brugerrolle"
+  },
+
+  userSelector: {
+    selectUser: "Vælg bruger"
+  },
+
+  truckSelector: {
+    selectTruck: "Vælg vogn"
+  },
+
+  regionSelector: {
+    region: "Region",
+    selectRegion: "Vælg region"
   },
 
   enums: {
@@ -387,7 +422,11 @@ export const table: Locale = {
       "17": "Hent vogne",
       "18": "Opdater vogne",
       "19": "Opdater brugere",
-      "20": "Hent alle brugere"
+      "20": "Hent alle brugere",
+      "21": "Juster debitor kuponkrav",
+      "22": "Opret brugerroller",
+      "23": "Opdater brugerroller",
+      "24": "Opret brugere"
     }
   }
 };

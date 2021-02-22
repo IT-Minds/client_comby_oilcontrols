@@ -3,12 +3,14 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Common.Security;
 using Application.Common.Services;
 using CsvHelper;
 using MediatR;
 
 namespace Application.Stats.GetRefillOfYear
 {
+  [AuthorizeAttribute(Domain.Enums.Action.GET_REFILLS)]
   public class GetRefillOfYearQuery : IRequest<FileResponseDto>
   {
     public int Year { get; set; }

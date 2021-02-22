@@ -25,6 +25,9 @@ export interface Locale {
       overview: string;
       create: string;
     };
+    temperature: {
+      temperature: string;
+    };
     users: string;
     statistics: string;
   };
@@ -47,6 +50,17 @@ export interface Locale {
     cancel: string;
     invalidate: string;
     submit: string;
+  };
+
+  toast: {
+    successful: string;
+    updateDebtor: string;
+    createTruck: string;
+    createLocation: string;
+    updateLocation: string;
+    updatePassword: string;
+    updateRole: string;
+    createTemperature: string;
   };
 
   coupons: {
@@ -75,6 +89,7 @@ export interface Locale {
   };
 
   dailyTemperature: {
+    addDailyTemperature: string;
     selectRegion: string;
     temperature: string;
     selectDate: string;
@@ -139,6 +154,8 @@ export interface Locale {
       name: string;
       accountNumber: string;
       blocked: string;
+      yes: string;
+      no: string;
       couponIsRequired: string;
     };
   };
@@ -151,12 +168,13 @@ export interface Locale {
     selectRefillSchedule: string;
     refillSchedule: string;
     daysBetweenRefill: string;
+    numberOfDays: string;
     comment: string;
     comments: string;
     selectAnImage: string;
     selectImage: string;
     reSelectImage: string;
-    tankNumber: string;
+    bstNumber: string;
     tankCapacity: string;
     liters: string;
     minFuelAmount: string;
@@ -175,7 +193,7 @@ export interface Locale {
       daysBetween: string;
       enterComment: string;
       selectAnImage: string;
-      tankNumber: string;
+      bstNumber: string;
       tankCapacity: string;
       minFuelAmount: string;
       dailyFuelConsumptionEstimate: string;
@@ -299,7 +317,9 @@ export interface Locale {
       };
     };
     runlist: {
-      locationType: string;
+      comments: string;
+      debtorBlocked: string;
+      bstNumber: string;
       address: string;
       agreementType: string;
       fuelType: string;
@@ -334,6 +354,7 @@ export interface Locale {
 
   locationOverview: {
     addNew: string;
+    editLocation: string;
     location: string;
   };
 
@@ -343,10 +364,24 @@ export interface Locale {
 
   debtorSelector: {
     selectDebtor: string;
+    noDebtor: string;
   };
 
   userRoleSelector: {
     selectUserRole: string;
+  };
+
+  userSelector: {
+    selectUser: string;
+  };
+
+  truckSelector: {
+    selectTruck: string;
+  };
+
+  regionSelector: {
+    selectRegion: string;
+    region: string;
   };
 
   enums: {
@@ -396,6 +431,10 @@ export interface Locale {
       18: string;
       19: string;
       20: string;
+      21: string;
+      22: string;
+      23: string;
+      24: string;
     };
   };
 }

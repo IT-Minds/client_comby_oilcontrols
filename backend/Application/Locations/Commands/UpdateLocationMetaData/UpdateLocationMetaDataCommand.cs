@@ -48,10 +48,10 @@ namespace Application.Locations.Commands.UpdateLocationMetaData
         location.Schedule = request.Data.Schedule;
         location.EstimateFuelConsumption = request.Data.EstimateFuelConsumption;
         location.DaysBetweenRefills = request.Data.DaysBetweenRefills;
+        location.TankType = request.Data.TankType;
+        location.TankNumber = request.Data.BSTNumber;
 
         var tank = location.FuelTank;
-        tank.TankType = request.Data.TankType;
-        tank.TankNumber = request.Data.TankNumber;
         tank.TankCapacity = request.Data.TankCapacity;
         tank.MinimumFuelAmount = request.Data.MinimumFuelAmount;
         tank.FuelType = request.Data.FuelType;

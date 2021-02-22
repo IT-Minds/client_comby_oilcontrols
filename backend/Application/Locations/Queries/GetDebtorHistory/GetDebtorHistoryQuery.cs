@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
 using Application.Common.Interfaces.Pagination;
+using Application.Common.Security;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Entities;
@@ -11,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Locations.Queries.GetDebtorHistory
 {
+  [AuthorizeAttribute(Domain.Enums.Action.GET_DEBTOR, Domain.Enums.Action.GET_LOCATION)]
   public class GetDebtorHistoryQuery : IPageRequest<LocationDebtorHistoryDto, DateTime>, IPageBody<LocationDebtorHistory, DateTime>
   {
     public int LocationId { get; set; }

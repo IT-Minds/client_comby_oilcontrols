@@ -15,7 +15,7 @@ using Application.Common.Security;
 
 namespace Application.Locations.Commands.AddLocationImage
 {
-  [AuthorizeAttribute(Domain.Enums.Action.CREATE_LOCATION)]
+  [AuthorizeAttribute(Domain.Enums.Action.UPDATE_LOCATION)]
   public class AddLocationImageCommand : IRequest<string>
   {
     public int LocationId { get; set; }

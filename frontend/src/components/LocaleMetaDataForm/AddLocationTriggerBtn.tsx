@@ -57,8 +57,8 @@ const AddLocationTriggerBtn: FC<Props> = ({ tankType = null }) => {
       );
 
       toast({
-        title: "Truck successfully created",
-        description: "Successful",
+        title: t("toast.createLocation"),
+        description: t("toast.successful"),
         status: "success",
         duration: 9000,
         isClosable: true

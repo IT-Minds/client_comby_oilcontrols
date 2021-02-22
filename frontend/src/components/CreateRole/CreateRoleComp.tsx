@@ -8,6 +8,7 @@ import {
   Input,
   Spacer,
   Text,
+  Tooltip,
   VStack
 } from "@chakra-ui/react";
 import { useI18n } from "next-rosetta";
@@ -81,11 +82,13 @@ const CreateRoleComp: FC<Props> = ({ submitCallback, value }) => {
 
         <FormControl isRequired isInvalid={formSubmitAttempts > 0 && localActions.length < 1}>
           <FormLabel>{t("createRole.roleAction")}</FormLabel>
-          {Object.entries(ActionRecord).map(([a, b]) => (
+          {Object.entries(ActionRecord).map(([a, b], i) => (
             <HStack key={b}>
-              <Text>{t("enums.action." + b)}</Text>
+              <Tooltip label={a} fontSize="md" hasArrow placement="top" shouldWrapChildren>
+                <Text>{`${i}: ` + t("enums.action." + b)}</Text>
+              </Tooltip>
               <Spacer></Spacer>
-              <Checkbox onChange={e => setRole(b)}></Checkbox>
+              <Checkbox onChange={() => setRole(b)}></Checkbox>
             </HStack>
           ))}
           <FormErrorMessage>{t("createRole.formErrors.selectActions")}</FormErrorMessage>

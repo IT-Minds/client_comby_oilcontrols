@@ -1,4 +1,5 @@
 import { Button, Center, Heading, HStack, Select, Text, VStack } from "@chakra-ui/react";
+import { runTimeTable } from "i18n/runtimeTable";
 import { GetStaticProps, NextPage } from "next";
 import { I18nProps, useI18n } from "next-rosetta";
 import React, { useCallback, useMemo, useState } from "react";
@@ -60,7 +61,8 @@ const LocalePage: NextPage = () => {
 export const getStaticProps: GetStaticProps<I18nProps<Locale>> = async context => {
   const locale = context.locale || context.defaultLocale;
 
-  const { table = {} } = await import(`../i18n/${locale}`);
+  let { table = {} } = await import(`../i18n/${locale}`);
+  table = runTimeTable(locale, table);
   return { props: { table } };
 };
 
