@@ -14,6 +14,7 @@ import React, { FC, useCallback } from "react";
 import { MdModeEdit } from "react-icons/md";
 import { genLocationClient } from "services/backend/apiClients";
 import {
+  AddDebtorToLocationCommand,
   ILocationDetailsIdDto,
   LocationDetailsIdDto,
   UpdateLocationMetaDataCommand
@@ -30,39 +31,48 @@ const EditLocationTriggerBtn: FC<Props> = ({ data = null }) => {
   const { t } = useI18n<Locale>();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const createLocation = useCallback(async (reportForm: ILocationDetailsIdDto) => {
-    const client = await genLocationClient();
+  const createLocation = useCallback(
+    async (
+      reportForm: ILocationDetailsIdDto,
+      debtors: AddDebtorToLocationCommand[],
+      image: File
+    ) => {
+      const client = await genLocationClient();
 
-    const data = new LocationDetailsIdDto();
-    data.init(reportForm);
-    await client.updateMetaData(
-      data.id,
-      new UpdateLocationMetaDataCommand({
-        data
-      })
-    );
+      const data = new LocationDetailsIdDto();
+      data.init(reportForm);
+      const newId = await client.updateMetaData(
+        data.id,
+        new UpdateLocationMetaDataCommand({
+          data
+        })
+      );
 
-    // await client.saveLocationImage(newId, {
-    //   data: image,
-    //   fileName: newId + ".webp"
-    // });
+      if (image) {
+        await client.saveLocationImage(newId, {
+          data: image,
+          fileName: newId + ".webp"
+        });
+      }
 
-    // await Promise.all(
-    //   debtors.map(x =>
-    //     client.addDebtor(new AddDebtorToLocationCommand({ ...x, locationId: newId }))
-    //   )
-    // );
+      await Promise.all(
+        debtors.map(x =>
+          client.addDebtor(new AddDebtorToLocationCommand({ ...x, locationId: newId }))
+        )
+      );
 
-    toast({
-      title: t("toast.updateLocation"),
-      description: t("toast.successful"),
-      status: "success",
-      duration: 9000,
-      isClosable: true
-    });
+      toast({
+        title: t("toast.updateLocation"),
+        description: t("toast.successful"),
+        status: "success",
+        duration: 9000,
+        isClosable: true
+      });
 
-    onClose();
-  }, []);
+      onClose();
+    },
+    []
+  );
 
   return (
     <>
