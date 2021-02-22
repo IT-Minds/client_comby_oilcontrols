@@ -1,8 +1,10 @@
 import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import UserCirle from "components/Menu/components/UserCirle";
+import { RefetchDataContext } from "contexts/RefetchDataContext";
+import { useEffectAsync } from "hooks/useEffectAsync";
 import { usePagedFetched } from "hooks/usePagedFetched";
 import { useI18n } from "next-rosetta";
-import { FC, useCallback, useReducer } from "react";
+import { FC, useCallback, useContext, useReducer } from "react";
 import ListReducer, { ListReducerActionType } from "react-list-reducer";
 import { genUserClient } from "services/backend/apiClients";
 import { IUserIdDto } from "services/backend/nswagts";
@@ -11,8 +13,8 @@ import UserDetailModal from "./UserDetailModal";
 
 const UserDetailsTable: FC = () => {
   const { t } = useI18n<Locale>();
-
   const [data, dataDispatch] = useReducer(ListReducer<IUserIdDto>("id"), []);
+  const { count } = useContext(RefetchDataContext);
 
   const { done } = usePagedFetched<number, IUserIdDto>(
     "",
@@ -29,6 +31,16 @@ const UserDetailsTable: FC = () => {
     });
   }, []);
 
+  useEffectAsync(async () => {
+    const client = await genUserClient();
+    const users = await client.getAllUser();
+
+    dataDispatch({
+      type: ListReducerActionType.Reset,
+      data: users.results
+    });
+  }, [count]);
+
   return (
     <Table size="sm">
       <Thead>
@@ -39,6 +51,7 @@ const UserDetailsTable: FC = () => {
           <Th w={8}></Th>
         </Tr>
       </Thead>
+
       <Tbody>
         {data
           .filter(u => u.currentRole?.name !== "SuperAdmin")
