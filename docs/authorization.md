@@ -1,44 +1,46 @@
-# Actions
+# Auth
+
+## Actions
 
 List of actions defined under `Domain.Enums.Action` and their related commands.
 
-### ASSIGN_COUPON
+### 0 ASSIGN_COUPON
 
 - `AssignCouponsCommand`
 
-### SAVE_COUPON_IMAGE
+### 1 SAVE_COUPON_IMAGE
 
 - `SaveCouponImageCommand`
 
-### UPDATE_COUPON_STATUS
+### 2 UPDATE_COUPON_STATUS
 
 - `UpdateCouponStatusCommand`
 
-### GET_COUPONS
+### 3 GET_COUPONS
 
 - `GetCouponImageQuery`
 - `GetCouponsTruckQuery`
 
-### SET_TEMPERATURE
+### 4 SET_TEMPERATURE
 
 - `CreateDailyTemperatureCommand`
 
-### GET_DEBTOR
+### 5 GET_DEBTOR
 
 - `GetDebtorQuery`
 - `GetDebtorHistoryQuery`
 - `GetDebtorsQuery`
 
-### GET_LOCATION_HISTORIES
+### 6 GET_LOCATION_HISTORIES
 
 - `GetAllLocationHistoriesQuery`
 - `GetLocationHistoryQuery`
 
-### CREATE_LOCATION
+### 7 CREATE_LOCATION
 
 - `CreateLocationCommand`
 
-### UPDATE_LOCATION
+### 8 UPDATE_LOCATION
 
 - `AddDebtorToLocationCommand`
 - `AddLocationImageCommand`
@@ -46,7 +48,7 @@ List of actions defined under `Domain.Enums.Action` and their related commands.
 - `UpdateLocationMetaDataCommand`
 - `RemoveDebtorFromLocationCommand`
 
-### GET_LOCATION
+### 9 GET_LOCATION
 
 - `GetDebtorHistoryQuery`
 - `GetLocationImageQuery`
@@ -54,68 +56,80 @@ List of actions defined under `Domain.Enums.Action` and their related commands.
 - `GetHistoricConsumptionCsvQuery`
 - `GetHistoricConsumptionQuery`
 
-### CREATE_REFILL
+### 10 CREATE_REFILL
 
 - `CompleteRefillCommand`
 
-### ORDER_REFILL
+### 11 ORDER_REFILL
 
 - `OrderRefillCommand`
 
-### GET_REFILLS
+### 12 GET_REFILLS
 
 - `GetLocationRefillHistoryQuery`
 - `GetRefillsLocationQuery`
 - `GetTruckRefillHistoryQuery`
 - `GetRefillOfYearQuery`
 
-### GET_STREETS
+### 13 GET_STREETS
 
 - `GetStreetsQuery`
 
-### CREATE_TRUCK_REFILL
+### 14 CREATE_TRUCK_REFILL
 
 - `CreateTruckRefillCommand`
 
-### CREATE_TRUCK
+### 15 CREATE_TRUCK
 
 - `CreateTruckCommand`
 
-### UPDATE_TRUCK
+### 16 UPDATE_TRUCK
 
 - `UpdateTruckCommand`
 
-### GET_TRUCK
+### 17 GET_TRUCK
 
 - `GetTrucksPageQuery`
 - `GetTruckInfoQuery`
 
-### GET_ROLES
+### 18 GET_ROLES
 
 - `GetRoleQuery`
 - `GetAllRolesQuery`
 
-### UPDATE_USER
+### 19 UPDATE_USER
 
 - `UpdatePasswordCommand`
 - `UpdateUserRolesCommand`
 
-### GET_ALL_USERS
+### 20 GET_ALL_USERS
 
 - `GetAllUsersQuery`
 
-### SET_DEBTOR_COUPON_REQUIRED
+### 21 SET_DEBTOR_COUPON_REQUIRED
 
 - `PrintCouponRequiredCommand`
 
-### CREATE_ROLE
+### 22 CREATE_ROLE
 
 - `CreateRoleCommand`
 
-### UPDATE_ROLE
+### 23 UPDATE_ROLE
 
 - `UpdateRoleCommand`
 
-### CREATE_USER
+### 24 CREATE_USER
 
 - `CreateUserCommand`
+
+## Pages
+
+### MyTruck
+
+Full action list:
+
+14 CREATE_TRUCK_REFILL
+17 GET_TRUCK
+3 GET_COUPONS
+9 GET_LOCATION
+1 SAVE_COUPON_IMAGE
