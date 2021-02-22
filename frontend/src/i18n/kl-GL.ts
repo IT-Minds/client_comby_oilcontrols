@@ -426,7 +426,7 @@ export const table: Locale = {
       "21": "Juster debitor kuponkrav",
       "22": "Opret brugerroller",
       "23": "Opdater brugerroller",
-      "24": "Opret brugere"
+      "25": "Opret brugere"
     }
   }
 };

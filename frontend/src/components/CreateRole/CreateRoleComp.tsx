@@ -82,12 +82,12 @@ const CreateRoleComp: FC<Props> = ({ submitCallback, value }) => {
 
         <FormControl isRequired isInvalid={formSubmitAttempts > 0 && localActions.length < 1}>
           <FormLabel>{t("createRole.roleAction")}</FormLabel>
-          {Object.entries(ActionRecord).map(([a, b], i) => (
+          {Object.entries(ActionRecord).map(([a, b]) => (
             <HStack key={b}>
               <Tooltip label={a} fontSize="md" hasArrow placement="top" shouldWrapChildren>
-                <Text>{`${i}: ` + t("enums.action." + b)}</Text>
+                <Text>{`${Number(b)}: ` + t("enums.action." + b)}</Text>
               </Tooltip>
-              <Spacer></Spacer>
+              <Spacer />
               <Checkbox onChange={() => setRole(b)}></Checkbox>
             </HStack>
           ))}
