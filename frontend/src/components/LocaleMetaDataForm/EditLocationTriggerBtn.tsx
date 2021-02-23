@@ -17,6 +17,8 @@ import {
   AddDebtorToLocationCommand,
   ILocationDetailsIdDto,
   LocationDetailsIdDto,
+  RemoveDebtorFromLocationCommand,
+  UpdateDebtorOnLocationCommand,
   UpdateLocationMetaDataCommand
 } from "services/backend/nswagts";
 
@@ -34,7 +36,9 @@ const EditLocationTriggerBtn: FC<Props> = ({ data = null }) => {
   const createLocation = useCallback(
     async (
       reportForm: ILocationDetailsIdDto,
-      debtors: AddDebtorToLocationCommand[],
+      addDebtors: AddDebtorToLocationCommand[],
+      updateDebtors: UpdateDebtorOnLocationCommand[],
+      removeDebtors: RemoveDebtorFromLocationCommand[],
       image: File
     ) => {
       const client = await genLocationClient();
@@ -56,8 +60,20 @@ const EditLocationTriggerBtn: FC<Props> = ({ data = null }) => {
       }
 
       await Promise.all(
-        debtors.map(x =>
+        addDebtors.map(x =>
           client.addDebtor(new AddDebtorToLocationCommand({ ...x, locationId: newId }))
+        )
+      );
+
+      await Promise.all(
+        updateDebtors.map(x =>
+          client.updateDebtor(new UpdateDebtorOnLocationCommand({ ...x, locationId: newId }))
+        )
+      );
+
+      await Promise.all(
+        removeDebtors.map(x =>
+          client.removeDebtor(new RemoveDebtorFromLocationCommand({ ...x, locationId: newId }))
         )
       );
 
