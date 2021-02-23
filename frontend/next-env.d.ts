@@ -2,6 +2,29 @@
 /// <reference types="next/types/global" />
 
 export declare global {
+  namespace Intl {
+    type UnitListSettings = {
+      style: "short" | "narrow";
+      type: "unit";
+    };
+
+    type LongListSettings = {
+      style: "long";
+      type: "disjunction" | "conjunction";
+    };
+
+    type ListSettings = UnitListSettings | LongListSettings;
+
+    class ListFormat {
+      constructor(locale: string, options?: ListSettings);
+
+      static supportedLocalesOf(): unknown[];
+
+      format(objs: unknown[]): string;
+      formatToParts(objs: unknown[]): unknown[];
+    }
+  }
+
   interface Window {
     workbox: Workbox;
     showOpenFilePicker(opt?: FilePickerOptions): PromiseLike<FileSystemFileHandle[]>;

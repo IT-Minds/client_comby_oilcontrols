@@ -18,7 +18,6 @@ import TruckListComp from "components/TruckList/TruckListComp";
 import AddTruckMetaData from "components/TruckMetaData/AddTruckMetaData";
 import AddTruckTriggerBtn from "components/TruckMetaData/AddTruckTriggerBtn";
 import { useEffectAsync } from "hooks/useEffectAsync";
-import { useOffline } from "hooks/useOffline";
 import { Locale } from "i18n/Locale";
 import { runTimeTable } from "i18n/runtimeTable";
 import { GetStaticProps, NextPage } from "next";
@@ -29,7 +28,7 @@ import {
   AssignCouponsCommand,
   CouponDto,
   CreateTruckCommand,
-  LocationRefillDto,
+  RefillDto,
   TruckInfoIdDto,
   UpdateTruckCommand
 } from "services/backend/nswagts";
@@ -45,7 +44,7 @@ const TruckPage: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [truckMetaData, setTruckMetaData] = useState<TruckInfoIdDto>(null);
   const [couponData, setCouponData] = useState<CouponDto[]>(null);
-  const [truckRefillData, setTruckRefillData] = useState<LocationRefillDto[]>(null);
+  const [truckRefillData, setTruckRefillData] = useState<RefillDto[]>(null);
   // <<<
   const toast = useToast();
 
@@ -103,11 +102,11 @@ const TruckPage: NextPage = () => {
 
     const couponsData = await client.getTrucksCoupons(truckId);
     const truckMetaData = await client.getTruck(truckId);
-    const truckRefillData = await client.getTrucksRefills(truckId);
+    const truckRefillData = await client.getRefillHistory(truckId);
 
     setCouponData(couponsData.results);
     setTruckMetaData(truckMetaData);
-    setTruckRefillData(truckRefillData);
+    setTruckRefillData(truckRefillData.results);
 
     setIsLoading(false);
   }, []);

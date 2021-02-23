@@ -28,19 +28,19 @@ namespace Web.Controllers
     }
 
     [HttpGet("{id}/coupons")]
-    public async Task<ActionResult<PageResult<CouponIdDto, DateTimeOffset>>> GetTrucksCoupons(
-      [FromRoute] int id, [FromQuery] DateTimeOffset? needle, [FromQuery] int size = 1000, [FromQuery] int? skip = 0
+    public async Task<ActionResult<PageResult<CouponIdDto, int>>> GetTrucksCoupons(
+      [FromRoute] int id, [FromQuery] int? needle, [FromQuery] int size = 1000, [FromQuery] int? skip = 0
     )
     {
       if (needle == null)
       {
-        needle = DateTimeOffset.MinValue;
+        needle = 0;
       }
 
       return await Mediator.Send(new GetCouponsTruckQuery
       {
         Size = size,
-        Needle = (DateTimeOffset)needle,
+        Needle = (int)needle,
         Skip = skip,
         TruckId = id
       });
