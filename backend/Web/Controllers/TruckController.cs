@@ -29,7 +29,7 @@ namespace Web.Controllers
 
     [HttpGet("{id}/coupons")]
     public async Task<ActionResult<PageResult<CouponIdDto, int>>> GetTrucksCoupons(
-      [FromRoute] int id, [FromQuery] int? needle, [FromQuery] int size = 1000, [FromQuery] int? skip = 0
+      [FromRoute] int id, [FromQuery] int? needle, [FromQuery] int size = 1000, [FromQuery] int? skip = 0, [FromQuery] bool? includeDestroyedCoupons = false
     )
     {
       if (needle == null)
@@ -42,7 +42,8 @@ namespace Web.Controllers
         Size = size,
         Needle = (int)needle,
         Skip = skip,
-        TruckId = id
+        TruckId = id,
+        IncludeDestroyedCoupons = (bool)includeDestroyedCoupons
       });
     }
 
