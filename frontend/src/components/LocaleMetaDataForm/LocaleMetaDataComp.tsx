@@ -119,8 +119,32 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
         })
       );
     } else if (debtorId > 0 && originalId > 0) {
-      updateDebtors.push(
-        new UpdateDebtorOnLocationCommand({
+      /*
+        TODO: This is supposed to be an "update", but
+        as the BE is not ready for this yet, we have to
+        make a delete first, and then an add. When ready
+        use the commented out code below, and remove
+        the "removeDebtors" and the "addDebtors" below it.
+      */
+
+      // updateDebtors.push(
+      //   new UpdateDebtorToLocationCommand({
+      //     debtorId,
+      //     debtorType,
+      //     changeDate: debtorDate
+      //   })
+      // );
+
+      //TODO: Remove when backend is ready for the UPDATE command
+      removeDebtors.push(
+        new RemoveDebtorFromLocationCommand({
+          debtorId: originalId
+        })
+      );
+
+      //TODO: Remove when backend is ready for the UPDATE command
+      addDebtors.push(
+        new AddDebtorToLocationCommand({
           debtorId,
           debtorType,
           changeDate: debtorDate

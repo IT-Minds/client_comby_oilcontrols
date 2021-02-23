@@ -60,20 +60,21 @@ const EditLocationTriggerBtn: FC<Props> = ({ data = null }) => {
       }
 
       await Promise.all(
-        addDebtors.map(x =>
-          client.addDebtor(new AddDebtorToLocationCommand({ ...x, locationId: newId }))
-        )
-      );
-
-      await Promise.all(
-        updateDebtors.map(x =>
-          client.updateDebtor(new UpdateDebtorOnLocationCommand({ ...x, locationId: newId }))
-        )
-      );
-
-      await Promise.all(
         removeDebtors.map(x =>
           client.removeDebtor(new RemoveDebtorFromLocationCommand({ ...x, locationId: newId }))
+        )
+      );
+
+      //TODO: can be used when the backend is ready for the UPDATE command
+      // await Promise.all(
+      //   updateDebtors.map(x =>
+      //     client.updateDebtor(new UpdateDebtorOnLocationCommand({ ...x, locationId: newId }))
+      //   )
+      // );
+
+      await Promise.all(
+        addDebtors.map(x =>
+          client.addDebtor(new AddDebtorToLocationCommand({ ...x, locationId: newId }))
         )
       );
 
