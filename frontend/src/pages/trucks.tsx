@@ -106,7 +106,7 @@ const TruckPage: NextPage = () => {
 
     setCouponData(couponsData.results);
     setTruckMetaData(truckMetaData);
-    setTruckRefillData(truckRefillData);
+    setTruckRefillData(truckRefillData.results);
 
     setIsLoading(false);
   }, []);

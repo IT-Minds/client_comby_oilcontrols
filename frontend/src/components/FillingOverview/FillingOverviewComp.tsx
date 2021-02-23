@@ -42,7 +42,7 @@ const FillingOverviewComp: FC<Props> = ({
 }) => {
   const { t } = useI18n<Locale>();
 
-  const [data, dataDispatch] = useReducer(ListReducer<RefillDto>("refillId"), preLoadedData ?? []);
+  const [data, dataDispatch] = useReducer(ListReducer<RefillDto>("id"), preLoadedData ?? []);
   const [pageShowing, setPageShowing] = useState(0);
 
   const { done } = usePagedFetched(
