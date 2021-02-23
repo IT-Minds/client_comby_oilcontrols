@@ -2007,7 +2007,7 @@ export class StreetClient extends ClientBase implements IStreetClient {
 export interface ITruckClient {
     getTruck(id: number): Promise<TruckInfoDetailsDto>;
     updateTruck(id: number, command: UpdateTruckCommand): Promise<TruckInfoIdDto>;
-    getTrucksCoupons(id: number, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfCouponIdDtoAndDateTimeOffset>;
+    getTrucksCoupons(id: number, needle?: number | null | undefined, size?: number | undefined, skip?: number | null | undefined, includeDestroyedCoupons?: boolean | null | undefined): Promise<PageResultOfCouponIdDtoAndInteger>;
     getTrucks(needle?: number | undefined, size?: number | undefined, skip?: number | undefined): Promise<PageResultOfTruckInfoIdDtoAndInteger>;
     createTruck(command: CreateTruckCommand): Promise<TruckInfoIdDto>;
     getTrucksRefills(id: number): Promise<LocationRefillDto[]>;
@@ -2108,19 +2108,21 @@ export class TruckClient extends ClientBase implements ITruckClient {
         return Promise.resolve<TruckInfoIdDto>(<any>null);
     }
 
-    getTrucksCoupons(id: number, needle?: Date | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfCouponIdDtoAndDateTimeOffset> {
+    getTrucksCoupons(id: number, needle?: number | null | undefined, size?: number | undefined, skip?: number | null | undefined, includeDestroyedCoupons?: boolean | null | undefined): Promise<PageResultOfCouponIdDtoAndInteger> {
         let url_ = this.baseUrl + "/api/Truck/{id}/coupons?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
         if (needle !== undefined && needle !== null)
-            url_ += "needle=" + encodeURIComponent(needle ? "" + needle.toJSON() : "") + "&";
+            url_ += "needle=" + encodeURIComponent("" + needle) + "&";
         if (size === null)
             throw new Error("The parameter 'size' cannot be null.");
         else if (size !== undefined)
             url_ += "size=" + encodeURIComponent("" + size) + "&";
         if (skip !== undefined && skip !== null)
             url_ += "skip=" + encodeURIComponent("" + skip) + "&";
+        if (includeDestroyedCoupons !== undefined && includeDestroyedCoupons !== null)
+            url_ += "includeDestroyedCoupons=" + encodeURIComponent("" + includeDestroyedCoupons) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -2137,14 +2139,14 @@ export class TruckClient extends ClientBase implements ITruckClient {
         });
     }
 
-    protected processGetTrucksCoupons(response: Response): Promise<PageResultOfCouponIdDtoAndDateTimeOffset> {
+    protected processGetTrucksCoupons(response: Response): Promise<PageResultOfCouponIdDtoAndInteger> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PageResultOfCouponIdDtoAndDateTimeOffset.fromJS(resultData200);
+            result200 = PageResultOfCouponIdDtoAndInteger.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -2152,7 +2154,7 @@ export class TruckClient extends ClientBase implements ITruckClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<PageResultOfCouponIdDtoAndDateTimeOffset>(<any>null);
+        return Promise.resolve<PageResultOfCouponIdDtoAndInteger>(<any>null);
     }
 
     getTrucks(needle?: number | undefined, size?: number | undefined, skip?: number | undefined): Promise<PageResultOfTruckInfoIdDtoAndInteger> {
@@ -5016,13 +5018,13 @@ export interface ITruckInfoDetailsDto extends ITruckInfoIdDto {
     currentTankLevel?: number;
 }
 
-export class PageResultOfCouponIdDtoAndDateTimeOffset implements IPageResultOfCouponIdDtoAndDateTimeOffset {
-    newNeedle?: Date;
+export class PageResultOfCouponIdDtoAndInteger implements IPageResultOfCouponIdDtoAndInteger {
+    newNeedle?: number;
     pagesRemaining?: number;
     results?: CouponIdDto[] | null;
     hasMore?: boolean;
 
-    constructor(data?: IPageResultOfCouponIdDtoAndDateTimeOffset) {
+    constructor(data?: IPageResultOfCouponIdDtoAndInteger) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -5033,7 +5035,7 @@ export class PageResultOfCouponIdDtoAndDateTimeOffset implements IPageResultOfCo
 
     init(_data?: any) {
         if (_data) {
-            this.newNeedle = _data["newNeedle"] ? new Date(_data["newNeedle"].toString()) : <any>null;
+            this.newNeedle = _data["newNeedle"] !== undefined ? _data["newNeedle"] : <any>null;
             this.pagesRemaining = _data["pagesRemaining"] !== undefined ? _data["pagesRemaining"] : <any>null;
             if (Array.isArray(_data["results"])) {
                 this.results = [] as any;
@@ -5044,16 +5046,16 @@ export class PageResultOfCouponIdDtoAndDateTimeOffset implements IPageResultOfCo
         }
     }
 
-    static fromJS(data: any): PageResultOfCouponIdDtoAndDateTimeOffset {
+    static fromJS(data: any): PageResultOfCouponIdDtoAndInteger {
         data = typeof data === 'object' ? data : {};
-        let result = new PageResultOfCouponIdDtoAndDateTimeOffset();
+        let result = new PageResultOfCouponIdDtoAndInteger();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["newNeedle"] = this.newNeedle ? this.newNeedle.toISOString() : <any>null;
+        data["newNeedle"] = this.newNeedle !== undefined ? this.newNeedle : <any>null;
         data["pagesRemaining"] = this.pagesRemaining !== undefined ? this.pagesRemaining : <any>null;
         if (Array.isArray(this.results)) {
             data["results"] = [];
@@ -5065,8 +5067,8 @@ export class PageResultOfCouponIdDtoAndDateTimeOffset implements IPageResultOfCo
     }
 }
 
-export interface IPageResultOfCouponIdDtoAndDateTimeOffset {
-    newNeedle?: Date;
+export interface IPageResultOfCouponIdDtoAndInteger {
+    newNeedle?: number;
     pagesRemaining?: number;
     results?: CouponIdDto[] | null;
     hasMore?: boolean;

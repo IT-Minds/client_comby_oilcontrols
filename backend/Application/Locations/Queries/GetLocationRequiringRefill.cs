@@ -70,10 +70,12 @@ namespace Application.Locations.Queries
         var locationToRefill = locations
           .Where(l =>
             l.AssignedRefills.Count() <= 0 && // Can't have an upcoming Refill.
-            l.CompletedRefills.Count() > 0 && // Must have had at least one refill.
-            l.DaysBetweenRefills >= (
-              now - l.CompletedRefills.OrderByDescending(x => x.ActualDeliveryDate).First().ActualDeliveryDate
-            ).Days // The days between now and last refill must be greater than the
+            (
+              l.CompletedRefills.Count() == 0 ||
+              l.DaysBetweenRefills >= (
+                now - l.CompletedRefills.OrderByDescending(x => x.ActualDeliveryDate).First().ActualDeliveryDate
+              ).Days // The days between now and last refill must be greater than the
+            )
           );
 
         var refills = locationToRefill.Select(location => new AssignedRefill
@@ -132,11 +134,8 @@ namespace Application.Locations.Queries
             truckCount = 0;
           }
           var truck = trucks[truckCount++];
-          if (truck.Refills == null)
-          {
-            truck.Refills = new List<AssignedRefill>();
-          }
-          truck.Refills.Add(refill);
+          refill.Truck = truck;
+          _context.AssignedRefills.Update(refill);
         }
 
         await _context.SaveChangesAsync(cancellationToken);
