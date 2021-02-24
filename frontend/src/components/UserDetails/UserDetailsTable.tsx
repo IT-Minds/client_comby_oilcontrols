@@ -1,5 +1,5 @@
 import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
-import UserCirle from "components/Menu/components/UserCirle";
+import UserCircle from "components/Menu/components/UserCircle";
 import { RefetchDataContext } from "contexts/RefetchDataContext";
 import { useEffectAsync } from "hooks/useEffectAsync";
 import { usePagedFetched } from "hooks/usePagedFetched";
@@ -58,7 +58,7 @@ const UserDetailsTable: FC = () => {
           .map(user => (
             <Tr key={user.id}>
               <Td>
-                <UserCirle size={8} user={user} />
+                <UserCircle size={8} user={user} />
               </Td>
               <Td>{user.username}</Td>
               <Td>{user.currentRole?.name}</Td>

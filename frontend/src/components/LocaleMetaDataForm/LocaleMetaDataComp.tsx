@@ -30,20 +30,24 @@ import {
   AddDebtorToLocationCommand,
   ILocationDetailsDto,
   LocationDebtorType,
-  RefillSchedule
+  RefillSchedule,
+  RemoveDebtorFromLocationCommand,
+  UpdateDebtorOnLocationCommand
 } from "services/backend/nswagts";
 import { logger } from "utils/logger";
 
 type Props = {
   submitCallback: (
     reportForm: ILocationDetailsDto,
-    debtors: AddDebtorToLocationCommand[],
+    addDebtors: AddDebtorToLocationCommand[],
+    updateDebtors: UpdateDebtorOnLocationCommand[],
+    removeDebtors: RemoveDebtorFromLocationCommand[],
     image?: File
   ) => void;
   localeMetaData?: ILocationDetailsDto;
 };
 
-const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }) => {
+const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
   const { t } = useI18n<Locale>();
 
   const [mainDebtorId, setMainDebtorId] = useState(null);
@@ -51,6 +55,10 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
   const [upcomingDebtorId, setUpcomingDebtorId] = useState(null);
   const [debtorDate, setDebtorDate] = useState(new Date());
   const [image, setImage] = useState<File>(null);
+
+  const addDebtors: AddDebtorToLocationCommand[] = [];
+  const updateDebtors: UpdateDebtorOnLocationCommand[] = [];
+  const removeDebtors: RemoveDebtorFromLocationCommand[] = [];
 
   const [localForm, setLocalForm] = useState<ILocationDetailsDto>({
     address: "",
@@ -65,6 +73,9 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
     tankType: -1,
     fuelType: -1,
     daysBetweenRefills: 0,
+    baseDebtorId: -1,
+    mainDebtorId: -1,
+    upcomingDebtorId: -1,
     ...localeMetaData
   });
 
@@ -87,38 +98,66 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
     (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       logger.debug("Submitting form ReportingComp");
-      const debtors: AddDebtorToLocationCommand[] = [];
-      if (mainDebtorId) {
-        debtors.push(
-          new AddDebtorToLocationCommand({
-            debtorId: mainDebtorId,
-            debtorType: LocationDebtorType.MAIN
-          })
-        );
-      }
-      if (baseDebtorId) {
-        debtors.push(
-          new AddDebtorToLocationCommand({
-            debtorId: baseDebtorId,
-            debtorType: LocationDebtorType.BASE
-          })
-        );
-      }
-      if (upcomingDebtorId) {
-        debtors.push(
-          new AddDebtorToLocationCommand({
-            debtorId: upcomingDebtorId,
-            debtorType: LocationDebtorType.UPCOMING,
-            changeDate: debtorDate
-          })
-        );
-      }
 
-      submitCallback(localForm, debtors, image);
+      setDebtors(mainDebtorId, LocationDebtorType.MAIN, localForm.mainDebtorId);
+      setDebtors(baseDebtorId, LocationDebtorType.BASE, localForm.baseDebtorId);
+      setDebtors(upcomingDebtorId, LocationDebtorType.UPCOMING, localForm.upcomingDebtorId);
+
+      submitCallback(localForm, addDebtors, updateDebtors, removeDebtors, image);
       setFormSubmitAttempts(0);
     },
     [submitCallback, localForm, mainDebtorId, baseDebtorId, upcomingDebtorId, debtorDate, image]
   );
+
+  const setDebtors = (debtorId: number, debtorType: LocationDebtorType, originalId: number) => {
+    if (debtorId > 0 && originalId === 0) {
+      addDebtors.push(
+        new AddDebtorToLocationCommand({
+          debtorId,
+          debtorType,
+          changeDate: debtorDate
+        })
+      );
+    } else if (debtorId > 0 && originalId > 0) {
+      /*
+        TODO: This is supposed to be an "update", but
+        as the BE is not ready for this yet, we have to
+        make a delete first, and then an add. When ready
+        use the commented out code below, and remove
+        the "removeDebtors" and the "addDebtors" below it.
+      */
+
+      // updateDebtors.push(
+      //   new UpdateDebtorToLocationCommand({
+      //     debtorId,
+      //     debtorType,
+      //     changeDate: debtorDate
+      //   })
+      // );
+
+      //TODO: Remove when backend is ready for the UPDATE command
+      removeDebtors.push(
+        new RemoveDebtorFromLocationCommand({
+          debtorId: originalId
+        })
+      );
+
+      //TODO: Remove when backend is ready for the UPDATE command
+      addDebtors.push(
+        new AddDebtorToLocationCommand({
+          debtorId,
+          debtorType,
+          changeDate: debtorDate
+        })
+      );
+    } else if (debtorId === 0 && originalId > 0) {
+      removeDebtors.push(
+        new RemoveDebtorFromLocationCommand({
+          debtorId: originalId
+        })
+      );
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit}>
@@ -325,12 +364,15 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData = null }
               formSubmitAttempts > 0 && !mainDebtorId && !baseDebtorId && !upcomingDebtorId
             }>
             <FormLabel>{t("localeMetaData.main")}</FormLabel>
-            <DebtorSelector cb={x => setMainDebtorId(x?.dbId)} />
+            <DebtorSelector cb={x => setMainDebtorId(x?.dbId)} value={localForm.mainDebtorId} />
 
             <FormLabel>{t("localeMetaData.base")}</FormLabel>
-            <DebtorSelector cb={x => setBaseDebtorId(x?.dbId)} />
+            <DebtorSelector cb={x => setBaseDebtorId(x?.dbId)} value={localForm.baseDebtorId} />
             <FormLabel>{t("localeMetaData.upcoming")}</FormLabel>
-            <DebtorSelector cb={x => setUpcomingDebtorId(x?.dbId)} />
+            <DebtorSelector
+              cb={x => setUpcomingDebtorId(x?.dbId)}
+              value={localForm.upcomingDebtorId}
+            />
             <FormLabel>{t("localeMetaData.selectDate")}</FormLabel>
             <DatePicker
               selectedDate={debtorDate}

@@ -78,8 +78,10 @@ namespace Application.Refills.Commands.CompleteRefill
         }
 
         var truck = await _context.Trucks
-            .Include(r => r.Refills)
-          .Include(x => x.DailyStates.Where(x => x.Date.DayOfYear == request.ActualDeliveryDate.DayOfYear && x.Date.Year == request.ActualDeliveryDate.Year))
+          .Include(t => t.Refills)
+          .Include(t => t.DailyStates
+            .Where(ds => ds.Date.DayOfYear == request.ActualDeliveryDate.DayOfYear && ds.Date.Year == request.ActualDeliveryDate.Year)
+          )
           .Where(t => t.Refills.Any(r => r.Id == refill.Id))
           .FirstOrDefaultAsync();
 
@@ -121,7 +123,15 @@ namespace Application.Refills.Commands.CompleteRefill
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        await PostUniContaOrder(completingrefill.Id);
+        try
+        {
+          await PostUniContaOrder(completingrefill.Id);
+        }
+        catch (System.FormatException e)
+        {
+          throw new ArgumentException("Couldn't access Uniconta.");
+        }
+
 
         return refill.Id;
       }

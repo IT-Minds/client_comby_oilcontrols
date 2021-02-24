@@ -1,15 +1,16 @@
 import { HStack, IconButton, Spacer, Table, useBreakpointValue } from "@chakra-ui/react";
 import { Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
+import LocationImageModal from "components/ImageModal/LocationImageModal";
 import QuerySortBtn, { Direction } from "components/SortFilter/QuerySortBtn";
 import { useEffectAsync } from "hooks/useEffectAsync";
 import { useRouter } from "next/router";
 import { useI18n } from "next-rosetta";
 import { FC, useCallback, useRef, useState } from "react";
 import { GiFuelTank } from "react-icons/gi";
-import { MdPrint, MdRemoveRedEye } from "react-icons/md";
+import { MdPrint } from "react-icons/md";
 import { useReactToPrint } from "react-to-print";
 import { genTruckClient } from "services/backend/apiClients";
-import { FuelType, ILocationRefillDto, RefillSchedule, TankType } from "services/backend/nswagts";
+import { FuelType, ILocationRefillDto, RefillSchedule } from "services/backend/nswagts";
 import { capitalize } from "utils/capitalizeAnyString";
 
 import data from "./data";
@@ -83,7 +84,7 @@ const RunListTable: FC<Props> = ({ truckId, refillCb }) => {
             <HStack spacing={1}>
               <Text>{t("mytruck.runlist.bstNumber")}</Text>
               <Spacer />
-              <QuerySortBtn queryKey="locationId" sortCb={sortCb} />
+              <QuerySortBtn queryKey="bstNumber" sortCb={sortCb} />
             </HStack>
           </Th>
           <Th hidden={!isPrinting && cols < 4}>
@@ -146,7 +147,7 @@ const RunListTable: FC<Props> = ({ truckId, refillCb }) => {
       <Tbody>
         {refills.sort(sort).map(row => (
           <Tr key={row.refillId}>
-            <Td hidden={!isPrinting && cols < 4}>{row.locationId}</Td>
+            <Td hidden={!isPrinting && cols < 4}>{row.bstNumber}</Td>
             <Td hidden={!isPrinting && cols < 4}>DATA MISSING</Td>
             <Td hidden={!isPrinting && cols < 4}>{row.debtorBlocked.toString()}</Td>
             <Td>
@@ -164,13 +165,7 @@ const RunListTable: FC<Props> = ({ truckId, refillCb }) => {
                   onClick={() => refillCb({ ...row })}
                   icon={<GiFuelTank size={30} />}
                 />
-                <IconButton
-                  size="sm"
-                  colorScheme="gray"
-                  aria-label={"do something 2" + row.refillId}
-                  onClick={() => refillCb(row)}
-                  icon={<MdRemoveRedEye size={24} />}
-                />
+                <LocationImageModal location={row} />
               </HStack>
             </Td>
           </Tr>

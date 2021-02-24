@@ -14,16 +14,17 @@ using System.Threading.Tasks;
 namespace Application.Coupons.Queries.GetCoupons.Truck
 {
   [AuthorizeAttribute(Domain.Enums.Action.GET_COUPONS)]
-  public class GetCouponsTruckQuery : IPageRequest<CouponIdDto, DateTimeOffset>, IPageBody<Coupon, DateTimeOffset>
+  public class GetCouponsTruckQuery : IPageRequest<CouponIdDto, int>, IPageBody<Coupon, int>
   {
     public int Size { get; set; }
-    public DateTimeOffset Needle { get; set; }
+    public int Needle { get; set; } //coupon number
     public int? Skip { get; set; }
     public int TruckId { get; set; }
+    public bool IncludeDestroyedCoupons { get; set; } = false;
 
-    public DateTimeOffset GetNewNeedle(IQueryable<Coupon> query)
+    public int GetNewNeedle(IQueryable<Coupon> query)
     {
-      return query.Select(x => x.Created).Take(Size).LastOrDefault();
+      return query.Select(x => x.CouponNumber).Take(Size).LastOrDefault();
     }
 
     public IQueryable<Coupon> PreparePage(IQueryable<Coupon> query)
@@ -31,13 +32,13 @@ namespace Application.Coupons.Queries.GetCoupons.Truck
       if (Skip.HasValue)
       {
         return query
-            .OrderByDescending(x => x.Created)
-            .Where(x => x.Created > Needle)
+            .OrderBy(x => x.CouponNumber)
+            .Where(x => x.CouponNumber > Needle)
             .Skip((int)(Skip * Size));
       }
       return query
-            .OrderBy(x => x.Created)
-            .Where(x => x.Created > Needle);
+            .OrderBy(x => x.CouponNumber)
+            .Where(x => x.CouponNumber > Needle);
     }
 
     public async Task<int> PagesRemaining(IQueryable<Coupon> query)
@@ -49,7 +50,7 @@ namespace Application.Coupons.Queries.GetCoupons.Truck
       return pagesLeft;
     }
 
-    public class GetCouponsTruckQueryHandler : IPageRequestHandler<GetCouponsTruckQuery, CouponIdDto, DateTimeOffset>
+    public class GetCouponsTruckQueryHandler : IPageRequestHandler<GetCouponsTruckQuery, CouponIdDto, int>
     {
       private readonly IApplicationDbContext _context;
       private readonly IMapper _mapper;
@@ -60,13 +61,18 @@ namespace Application.Coupons.Queries.GetCoupons.Truck
         _mapper = mapper;
       }
 
-      public async Task<PageResult<CouponIdDto, DateTimeOffset>> Handle(GetCouponsTruckQuery request, CancellationToken cancellationToken)
+      public async Task<PageResult<CouponIdDto, int>> Handle(GetCouponsTruckQuery request, CancellationToken cancellationToken)
       {
 
-        var page = new PageResult<CouponIdDto, DateTimeOffset>();
+        var page = new PageResult<CouponIdDto, int>();
 
         var baseQuery = _context.Coupons
           .Where(x => x.TruckId == request.TruckId);
+
+        if (!request.IncludeDestroyedCoupons)
+        {
+          baseQuery = baseQuery.Where(x => x.Status != CouponStatus.DESTROYED);
+        }
 
         var query = request.PreparePage(baseQuery);
         var pagesRemaining = await request.PagesRemaining(query);

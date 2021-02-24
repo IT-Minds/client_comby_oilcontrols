@@ -18,7 +18,9 @@ import {
   CreateLocationCommand,
   ILocationDetailsDto,
   LocationDetailsDto,
-  TankType
+  RemoveDebtorFromLocationCommand,
+  TankType,
+  UpdateDebtorOnLocationCommand
 } from "services/backend/nswagts";
 
 import LocaleMetaDataComp from "./LocaleMetaDataComp";
@@ -35,7 +37,13 @@ const AddLocationTriggerBtn: FC<Props> = ({ tankType = null }) => {
   const { refetchData } = useContext(RefetchDataContext);
 
   const createLocation = useCallback(
-    async (reportForm: ILocationDetailsDto, debtors: AddDebtorToLocationCommand[], image: File) => {
+    async (
+      reportForm: ILocationDetailsDto,
+      debtors: AddDebtorToLocationCommand[],
+      updateDebtors: UpdateDebtorOnLocationCommand[],
+      removeDebtors: RemoveDebtorFromLocationCommand[],
+      image: File
+    ) => {
       const client = await genLocationClient();
 
       const data = new LocationDetailsDto();

@@ -17,14 +17,14 @@ import { useI18n } from "next-rosetta";
 import React, { FC, useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import ListReducer, { ListReducerActionType } from "react-list-reducer";
 import { genRefillClient } from "services/backend/apiClients";
-import { LocationRefillDto, TankType } from "services/backend/nswagts";
+import { RefillDto, TankType } from "services/backend/nswagts";
 import { capitalize } from "utils/capitalizeAnyString";
 
 import QuerySortBtn, { Direction } from "../SortFilter/QuerySortBtn";
 import styles from "./styles.module.css";
 
 type Props = {
-  preLoadedData?: LocationRefillDto[];
+  preLoadedData?: RefillDto[];
   preloadDataNeedle?: string;
   preloadLoadedAll?: boolean;
   preLoadedPageCount?: number;
@@ -32,8 +32,8 @@ type Props = {
 
 export const PAGE_SHOW_SIZE = 15;
 
-const defaultSort = (a: LocationRefillDto, b: LocationRefillDto) =>
-  a.refillId > b.refillId ? 1 : -1;
+const defaultSort = (a: RefillDto, b: RefillDto) =>
+  a.actualDeliveryDate > b.actualDeliveryDate ? 1 : -1;
 
 const FillingOverviewComp: FC<Props> = ({
   preLoadedData = [],
@@ -42,10 +42,7 @@ const FillingOverviewComp: FC<Props> = ({
 }) => {
   const { t } = useI18n<Locale>();
 
-  const [data, dataDispatch] = useReducer(
-    ListReducer<LocationRefillDto>("refillId"),
-    preLoadedData ?? []
-  );
+  const [data, dataDispatch] = useReducer(ListReducer<RefillDto>("id"), preLoadedData ?? []);
   const [pageShowing, setPageShowing] = useState(0);
 
   const { done } = usePagedFetched(
@@ -78,7 +75,7 @@ const FillingOverviewComp: FC<Props> = ({
   /**
    * Splits the data into table pages.
    */
-  const dataSplitter = useMemo<LocationRefillDto[]>(() => {
+  const dataSplitter = useMemo<RefillDto[]>(() => {
     const realPageMax = data.length > 0 ? Math.ceil(data.length / PAGE_SHOW_SIZE) : 0;
 
     if (realPageMax === 0) {
@@ -97,20 +94,16 @@ const FillingOverviewComp: FC<Props> = ({
     return elements.length;
   }, [pages, data]);
 
-  const [sort, setSort] = useState<(a: LocationRefillDto, b: LocationRefillDto) => number>(
-    () => defaultSort
-  );
+  const [sort, setSort] = useState<(a: RefillDto, b: RefillDto) => number>(() => defaultSort);
 
-  const sortCb = useCallback((key: keyof LocationRefillDto, direction: Direction) => {
+  const sortCb = useCallback((key: keyof RefillDto, direction: Direction) => {
     if (direction === null) {
       setSort(() => defaultSort);
       return;
     }
 
     const sortVal = direction === "ASC" ? 1 : -1;
-    setSort(() => (a: LocationRefillDto, b: LocationRefillDto) =>
-      a[key] > b[key] ? sortVal : -sortVal
-    );
+    setSort(() => (a: RefillDto, b: RefillDto) => (a[key] > b[key] ? sortVal : -sortVal));
   }, []);
 
   return (
@@ -134,19 +127,15 @@ const FillingOverviewComp: FC<Props> = ({
             </Th>
             <Th>
               <HStack>
-                <Text>{t("fillingOverview.truckId")}</Text>
-                <Spacer />
-                <QuerySortBtn queryKey="truckId" sortCb={sortCb} />
-              </HStack>
-            </Th>
-            <Th isNumeric>
-              <HStack>
                 <Text>{t("fillingOverview.start")}</Text>
                 <Spacer />
                 <QuerySortBtn queryKey="startAmount" sortCb={sortCb} />
               </HStack>
             </Th>
-            <Th isNumeric>
+            <Th>
+              <Text>{t("fillingOverview.amount")}</Text>
+            </Th>
+            <Th>
               <HStack>
                 <Text>{t("fillingOverview.end")}</Text>
                 <Spacer />
@@ -159,13 +148,13 @@ const FillingOverviewComp: FC<Props> = ({
         <Tbody>
           {dataSplitter.sort(sort).map(data => {
             return (
-              <Tr key={data.refillId}>
+              <Tr key={data.id}>
                 <Td>{capitalize(TankType[data.locationType])}</Td>
                 <Td>{new Date(data.expectedDeliveryDate).toLocaleDateString()}</Td>
-                <Td>{data.regionId}</Td>
-                <Td isNumeric>{data.locationId}</Td>
-                <Td isNumeric>{data.schedule}</Td>
-                <Td>{data.fuelType}</Td>
+                <Td>{data.startAmount}</Td>
+                <Td>{data.endAmount}</Td>
+                <Td>{data.startAmount - data.endAmount}</Td>
+                <Td>{data.couponId}</Td>
               </Tr>
             );
           })}

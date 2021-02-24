@@ -1,10 +1,8 @@
 import {
   Box,
-  Circle,
   Collapse,
   Flex,
   HStack,
-  Image,
   Spacer,
   StackDivider,
   Text,
@@ -22,8 +20,7 @@ import { useI18n } from "next-rosetta";
 import React, { FC, useContext, useState } from "react";
 
 import AppVersion from "./AppVersion";
-import LanguageSelector from "./LanguageSelector";
-import UserCirle from "./UserCirle";
+import UserCircle from "./UserCircle";
 
 type Props = {
   forceOpen?: boolean;
@@ -51,7 +48,7 @@ const MyUserSnippet: FC<Props> = ({ forceOpen = false }) => {
         cursor="pointer"
         borderColor={borderColor}
         borderBottom={"1px"}>
-        <UserCirle user={activeUser} />
+        <UserCircle user={activeUser} />
         <VStack spacing={0} alignItems="left" maxW={nameLength + "px"}>
           <Text isTruncated>{activeUser.username}</Text>
           <Text size="xs" isTruncated as="i">

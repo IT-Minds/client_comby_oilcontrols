@@ -64,7 +64,7 @@ const InvalidateCouponBtn: FC<Props> = ({ coupons, triggered = false }) => {
               {t("coupons.invalidate.confirm", { coupon: chosenCoupon })}
               <Select onChange={e => setChosenCoupon(e.target.value)}>
                 {coupons.map(coupon => (
-                  <option key={coupon.id} value={coupon.id}>
+                  <option key={coupon.name} value={coupon.name}>
                     {coupon.name}
                   </option>
                 ))}

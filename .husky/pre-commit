@@ -4,14 +4,14 @@ set -e
 
 ./.husky/scripts/validate-email.sh
 
-# build and test backend
-cd backend
-dotnet restore
-dotnet build --no-restore
-dotnet test --no-build
+# # build and test backend
+# cd backend
+# dotnet restore
+# dotnet build --no-restore
+# dotnet test --no-build
 
-# build and test frontend
-cd ../frontend
-npm run validate
+# # build and test frontend
+# cd ../frontend
+# npm run validate
 
-git add -f src/services/backend/nswagts.ts
+# git add -f src/services/backend/nswagts.ts
