@@ -20,6 +20,7 @@ namespace Application.Coupons.Queries.GetCoupons.Truck
     public int Needle { get; set; } //coupon number
     public int? Skip { get; set; }
     public int TruckId { get; set; }
+    public bool IncludeDestroyedCoupons { get; set; } = false;
 
     public int GetNewNeedle(IQueryable<Coupon> query)
     {
@@ -67,6 +68,11 @@ namespace Application.Coupons.Queries.GetCoupons.Truck
 
         var baseQuery = _context.Coupons
           .Where(x => x.TruckId == request.TruckId);
+
+        if (!request.IncludeDestroyedCoupons)
+        {
+          baseQuery = baseQuery.Where(x => x.Status != CouponStatus.DESTROYED);
+        }
 
         var query = request.PreparePage(baseQuery);
         var pagesRemaining = await request.PagesRemaining(query);

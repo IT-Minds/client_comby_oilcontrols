@@ -2007,7 +2007,7 @@ export class StreetClient extends ClientBase implements IStreetClient {
 export interface ITruckClient {
     getTruck(id: number): Promise<TruckInfoDetailsDto>;
     updateTruck(id: number, command: UpdateTruckCommand): Promise<TruckInfoIdDto>;
-    getTrucksCoupons(id: number, needle?: number | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfCouponIdDtoAndInteger>;
+    getTrucksCoupons(id: number, needle?: number | null | undefined, size?: number | undefined, skip?: number | null | undefined, includeDestroyedCoupons?: boolean | null | undefined): Promise<PageResultOfCouponIdDtoAndInteger>;
     getTrucks(needle?: number | undefined, size?: number | undefined, skip?: number | undefined): Promise<PageResultOfTruckInfoIdDtoAndInteger>;
     createTruck(command: CreateTruckCommand): Promise<TruckInfoIdDto>;
     getTrucksRefills(id: number): Promise<LocationRefillDto[]>;
@@ -2108,7 +2108,7 @@ export class TruckClient extends ClientBase implements ITruckClient {
         return Promise.resolve<TruckInfoIdDto>(<any>null);
     }
 
-    getTrucksCoupons(id: number, needle?: number | null | undefined, size?: number | undefined, skip?: number | null | undefined): Promise<PageResultOfCouponIdDtoAndInteger> {
+    getTrucksCoupons(id: number, needle?: number | null | undefined, size?: number | undefined, skip?: number | null | undefined, includeDestroyedCoupons?: boolean | null | undefined): Promise<PageResultOfCouponIdDtoAndInteger> {
         let url_ = this.baseUrl + "/api/Truck/{id}/coupons?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -2121,6 +2121,8 @@ export class TruckClient extends ClientBase implements ITruckClient {
             url_ += "size=" + encodeURIComponent("" + size) + "&";
         if (skip !== undefined && skip !== null)
             url_ += "skip=" + encodeURIComponent("" + skip) + "&";
+        if (includeDestroyedCoupons !== undefined && includeDestroyedCoupons !== null)
+            url_ += "includeDestroyedCoupons=" + encodeURIComponent("" + includeDestroyedCoupons) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{

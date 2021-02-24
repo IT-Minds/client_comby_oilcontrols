@@ -11,6 +11,7 @@ import {
   useToast
 } from "@chakra-ui/react";
 import PageIndicator from "components/Demo/components/PageIndicator";
+import CouponImageModal from "components/ImageModal/CouponImageModal";
 import { usePagedFetched } from "hooks/usePagedFetched";
 import { useI18n } from "next-rosetta";
 import React, { FC, useEffect, useMemo, useReducer, useState } from "react";
@@ -138,6 +139,7 @@ const RefillHistoryComp: FC<Props> = ({
             <Th>{t("refillHistoryTable.amount")}</Th>
             <Th>{t("refillHistoryTable.truckId")}</Th>
             <Th>{t("refillHistoryTable.coupon")}</Th>
+            <Th></Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -147,6 +149,9 @@ const RefillHistoryComp: FC<Props> = ({
               <Td>{lh.endAmount - lh.startAmount}</Td>
               <Td>{lh.truckId}</Td>
               <Td>{lh.couponId}</Td>
+              <Td>
+                <CouponImageModal location={{ refillId: lh.id }} />
+              </Td>
             </Tr>
           ))}
         </Tbody>

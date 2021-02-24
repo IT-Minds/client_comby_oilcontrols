@@ -156,11 +156,7 @@ const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) =>
           </FormControl>
 
           <HStack justifyContent="space-between" w="100%">
-            <FormControl
-              id="photo"
-              isInvalid={formSubmitAttempts > 0 && localReportForm.image.length <= 0}
-              isRequired
-              w="unset">
+            <FormControl id="photo" w="unset">
               {localReportForm.image.length > 0 ? (
                 <Button onClick={onOpen} rightIcon={<MdRemoveRedEye />}>
                   {t("mytruck.refill.viewImage")}
