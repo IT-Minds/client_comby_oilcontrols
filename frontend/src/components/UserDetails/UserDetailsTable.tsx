@@ -16,7 +16,7 @@ const UserDetailsTable: FC = () => {
   const [data, dataDispatch] = useReducer(ListReducer<IUserIdDto>("id"), []);
   const { count } = useContext(RefetchDataContext);
 
-  const { done } = usePagedFetched<number, IUserIdDto>(
+  usePagedFetched<number, IUserIdDto>(
     "",
     (needle, size, _, skip) =>
       genUserClient().then(client => client.getAllUser(needle, size, skip)),
