@@ -27,7 +27,7 @@
     "@microsoft/signalr": "^5.0.3",
     "framer-motion": "^3.6.7",
     "isomorphic-unfetch": "^3.1.0",
-    "next": "10.0.5",
+    "next": "10.0.7",
     "next-pwa": "^5.0.5",
     "next-rosetta": "^1.2.2",
     "popmotion": "^9.2.1",
