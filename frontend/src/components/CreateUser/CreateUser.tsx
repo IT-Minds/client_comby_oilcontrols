@@ -9,8 +9,9 @@ import {
   useDisclosure,
   useToast
 } from "@chakra-ui/react";
+import { RefetchDataContext } from "contexts/RefetchDataContext";
 import { useI18n } from "next-rosetta";
-import React, { FC, useCallback } from "react";
+import React, { FC, useCallback, useContext } from "react";
 import { MdAdd } from "react-icons/md";
 import { genUserClient } from "services/backend/apiClients";
 import { CreateUserCommand, ICreateUserCommand } from "services/backend/nswagts";
@@ -21,10 +22,14 @@ const CreateUser: FC = () => {
   const { t } = useI18n<Locale>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
+  const { refetchData } = useContext(RefetchDataContext);
 
-  const createRole = useCallback(async (createUserForm: ICreateUserCommand) => {
+  const createUser = useCallback(async (createUserForm: ICreateUserCommand) => {
     const client = await genUserClient();
     await client.createUser(new CreateUserCommand(createUserForm));
+
+    refetchData();
+    onClose();
 
     toast({
       title: t("users.createUser"),
@@ -52,7 +57,7 @@ const CreateUser: FC = () => {
           <ModalHeader>{t("users.createUser")}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <CreateUserComp submitCallback={createRole} />
+            <CreateUserComp submitCallback={createUser} />
           </ModalBody>
         </ModalContent>
       </Modal>

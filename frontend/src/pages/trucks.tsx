@@ -111,20 +111,24 @@ const TruckPage: NextPage = () => {
     setIsLoading(false);
   }, []);
 
+  const loadTrucks = useCallback(async () => {
+    const client = await genTruckClient();
+    const truckEntityData = await client.getTrucks();
+    setTruckEntities(truckEntityData.results);
+  }, []);
+
   useEffectAsync(async () => {
     if (truckId) {
       loadSingleTruck(truckId);
     } else {
-      const client = await genTruckClient();
-      const truckEntityData = await client.getTrucks();
-      setTruckEntities(truckEntityData.results);
+      loadTrucks();
     }
   }, [truckId]);
 
   return (
     <VStack h="95vh" w="100%">
       <Heading>{t("trucks.truckOverview")}</Heading>
-      <AddTruckTriggerBtn />
+      <AddTruckTriggerBtn submitCallback={() => loadTrucks()} />
       <TruckListComp preLoadedData={truckEntities} truckId={setTruckId} />
       {/* // TODO move modal into own component */}
       <Modal
