@@ -112,19 +112,19 @@ namespace Application.Locations.Queries
         return refills;
       }
 
-
-      public async Task<List<LocationRefillDto>> Handle(GetLocationRequiringRefill request, CancellationToken cancellationToken)
+      private async Task SyncLocationsToRefills(CancellationToken cancellationToken)
       {
-
-        var trucks = await _context.Trucks
-          .Include(r => r.Refills)
-        .ToListAsync();
-
         List<AssignedRefill> refills = new List<AssignedRefill>();
         refills.AddRange(await GetAutomaticRefills());
         refills.AddRange(await GetIntervalRefills());
         // refills.AddRange(await GetManualRefills());
 
+        var trucks = await _context.Trucks
+          .Include(r => r.Refills)
+        .ToListAsync();
+
+        var rand = new Random();
+        trucks.OrderBy(x => rand.Next());
 
         var truckCount = 0;
         foreach (var refill in refills)
@@ -135,10 +135,15 @@ namespace Application.Locations.Queries
           }
           var truck = trucks[truckCount++];
           refill.Truck = truck;
-          _context.AssignedRefills.Update(refill);
+          _context.AssignedRefills.Add(refill);
         }
 
         await _context.SaveChangesAsync(cancellationToken);
+      }
+
+      public async Task<List<LocationRefillDto>> Handle(GetLocationRequiringRefill request, CancellationToken cancellationToken)
+      {
+        await SyncLocationsToRefills(cancellationToken);
 
         var refillDtos = await _context.Trucks
           .Include(r => r.Refills)
