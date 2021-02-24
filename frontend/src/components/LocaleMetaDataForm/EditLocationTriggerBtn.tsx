@@ -9,8 +9,9 @@ import {
   useDisclosure,
   useToast
 } from "@chakra-ui/react";
+import { RefetchDataContext } from "contexts/RefetchDataContext";
 import { useI18n } from "next-rosetta";
-import React, { FC, useCallback } from "react";
+import React, { FC, useCallback, useContext } from "react";
 import { MdModeEdit } from "react-icons/md";
 import { genLocationClient } from "services/backend/apiClients";
 import {
@@ -32,8 +33,9 @@ const EditLocationTriggerBtn: FC<Props> = ({ data = null }) => {
   const toast = useToast();
   const { t } = useI18n<Locale>();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { refetchData } = useContext(RefetchDataContext);
 
-  const createLocation = useCallback(
+  const updateLocation = useCallback(
     async (
       reportForm: ILocationDetailsIdDto,
       addDebtors: AddDebtorToLocationCommand[],
@@ -52,6 +54,10 @@ const EditLocationTriggerBtn: FC<Props> = ({ data = null }) => {
         })
       );
 
+      // await client.saveLocationImage(newId, {
+      //   data: image,
+      //   fileName: newId + ".webp"
+      // });
       if (image) {
         await client.saveLocationImage(newId, {
           data: image,
@@ -86,6 +92,7 @@ const EditLocationTriggerBtn: FC<Props> = ({ data = null }) => {
         isClosable: true
       });
 
+      refetchData();
       onClose();
     },
     []
@@ -107,7 +114,7 @@ const EditLocationTriggerBtn: FC<Props> = ({ data = null }) => {
           <ModalHeader>{t("locationOverview.editLocation")}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <LocaleMetaDataComp submitCallback={createLocation} localeMetaData={data} />
+            <LocaleMetaDataComp submitCallback={updateLocation} localeMetaData={data} />
           </ModalBody>
         </ModalContent>
       </Modal>
