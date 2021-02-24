@@ -9,9 +9,10 @@ import QuerySingleSelectBtn from "components/SortFilter/QuerySingleSelectBtn";
 import QuerySortBtn, { Direction } from "components/SortFilter/QuerySortBtn";
 import { useColors } from "hooks/useColors";
 import { useI18n } from "next-rosetta";
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { genRefillClient } from "services/backend/apiClients";
 import {
+  ILocationDetailsIdDto,
   IOrderRefillCommand,
   LocationDetailsIdDto,
   OrderRefillCommand,
@@ -61,18 +62,18 @@ const LocationList: FC<Props> = ({ data }) => {
   }, []);
 
   //Filtering
-  const getUniqueStreets = (locations: LocationDetailsIdDto[]) => {
-    const streets = locations.map(l => l.address).distinct();
+  const uniqueStreets = useMemo(() => {
+    const streets = data.distinct(l => l.address).map(l => l.address);
     return streets;
-  };
+  }, [data]);
 
-  const getUniqueSchedules = (locations: LocationDetailsIdDto[]) => {
-    const schedules = locations.map(l => l.schedule).distinct();
+  const uniqueSchedules = useMemo(() => {
+    const schedules = data.distinct(l => l.schedule).map(l => l.schedule);
     return schedules;
-  };
+  }, [data]);
 
   const filterCb = useCallback(
-    (qkey: string, chosenOptions: DropdownType["id"]) => {
+    (qkey: keyof ILocationDetailsIdDto, chosenOptions: DropdownType["id"]) => {
       const filtered = origData.filter(d => d[qkey] == chosenOptions);
       filtered.length > 0 ? setFilteredData(filtered) : setFilteredData(origData);
     },
@@ -91,7 +92,7 @@ const LocationList: FC<Props> = ({ data }) => {
               <QuerySingleSelectBtn
                 queryKey="address"
                 filterCb={filterCb}
-                options={getUniqueStreets(data).map(s => ({
+                options={uniqueStreets.map(s => ({
                   id: s,
                   name: s
                 }))}
@@ -113,8 +114,8 @@ const LocationList: FC<Props> = ({ data }) => {
               <QuerySingleSelectBtn
                 queryKey="schedule"
                 filterCb={filterCb}
-                options={getUniqueSchedules(data).map(s => ({
-                  id: s.toString(),
+                options={uniqueSchedules.map(s => ({
+                  id: s,
                   name: t("enums.refillSchedule." + s) + ""
                 }))}
               />
