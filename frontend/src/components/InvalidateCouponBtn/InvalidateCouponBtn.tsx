@@ -14,42 +14,39 @@ import { useI18n } from "next-rosetta";
 import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { RiFileShredLine } from "react-icons/ri";
 import { genCouponsClient } from "services/backend/apiClients";
+import { CouponIdDto, CouponStatus } from "services/backend/nswagts";
 import DropdownType from "types/DropdownType";
 
 type Props = {
+  data: CouponIdDto[];
   coupons: DropdownType[];
-  triggered?: boolean;
 };
 
-const InvalidateCouponBtn: FC<Props> = ({ coupons, triggered = false }) => {
+const InvalidateCouponBtn: FC<Props> = ({ data = [], coupons }) => {
   const cancelRef = useRef();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { t } = useI18n<Locale>();
 
-  const [chosenCoupon, setChosenCoupon] = useState(coupons[0]?.id ?? "0");
+  const [dataCoupons, setDataCoupons] = useState<CouponIdDto[]>([]);
+  const [chosenCoupon, setChosenCoupon] = useState(coupons[0]?.name ?? "0");
+
   const invalidateActions = useCallback(async () => {
-    onClose();
     const client = await genCouponsClient();
-    await client.invalidateCoupon(Number(chosenCoupon));
-  }, [chosenCoupon]);
+    const result = await client.invalidateCoupon(Number(chosenCoupon));
+    if (result.status === CouponStatus.DESTROYED) {
+      setDataCoupons(dataCoupons.filter(a => a.id !== result.id));
+      setChosenCoupon(coupons[0]?.name ?? "0");
+    }
+  }, [chosenCoupon, dataCoupons]);
 
   useEffect(() => {
-    if (triggered) {
-      onOpen();
-    } else {
-      onClose();
-    }
-  }, [triggered]);
+    setDataCoupons(data);
+  }, [data]);
 
   return (
     <>
-      <Button
-        colorScheme="red"
-        onClick={onOpen}
-        leftIcon={<RiFileShredLine />}
-        // leftIcon={<GiGasPump />}>
-      >
+      <Button colorScheme="red" onClick={onOpen} leftIcon={<RiFileShredLine />}>
         {t("coupons.invalidate.invalidate")}
       </Button>
 
@@ -63,9 +60,9 @@ const InvalidateCouponBtn: FC<Props> = ({ coupons, triggered = false }) => {
             <AlertDialogBody>
               {t("coupons.invalidate.confirm", { coupon: chosenCoupon })}
               <Select onChange={e => setChosenCoupon(e.target.value)}>
-                {coupons.map(coupon => (
-                  <option key={coupon.name} value={coupon.name}>
-                    {coupon.name}
+                {dataCoupons.map(coupon => (
+                  <option key={coupon.couponNumber} value={coupon.couponNumber}>
+                    {coupon.couponNumber}
                   </option>
                 ))}
               </Select>
