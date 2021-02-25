@@ -326,6 +326,8 @@ export const table: Locale = {
     users: "Brugere",
     createUser: "Opret bruger",
     createRole: "Opret rolle",
+    updateRole: "Opdater rolle",
+    administrateRoles: "Administrer roller",
     userDetailsTable: {
       userName: "Brugernavn",
       role: "Rolle",
