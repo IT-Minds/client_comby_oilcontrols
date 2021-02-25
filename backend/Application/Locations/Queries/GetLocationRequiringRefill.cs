@@ -41,19 +41,21 @@ namespace Application.Locations.Queries
           .Include(x => x.FuelTank) //required to calculate min fuel level
           .Include(x => x.Region) //required to calculate min fuel level
             .ThenInclude(r => r.DailyTemperatures) //required to calculate min fuel level
-          .Where(x => x.Schedule == RefillSchedule.AUTOMATIC)
+          .Where(x =>
+            x.Schedule == RefillSchedule.AUTOMATIC &&
+            !x.Refills.Any(r => r.RefillState == RefillState.ASSIGNED) // Can't have an upcoming Refill.
+
+          )
           .ToListAsync();
 
-        var locationToRefill = locations
+        var refills = locations
           .Where(x => DateTimeOffset.Compare(x.PredictDayReachingMinimumFuelLevel(7), nextWeek) <= 0)
-          .Where(l => l.AssignedRefills.Count() <= 0); // Can't have an upcoming Refill.
-
-        var refills = locationToRefill.Select(location => new AssignedRefill
-        {
-          Location = location,
-          ExpectedDeliveryDate = location.PredictDayReachingMinimumFuelLevel(7),
-          RefillState = RefillState.ASSIGNED
-        }).ToList();
+          .Select(location => new AssignedRefill
+          {
+            Location = location,
+            ExpectedDeliveryDate = location.PredictDayReachingMinimumFuelLevel(7),
+            RefillState = RefillState.ASSIGNED
+          }).ToList();
 
         return refills;
       }
@@ -64,18 +66,18 @@ namespace Application.Locations.Queries
 
         var locations = await _context.Locations
           .Include(x => x.Refills)
-          .Where(x => x.Schedule == RefillSchedule.INTERVAL)
+          .Where(x =>
+            x.Schedule == RefillSchedule.INTERVAL &&
+            !x.Refills.Any(x => x.RefillState == RefillState.ASSIGNED) // Can't have an upcoming Refill.
+          )
           .ToListAsync();
 
         var locationToRefill = locations
           .Where(l =>
-            l.AssignedRefills.Count() <= 0 && // Can't have an upcoming Refill.
-            (
-              l.CompletedRefills.Count() == 0 ||
-              l.DaysBetweenRefills >= (
-                now - l.CompletedRefills.OrderByDescending(x => x.ActualDeliveryDate).First().ActualDeliveryDate
-              ).Days // The days between now and last refill must be greater than the
-            )
+            !l.CompletedRefills.Any() ||
+            l.DaysBetweenRefills >= (
+              now - l.CompletedRefills.Max(x => x.ActualDeliveryDate)
+            ).Days // The days between now and last refill must be greater than the
           );
 
         var refills = locationToRefill.Select(location => new AssignedRefill
@@ -92,15 +94,13 @@ namespace Application.Locations.Queries
       {
         var now = DateTimeOffset.UtcNow;
 
-        var locations = await _context.Locations
+        var locationToRefill = await _context.Locations
           .Include(x => x.Refills)
-          .Where(x => x.Schedule == RefillSchedule.MANUAL)
+          .Where(x =>
+            x.Schedule == RefillSchedule.MANUAL &&
+            !x.Refills.Where(x => x.RefillState == RefillState.ASSIGNED).Any()
+          )
           .ToListAsync();
-
-        var locationToRefill = locations
-          .Where(l =>
-            l.AssignedRefills.Count() <= 0 // Can't have an upcoming Refill.
-          );
 
         var refills = locationToRefill.Select(location => new AssignedRefill
         {
@@ -112,19 +112,19 @@ namespace Application.Locations.Queries
         return refills;
       }
 
-
-      public async Task<List<LocationRefillDto>> Handle(GetLocationRequiringRefill request, CancellationToken cancellationToken)
+      private async Task SyncLocationsToRefills(CancellationToken cancellationToken)
       {
+        List<AssignedRefill> refills = new List<AssignedRefill>();
+        refills.AddRange(await GetAutomaticRefills());
+        refills.AddRange(await GetIntervalRefills());
+        // refills.AddRange(await GetManualRefills());
 
         var trucks = await _context.Trucks
           .Include(r => r.Refills)
         .ToListAsync();
 
-        List<AssignedRefill> refills = new List<AssignedRefill>();
-        refills.AddRange(await GetAutomaticRefills());
-        refills.AddRange(await GetIntervalRefills());
-        refills.AddRange(await GetManualRefills());
-
+        var rand = new Random();
+        trucks.OrderBy(x => rand.Next());
 
         var truckCount = 0;
         foreach (var refill in refills)
@@ -135,10 +135,15 @@ namespace Application.Locations.Queries
           }
           var truck = trucks[truckCount++];
           refill.Truck = truck;
-          _context.AssignedRefills.Update(refill);
+          _context.AssignedRefills.Add(refill);
         }
 
         await _context.SaveChangesAsync(cancellationToken);
+      }
+
+      public async Task<List<LocationRefillDto>> Handle(GetLocationRequiringRefill request, CancellationToken cancellationToken)
+      {
+        await SyncLocationsToRefills(cancellationToken);
 
         var refillDtos = await _context.Trucks
           .Include(r => r.Refills)

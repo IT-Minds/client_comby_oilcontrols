@@ -15,10 +15,15 @@ import React, { FC, useCallback } from "react";
 import { genTruckClient } from "services/backend/apiClients";
 import { CreateTruckCommand, TruckInfoDto } from "services/backend/nswagts";
 
-const AddTruckTriggerBtn: FC = () => {
+type Props = {
+  submitCallback: () => void;
+};
+
+const AddTruckTriggerBtn: FC<Props> = ({ submitCallback }) => {
   const { t } = useI18n<Locale>();
 
   const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const createTruck = useCallback(async (form: TruckInfoDto) => {
     const client = await genTruckClient();
@@ -28,6 +33,9 @@ const AddTruckTriggerBtn: FC = () => {
       })
     );
 
+    submitCallback();
+    onClose();
+
     toast({
       title: t("toast.createTruck"),
       description: t("toast.successful"),
@@ -36,8 +44,6 @@ const AddTruckTriggerBtn: FC = () => {
       isClosable: true
     });
   }, []);
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
