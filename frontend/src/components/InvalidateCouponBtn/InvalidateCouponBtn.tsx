@@ -27,7 +27,7 @@ const InvalidateCouponBtn: FC<Props> = ({ coupons, triggered = false }) => {
 
   const { t } = useI18n<Locale>();
 
-  const [chosenCoupon, setChosenCoupon] = useState(coupons[0]?.id ?? "0");
+  const [chosenCoupon, setChosenCoupon] = useState(coupons[0]?.name ?? "0");
   const invalidateActions = useCallback(async () => {
     onClose();
     const client = await genCouponsClient();
