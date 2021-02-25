@@ -11,19 +11,29 @@ import {
   Tooltip,
   VStack
 } from "@chakra-ui/react";
+import UserRoleSelector from "components/UserRoleSelector/UserRoleSelector";
+import { useEffectAsync } from "hooks/useEffectAsync";
 import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
+import { genRoleClient } from "services/backend/apiClients";
 import { ActionRecord } from "services/backend/ext/enumConvertor";
 import { Action, IRoleDto, IRoleIdDto } from "services/backend/nswagts";
 import { logger } from "utils/logger";
 
 type Props = {
   submitCallback: (createUserForm: IRoleIdDto | IRoleDto) => void;
+  submitUpdateCallback: (createUserForm: IRoleIdDto | IRoleDto) => void;
   value?: IRoleIdDto;
+  isAdministrate: boolean;
 };
 
-const CreateRoleComp: FC<Props> = ({ submitCallback, value }) => {
+const CreateRoleComp: FC<Props> = ({
+  submitCallback,
+  submitUpdateCallback,
+  value,
+  isAdministrate
+}) => {
   const { t } = useI18n<Locale>();
 
   const [localForm, setLocalForm] = useState<IRoleDto>(
@@ -33,9 +43,20 @@ const CreateRoleComp: FC<Props> = ({ submitCallback, value }) => {
     }
   );
 
+  const [selectedRole, setSelectedRole] = useState<number>();
+
   const [localActions, setLocalActions] = useState<number[]>([]);
 
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
+
+  useEffectAsync(async () => {
+    if (selectedRole) {
+      const client = await genRoleClient();
+      const result = await client.getRole(selectedRole);
+      console.log(result.actions);
+      setLocalActions(result.actions);
+    }
+  }, [selectedRole]);
 
   const updateLocalForm = useCallback((value: unknown, key: keyof typeof localForm) => {
     setLocalForm(form => {
@@ -59,7 +80,7 @@ const CreateRoleComp: FC<Props> = ({ submitCallback, value }) => {
       logger.debug("Submitting form CreateRoleComp");
       localForm.actions = localActions;
       if (localForm.actions.length > 0) {
-        submitCallback(localForm);
+        isAdministrate ? submitUpdateCallback(localForm) : submitCallback(localForm);
         setFormSubmitAttempts(0);
       }
     },
@@ -69,12 +90,29 @@ const CreateRoleComp: FC<Props> = ({ submitCallback, value }) => {
   return (
     <form onSubmit={handleSubmit}>
       <VStack spacing={2}>
-        <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.name}>
-          <FormLabel>{t("createRole.roleName")}</FormLabel>
-          <Input
-            placeholder={t("createRole.roleName") as string}
-            onChange={e => {
-              updateLocalForm(e.target.value, "name");
+        {!isAdministrate && (
+          <FormControl isRequired isInvalid={formSubmitAttempts > 0 && !localForm.name}>
+            <FormLabel>{t("createRole.roleName")}</FormLabel>
+            <Input
+              placeholder={t("createRole.roleName") as string}
+              onChange={e => {
+                updateLocalForm(e.target.value, "name");
+              }}
+            />
+            <FormErrorMessage>{t("createRole.formErrors.enterRoleName")}</FormErrorMessage>
+          </FormControl>
+        )}
+
+        <FormControl
+          hidden={!isAdministrate}
+          isRequired
+          isInvalid={formSubmitAttempts > 0 && !localForm.name}>
+          <FormLabel>{t("createUser.role")}</FormLabel>
+
+          <UserRoleSelector
+            cb={x => {
+              setSelectedRole(x.id);
+              updateLocalForm(x.name, "name");
             }}
           />
           <FormErrorMessage>{t("createRole.formErrors.enterRoleName")}</FormErrorMessage>
@@ -88,7 +126,9 @@ const CreateRoleComp: FC<Props> = ({ submitCallback, value }) => {
                 <Text>{`${Number(b)}: ` + t("enums.action." + b)}</Text>
               </Tooltip>
               <Spacer />
-              <Checkbox onChange={() => setRole(b)}></Checkbox>
+              <Checkbox
+                isChecked={localActions.some(a => a === b)}
+                onChange={() => setRole(b)}></Checkbox>
             </HStack>
           ))}
           <FormErrorMessage>{t("createRole.formErrors.selectActions")}</FormErrorMessage>
@@ -98,7 +138,7 @@ const CreateRoleComp: FC<Props> = ({ submitCallback, value }) => {
           type="submit"
           rightIcon={<MdCheck />}
           onClick={() => setFormSubmitAttempts(x => x + 1)}>
-          {t("createRole.createRole")}
+          {isAdministrate ? t("users.updateRole") : t("createRole.createRole")}
         </Button>
       </VStack>
     </form>
