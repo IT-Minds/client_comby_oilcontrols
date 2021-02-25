@@ -27,7 +27,7 @@ export const table: Locale = {
       temperature: "Temperaturer"
     },
     users: "Brugerstyring",
-    statistics: "Rapporter"
+    statistics: "Rapportereee"
   },
   user: {
     editInfo: "Redigér info",
