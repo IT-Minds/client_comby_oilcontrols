@@ -90,6 +90,7 @@ export const table: Locale = {
     selectRegion: "Select region",
     temperature: "Temperature",
     selectDate: "Select a date",
+    degree: "Grader",
     formErrors: {
       selectRegion: "Please select a region",
       inputTemperature: "Please enter a temperature"
@@ -295,6 +296,7 @@ export const table: Locale = {
       }
     },
     refill: {
+      refill: "Påfyldning",
       selectCouponNumber: "Select coupon number:",
       selectFuelType: "Select fuel type",
       fuelInTankAfterRefill: "Brændstof i tanken EFTER påfyldning:",
@@ -349,6 +351,16 @@ export const table: Locale = {
         }
       }
     }
+  },
+
+  filtering: {
+    all: "Alle",
+    selectAll: "Vælg alle",
+    filter: "Filtrér"
+  },
+
+  debtors: {
+    debtors: "Debitorer"
   },
 
   locationOverview: {

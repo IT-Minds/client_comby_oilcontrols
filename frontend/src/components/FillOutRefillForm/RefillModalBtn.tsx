@@ -8,6 +8,7 @@ import {
   ModalOverlay,
   useDisclosure
 } from "@chakra-ui/react";
+import { useI18n } from "next-rosetta";
 import { FC } from "react";
 import { GiFuelTank } from "react-icons/gi";
 
@@ -15,6 +16,7 @@ import FillOutRefillForm from "./FillOutRefillForm";
 
 const RefillModalBtn: FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { t } = useI18n<Locale>();
 
   return (
     <>
@@ -29,7 +31,7 @@ const RefillModalBtn: FC = () => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>{t("mytruck.refill.refill")}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <FillOutRefillForm submitCallback={null} couponNumbers={[]} />

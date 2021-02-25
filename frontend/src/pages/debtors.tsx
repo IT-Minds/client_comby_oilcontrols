@@ -3,13 +3,14 @@ import DebtorTableComp from "components/DebtorTable/DebtorTableComp";
 import { useEffectAsync } from "hooks/useEffectAsync";
 import { runTimeTable } from "i18n/runtimeTable";
 import { GetStaticProps, NextPage } from "next";
-import { I18nProps } from "next-rosetta";
+import { I18nProps, useI18n } from "next-rosetta";
 import { useState } from "react";
 import { genDebtorClient } from "services/backend/apiClients";
 import { DebtorDto } from "services/backend/nswagts";
 
 const Debtors: NextPage = () => {
   const [debtorEntities, setDebtorEntities] = useState<DebtorDto[]>(null);
+  const { t } = useI18n<Locale>();
 
   useEffectAsync(async () => {
     const data = await genDebtorClient().then(client => client.get());
@@ -18,7 +19,7 @@ const Debtors: NextPage = () => {
 
   return (
     <Container w="5xl" centerContent>
-      <Heading>Debtors</Heading>
+      <Heading>{t("debtors.debtors")}</Heading>
       {debtorEntities == null ? <Spinner /> : <DebtorTableComp preLoadedData={debtorEntities} />}
     </Container>
   );

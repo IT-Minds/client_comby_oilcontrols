@@ -93,6 +93,7 @@ export interface Locale {
     selectRegion: string;
     temperature: string;
     selectDate: string;
+    degree: string;
     formErrors: {
       selectRegion: string;
       inputTemperature: string;
@@ -298,6 +299,7 @@ export interface Locale {
       };
     };
     refill: {
+      refill: string;
       selectCouponNumber: string;
       selectFuelType: string;
       fuelInTankAfterRefill: string;
@@ -352,6 +354,16 @@ export interface Locale {
         };
       };
     };
+  };
+
+  filtering: {
+    all: string;
+    selectAll: string;
+    filter: string;
+  };
+
+  debtors: {
+    debtors: string;
   };
 
   locationOverview: {
