@@ -29,13 +29,14 @@ const InvalidateCouponBtn: FC<Props> = ({ data = [], coupons }) => {
   const { t } = useI18n<Locale>();
 
   const [dataCoupons, setDataCoupons] = useState<CouponIdDto[]>([]);
-  const [chosenCoupon, setChosenCoupon] = useState(coupons[0]?.id ?? "0");
+  const [chosenCoupon, setChosenCoupon] = useState(coupons[0]?.name ?? "0");
 
   const invalidateActions = useCallback(async () => {
     const client = await genCouponsClient();
     const result = await client.invalidateCoupon(Number(chosenCoupon));
     if (result.status === CouponStatus.DESTROYED) {
       setDataCoupons(dataCoupons.filter(a => a.id !== result.id));
+      setChosenCoupon(coupons[0]?.name ?? "0");
     }
   }, [chosenCoupon, dataCoupons]);
 
