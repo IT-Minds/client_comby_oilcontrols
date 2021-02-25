@@ -25,9 +25,8 @@ using Microsoft.Extensions.Options;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Domain.Entities;
-using Application.Security;
 using Hangfire;
+using Hangfire.Dashboard;
 
 namespace Web
 {
@@ -171,7 +170,11 @@ namespace Web
 
       app.UseRouting();
 
-      app.UseHangfireDashboard();
+      app.UseHangfireDashboard("/hangfire"
+        , new DashboardOptions
+        {
+          Authorization = new[] { new DashboardNoAuthorizationFilter() }
+        });
 
       app.UseAuthentication();
       app.UseAuthorization();
@@ -183,10 +186,14 @@ namespace Web
                   pattern: "{controller}/{action=Index}/{id?}");
 
         endpoints.MapHub<ExampleHub>("/examplehub");
-        endpoints.MapHangfireDashboard("/jobs");
+        endpoints.MapHangfireDashboard();
       });
 
       app.AddApplication(backgroundJobs);
     }
+  }
+  class DashboardNoAuthorizationFilter : IDashboardAuthorizationFilter
+  {
+    public bool Authorize(DashboardContext dashboardContext) => true;
   }
 }
