@@ -331,6 +331,8 @@ export interface Locale {
     users: string;
     createUser: string;
     createRole: string;
+    updateRole: string;
+    administrateRoles: string;
     userDetailsTable: {
       userName: string;
       role: string;
