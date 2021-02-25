@@ -27,6 +27,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Domain.Entities;
 using Application.Security;
+using Hangfire;
 
 namespace Web
 {
@@ -67,7 +68,7 @@ namespace Web
           });
       });
 
-      services.AddApplication();
+      services.AddApplication(Configuration);
       services.AddInfrastructure(Configuration, Environment);
 
       services.AddHttpContextAccessor();
@@ -130,7 +131,7 @@ namespace Web
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationDbContext context, IOptions<SeedOptions> seedOptions,  SuperAdminService superAdminService)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationDbContext context, IOptions<SeedOptions> seedOptions,  SuperAdminService superAdminService, IRecurringJobManager backgroundJobs)
     {
       if (env.IsDevelopment())
       {
@@ -181,6 +182,8 @@ namespace Web
 
         endpoints.MapHub<ExampleHub>("/examplehub");
       });
+
+      app.AddApplication(backgroundJobs);
     }
   }
 }
