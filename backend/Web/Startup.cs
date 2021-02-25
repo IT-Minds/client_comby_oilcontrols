@@ -171,6 +171,8 @@ namespace Web
 
       app.UseRouting();
 
+      app.UseHangfireDashboard();
+
       app.UseAuthentication();
       app.UseAuthorization();
 
@@ -181,6 +183,7 @@ namespace Web
                   pattern: "{controller}/{action=Index}/{id?}");
 
         endpoints.MapHub<ExampleHub>("/examplehub");
+        endpoints.MapHangfireDashboard("/jobs");
       });
 
       app.AddApplication(backgroundJobs);

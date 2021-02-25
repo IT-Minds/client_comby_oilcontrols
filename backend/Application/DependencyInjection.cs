@@ -52,12 +52,6 @@ namespace Application
 
     public static IApplicationBuilder AddApplication(this IApplicationBuilder app, IRecurringJobManager jobs)
     {
-      app.UseHangfireDashboard();
-      app.UseEndpoints(endpoints =>
-     {
-         endpoints.MapHangfireDashboard();
-     });
-
       jobs.AddOrUpdate<RunListService>(
         "RunListService",
         o => o.SyncLocationsToRefills(CancellationToken.None), "0 * * * *"
