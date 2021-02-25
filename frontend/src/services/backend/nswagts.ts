@@ -3474,6 +3474,9 @@ export class LocationDto implements ILocationDto {
     schedule?: RefillSchedule;
     estimateFuelConsumption?: number;
     daysBetweenRefills?: number;
+    mainDebtorId?: number | null;
+    baseDebtorId?: number | null;
+    upcomingDebtorId?: number | null;
 
     constructor(data?: ILocationDto) {
         if (data) {
@@ -3493,6 +3496,9 @@ export class LocationDto implements ILocationDto {
             this.schedule = _data["schedule"] !== undefined ? _data["schedule"] : <any>null;
             this.estimateFuelConsumption = _data["estimateFuelConsumption"] !== undefined ? _data["estimateFuelConsumption"] : <any>null;
             this.daysBetweenRefills = _data["daysBetweenRefills"] !== undefined ? _data["daysBetweenRefills"] : <any>null;
+            this.mainDebtorId = _data["mainDebtorId"] !== undefined ? _data["mainDebtorId"] : <any>null;
+            this.baseDebtorId = _data["baseDebtorId"] !== undefined ? _data["baseDebtorId"] : <any>null;
+            this.upcomingDebtorId = _data["upcomingDebtorId"] !== undefined ? _data["upcomingDebtorId"] : <any>null;
         }
     }
 
@@ -3512,6 +3518,9 @@ export class LocationDto implements ILocationDto {
         data["schedule"] = this.schedule !== undefined ? this.schedule : <any>null;
         data["estimateFuelConsumption"] = this.estimateFuelConsumption !== undefined ? this.estimateFuelConsumption : <any>null;
         data["daysBetweenRefills"] = this.daysBetweenRefills !== undefined ? this.daysBetweenRefills : <any>null;
+        data["mainDebtorId"] = this.mainDebtorId !== undefined ? this.mainDebtorId : <any>null;
+        data["baseDebtorId"] = this.baseDebtorId !== undefined ? this.baseDebtorId : <any>null;
+        data["upcomingDebtorId"] = this.upcomingDebtorId !== undefined ? this.upcomingDebtorId : <any>null;
         return data; 
     }
 }
@@ -3524,6 +3533,9 @@ export interface ILocationDto {
     schedule?: RefillSchedule;
     estimateFuelConsumption?: number;
     daysBetweenRefills?: number;
+    mainDebtorId?: number | null;
+    baseDebtorId?: number | null;
+    upcomingDebtorId?: number | null;
 }
 
 export class LocationDetailsDto extends LocationDto implements ILocationDetailsDto {

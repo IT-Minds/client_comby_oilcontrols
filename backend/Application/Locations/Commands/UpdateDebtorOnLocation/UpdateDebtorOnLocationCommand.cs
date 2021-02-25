@@ -37,6 +37,7 @@ namespace Application.Locations.Commands.UpdateDebtorOnLocation
           .Include(e => e.Debtors)
           .ThenInclude(e => e.Debtor)
           .FirstOrDefaultAsync(x => x.Id == request.LocationId);
+
         if (location == null)
         {
           throw new ArgumentException("No location with ID: " + request.LocationId);
