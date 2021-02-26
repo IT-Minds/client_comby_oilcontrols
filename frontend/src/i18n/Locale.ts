@@ -67,6 +67,8 @@ export interface Locale {
     invalidate: {
       invalidate: string;
       confirm: string;
+      noMoreCoupons: string;
+      close: string;
     };
   };
 
