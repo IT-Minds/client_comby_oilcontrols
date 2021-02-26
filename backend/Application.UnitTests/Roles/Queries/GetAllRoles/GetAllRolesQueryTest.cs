@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ using Xunit;
 namespace Application.UnitTests.Roles.Queryies.GetAllRoles
 {
   [Collection("QueryTests")]
-  public class GetAllRolesQueryTest
+  public class GetAllRolesQueryTest : CommandTestBase
   {
     private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
@@ -49,12 +50,14 @@ namespace Application.UnitTests.Roles.Queryies.GetAllRoles
         Skip = 0,
         Needle = "a"
       };
+      var count = Context.Roles.Count();
+      var pagesLeft = (int)(Math.Ceiling((float)count / (float)query.Size)) - 1;
 
       var handler = new GetAllRolesQuery.GetAllRolesQueryHandler(_context, _mapper);
       var result = await handler.Handle(query, CancellationToken.None);
       result.Should().BeOfType<PageResult<RoleIdDto>>();
-      result.Results.Count.Should().Be(2);
-      result.PagesRemaining.Should().Be(3);
+      result.Results.Count.Should().Be(query.Size);
+      result.PagesRemaining.Should().Be(pagesLeft);
     }
   }
 }
