@@ -67,7 +67,9 @@ const InvalidateCouponBtn: FC<Props> = ({ data = [] }) => {
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              {t("coupons.invalidate.confirm", { coupon: chosenCoupon })}
+              {dataCoupons.length > 0
+                ? t("coupons.invalidate.confirm", { coupon: chosenCoupon })
+                : t("coupons.invalidate.noMoreCoupons")}
               <Select
                 onChange={e => setChosenCoupon(parseInputToNumber(e.target.value))}
                 value={chosenCoupon}>
@@ -83,8 +85,13 @@ const InvalidateCouponBtn: FC<Props> = ({ data = [] }) => {
               <Button variant="outline" ref={cancelRef} onClick={onClose}>
                 {t("actions.cancel")}
               </Button>
-              <Button colorScheme="red" onClick={invalidateActions} ml={3}>
-                {t("actions.invalidate")}
+              <Button
+                colorScheme="red"
+                onClick={() => {
+                  dataCoupons.length > 0 ? invalidateActions() : onClose();
+                }}
+                ml={3}>
+                {dataCoupons.length > 0 ? t("actions.invalidate") : "Luk"}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
