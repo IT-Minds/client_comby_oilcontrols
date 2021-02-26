@@ -2384,6 +2384,7 @@ export interface IUserClient {
     getAllUser(needle?: number | undefined, size?: number | undefined, skip?: number | undefined): Promise<PageResultOfUserIdDtoAndInteger>;
     updateUserRoles(id: number, command: UpdateUserRolesCommand): Promise<UserIdDto>;
     updateUserPassword(id: number, command: UpdatePasswordCommand): Promise<number>;
+    deleteUser(id: number): Promise<UserDto>;
 }
 
 export class UserClient extends ClientBase implements IUserClient {
@@ -2569,6 +2570,45 @@ export class UserClient extends ClientBase implements IUserClient {
             });
         }
         return Promise.resolve<number>(<any>null);
+    }
+
+    deleteUser(id: number): Promise<UserDto> {
+        let url_ = this.baseUrl + "/api/User/delete/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "POST",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processDeleteUser(_response));
+        });
+    }
+
+    protected processDeleteUser(response: Response): Promise<UserDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<UserDto>(<any>null);
     }
 }
 
@@ -2801,6 +2841,7 @@ export enum Action {
     SET_DEBTOR_COUPON_REQUIRED = 21,
     CREATE_ROLE = 22,
     UPDATE_ROLE = 23,
+    DELETE_USER = 24,
     CREATE_USER = 25,
 }
 
