@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { Locale } from "./Locale";
 
 export const runTimeTable = (locale: string, table: Locale): Locale => {
