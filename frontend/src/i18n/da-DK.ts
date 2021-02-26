@@ -10,12 +10,16 @@ export const table: Locale = {
   welcome: "Velkommen {{name}}! 😃",
 
   menu: {
-    trucks: { trucks: "Vogne", overview: "Se vogne", create: "Opret ny vogn" },
+    trucks: {
+      trucks: "Vogne",
+      overview: "Se vogne",
+      create: "Opret ny vogn"
+    },
     locations: {
       locations: "Lokationer",
-      buildings: "Oversigt af bygninger",
-      ships: "Oversigt af skibe",
-      freestands: "Oversigt af fritstående tank",
+      buildings: "Bygninger",
+      ships: "Skibe",
+      freestands: "Fritstående tanke",
       create: "Opret ny lokation"
     },
     debtors: {
@@ -50,7 +54,7 @@ export const table: Locale = {
 
   toast: {
     successful: "Vellykket",
-    updateDebtor: "Opdater debtor",
+    updateDebtor: "Opdater debitor",
     createTruck: "Opret vogn",
     createLocation: "Opret lokation",
     updateLocation: "Opdater lokation",
@@ -90,6 +94,7 @@ export const table: Locale = {
     selectRegion: "Vælg region",
     temperature: "Temperatur",
     selectDate: "Vælg en dato",
+    degree: "Grader",
     formErrors: {
       selectRegion: "Vælg en region",
       inputTemperature: "Indtast en temperatur"
@@ -111,9 +116,9 @@ export const table: Locale = {
 
   addCoupon: {
     enterCouponInterval: "Udfyld kuponinterval:",
-    addPendingCoupons: "Tilføj ventende kuponner",
-    availableCoupons: "Tilgængelige kuponner",
-    submitCoupons: "Indsend kuponner",
+    addPendingCoupons: "Tilføj ventende kuponer",
+    availableCoupons: "Tilgængelige kuponer",
+    submitCoupons: "Indsend kuponer",
     formErrors: {
       validInterval: "Indtast et gyldigt interval"
     }
@@ -121,11 +126,11 @@ export const table: Locale = {
 
   createRole: {
     roleName: "Rollenavn",
-    roleAction: "Rollehandling",
+    roleAction: "Rollerettighed",
     createRole: "Opret rolle",
     formErrors: {
       enterRoleName: "Indtast et rollenavn",
-      selectActions: "Vælg én eller flere handlinger"
+      selectActions: "Vælg én eller flere rettigheder"
     }
   },
 
@@ -150,7 +155,7 @@ export const table: Locale = {
       overViewOfDebtor: "Overblik over debitor {{debtor}}",
       name: "Navn:",
       accountNumber: "Kontonummer:",
-      blocked: "Blokkeret:",
+      blocked: "Blokeret:",
       yes: "Ja",
       no: "Nej",
       couponIsRequired: "Kupon er påkrævet:"
@@ -200,7 +205,7 @@ export const table: Locale = {
   },
 
   locationHistory: {
-    locationMetaChangesHistory: "Lokationsmetaændringshistorik",
+    locationMetaChangesHistory: "Ændringshistorik",
     address: "Adresse",
     comments: "Kommentarer",
     regionId: "Region ID",
@@ -256,10 +261,10 @@ export const table: Locale = {
   },
 
   trucks: {
-    truckOverview: "Vogn overblik",
+    truckOverview: "Vogne",
     overviewOfTruck: "Overblik over vogn {{id}}",
-    metaData: "Meta data",
-    coupons: "Kuponner",
+    metaData: "Vognoplysninger",
+    coupons: "Kuponer",
     fuelingHistory: "Påfyldningshistorik",
     truckList: {
       truckName: "Vognnavn",
@@ -281,8 +286,8 @@ export const table: Locale = {
     },
     tankLevel: "",
     refuel: {
-      trigger: "Påfyld tank",
-      complete: "Indsend påfyldning",
+      trigger: "Optank tankvogn",
+      complete: "Indsend Optankning",
       selectFuelType: "Vælg brændstoftype:",
       fillingAmount: "Påfyldningsmængde (i liter):",
       cardNumber: "Kortnummer:",
@@ -295,6 +300,7 @@ export const table: Locale = {
       }
     },
     refill: {
+      refill: "Påfyldning",
       selectCouponNumber: "Vælg kuponnummer:",
       selectFuelType: "Vælg brændstofstype",
       fuelInTankAfterRefill: "Brændstof i tanken EFTER påfyldning:",
@@ -315,12 +321,12 @@ export const table: Locale = {
     },
     runlist: {
       comments: "Kommentarer",
-      debtorBlocked: "Debitor blokkeret",
+      debtorBlocked: "Debitor blokeret",
       bstNumber: "B/S/T nummer",
       address: "Adresse",
       agreementType: "Aftaletype",
       fuelType: "Brændstofstype",
-      deadline: "Deadline"
+      deadline: "Frist"
     }
   },
 
@@ -349,6 +355,16 @@ export const table: Locale = {
         }
       }
     }
+  },
+
+  filtering: {
+    all: "Alle",
+    selectAll: "Vælg alle",
+    filter: "Filtrér"
+  },
+
+  debtors: {
+    debtors: "Debitorer"
   },
 
   locationOverview: {
@@ -387,7 +403,7 @@ export const table: Locale = {
     fuelType: {
       "0": "Benzin",
       "1": "Petroleum",
-      "2": "Gasolin",
+      "2": "Dieselolie",
       "3": "Andet"
     },
     interval: {

@@ -105,7 +105,7 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback }) => {
             <Stack spacing={4}>
               <InputGroup size="sm">
                 <Input
-                  placeholder="Degrees"
+                  placeholder={t("dailyTemperature.degree") as string}
                   type="number"
                   step={0.01}
                   onChange={e =>

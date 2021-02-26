@@ -14,6 +14,7 @@ import {
   VStack
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { useI18n } from "next-rosetta";
 import { FC, useCallback, useEffect, useState } from "react";
 import { MdFilterList } from "react-icons/md";
 import DropdownType from "types/DropdownType";
@@ -33,6 +34,8 @@ const QuerySingleSelectBtn: FC<Props> = ({
   queryGroup = "t",
   options
 }) => {
+  const { t } = useI18n<Locale>();
+
   const [isOpen, setIsOpen] = useState(false);
 
   const [checkedItem, setCheckedItem] = useState<DropdownType["id"]>("ANY");
@@ -95,7 +98,7 @@ const QuerySingleSelectBtn: FC<Props> = ({
           <RadioGroup name="test" onChange={x => setCheckedItem(x as string)} value={checkedItem}>
             <VStack align="left" minH={30} maxH={60} overflowY="auto">
               <Radio value={"ANY"} isChecked={"ANY" === checkedItem}>
-                Any
+                {t("filtering.all")}
               </Radio>
               {options.map(o => (
                 <Radio key={o.id} value={o.id} isChecked={o.id === checkedItem}>
@@ -106,7 +109,7 @@ const QuerySingleSelectBtn: FC<Props> = ({
           </RadioGroup>
         </PopoverBody>
         <PopoverFooter>
-          <Button onClick={onClick}>Apply</Button>
+          <Button onClick={onClick}>{t("filtering.filter")}</Button>
         </PopoverFooter>
       </PopoverContent>
     </Popover>
