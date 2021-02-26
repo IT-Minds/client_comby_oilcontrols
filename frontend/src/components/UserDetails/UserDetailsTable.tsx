@@ -1,14 +1,15 @@
-import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { HStack, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import UserCircle from "components/Menu/components/UserCircle";
 import { RefetchDataContext } from "contexts/RefetchDataContext";
 import { useEffectAsync } from "hooks/useEffectAsync";
 import { usePagedFetched } from "hooks/usePagedFetched";
 import { useI18n } from "next-rosetta";
-import { FC, useCallback, useContext, useReducer } from "react";
+import React, { FC, useCallback, useContext, useReducer } from "react";
 import ListReducer, { ListReducerActionType } from "react-list-reducer";
 import { genUserClient } from "services/backend/apiClients";
 import { IUserIdDto } from "services/backend/nswagts";
 
+import DeleteUserModal from "./DeleteUserModal";
 import UserDetailModal from "./UserDetailModal";
 
 const UserDetailsTable: FC = () => {
@@ -27,6 +28,13 @@ const UserDetailsTable: FC = () => {
   const updateUser = useCallback((user: IUserIdDto) => {
     dataDispatch({
       type: ListReducerActionType.Update,
+      data: user
+    });
+  }, []);
+
+  const deleteUser = useCallback((user: IUserIdDto) => {
+    dataDispatch({
+      type: ListReducerActionType.Remove,
       data: user
     });
   }, []);
@@ -63,7 +71,10 @@ const UserDetailsTable: FC = () => {
               <Td>{user.username}</Td>
               <Td>{user.currentRole?.name}</Td>
               <Td>
-                <UserDetailModal user={user} userCallback={x => updateUser(x)} />
+                <HStack>
+                  <UserDetailModal user={user} userCallback={x => updateUser(x)} />
+                  <DeleteUserModal user={user} userCallback={x => deleteUser(x)} />
+                </HStack>
               </Td>
             </Tr>
           ))}
