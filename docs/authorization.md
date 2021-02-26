@@ -118,7 +118,11 @@ List of actions defined under `Domain.Enums.Action` and their related commands.
 
 - `UpdateRoleCommand`
 
-### 24 CREATE_USER
+### 24 DELETE_USER
+
+- `DeleteUserCommand`
+
+### 25 CREATE_USER
 
 - `CreateUserCommand`
 
