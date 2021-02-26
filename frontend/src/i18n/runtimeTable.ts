@@ -1,12 +1,12 @@
-import { readdirSync, readFileSync } from "fs";
-import { join } from "path";
-
 import { Locale } from "./Locale";
 
 export const runTimeTable = (locale: string, table: Locale): Locale => {
   try {
+    const { readdirSync, readFileSync } = require("fs");
+    const { join } = require("path");
+
     const postsDirectory = join(process.cwd(), "src", "i18n");
-    const filenames = readdirSync(postsDirectory);
+    const filenames: string[] = readdirSync(postsDirectory);
     const localeFile = filenames.find(x => x === locale + ".json");
 
     let runTimeTable: Partial<Locale> = {};
