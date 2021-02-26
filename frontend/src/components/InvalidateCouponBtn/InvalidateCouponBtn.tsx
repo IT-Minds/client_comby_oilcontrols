@@ -91,7 +91,7 @@ const InvalidateCouponBtn: FC<Props> = ({ data = [] }) => {
                   dataCoupons.length > 0 ? invalidateActions() : onClose();
                 }}
                 ml={3}>
-                {dataCoupons.length > 0 ? t("actions.invalidate") : "Luk"}
+                {dataCoupons.length > 0 ? t("actions.invalidate") : t("coupons.invalidate.close")}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
