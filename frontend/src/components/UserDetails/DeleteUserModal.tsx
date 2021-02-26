@@ -10,26 +10,28 @@ import {
   useDisclosure,
   useToast
 } from "@chakra-ui/react";
+import { RefetchDataContext } from "contexts/RefetchDataContext";
 import { useI18n } from "next-rosetta";
-import React, { FC, useCallback } from "react";
-import { MdDelete, MdEdit } from "react-icons/md";
+import React, { FC, useCallback, useContext } from "react";
+import { MdDelete } from "react-icons/md";
 import { genUserClient } from "services/backend/apiClients";
 import { IUserIdDto } from "services/backend/nswagts";
 
 type Props = {
   user: IUserIdDto;
-  userCallback: (user: IUserIdDto) => void;
 };
 
-const DeleteUserModal: FC<Props> = ({ user, userCallback }) => {
+const DeleteUserModal: FC<Props> = ({ user }) => {
   const { t } = useI18n<Locale>();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { refetchData } = useContext(RefetchDataContext);
 
   const deleteUser = useCallback(async () => {
     const client = await genUserClient();
     await client.deleteUser(user.id);
 
+    refetchData();
     onClose();
 
     toast({
@@ -39,7 +41,6 @@ const DeleteUserModal: FC<Props> = ({ user, userCallback }) => {
       duration: 9000,
       isClosable: true
     });
-    userCallback({ ...user });
   }, []);
 
   return (

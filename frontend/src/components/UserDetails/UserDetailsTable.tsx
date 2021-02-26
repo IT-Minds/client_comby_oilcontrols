@@ -32,13 +32,6 @@ const UserDetailsTable: FC = () => {
     });
   }, []);
 
-  const deleteUser = useCallback((user: IUserIdDto) => {
-    dataDispatch({
-      type: ListReducerActionType.Remove,
-      data: user
-    });
-  }, []);
-
   useEffectAsync(async () => {
     const client = await genUserClient();
     const users = await client.getAllUser();
@@ -73,7 +66,7 @@ const UserDetailsTable: FC = () => {
               <Td>
                 <HStack>
                   <UserDetailModal user={user} userCallback={x => updateUser(x)} />
-                  <DeleteUserModal user={user} userCallback={x => deleteUser(x)} />
+                  <DeleteUserModal user={user} />
                 </HStack>
               </Td>
             </Tr>
