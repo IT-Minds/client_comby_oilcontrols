@@ -17,6 +17,7 @@ import { useI18n } from "next-rosetta";
 import React, { FC, useCallback, useRef, useState } from "react";
 import { MdInput } from "react-icons/md";
 import { IOrderRefillCommand, ITruckInfoIdDto } from "services/backend/nswagts";
+import getLocale from "utils/datepickerLocale";
 import { logger } from "utils/logger";
 
 type Props = {
@@ -64,6 +65,7 @@ const OrderRefillComp: FC<Props> = ({ submitCallback, locationId }) => {
               <VStack align="left">
                 <TruckSelector cb={setTruck} />
                 <DatePicker
+                  locale={getLocale()}
                   selectedDate={refillDate}
                   onChange={(date: Date) => setRefillDate(date)}
                   showPopperArrow={false}

@@ -18,6 +18,7 @@ import {
 import DatePicker from "components/DatePicker/DatePicker";
 import DebtorSelector from "components/DebtorSelector/DebtorSelector";
 import StreetSelector from "components/StreetSelector/StreetSelector";
+import da from "date-fns/locale/da";
 import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
@@ -34,6 +35,7 @@ import {
   RemoveDebtorFromLocationCommand,
   UpdateDebtorOnLocationCommand
 } from "services/backend/nswagts";
+import getLocale from "utils/datepickerLocale";
 import { logger } from "utils/logger";
 
 type Props = {
@@ -375,6 +377,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
             />
             <FormLabel>{t("localeMetaData.selectDate")}</FormLabel>
             <DatePicker
+              locale={getLocale()}
               selectedDate={debtorDate}
               onChange={(date: Date) => setDebtorDate(date)}
               // value={localForm.fuelType}
