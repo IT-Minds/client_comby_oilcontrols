@@ -13,6 +13,7 @@ import {
   VStack
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { useI18n } from "next-rosetta";
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { MdFilterList } from "react-icons/md";
 import DropdownType from "types/DropdownType";
@@ -32,6 +33,8 @@ const QueryMultiSelectBtn: FC<Props> = ({
   queryGroup = "t",
   options
 }) => {
+  const { t } = useI18n<Locale>();
+
   const [isOpen, setIsOpen] = useState(false);
 
   const [checkedItems, setCheckedItems] = useState<DropdownType["id"][]>(options.map(x => x.id));
@@ -102,7 +105,7 @@ const QueryMultiSelectBtn: FC<Props> = ({
               isChecked={allChecked}
               isIndeterminate={isIndeterminate}
               onChange={() => setCheckedItems(allChecked ? [] : options.map(x => x.id))}>
-              Select All
+              {t("filtering.selectAll")}
             </Checkbox>
             {options.map(o => (
               <Checkbox
@@ -122,7 +125,7 @@ const QueryMultiSelectBtn: FC<Props> = ({
           </VStack>
         </PopoverBody>
         <PopoverFooter>
-          <Button onClick={onClick}>Apply</Button>
+          <Button onClick={onClick}>{t("filtering.filter")}</Button>
         </PopoverFooter>
       </PopoverContent>
     </Popover>
