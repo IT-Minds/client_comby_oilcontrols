@@ -15,33 +15,42 @@ import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { RiFileShredLine } from "react-icons/ri";
 import { genCouponsClient } from "services/backend/apiClients";
 import { CouponIdDto, CouponStatus } from "services/backend/nswagts";
-import DropdownType from "types/DropdownType";
+import { parseInputToNumber } from "utils/formatNumber";
 
 type Props = {
   data: CouponIdDto[];
-  coupons: DropdownType[];
 };
 
-const InvalidateCouponBtn: FC<Props> = ({ data = [], coupons }) => {
+const InvalidateCouponBtn: FC<Props> = ({ data = [] }) => {
   const cancelRef = useRef();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { t } = useI18n<Locale>();
 
   const [dataCoupons, setDataCoupons] = useState<CouponIdDto[]>([]);
-  const [chosenCoupon, setChosenCoupon] = useState(coupons[0]?.name ?? "0");
+  const [chosenCoupon, setChosenCoupon] = useState<number>();
 
   const invalidateActions = useCallback(async () => {
     const client = await genCouponsClient();
     const result = await client.invalidateCoupon(Number(chosenCoupon));
     if (result.status === CouponStatus.DESTROYED) {
       setDataCoupons(dataCoupons.filter(a => a.id !== result.id));
-      setChosenCoupon(coupons[0]?.name ?? "0");
+
+      const selectedCouponIndex = dataCoupons.findIndex(d => d.couponNumber === chosenCoupon);
+      const isLastIndex = dataCoupons.length - 1 === selectedCouponIndex;
+      if (isLastIndex) {
+        //If last index, select first coupon
+        setChosenCoupon(dataCoupons[0]?.couponNumber ?? 0);
+      } else {
+        //If not last index, select the next coupon
+        setChosenCoupon(dataCoupons[selectedCouponIndex + 1].couponNumber);
+      }
     }
   }, [chosenCoupon, dataCoupons]);
 
   useEffect(() => {
     setDataCoupons(data);
+    setChosenCoupon(data[0]?.couponNumber ?? 0);
   }, [data]);
 
   return (
@@ -59,7 +68,9 @@ const InvalidateCouponBtn: FC<Props> = ({ data = [], coupons }) => {
 
             <AlertDialogBody>
               {t("coupons.invalidate.confirm", { coupon: chosenCoupon })}
-              <Select onChange={e => setChosenCoupon(e.target.value)}>
+              <Select
+                onChange={e => setChosenCoupon(parseInputToNumber(e.target.value))}
+                value={chosenCoupon}>
                 {dataCoupons.map(coupon => (
                   <option key={coupon.couponNumber} value={coupon.couponNumber}>
                     {coupon.couponNumber}
