@@ -43,5 +43,7 @@ namespace Domain.Entities
     public double EstimateFuelConsumption { get; set; }
     public ICollection<LocationDebtor> Debtors { get; set; }
     public ICollection<LocationDebtorHistory> DebtorsHistory { get; set; }
+
+    public DateTime InactiveSince { get; set; } = DateTime.MaxValue;
   }
 }

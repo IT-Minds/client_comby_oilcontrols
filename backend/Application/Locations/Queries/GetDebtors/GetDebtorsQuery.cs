@@ -40,7 +40,7 @@ namespace Application.Locations.Queries.GetDebtors
     {
       var partial = query
         .OrderByDescending(x => x.Created)
-        .Where(x => x.Created < Needle);
+        .Where(x => x.InactiveSince >= DateTime.Now && x.Created < Needle);
 
       if (TankType.HasValue)
       {

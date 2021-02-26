@@ -38,7 +38,7 @@ namespace Application.Locations.Queries
           .Include(r => r.Truck)
           .Include(r => r.Location)
             .ThenInclude(l => l.FuelTank)
-          .Where(r => r.TruckId == request.TruckId)
+          .Where(r => r.TruckId == request.TruckId && r.Location.InactiveSince >= DateTime.Now)
           .ProjectTo<LocationRefillDto>(_mapper.ConfigurationProvider)
           .ToListAsync();
 
