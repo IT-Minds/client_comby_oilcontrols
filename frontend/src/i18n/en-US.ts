@@ -64,10 +64,8 @@ export const table: Locale = {
       invalidate: "Invalidate Coupon",
       confirm:
         "Are you sure you want to invalidate coupon '{{coupon}}', this action can't be undone?",
-        noMoreCoupons: "Der er ikke flere kuponer",
-        close: "Luk"
-      },
-      
+      noMoreCoupons: "Der er ikke flere kuponer",
+      close: "Luk"
     }
   },
 

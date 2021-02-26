@@ -63,9 +63,8 @@ export const table: Locale = {
       invalidate: "Marker kupon ugyldig",
       confirm:
         "Er du sikker på, at du vil ugyldiggøre kuponen '{{coupon}}', denne handling kan ikke fortrydes?",
-        noMoreCoupons: "Der er ikke flere kuponer",
-        close: "Luk"
-      }
+      noMoreCoupons: "Der er ikke flere kuponer",
+      close: "Luk"
     }
   },
 
