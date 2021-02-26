@@ -32,7 +32,7 @@ namespace Application.Trucks.Commands.UpdateTruck
 
       public async Task<TruckInfoIdDto> Handle(UpdateTruckCommand request, CancellationToken cancellationToken)
       {
-        var truck = await _context.Trucks.FirstOrDefaultAsync(x => x.Id == request.Id);
+        var truck = await _context.Trucks.Include(x => x.Driver).FirstOrDefaultAsync(x => x.Id == request.Id);
         if (truck == null)
         {
           throw new ArgumentException("No truck with Truck Id: " + request.Id + ".");
@@ -43,7 +43,12 @@ namespace Application.Trucks.Commands.UpdateTruck
           throw new ArgumentException("No user with User Id: " + request.TruckInfo.DriverId + ".");
         }
 
-
+        var oldDriver = truck.Driver;
+        if (oldDriver != null)
+        {
+          oldDriver.Truck = null;
+          _context.Users.Update(oldDriver);
+        }
         truck.TruckIdentifier = request.TruckInfo.TruckIdentifier;
         truck.Description = request.TruckInfo.Description;
         truck.TankCapacity = request.TruckInfo.TankCapacity;
