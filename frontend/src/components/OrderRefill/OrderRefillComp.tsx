@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import DatePicker from "components/DatePicker/DatePicker";
 import TruckSelector from "components/TruckSelector/TruckSelector";
+import { useEffectAsync } from "hooks/useEffectAsync";
 import { Locale } from "i18n/Locale";
 import { useI18n } from "next-rosetta";
 import React, { FC, useCallback, useRef, useState } from "react";
@@ -31,8 +32,14 @@ const OrderRefillComp: FC<Props> = ({ submitCallback, locationId }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [refillDate, setRefillDate] = useState<Date>(new Date());
   const [truck, setTruck] = useState<ITruckInfoIdDto>(null);
+  const [locale, setLocale] = useState<globalThis.Locale>();
 
   const { t } = useI18n<Locale>();
+
+  useEffectAsync(async () => {
+    const lang = await getLocale();
+    setLocale(lang);
+  }, []);
 
   const postOrderRefill = useCallback(() => {
     logger.debug("Submitting form OrderRefillComp");
@@ -65,7 +72,7 @@ const OrderRefillComp: FC<Props> = ({ submitCallback, locationId }) => {
               <VStack align="left">
                 <TruckSelector cb={setTruck} />
                 <DatePicker
-                  locale={getLocale()}
+                  locale={locale}
                   selectedDate={refillDate}
                   onChange={(date: Date) => setRefillDate(date)}
                   showPopperArrow={false}

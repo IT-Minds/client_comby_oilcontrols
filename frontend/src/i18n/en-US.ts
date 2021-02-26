@@ -1,4 +1,8 @@
+import en from "date-fns/locale/en-US";
+
 import { Locale } from "./Locale";
+
+export const dateFns = en;
 
 export const table: Locale = {
   locale: "English",
