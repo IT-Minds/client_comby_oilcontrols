@@ -55,6 +55,7 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
   const { locale } = useRouter();
 
   const [refillingLocation, setRefillingLocation] = useState<ILocationRefillDto>(null);
+  const [truckCoupons, setTruckCoupons] = useState<CouponIdDto[]>([]);
 
   const { awaitCallback, isOnline } = useOffline();
   const toast = useToast();
@@ -62,6 +63,12 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
   const formatter = Intl.NumberFormat(locale, {
     minimumFractionDigits: 2
   });
+
+  const fetchCoupons = async () => {
+    const truckClient = await genTruckClient();
+    const coupons = await truckClient.getTrucksCoupons(truckInfo.id);
+    setTruckCoupons(coupons.results);
+  };
 
   const completeLocationRefill = useCallback(
     (reportForm: RefillForm) => {
@@ -152,7 +159,7 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
           />
           <FillOutRefillForm
             submitCallback={completeLocationRefill}
-            couponNumbers={coupons.map<DropdownType>(x => ({
+            couponNumbers={truckCoupons.map<DropdownType>(x => ({
               id: x.id + "",
               name: x.couponNumber + ""
             }))}
@@ -177,20 +184,20 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
               })}
             </Badge>
           </Text>
-          <RunListTable truckId={truckInfo.id} refillCb={obj => setRefillingLocation(obj)} />
+          <RunListTable
+            truckId={truckInfo.id}
+            refillCb={obj => {
+              fetchCoupons();
+              setRefillingLocation(obj);
+            }}
+          />
         </Collapse>
       </Box>
 
       {!viewOnly && (
         <HStack position="absolute" bottom={2} right={0}>
           <RefuelForm fillData={completeTruckRefuel} />
-          <InvalidateCouponBtn
-            data={coupons}
-            coupons={coupons.map<DropdownType>(x => ({
-              id: x.id + "",
-              name: x.couponNumber + ""
-            }))}
-          />
+          <InvalidateCouponBtn data={coupons} />
         </HStack>
       )}
     </VStack>
