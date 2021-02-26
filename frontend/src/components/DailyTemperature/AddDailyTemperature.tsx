@@ -19,6 +19,7 @@ import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
 import { genStreetClient } from "services/backend/apiClients";
 import { Action, ICreateDailyTemperatureCommand } from "services/backend/nswagts";
+import getLocale from "utils/datepickerLocale";
 import { formatInputNumber, parseInputToNumber } from "utils/formatNumber";
 import { logger } from "utils/logger";
 
@@ -42,10 +43,11 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback }) => {
 
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
   const [date, setDate] = useState<Date>(new Date());
+  const [locale, setLocale] = useState<globalThis.Locale>();
 
   useEffectAsync(async () => {
-    const client = await genStreetClient();
-    const data = await client.get();
+    const lang = await getLocale();
+    setLocale(lang);
   }, []);
 
   const updateLocalForm = useCallback(
@@ -93,6 +95,7 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback }) => {
           <FormControl isRequired>
             <FormLabel>{t("dailyTemperature.selectDate")}:</FormLabel>
             <DatePicker
+              locale={locale}
               selectedDate={date}
               onChange={(x: Date) => setDate(x)}
               showPopperArrow={false}

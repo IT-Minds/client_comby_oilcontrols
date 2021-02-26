@@ -1,4 +1,8 @@
+import da from "date-fns/locale/da";
+
 import { Locale } from "./Locale";
+
+export const dateFns = da;
 
 export const table: Locale = {
   locale: "Dansk",
