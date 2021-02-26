@@ -5,6 +5,7 @@ using Domain.Enums;
 using global::Application.Common.Interfaces;
 using Domain.Entities;
 using Application.Common.Security;
+using System;
 
 namespace Application.Locations.Commands.CreateLocation
 {
@@ -46,6 +47,7 @@ namespace Application.Locations.Commands.CreateLocation
           DaysBetweenRefills = request.Data.DaysBetweenRefills,
           TankType = request.Data.TankType,
           TankNumber = request.Data.BSTNumber,
+          InactiveSince = DateTime.MaxValue
         };
         _context.Locations.Add(location);
 
