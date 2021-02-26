@@ -117,7 +117,7 @@ namespace Application.Common.Services
       .ToListAsync();
 
       var rand = new Random();
-      trucks.OrderBy(x => rand.Next());
+      trucks = trucks.OrderBy(x => rand.Next()).ToList();
 
       var truckCount = 0;
       foreach (var refill in refills)
@@ -147,5 +147,4 @@ namespace Application.Common.Services
     public int Id { get; set; }
     public int LocationId { get; set; }
   }
-
 }
