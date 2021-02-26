@@ -184,13 +184,7 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
       {!viewOnly && (
         <HStack position="absolute" bottom={2} right={0}>
           <RefuelForm fillData={completeTruckRefuel} />
-          <InvalidateCouponBtn
-            data={coupons}
-            coupons={coupons.map<DropdownType>(x => ({
-              id: x.id + "",
-              name: x.couponNumber + ""
-            }))}
-          />
+          <InvalidateCouponBtn data={coupons} />
         </HStack>
       )}
     </VStack>
