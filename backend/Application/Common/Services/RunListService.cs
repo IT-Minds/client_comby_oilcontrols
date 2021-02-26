@@ -101,7 +101,7 @@ namespace Application.Common.Services
       return refills;
     }
 
-    public async Task<object> SyncLocationsToRefills(CancellationToken cancellationToken)
+    public async Task<RunListDto[]> SyncLocationsToRefills(CancellationToken cancellationToken)
     {
       var existingRefills = await _context.AssignedRefills.Select(r => r.LocationId).ToListAsync();
 
@@ -133,11 +133,19 @@ namespace Application.Common.Services
 
       await _context.SaveChangesAsync(cancellationToken);
 
-      return refills.Select(x => new {
+      var result = refills.Select(x => new RunListDto {
         Id = x.Id,
         LocationId = x.LocationId
-      });
+      }).ToArray();
+
+      return result;
     }
+  }
+
+  public class RunListDto
+  {
+    public int Id { get; set; }
+    public int LocationId { get; set; }
   }
 
 }
