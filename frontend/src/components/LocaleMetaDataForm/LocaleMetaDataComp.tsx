@@ -56,6 +56,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
   const [baseDebtorId, setBaseDebtorId] = useState(null);
   const [upcomingDebtorId, setUpcomingDebtorId] = useState(null);
   const [debtorDate, setDebtorDate] = useState(new Date());
+  const [inactiveDate, setInactiveDate] = useState(null);
   const [image, setImage] = useState<File>(null);
   const [locale, setLocale] = useState<globalThis.Locale>();
 
@@ -255,6 +256,16 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
               value={localForm.daysBetweenRefills}
             />
             <FormErrorMessage>{t("localeMetaData.formErrors.daysBetween")}</FormErrorMessage>
+          </FormControl>
+
+          <FormControl>
+            <FormLabel>{t("localeMetaData.inactiveSince")}:</FormLabel>
+            <DatePicker
+              locale={locale}
+              selectedDate={inactiveDate}
+              onChange={(x: Date) => setInactiveDate(x)}
+              showPopperArrow={false}
+            />
           </FormControl>
 
           <FormControl>
