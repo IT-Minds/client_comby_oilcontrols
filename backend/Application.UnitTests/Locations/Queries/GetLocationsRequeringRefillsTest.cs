@@ -23,7 +23,7 @@ namespace Application.UnitTests.Locations.Queries
     }
 
 
-    [Fact(Skip="Something weird going on with the DateTime")]
+    [Fact(Skip = "Something weird going on with the DateTime")]
     public async Task Handle_ReturnAwaitRefills()
     {
       var query = new GetLocationRequiringRefill
@@ -32,7 +32,7 @@ namespace Application.UnitTests.Locations.Queries
 
       };
 
-      var handler = new GetLocationRequiringRefill.GetLocationRequiringRefillHandler(_context, _mapper);
+      var handler = new GetLocationRequiringRefill.GetLocationRequiringRefillHandler(_context, _mapper, null, null);
       var result = await handler.Handle(query, CancellationToken.None);
 
       result.Should().NotBeEmpty();
