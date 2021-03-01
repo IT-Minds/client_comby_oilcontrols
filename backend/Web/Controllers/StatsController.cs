@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Application.Common.Services;
 using Application.Stats.GetHistoricConsumption;
@@ -28,7 +29,7 @@ namespace Web.Controllers
       Response.Headers.Add("Content-Disposition", cd.ToString());
       Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
 
-      return File(data.Stream, "text/csv", data.Filename); ;
+      return File(Encoding.UTF8.GetPreamble().Concat(data.Stream).ToArray(), "text/csv", data.Filename); ;
     }
 
     [HttpGet("usageHistoryFile")]
@@ -53,7 +54,7 @@ namespace Web.Controllers
       Response.Headers.Add("Content-Disposition", cd.ToString());
       Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
 
-      return File(data.Stream, "text/csv", data.Filename); ;
+      return File(Encoding.UTF8.GetPreamble().Concat(data.Stream).ToArray(), "text/csv", data.Filename); ;
     }
 
     [HttpGet("usageHistory")]
