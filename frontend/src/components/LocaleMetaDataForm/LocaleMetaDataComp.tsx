@@ -20,7 +20,7 @@ import DebtorSelector from "components/DebtorSelector/DebtorSelector";
 import StreetSelector from "components/StreetSelector/StreetSelector";
 import { useEffectAsync } from "hooks/useEffectAsync";
 import { useI18n } from "next-rosetta";
-import React, { FC, FormEvent, useCallback, useState } from "react";
+import React, { FC, FormEvent, useCallback, useEffect, useState } from "react";
 import { MdCheck } from "react-icons/md";
 import {
   FuelTypeRecord,
@@ -90,6 +90,11 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
     const lang = await getLocale();
     setLocale(lang);
   }, []);
+
+  useEffect(() => {
+    setDebtorDate(localeMetaData.debtorChangeDate);
+    setInactiveDate(localeMetaData.inactiveSince);
+  }, [localeMetaData]);
 
   const updateLocalForm = useCallback((value: unknown, key: keyof typeof localForm) => {
     setLocalForm(form => {
