@@ -38,7 +38,8 @@ namespace Application.Locations.Queries
           .Include(r => r.Truck)
           .Include(r => r.Location)
             .ThenInclude(l => l.FuelTank)
-          .Where(r => r.TruckId == request.TruckId);
+          .Where(r => r.TruckId == request.TruckId)
+          .Where(r => r.RefillState == Domain.Entities.Refills.RefillState.ASSIGNED);
 
         var refillDtos = await refillEntities
           .ProjectTo<LocationRefillDto>(_mapper.ConfigurationProvider)
