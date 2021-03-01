@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Application.Common.Interfaces.Pagination;
 using Application.Users;
 using Application.Users.Commands.CreateUser;
+using Application.Users.Commands.DeleteUser;
 using Application.Users.Commands.UpdatePassword;
 using Application.Users.Commands.UpdateUserRole;
 using Application.Users.Queries.GetAllUsers;
@@ -43,6 +44,16 @@ namespace Web.Controllers
         Skip = skip
       });
     }
+
+    [HttpPost("delete/{id}")]
+    public async Task<ActionResult<UserDto>> DeleteUser([FromRoute] int id)
+    {
+      return await Mediator.Send(new DeleteUserCommand
+      {
+        UserId = id
+      });
+    }
+
 
   }
 }
