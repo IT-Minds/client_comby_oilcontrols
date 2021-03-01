@@ -34,11 +34,13 @@ namespace Application.Locations.Queries
 
       public async Task<List<LocationRefillDto>> Handle(GetLocationRequiringRefill request, CancellationToken cancellationToken)
       {
-        var refillDtos = await _context.AssignedRefills
+        var refillEntities = _context.AssignedRefills
           .Include(r => r.Truck)
           .Include(r => r.Location)
             .ThenInclude(l => l.FuelTank)
-          .Where(r => r.TruckId == request.TruckId)
+          .Where(r => r.TruckId == request.TruckId);
+
+        var refillDtos = await refillEntities
           .ProjectTo<LocationRefillDto>(_mapper.ConfigurationProvider)
           .ToListAsync();
 
