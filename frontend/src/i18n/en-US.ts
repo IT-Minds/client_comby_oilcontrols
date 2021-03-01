@@ -1,4 +1,8 @@
+import en from "date-fns/locale/en-US";
+
 import { Locale } from "./Locale";
+
+export const dateFns = en;
 
 export const table: Locale = {
   locale: "English",
@@ -56,7 +60,8 @@ export const table: Locale = {
     updateLocation: "Opdater lokation",
     updatePassword: "Opdater kodeord",
     updateRole: "Opdater rolle",
-    createTemperature: "Opret temperatur"
+    createTemperature: "Opret temperatur",
+    deleteUser: "Slet bruger"
   },
 
   coupons: {
@@ -351,6 +356,11 @@ export const table: Locale = {
           inputPassword: "Udfyld et nyt kodeord og sørg for at de er ens",
           chooseARole: "Vælg en rolle"
         }
+      },
+      deleteUserModal: {
+        deleteUserInfo:
+          "Er du sikker på at du vil slette brugeren {{user}}, handlingen kan ikke fortrydes?",
+        deleteUser: "Slet bruger"
       }
     }
   },
@@ -444,6 +454,7 @@ export const table: Locale = {
       "21": "Juster debitor kuponkrav",
       "22": "Opret brugerroller",
       "23": "Opdater brugerroller",
+      "24": "Slet bruger",
       "25": "Opret brugere"
     }
   }

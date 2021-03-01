@@ -409,6 +409,32 @@ namespace Application.UnitTests
         new CompletedRefill { Id = 618, CouponId = 618, EndAmount = 0, StartAmount = 1000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2019, 1, 1), ActualDeliveryDate = new DateTime(2019, 1, 1), LocationId = 604, Created = new DateTime(2019, 1, 1) }
       );
       //END
+
+      //START: DATA TO TEST USER DELETE
+      var role700 = new Role { Id = 700, Name = "Test Role 700" };
+      var role701 = new Role { Id = 701, Name = "Test Role 701" };
+      var role702 = new Role { Id = 702, Name = "Test Role 702" };
+      var role703 = new Role { Id = 703, Name = "Test Role 703" };
+      context.Roles.AddRange(
+        role700, role701, role702, role703
+      );
+
+      var user700 = new User { Id = 700, Username = "LegitUser420", Password = "Password" };
+      context.Users.AddRange(
+        user1
+      );
+
+      context.UserRoles.AddRange(
+        new UserRole { Id = 700, User = user700, Role = role700 },
+        new UserRole { Id = 701, User = user700, Role = role701 },
+        new UserRole { Id = 702, User = user700, Role = role702 },
+        new UserRole { Id = 703, User = user700, Role = role703 }
+        );
+
+      context.Trucks.Add(
+        new Truck { Driver = user700, Id = 700, TruckIdentifier = "Truck700", Name = "7RUCK" }
+      );
+      //END
       context.SaveChanges();
     }
 

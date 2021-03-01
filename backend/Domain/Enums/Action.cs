@@ -26,6 +26,7 @@ namespace Domain.Enums
     SET_DEBTOR_COUPON_REQUIRED = 21,
     CREATE_ROLE = 22,
     UPDATE_ROLE = 23,
+    DELETE_USER = 24,
     CREATE_USER = 25
   }
 }

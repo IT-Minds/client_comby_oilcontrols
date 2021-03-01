@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Application.Common.Mappings;
 using AutoMapper;
@@ -19,6 +20,8 @@ namespace Application.Locations
     public int? BaseDebtorId { get; set; }
     public int? UpcomingDebtorId { get; set; }
 
+    public DateTime? DebtorChangeDate { get; set; }
+
     public void Mapping(Profile profile)
     {
       profile.CreateMap<Location, LocationDto>()
@@ -27,6 +30,8 @@ namespace Application.Locations
       .ForMember(dest => dest.BaseDebtorId, map => map.MapFrom(from => from.Debtors.Where(x => x.Type == LocationDebtorType.BASE).Select(x => x.DebtorId).FirstOrDefault()
       ))
       .ForMember(dest => dest.UpcomingDebtorId, map => map.MapFrom(from => from.Debtors.Where(x => x.Type == LocationDebtorType.UPCOMING).Select(x => x.DebtorId).FirstOrDefault()
+      ))
+      .ForMember(dest => dest.DebtorChangeDate, map => map.MapFrom(from => from.Debtors.Where(x => x.Type == LocationDebtorType.UPCOMING).Select(x => x.DebtorChangeDate).FirstOrDefault()
       ));
 
 

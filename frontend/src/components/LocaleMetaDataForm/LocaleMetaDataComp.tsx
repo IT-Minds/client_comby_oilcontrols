@@ -18,6 +18,7 @@ import {
 import DatePicker from "components/DatePicker/DatePicker";
 import DebtorSelector from "components/DebtorSelector/DebtorSelector";
 import StreetSelector from "components/StreetSelector/StreetSelector";
+import { useEffectAsync } from "hooks/useEffectAsync";
 import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
@@ -34,6 +35,7 @@ import {
   RemoveDebtorFromLocationCommand,
   UpdateDebtorOnLocationCommand
 } from "services/backend/nswagts";
+import getLocale from "utils/datepickerLocale";
 import { logger } from "utils/logger";
 
 type Props = {
@@ -55,6 +57,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
   const [upcomingDebtorId, setUpcomingDebtorId] = useState(null);
   const [debtorDate, setDebtorDate] = useState(new Date());
   const [image, setImage] = useState<File>(null);
+  const [locale, setLocale] = useState<globalThis.Locale>();
 
   const addDebtors: AddDebtorToLocationCommand[] = [];
   const updateDebtors: UpdateDebtorOnLocationCommand[] = [];
@@ -80,6 +83,11 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
   });
 
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
+
+  useEffectAsync(async () => {
+    const lang = await getLocale();
+    setLocale(lang);
+  }, []);
 
   const updateLocalForm = useCallback((value: unknown, key: keyof typeof localForm) => {
     setLocalForm(form => {
@@ -375,9 +383,9 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
             />
             <FormLabel>{t("localeMetaData.selectDate")}</FormLabel>
             <DatePicker
+              locale={locale}
               selectedDate={debtorDate}
               onChange={(date: Date) => setDebtorDate(date)}
-              // value={localForm.fuelType}
               showPopperArrow={false}
             />
             <FormErrorMessage>{t("localeMetaData.formErrors.selectDebtorId")}</FormErrorMessage>
