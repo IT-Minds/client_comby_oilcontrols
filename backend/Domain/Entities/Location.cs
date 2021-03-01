@@ -44,6 +44,6 @@ namespace Domain.Entities
     public ICollection<LocationDebtor> Debtors { get; set; }
     public ICollection<LocationDebtorHistory> DebtorsHistory { get; set; }
 
-    public DateTime InactiveSince { get; set; }
+    public DateTime? InactiveSince { get; set; }
   }
 }

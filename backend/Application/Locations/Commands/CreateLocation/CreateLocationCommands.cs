@@ -47,7 +47,7 @@ namespace Application.Locations.Commands.CreateLocation
           DaysBetweenRefills = request.Data.DaysBetweenRefills,
           TankType = request.Data.TankType,
           TankNumber = request.Data.BSTNumber,
-          InactiveSince = DateTime.MaxValue
+          InactiveSince = null
         };
         _context.Locations.Add(location);
 

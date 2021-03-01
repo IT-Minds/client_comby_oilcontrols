@@ -3477,7 +3477,7 @@ export class LocationDto implements ILocationDto {
     mainDebtorId?: number | null;
     baseDebtorId?: number | null;
     upcomingDebtorId?: number | null;
-    inactiveSince?: Date;
+    inactiveSince?: Date | null;
 
     constructor(data?: ILocationDto) {
         if (data) {
@@ -3539,7 +3539,7 @@ export interface ILocationDto {
     mainDebtorId?: number | null;
     baseDebtorId?: number | null;
     upcomingDebtorId?: number | null;
-    inactiveSince?: Date;
+    inactiveSince?: Date | null;
 }
 
 export class LocationDetailsDto extends LocationDto implements ILocationDetailsDto {
