@@ -9,7 +9,7 @@ using Application.Locations.Commands.RemoveDebtorFromLocation;
 using Application.Locations.Commands.UpdateDebtorOnLocation;
 using Application.Locations.Commands.UpdateLocationMetaData;
 using Application.Locations.Queries.GetDebtorHistory;
-using Application.Locations.Queries.GetDebtors;
+using Application.Locations.Queries.GetLocations;
 using Application.Locations.Queries.GetLocationImage;
 using Application.Refills;
 using Application.Refills.Queries;
@@ -58,7 +58,7 @@ namespace Web.Controllers
         needle = DateTimeOffset.MaxValue;
       }
 
-      return await Mediator.Send(new GetDebtorsQuery
+      return await Mediator.Send(new GetLocationsQuery
       {
         TankType = locationType,
         Needle = (DateTimeOffset)needle,
@@ -67,25 +67,6 @@ namespace Web.Controllers
       });
     }
 
-    // [HttpGet("/histories")]
-    // public async Task<ActionResult<PageResult<LocationHistoryDto>>> GetAllLocationHistories(
-    //  [FromQuery] int needle, [FromQuery] int size = 1000, [FromQuery] int? skip = 0
-    // )
-    // {
-    //   return await Mediator.Send(new GetAllLocationHistoriesQuery
-    //   {
-    //     Needle = needle,
-    //     Size = size,
-    //     Skip = skip
-    //   });
-    // }
-
-    [HttpGet("{id}")]
-    public async Task<ActionResult<LocationDetailsIdDto>> Get(
-    [FromRoute] int id)
-    {
-      return null;
-    }
 
     [HttpGet("{id}/history")]
     [ResponseCache(Duration = 43200)] // 12 hour cache
