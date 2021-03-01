@@ -30,7 +30,7 @@ namespace Application.Stats.GetRefillOfYear
         var data = await _statsService.ReportRefillsOfYear(request.Year);
 
         using (var memwriter = new MemoryStream())
-        using (var writer = new StreamWriter(memwriter))
+        using (var writer = new StreamWriter(memwriter, System.Text.Encoding.UTF8))
         using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
         {
 
