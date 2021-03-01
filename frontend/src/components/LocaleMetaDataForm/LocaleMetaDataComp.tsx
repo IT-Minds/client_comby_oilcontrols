@@ -77,9 +77,10 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
     tankType: -1,
     fuelType: -1,
     daysBetweenRefills: 0,
-    baseDebtorId: -1,
-    mainDebtorId: -1,
-    upcomingDebtorId: -1,
+    baseDebtorId: null,
+    mainDebtorId: null,
+    upcomingDebtorId: null,
+    inactiveSince: null,
     ...localeMetaData
   });
 
@@ -112,14 +113,25 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
       setDebtors(baseDebtorId, LocationDebtorType.BASE, localForm.baseDebtorId);
       setDebtors(upcomingDebtorId, LocationDebtorType.UPCOMING, localForm.upcomingDebtorId);
 
+      localForm.inactiveSince = inactiveDate;
+
       submitCallback(localForm, addDebtors, updateDebtors, removeDebtors, image);
       setFormSubmitAttempts(0);
     },
-    [submitCallback, localForm, mainDebtorId, baseDebtorId, upcomingDebtorId, debtorDate, image]
+    [
+      submitCallback,
+      localForm,
+      mainDebtorId,
+      baseDebtorId,
+      upcomingDebtorId,
+      debtorDate,
+      image,
+      inactiveDate
+    ]
   );
 
   const setDebtors = (debtorId: number, debtorType: LocationDebtorType, originalId: number) => {
-    if (debtorId > 0 && originalId === 0) {
+    if (debtorId > 0 && (originalId === null || originalId === 0)) {
       addDebtors.push(
         new AddDebtorToLocationCommand({
           debtorId,
