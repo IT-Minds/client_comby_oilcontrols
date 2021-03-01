@@ -1,4 +1,8 @@
+import da from "date-fns/locale/da";
+
 import { Locale } from "./Locale";
+
+export const dateFns = da;
 
 export const table: Locale = {
   locale: "Kalaallisut",
@@ -55,7 +59,8 @@ export const table: Locale = {
     updateLocation: "Opdater lokation",
     updatePassword: "Opdater kodeord",
     updateRole: "Opdater rolle",
-    createTemperature: "Opret temperatur"
+    createTemperature: "Opret temperatur",
+    deleteUser: "Slet bruger"
   },
 
   coupons: {
@@ -138,6 +143,7 @@ export const table: Locale = {
     refillSchedule: "Genopfyldningsplan:",
     daysBetweenRefill: "Dage mellem genopfyldninger:",
     numberOfDays: "# dage",
+    inactiveSince: "Inaktiv dato",
     comment: "Kommentar",
     comments: "Kommentarer:",
     selectAnImage: "Vælg et billede af tanklokationen",
@@ -349,6 +355,11 @@ export const table: Locale = {
           inputPassword: "Udfyld et nyt kodeord og sørg for at de er ens",
           chooseARole: "Vælg en rolle"
         }
+      },
+      deleteUserModal: {
+        deleteUserInfo:
+          "Er du sikker på at du vil slette brugeren {{user}}, handlingen kan ikke fortrydes?",
+        deleteUser: "Slet bruger"
       }
     }
   },
@@ -442,6 +453,7 @@ export const table: Locale = {
       "21": "Juster debitor kuponkrav",
       "22": "Opret brugerroller",
       "23": "Opdater brugerroller",
+      "24": "Slet bruger",
       "25": "Opret brugere"
     }
   }

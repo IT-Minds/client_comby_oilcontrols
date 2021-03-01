@@ -61,6 +61,7 @@ export interface Locale {
     updatePassword: string;
     updateRole: string;
     createTemperature: string;
+    deleteUser: string;
   };
 
   coupons: {
@@ -172,6 +173,7 @@ export interface Locale {
     refillSchedule: string;
     daysBetweenRefill: string;
     numberOfDays: string;
+    inactiveSince: string;
     comment: string;
     comments: string;
     selectAnImage: string;
@@ -355,6 +357,10 @@ export interface Locale {
           chooseARole: string;
         };
       };
+      deleteUserModal: {
+        deleteUserInfo: string;
+        deleteUser: string;
+      };
     };
   };
 
@@ -450,6 +456,7 @@ export interface Locale {
       21: string;
       22: string;
       23: string;
+      24: string;
       25: string;
     };
   };
