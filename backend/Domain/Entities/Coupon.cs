@@ -12,7 +12,6 @@ namespace Domain.Entities
     public int TruckId { get; set; }
     public CouponStatus Status { get; set; }
 
-    public int RefillId { get; set; }
     public CompletedRefill Refill { get; set; }
   }
 }
