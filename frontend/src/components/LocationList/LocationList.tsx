@@ -8,6 +8,7 @@ import OrderRefillComp from "components/OrderRefill/OrderRefillComp";
 import QuerySingleSelectBtn from "components/SortFilter/QuerySingleSelectBtn";
 import QuerySortBtn, { Direction } from "components/SortFilter/QuerySortBtn";
 import { useColors } from "hooks/useColors";
+import { useRouter } from "next/router";
 import { useI18n } from "next-rosetta";
 import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { genRefillClient } from "services/backend/apiClients";
@@ -25,6 +26,7 @@ type Props = {
 };
 
 const LocationList: FC<Props> = ({ data }) => {
+  const { locale } = useRouter();
   const { t } = useI18n<Locale>();
 
   const { hoverBg } = useColors();
@@ -80,6 +82,10 @@ const LocationList: FC<Props> = ({ data }) => {
     [origData]
   );
 
+  const dateTimeFormatter = useMemo(() => {
+    return new Intl.DateTimeFormat(locale);
+  }, [locale]);
+
   return (
     <Table size="sm">
       <Thead>
@@ -104,6 +110,13 @@ const LocationList: FC<Props> = ({ data }) => {
               <Text>{t("locationList.regionId")}</Text>
               <Spacer />
               <QuerySortBtn queryKey="regionId" sortCb={sortCb} />
+            </HStack>
+          </Th>
+          <Th>
+            <HStack spacing={1}>
+              <Text>DEBUG</Text>
+              <Spacer />
+              <QuerySortBtn queryKey="predictedFuelDate" sortCb={sortCb} />
             </HStack>
           </Th>
           <Th>
@@ -136,6 +149,7 @@ const LocationList: FC<Props> = ({ data }) => {
             </Td>
             <Td>{dat.regionId}</Td>
             <Td>{RefillSchedule[dat.schedule]}</Td>
+            <Td>{dateTimeFormatter.format(dat.predictedFuelDate)}</Td>
             <Td>
               <HStack>
                 <EditLocationTriggerBtn data={dat} />
