@@ -108,7 +108,10 @@ namespace Application.Common.Services
 
     public async Task<RunListDto[]> SyncLocationsToRefills(CancellationToken cancellationToken)
     {
-      var existingRefills = await _context.AssignedRefills.Select(r => r.LocationId).ToListAsync();
+      var existingRefills = await _context.AssignedRefills
+        .Where(x => x.RefillState == RefillState.ASSIGNED)
+        .Select(r => r.LocationId)
+        .ToListAsync();
 
       List<AssignedRefill> refills = new List<AssignedRefill>();
       refills.AddRange(await GetAutomaticRefills());
@@ -121,7 +124,9 @@ namespace Application.Common.Services
         .Include(r => r.Refills)
       .ToListAsync();
 
-      var rand = new Random();
+      var seed = (int)(DateTime.Now.Ticks / 1e7);
+      System.Console.WriteLine("SyncLocationsToRefills Seed: " + seed);
+      var rand = new Random(seed);
       trucks = trucks.OrderBy(x => rand.Next()).ToList();
 
       var truckCount = 0;
@@ -140,7 +145,8 @@ namespace Application.Common.Services
 
       var result = refills.Select(x => new RunListDto {
         Id = x.Id,
-        LocationId = x.LocationId
+        LocationId = x.LocationId,
+        TruckId = x.TruckId
       }).ToArray();
 
       return result;
@@ -151,5 +157,6 @@ namespace Application.Common.Services
   {
     public int Id { get; set; }
     public int LocationId { get; set; }
+    public int TruckId { get; set; }
   }
 }
