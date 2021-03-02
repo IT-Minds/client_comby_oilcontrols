@@ -114,13 +114,6 @@ const LocationList: FC<Props> = ({ data }) => {
           </Th>
           <Th>
             <HStack spacing={1}>
-              <Text>DEBUG</Text>
-              <Spacer />
-              <QuerySortBtn queryKey="predictedFuelDate" sortCb={sortCb} />
-            </HStack>
-          </Th>
-          <Th>
-            <HStack spacing={1}>
               <Text>{t("locationList.scheduleType")}</Text>
               <Spacer />
               <QuerySortBtn queryKey="scheduleType" sortCb={sortCb} />
@@ -132,6 +125,13 @@ const LocationList: FC<Props> = ({ data }) => {
                   name: t("enums.refillSchedule." + s) + ""
                 }))}
               />
+            </HStack>
+          </Th>
+          <Th>
+            <HStack spacing={1}>
+              <Text>Næste påfyldning</Text>
+              <Spacer />
+              <QuerySortBtn queryKey="predictedFuelDate" sortCb={sortCb} />
             </HStack>
           </Th>
           <Th></Th>

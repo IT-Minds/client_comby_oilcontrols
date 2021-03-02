@@ -73,11 +73,7 @@ namespace Application.Locations.Queries.GetLocations
 
         var query = request.PreparePage(
           _context.Locations
-    ///    * Location
-    ///   * Refills
-    ///   * FuelTank
-    ///   * Region
-    ///     * DailyTemperatures
+          .Include(x=> x.Debtors)
           .Include(x => x.FuelTank)
           .Include(x => x.Refills)
           .Include(x => x.Region)
