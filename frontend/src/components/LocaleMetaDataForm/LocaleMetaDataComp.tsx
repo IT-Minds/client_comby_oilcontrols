@@ -76,9 +76,9 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
     tankType: -1,
     fuelType: -1,
     daysBetweenRefills: 0,
-    baseDebtorId: -1,
-    mainDebtorId: -1,
-    upcomingDebtorId: -1,
+    baseDebtorId: null,
+    mainDebtorId: null,
+    upcomingDebtorId: null,
     ...localeMetaData
   });
 
