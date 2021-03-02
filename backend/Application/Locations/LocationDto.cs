@@ -19,6 +19,7 @@ namespace Application.Locations
     public int? MainDebtorId { get; set; }
     public int? BaseDebtorId { get; set; }
     public int? UpcomingDebtorId { get; set; }
+    public DateTime? InactiveSince { get; set; }
 
     public DateTime? DebtorChangeDate { get; set; }
 

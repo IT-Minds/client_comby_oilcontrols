@@ -20,7 +20,7 @@ import DebtorSelector from "components/DebtorSelector/DebtorSelector";
 import StreetSelector from "components/StreetSelector/StreetSelector";
 import { useEffectAsync } from "hooks/useEffectAsync";
 import { useI18n } from "next-rosetta";
-import React, { FC, FormEvent, useCallback, useState } from "react";
+import React, { FC, FormEvent, useCallback, useEffect, useState } from "react";
 import { MdCheck } from "react-icons/md";
 import {
   FuelTypeRecord,
@@ -56,6 +56,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
   const [baseDebtorId, setBaseDebtorId] = useState(null);
   const [upcomingDebtorId, setUpcomingDebtorId] = useState(null);
   const [debtorDate, setDebtorDate] = useState(new Date());
+  const [inactiveDate, setInactiveDate] = useState(null);
   const [image, setImage] = useState<File>(null);
   const [locale, setLocale] = useState<globalThis.Locale>();
 
@@ -79,6 +80,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
     baseDebtorId: null,
     mainDebtorId: null,
     upcomingDebtorId: null,
+    inactiveSince: null,
     ...localeMetaData
   });
 
@@ -88,6 +90,11 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
     const lang = await getLocale();
     setLocale(lang);
   }, []);
+
+  useEffect(() => {
+    setDebtorDate(localeMetaData.debtorChangeDate);
+    setInactiveDate(localeMetaData.inactiveSince);
+  }, [localeMetaData]);
 
   const updateLocalForm = useCallback((value: unknown, key: keyof typeof localForm) => {
     setLocalForm(form => {
@@ -111,14 +118,25 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
       setDebtors(baseDebtorId, LocationDebtorType.BASE, localForm.baseDebtorId);
       setDebtors(upcomingDebtorId, LocationDebtorType.UPCOMING, localForm.upcomingDebtorId);
 
+      localForm.inactiveSince = inactiveDate;
+
       submitCallback(localForm, addDebtors, updateDebtors, removeDebtors, image);
       setFormSubmitAttempts(0);
     },
-    [submitCallback, localForm, mainDebtorId, baseDebtorId, upcomingDebtorId, debtorDate, image]
+    [
+      submitCallback,
+      localForm,
+      mainDebtorId,
+      baseDebtorId,
+      upcomingDebtorId,
+      debtorDate,
+      image,
+      inactiveDate
+    ]
   );
 
   const setDebtors = (debtorId: number, debtorType: LocationDebtorType, originalId: number) => {
-    if (debtorId > 0 && originalId === 0) {
+    if (debtorId > 0 && (originalId === null || originalId === 0)) {
       addDebtors.push(
         new AddDebtorToLocationCommand({
           debtorId,
@@ -255,6 +273,16 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
               value={localForm.daysBetweenRefills}
             />
             <FormErrorMessage>{t("localeMetaData.formErrors.daysBetween")}</FormErrorMessage>
+          </FormControl>
+
+          <FormControl>
+            <FormLabel>{t("localeMetaData.inactiveSince")}:</FormLabel>
+            <DatePicker
+              locale={locale}
+              selectedDate={inactiveDate}
+              onChange={(x: Date) => setInactiveDate(x)}
+              showPopperArrow={false}
+            />
           </FormControl>
 
           <FormControl>

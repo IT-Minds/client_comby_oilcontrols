@@ -48,7 +48,8 @@ namespace Application.Locations.Commands.CreateLocation
           EstimateFuelConsumption = request.Data.EstimateFuelConsumption,
           DaysBetweenRefills = request.Data.DaysBetweenRefills,
           TankType = request.Data.TankType,
-          TankNumber = request.Data.BSTNumber
+          TankNumber = request.Data.BSTNumber,
+          InactiveSince = null
         };
 
         var locationDebtors = new List<LocationDebtor>();

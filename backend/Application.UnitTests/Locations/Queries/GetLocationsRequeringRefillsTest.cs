@@ -23,7 +23,7 @@ namespace Application.UnitTests.Locations.Queries
     }
 
 
-    [Fact(Skip="Something weird going on with the DateTime")]
+    [Fact(Skip = "Something weird going on with the DateTime")]
     public async Task Handle_ReturnAwaitRefills()
     {
       var query = new GetLocationRequiringRefill
