@@ -58,12 +58,6 @@ namespace Application
         o => o.SyncLocationsToRefills(CancellationToken.None), "0 * * * *"
       );
 
-      app.UseHangfireDashboard("/hangfire"
-        , new DashboardOptions
-        {
-          Authorization = new[] { new DashboardNoAuthorizationFilter() }
-        });
-
       app.UseEndpoints(endpoints =>
       {
         endpoints.MapHangfireDashboard();
@@ -71,10 +65,5 @@ namespace Application
 
       return app;
     }
-  }
-
-  class DashboardNoAuthorizationFilter : IDashboardAuthorizationFilter
-  {
-    public bool Authorize(DashboardContext dashboardContext) => true;
   }
 }
