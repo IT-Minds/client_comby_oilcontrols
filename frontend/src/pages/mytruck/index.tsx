@@ -117,7 +117,7 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
   );
 
   useEffectAsync(async () => {
-    const truck: TruckInfoDetailsDto = (await getTruck(truckInfo.id)).toJSON();
+    const truck: TruckInfoDetailsDto = await getTruck(truckInfo.id);
     setTruck(truck);
   }, []);
 
@@ -245,7 +245,7 @@ export const getServerSideProps: GetServerSideProps<Props & I18nProps<Locale>> =
 
   const truckClient = await genTruckClient();
 
-  const truckInfo = (await getTruck(me.truckId)).toJSON(); // await truckClient.getTruck(me.truckId).then(x => x.toJSON());
+  const truckInfo = await truckClient.getTruck(me.truckId).then(x => x.toJSON());
   const coupons = await truckClient.getTrucksCoupons(me.truckId).then(
     x => x.results.map(y => y.toJSON()),
     () => []
