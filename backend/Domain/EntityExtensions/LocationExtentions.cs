@@ -1,8 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Domain.Entities;
-using Domain.Entities.Refills;
+using Domain.Enums;
 
 namespace Domain.EntityExtensions
 {
@@ -66,6 +65,10 @@ namespace Domain.EntityExtensions
     /// <returns>DateTime </returns>
     public static DateTime PredictDayReachingMinimumFuelLevel(this Location location, int maxDays = 7)
     {
+      if (location.Schedule != RefillSchedule.AUTOMATIC) {
+        return DateTime.UtcNow; // TODO make logic for interval and manual?
+      }
+
       double limit = location.FuelTank.MinimumFuelAmount;
       var newestRefill = location.CompletedRefills.OrderBy(x => x.ActualDeliveryDate).LastOrDefault();
 
@@ -75,10 +78,10 @@ namespace Domain.EntityExtensions
       }
 
       var fuelAmount = newestRefill.EndAmount;
-      double fuelConsumption;
+      double fuelConsumptionPerDegree;
       try
       {
-        fuelConsumption = location.FuelConsumptionPerDegreeOfHeating();
+        fuelConsumptionPerDegree = location.FuelConsumptionPerDegreeOfHeating();
       }
       catch
       {
@@ -100,7 +103,7 @@ namespace Domain.EntityExtensions
         {
           heatdegree = HEAT_BASE; // TODO default / fallback temperature
         }
-        var fuelConsumed = heatdegree * fuelConsumption;
+        var fuelConsumed = heatdegree * fuelConsumptionPerDegree;
         fuelAmount = fuelAmount - fuelConsumed;
         count++;
       }

@@ -55,14 +55,9 @@ namespace Application.Locations.Commands.AddLocationImage
 
         try
         {
-          if (System.IO.File.Exists(filePath))
-          {
-            throw new ArgumentException("Image with " + request.LocationId + " already exists.");
-          }
-
           using (Stream fileStream = new FileStream(filePath, FileMode.Create))
           {
-            await request.Picture.CopyToAsync(fileStream);
+            await request.Picture.CopyToAsync(fileStream, cancellationToken);
           }
         }
         catch

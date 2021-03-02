@@ -170,14 +170,14 @@ namespace Web
 
       app.UseRouting();
 
+      app.UseAuthentication();
+      app.UseAuthorization();
+
       app.UseHangfireDashboard("/hangfire"
         , new DashboardOptions
         {
           Authorization = new[] { new DashboardNoAuthorizationFilter() }
         });
-
-      app.UseAuthentication();
-      app.UseAuthorization();
 
       app.UseEndpoints(endpoints =>
       {
@@ -192,6 +192,7 @@ namespace Web
       app.AddApplication(backgroundJobs);
     }
   }
+
   class DashboardNoAuthorizationFilter : IDashboardAuthorizationFilter
   {
     public bool Authorize(DashboardContext dashboardContext) => true;

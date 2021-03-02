@@ -410,9 +410,9 @@ export const table: Locale = {
 
   enums: {
     fuelType: {
-      "0": "Oil",
+      "0": "Gasoline",
       "1": "Petroleum",
-      "2": "Gasoline",
+      "2": "Diesel",
       "3": "Other"
     },
     interval: {

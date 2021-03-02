@@ -16,6 +16,7 @@ import { RefillForm } from "components/FillOutRefillForm/RefillForm";
 import InvalidateCouponBtn from "components/InvalidateCouponBtn/InvalidateCouponBtn";
 import RunListTable from "components/RunList/RunListTable";
 import { TOKEN_STORAGE_KEY } from "hooks/useAuth";
+import { useEffectAsync } from "hooks/useEffectAsync";
 import { useOffline } from "hooks/useOffline";
 import { runTimeTable } from "i18n/runtimeTable";
 import { GetServerSideProps, NextPage } from "next";
@@ -34,6 +35,7 @@ import {
   CouponIdDto,
   CreateTruckRefillCommand,
   ILocationRefillDto,
+  ITruckInfoDetailsDto,
   TankState,
   TruckInfoDetailsDto,
   UserIdDto
@@ -50,12 +52,19 @@ type Props = {
   viewOnly?: boolean;
 };
 
+const getTruck = async (id: number): Promise<TruckInfoDetailsDto> => {
+  const client = await genTruckClient();
+  return await client.getTruck(id);
+};
+
 const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
   const { t } = useI18n<Locale>();
   const { locale } = useRouter();
 
   const [refillingLocation, setRefillingLocation] = useState<ILocationRefillDto>(null);
   const [truckCoupons, setTruckCoupons] = useState<CouponIdDto[]>([]);
+
+  const [truck, setTruck] = useState<ITruckInfoDetailsDto>({});
 
   const { awaitCallback, isOnline } = useOffline();
   const toast = useToast();
@@ -107,6 +116,11 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
     [awaitCallback, refillingLocation]
   );
 
+  useEffectAsync(async () => {
+    const truck: TruckInfoDetailsDto = await getTruck(truckInfo.id);
+    setTruck(truck);
+  }, []);
+
   const completeTruckRefuel = useCallback((form: TruckRefuelForm) => {
     awaitCallback(async () => {
       const client = await genTruckClient();
@@ -119,6 +133,9 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
           timeStamp: form.date
         })
       );
+
+      const truck: TruckInfoDetailsDto = (await getTruck(truckInfo.id)).toJSON();
+      setTruck(truck);
     }, "asd");
   }, []);
 
@@ -127,7 +144,7 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
       <Head>
         <title>
           {t("mytruck.title", {
-            id: truckInfo.id
+            id: truck.id
           })}
         </title>
       </Head>
@@ -142,7 +159,7 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
       )}
       <Heading>
         {t("mytruck.heading", {
-          id: truckInfo.id
+          id: truck.id
         })}
       </Heading>
 
@@ -173,14 +190,14 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
               fontSize="0.8em"
               mb={1}
               colorScheme={
-                truckInfo.currentTankLevel > 4000
+                truck.currentTankLevel > 4000
                   ? "green"
-                  : truckInfo.currentTankLevel > 2000
+                  : truck.currentTankLevel > 2000
                   ? "yellow"
                   : "red"
               }>
               {t("mytruck.tank.liters", {
-                liters: formatter.format(truckInfo.currentTankLevel)
+                liters: formatter.format(truck.currentTankLevel)
               })}
             </Badge>
           </Text>
@@ -228,7 +245,7 @@ export const getServerSideProps: GetServerSideProps<Props & I18nProps<Locale>> =
 
   const truckClient = await genTruckClient();
 
-  const truckInfo = await truckClient.getTruck(me.truckId).then(x => x.toJSON());
+  const truckInfo = (await getTruck(me.truckId)).toJSON(); // await truckClient.getTruck(me.truckId).then(x => x.toJSON());
   const coupons = await truckClient.getTrucksCoupons(me.truckId).then(
     x => x.results.map(y => y.toJSON()),
     () => []

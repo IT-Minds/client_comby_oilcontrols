@@ -12,6 +12,7 @@ using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Builder;
 using System.Threading;
+using Hangfire.Dashboard;
 
 namespace Application
 {
@@ -57,8 +58,12 @@ namespace Application
         o => o.SyncLocationsToRefills(CancellationToken.None), "0 * * * *"
       );
 
+      app.UseEndpoints(endpoints =>
+      {
+        endpoints.MapHangfireDashboard();
+      });
+
       return app;
     }
   }
-
 }

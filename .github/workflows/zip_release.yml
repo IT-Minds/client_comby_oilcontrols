@@ -74,7 +74,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
 
       - name: Set up Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v2.1.4
+        uses: actions/setup-node@v2.1.5
         with:
           node-version: ${{ env.node-version }}
 

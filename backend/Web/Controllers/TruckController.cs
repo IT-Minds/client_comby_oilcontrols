@@ -74,7 +74,7 @@ namespace Web.Controllers
     }
 
     [HttpGet("{id}/runList")]
-    [ResponseCache(Duration = 43200)] // 12 hour cache
+    // [ResponseCache(Duration = 43200)] // 12 hour cache
     public async Task<ActionResult<IList<LocationRefillDto>>> GetTrucksRefills([FromRoute] int id)
     {
       return await Mediator.Send(new GetLocationRequiringRefill

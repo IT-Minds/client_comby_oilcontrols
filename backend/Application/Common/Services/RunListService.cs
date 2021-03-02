@@ -21,9 +21,9 @@ namespace Application.Common.Services
       _context = context;
     }
 
-    private async Task<List<AssignedRefill>> GetAutomaticRefills()
+    private async Task<IEnumerable<AssignedRefill>> GetAutomaticRefills()
     {
-      var nextWeek = DateTimeOffset.UtcNow.AddDays(14);
+      var dateLimit = DateTimeOffset.UtcNow.AddDays(14);
 
       var locations = await _context.Locations
         .Include(x => x.Refills)
@@ -33,23 +33,28 @@ namespace Application.Common.Services
         .Where(x =>
           x.Schedule == RefillSchedule.AUTOMATIC &&
           !x.Refills.Any(r => r.RefillState == RefillState.ASSIGNED) // Can't have an upcoming Refill.
-
         )
         .ToListAsync();
 
-      var refills = locations
-        .Where(x => DateTimeOffset.Compare(x.PredictDayReachingMinimumFuelLevel(7), nextWeek) <= 0)
+      var preFilter = locations
         .Select(location => new AssignedRefill
         {
           Location = location,
-          ExpectedDeliveryDate = location.PredictDayReachingMinimumFuelLevel(7),
+          ExpectedDeliveryDate = location.PredictDayReachingMinimumFuelLevel(365),
           RefillState = RefillState.ASSIGNED
-        }).ToList();
+        });
+
+      foreach (var item in preFilter)
+      {
+        System.Console.WriteLine("Location Auto date " + item.Id + " - " + item.ExpectedDeliveryDate.ToShortDateString());
+      }
+
+      var refills = preFilter.Where(x => DateTimeOffset.Compare(x.ExpectedDeliveryDate, dateLimit) <= 0);
 
       return refills;
     }
 
-    private async Task<List<AssignedRefill>> GetIntervalRefills()
+    private async Task<IEnumerable<AssignedRefill>> GetIntervalRefills()
     {
       var now = DateTimeOffset.UtcNow;
 
@@ -117,7 +122,7 @@ namespace Application.Common.Services
       .ToListAsync();
 
       var rand = new Random();
-      trucks.OrderBy(x => rand.Next());
+      trucks = trucks.OrderBy(x => rand.Next()).ToList();
 
       var truckCount = 0;
       foreach (var refill in refills)
@@ -147,5 +152,4 @@ namespace Application.Common.Services
     public int Id { get; set; }
     public int LocationId { get; set; }
   }
-
 }
