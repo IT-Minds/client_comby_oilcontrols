@@ -5,7 +5,7 @@ import { ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui
 import { Select, useDisclosure, VStack } from "@chakra-ui/react";
 import CameraComp from "components/Camera/CameraComponent";
 import { useI18n } from "next-rosetta";
-import React, { FC, FormEvent, useCallback, useState } from "react";
+import React, { FC, FormEvent, useCallback, useEffect, useState } from "react";
 import { MdCheck, MdPhotoCamera, MdRemoveRedEye, MdRepeat } from "react-icons/md";
 import { FuelTypeRecord } from "services/backend/ext/enumConvertor";
 import { FuelType } from "services/backend/nswagts";
@@ -31,6 +31,13 @@ const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) =>
     isSpecialFill: false,
     image: ""
   });
+
+  useEffect(() => {
+    setLocalReportForm(form => {
+      (form.couponNumber as unknown) = couponNumbers[0]?.name ?? "";
+      return form;
+    });
+  }, [couponNumbers]);
 
   const [isTakingPic, setIsTakingPic] = useState(false);
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
