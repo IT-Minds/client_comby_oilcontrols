@@ -101,6 +101,7 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
               fileName: "temp.webp"
             });
           }
+          setRefillingLocation(null);
           toast({
             title: t("toast.locationRefill"),
             description: t("toast.successful"),
@@ -118,8 +119,6 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
           });
         }
       }, Date.now().toString());
-
-      setRefillingLocation(null);
     },
     [awaitCallback, refillingLocation]
   );
