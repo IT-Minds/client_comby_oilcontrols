@@ -178,6 +178,7 @@ export const table: Locale = {
     refillSchedule: "Genopfyldningsplan:",
     daysBetweenRefill: "Dage mellem genopfyldninger:",
     numberOfDays: "# dage",
+    inactiveSince: "Inaktiv dato",
     comment: "Kommentar",
     comments: "Kommentarer:",
     selectAnImage: "Vælg et billede af tanklokationen",

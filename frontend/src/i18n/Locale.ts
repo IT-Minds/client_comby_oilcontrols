@@ -173,6 +173,7 @@ export interface Locale {
     refillSchedule: string;
     daysBetweenRefill: string;
     numberOfDays: string;
+    inactiveSince: string;
     comment: string;
     comments: string;
     selectAnImage: string;

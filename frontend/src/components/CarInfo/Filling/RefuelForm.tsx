@@ -1,11 +1,9 @@
 import {
   Button,
   Center,
-  Container,
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -17,6 +15,7 @@ import {
   Select,
   useDisclosure
 } from "@chakra-ui/react";
+import DatePicker from "components/DatePicker/DatePicker";
 import { useRouter } from "next/router";
 import { useI18n } from "next-rosetta";
 import React, { FC, useCallback, useState } from "react";
@@ -36,12 +35,12 @@ const RefuelForm: FC<Props> = ({ fillData }) => {
   const { t } = useI18n<Locale>();
   const { locale } = useRouter();
 
-  const formatter = Intl.DateTimeFormat(locale);
+  const [date, setDate] = useState(new Date());
 
   const [localFillingForm, setLocalFillingForm] = useState<TruckRefuelForm>({
     fillAmount: null,
     cardNumber: null,
-    date: new Date(),
+    date: null,
     fuelType: null
   });
 
@@ -54,10 +53,11 @@ const RefuelForm: FC<Props> = ({ fillData }) => {
 
   const addFilling = useCallback(() => {
     if (localFillingForm.fillAmount && localFillingForm.cardNumber && localFillingForm.fuelType) {
+      localFillingForm.date = date;
       fillData(localFillingForm);
       onClose();
     }
-  }, [localFillingForm]);
+  }, [localFillingForm, date]);
 
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
 
@@ -110,9 +110,14 @@ const RefuelForm: FC<Props> = ({ fillData }) => {
               </NumberInput>
               <FormErrorMessage>{t("mytruck.refuel.formErrors.enterCardNumber")}</FormErrorMessage>
             </FormControl>
-            <FormControl isReadOnly>
+            <FormControl>
               <FormLabel>{t("mytruck.refuel.date")}</FormLabel>
-              <Input value={formatter.format(new Date(localFillingForm.date))} />
+              <DatePicker
+                locale={locale}
+                selectedDate={date}
+                onChange={(date: Date) => setDate(date)}
+                showPopperArrow={false}
+              />
               <FormErrorMessage>{t("mytruck.refuel.formErrors.chooseDate")}</FormErrorMessage>
             </FormControl>
 

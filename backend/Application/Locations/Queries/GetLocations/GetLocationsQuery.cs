@@ -40,7 +40,7 @@ namespace Application.Locations.Queries.GetLocations
     {
       var partial = query
         .OrderByDescending(x => x.Created)
-        .Where(x => x.Created < Needle);
+        .Where(x => (x.InactiveSince == null || x.InactiveSince >= DateTime.Now) && x.Created < Needle);
 
       if (TankType.HasValue)
       {
@@ -73,11 +73,7 @@ namespace Application.Locations.Queries.GetLocations
 
         var query = request.PreparePage(
           _context.Locations
-    ///    * Location
-    ///   * Refills
-    ///   * FuelTank
-    ///   * Region
-    ///     * DailyTemperatures
+          .Include(x=> x.Debtors)
           .Include(x => x.FuelTank)
           .Include(x => x.Refills)
           .Include(x => x.Region)

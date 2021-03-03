@@ -117,7 +117,7 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
   );
 
   useEffectAsync(async () => {
-    const truck: TruckInfoDetailsDto = (await getTruck(truckInfo.id)).toJSON();
+    const truck: TruckInfoDetailsDto = await getTruck(truckInfo.id);
     setTruck(truck);
   }, []);
 

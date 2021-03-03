@@ -3478,6 +3478,7 @@ export class LocationDto implements ILocationDto {
     mainDebtorId?: number | null;
     baseDebtorId?: number | null;
     upcomingDebtorId?: number | null;
+    inactiveSince?: Date | null;
     debtorChangeDate?: Date | null;
 
     constructor(data?: ILocationDto) {
@@ -3501,6 +3502,7 @@ export class LocationDto implements ILocationDto {
             this.mainDebtorId = _data["mainDebtorId"] !== undefined ? _data["mainDebtorId"] : <any>null;
             this.baseDebtorId = _data["baseDebtorId"] !== undefined ? _data["baseDebtorId"] : <any>null;
             this.upcomingDebtorId = _data["upcomingDebtorId"] !== undefined ? _data["upcomingDebtorId"] : <any>null;
+            this.inactiveSince = _data["inactiveSince"] ? new Date(_data["inactiveSince"].toString()) : <any>null;
             this.debtorChangeDate = _data["debtorChangeDate"] ? new Date(_data["debtorChangeDate"].toString()) : <any>null;
         }
     }
@@ -3524,6 +3526,7 @@ export class LocationDto implements ILocationDto {
         data["mainDebtorId"] = this.mainDebtorId !== undefined ? this.mainDebtorId : <any>null;
         data["baseDebtorId"] = this.baseDebtorId !== undefined ? this.baseDebtorId : <any>null;
         data["upcomingDebtorId"] = this.upcomingDebtorId !== undefined ? this.upcomingDebtorId : <any>null;
+        data["inactiveSince"] = this.inactiveSince ? this.inactiveSince.toISOString() : <any>null;
         data["debtorChangeDate"] = this.debtorChangeDate ? this.debtorChangeDate.toISOString() : <any>null;
         return data; 
     }
@@ -3540,6 +3543,7 @@ export interface ILocationDto {
     mainDebtorId?: number | null;
     baseDebtorId?: number | null;
     upcomingDebtorId?: number | null;
+    inactiveSince?: Date | null;
     debtorChangeDate?: Date | null;
 }
 
