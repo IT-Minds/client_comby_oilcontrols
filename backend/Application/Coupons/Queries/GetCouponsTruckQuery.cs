@@ -67,7 +67,8 @@ namespace Application.Coupons.Queries.GetCoupons.Truck
         var page = new PageResult<CouponIdDto, int>();
 
         var baseQuery = _context.Coupons
-          .Where(x => x.TruckId == request.TruckId);
+          .Where(x => x.TruckId == request.TruckId)
+          .Where(x => x.Status != CouponStatus.USED);
 
         if (!request.IncludeDestroyedCoupons)
         {
