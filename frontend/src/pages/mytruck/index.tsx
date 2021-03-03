@@ -63,6 +63,7 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
 
   const [refillingLocation, setRefillingLocation] = useState<ILocationRefillDto>(null);
   const [truckCoupons, setTruckCoupons] = useState<CouponIdDto[]>([]);
+  const [truckId, setTruckId] = useState<number>(9999);
 
   const [truck, setTruck] = useState<ITruckInfoDetailsDto>({});
 
@@ -102,6 +103,7 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
             });
           }
           setRefillingLocation(null);
+          reloadTruckList();
           toast({
             title: t("toast.locationRefill"),
             description: t("toast.successful"),
@@ -123,9 +125,16 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
     [awaitCallback, refillingLocation]
   );
 
+  const reloadTruckList = () => {
+    //Dummy ID to trigger state change
+    setTruckId(9999);
+    setTruckId(truckInfo.id);
+  };
+
   useEffectAsync(async () => {
     const truck: TruckInfoDetailsDto = await getTruck(truckInfo.id);
     setTruck(truck);
+    setTruckId(truckInfo.id);
   }, []);
 
   const completeTruckRefuel = useCallback((form: TruckRefuelForm) => {
@@ -209,7 +218,7 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
             </Badge>
           </Text>
           <RunListTable
-            truckId={truckInfo.id}
+            truckId={truckId}
             refillCb={obj => {
               fetchCoupons();
               setRefillingLocation(obj);
