@@ -54,6 +54,7 @@ export interface Locale {
 
   toast: {
     successful: string;
+    error: string;
     updateDebtor: string;
     createTruck: string;
     createLocation: string;
@@ -62,6 +63,7 @@ export interface Locale {
     updateRole: string;
     createTemperature: string;
     deleteUser: string;
+    locationRefill: string;
   };
 
   coupons: {
