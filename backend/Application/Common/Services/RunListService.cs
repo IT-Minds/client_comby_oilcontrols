@@ -84,28 +84,6 @@ namespace Application.Common.Services
       return refills;
     }
 
-    private async Task<List<AssignedRefill>> GetManualRefills()
-    {
-      var now = DateTimeOffset.UtcNow;
-
-      var locationToRefill = await _context.Locations
-        .Include(x => x.Refills)
-        .Where(x =>
-          x.Schedule == RefillSchedule.MANUAL &&
-          !x.Refills.Where(x => x.RefillState == RefillState.ASSIGNED).Any()
-        )
-        .ToListAsync();
-
-      var refills = locationToRefill.Select(location => new AssignedRefill
-      {
-        Location = location,
-        ExpectedDeliveryDate = now.AddDays(location.DaysBetweenRefills).DateTime,
-        RefillState = RefillState.ASSIGNED
-      }).ToList();
-
-      return refills;
-    }
-
     public async Task<RunListDto[]> SyncLocationsToRefills(CancellationToken cancellationToken)
     {
       var existingRefills = await _context.AssignedRefills
@@ -116,7 +94,6 @@ namespace Application.Common.Services
       List<AssignedRefill> refills = new List<AssignedRefill>();
       refills.AddRange(await GetAutomaticRefills());
       refills.AddRange(await GetIntervalRefills());
-      // refills.AddRange(await GetManualRefills());
 
       refills = refills.Where(r => !existingRefills.Contains(r.Location.Id)).ToList();
 

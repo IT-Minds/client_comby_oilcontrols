@@ -5241,6 +5241,7 @@ export class LocationRefillDto implements ILocationRefillDto {
     expectedDeliveryDate?: Date;
     debtorBlocked?: boolean;
     bstNumber?: string | null;
+    comments?: string | null;
 
     constructor(data?: ILocationRefillDto) {
         if (data) {
@@ -5264,6 +5265,7 @@ export class LocationRefillDto implements ILocationRefillDto {
             this.expectedDeliveryDate = _data["expectedDeliveryDate"] ? new Date(_data["expectedDeliveryDate"].toString()) : <any>null;
             this.debtorBlocked = _data["debtorBlocked"] !== undefined ? _data["debtorBlocked"] : <any>null;
             this.bstNumber = _data["bstNumber"] !== undefined ? _data["bstNumber"] : <any>null;
+            this.comments = _data["comments"] !== undefined ? _data["comments"] : <any>null;
         }
     }
 
@@ -5287,6 +5289,7 @@ export class LocationRefillDto implements ILocationRefillDto {
         data["expectedDeliveryDate"] = this.expectedDeliveryDate ? this.expectedDeliveryDate.toISOString() : <any>null;
         data["debtorBlocked"] = this.debtorBlocked !== undefined ? this.debtorBlocked : <any>null;
         data["bstNumber"] = this.bstNumber !== undefined ? this.bstNumber : <any>null;
+        data["comments"] = this.comments !== undefined ? this.comments : <any>null;
         return data; 
     }
 }
@@ -5303,6 +5306,7 @@ export interface ILocationRefillDto {
     expectedDeliveryDate?: Date;
     debtorBlocked?: boolean;
     bstNumber?: string | null;
+    comments?: string | null;
 }
 
 export class CreateTruckRefillCommand implements ICreateTruckRefillCommand {

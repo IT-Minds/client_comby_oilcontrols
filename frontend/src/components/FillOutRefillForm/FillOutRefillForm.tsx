@@ -94,7 +94,7 @@ const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) =>
               placeholder={t("mytruck.refill.selectFuelType") as string}>
               {Object.entries(FuelTypeRecord).map(([a, b]) => (
                 <option key={b} value={b}>
-                  {capitalize(a)}
+                  {t("enums.fuelType." + b)}
                 </option>
               ))}
             </Select>

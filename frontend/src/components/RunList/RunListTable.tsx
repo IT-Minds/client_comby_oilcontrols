@@ -148,7 +148,7 @@ const RunListTable: FC<Props> = ({ truckId, refillCb }) => {
         {refills.sort(sort).map(row => (
           <Tr key={row.refillId}>
             <Td hidden={!isPrinting && cols < 4}>{row.bstNumber}</Td>
-            <Td hidden={!isPrinting && cols < 4}>DATA MISSING</Td>
+            <Td hidden={!isPrinting && cols < 4}>{row.comments}</Td>
             <Td hidden={!isPrinting && cols < 4}>{row.debtorBlocked.toString()}</Td>
             <Td>
               {row.address} {row.addressExtra}
