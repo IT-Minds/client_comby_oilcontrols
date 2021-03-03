@@ -12,6 +12,7 @@ namespace Infrastructure.Persistence.Migrations
                 table: "Locations",
                 type: "datetime2",
                 nullable: true,
+                defaultValue: null,
                 oldClrType: typeof(DateTime),
                 oldType: "datetime2");
         }

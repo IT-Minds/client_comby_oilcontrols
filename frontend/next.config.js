@@ -30,31 +30,31 @@ try {
 
 module.exports = withBundleAnalyzer(
   withPWA({
+    workboxOpts: {
+      runtimeCaching: [
+        {
+          urlPattern: /.js$/,
+          handler: "CacheFirst"
+        },
+        {
+          urlPattern: /^https?.*/,
+          handler: "NetworkFirst",
+          options: {
+            cacheableResponse: {
+              statuses: [0, 200]
+            },
+            expiration: {
+              maxEntries: 200
+            }
+          }
+        }
+      ]
+    },
     pwa: {
       disable: process.env.NODE_ENV === "development",
       register: false,
       skipWaiting: true,
-      dest: "public",
-      workboxOps: {
-        runtimeCaching: [
-          {
-            urlPattern: /.js$/,
-            handler: "CacheFirst"
-          },
-          {
-            urlPattern: /^https?.*/,
-            handler: "NetworkFirst",
-            options: {
-              cacheableResponse: {
-                statuses: [0, 200]
-              },
-              expiration: {
-                maxEntries: 200
-              }
-            }
-          }
-        ]
-      }
+      dest: "public"
     },
     i18n: {
       locales,
