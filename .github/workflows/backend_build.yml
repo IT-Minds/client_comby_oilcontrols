@@ -1,12 +1,6 @@
 name: Full Backend Build, Format, and Test
 
 on:
-  push:
-    paths:
-      - "backend/**"
-    branches:
-      - main
-
   pull_request:
     paths:
       - "backend/**"

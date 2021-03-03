@@ -1,12 +1,6 @@
 name: Full Frontend Build, Format, and Test
 
 on:
-  push:
-    paths:
-      - "frontend/**"
-    branches:
-      - main
-
   pull_request:
     paths:
       - "frontend/**"
