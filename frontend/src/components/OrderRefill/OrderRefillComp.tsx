@@ -14,6 +14,7 @@ import DatePicker from "components/DatePicker/DatePicker";
 import TruckSelector from "components/TruckSelector/TruckSelector";
 import { useEffectAsync } from "hooks/useEffectAsync";
 import { Locale } from "i18n/Locale";
+import { useRouter } from "next/router";
 import { useI18n } from "next-rosetta";
 import React, { FC, useCallback, useRef, useState } from "react";
 import { MdInput } from "react-icons/md";
@@ -32,14 +33,15 @@ const OrderRefillComp: FC<Props> = ({ submitCallback, locationId }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [refillDate, setRefillDate] = useState<Date>(new Date());
   const [truck, setTruck] = useState<ITruckInfoIdDto>(null);
-  const [locale, setLocale] = useState<globalThis.Locale>();
+  const [datelocale, setLocale] = useState<globalThis.Locale>();
 
+  const { locale } = useRouter();
   const { t } = useI18n<Locale>();
 
   useEffectAsync(async () => {
-    const lang = await getLocale();
+    const lang = await getLocale(locale);
     setLocale(lang);
-  }, []);
+  }, [locale]);
 
   const postOrderRefill = useCallback(() => {
     logger.debug("Submitting form OrderRefillComp");
@@ -72,7 +74,7 @@ const OrderRefillComp: FC<Props> = ({ submitCallback, locationId }) => {
               <VStack align="left">
                 <TruckSelector cb={setTruck} />
                 <DatePicker
-                  locale={locale}
+                  locale={datelocale}
                   selectedDate={refillDate}
                   onChange={(date: Date) => setRefillDate(date)}
                   showPopperArrow={false}

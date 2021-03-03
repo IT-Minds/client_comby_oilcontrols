@@ -19,6 +19,7 @@ import DatePicker from "components/DatePicker/DatePicker";
 import DebtorSelector from "components/DebtorSelector/DebtorSelector";
 import StreetSelector from "components/StreetSelector/StreetSelector";
 import { useEffectAsync } from "hooks/useEffectAsync";
+import { useRouter } from "next/router";
 import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useEffect, useState } from "react";
 import { MdCheck } from "react-icons/md";
@@ -51,6 +52,7 @@ type Props = {
 
 const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
   const { t } = useI18n<Locale>();
+  const { locale } = useRouter();
 
   const [mainDebtorId, setMainDebtorId] = useState(null);
   const [baseDebtorId, setBaseDebtorId] = useState(null);
@@ -58,7 +60,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
   const [debtorDate, setDebtorDate] = useState(new Date());
   const [inactiveDate, setInactiveDate] = useState(null);
   const [image, setImage] = useState<File>(null);
-  const [locale, setLocale] = useState<globalThis.Locale>();
+  const [dateLocale, setLocale] = useState<globalThis.Locale>();
 
   const addDebtors: AddDebtorToLocationCommand[] = [];
   const updateDebtors: UpdateDebtorOnLocationCommand[] = [];
@@ -87,9 +89,9 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
 
   useEffectAsync(async () => {
-    const lang = await getLocale();
+    const lang = await getLocale(locale);
     setLocale(lang);
-  }, []);
+  }, [locale]);
 
   useEffect(() => {
     setDebtorDate(localeMetaData.debtorChangeDate);
@@ -278,7 +280,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
           <FormControl>
             <FormLabel>{t("localeMetaData.inactiveSince")}:</FormLabel>
             <DatePicker
-              locale={locale}
+              locale={dateLocale}
               selectedDate={inactiveDate}
               onChange={(x: Date) => setInactiveDate(x)}
               showPopperArrow={false}
@@ -411,7 +413,7 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
             />
             <FormLabel>{t("localeMetaData.selectDate")}</FormLabel>
             <DatePicker
-              locale={locale}
+              locale={dateLocale}
               selectedDate={debtorDate}
               onChange={(date: Date) => setDebtorDate(date)}
               showPopperArrow={false}
