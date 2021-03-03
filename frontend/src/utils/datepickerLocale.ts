@@ -1,9 +1,6 @@
-import { useRouter } from "next/router";
-
-const getLocale = async (): Promise<globalThis.Locale> => {
-  const { locale } = useRouter();
-  const { datefns = {} } = await require("../i18n/" + locale);
-  return datefns;
+const getLocale = async (locale: string): Promise<globalThis.Locale> => {
+  const { dateFns = {} } = await import("../i18n/" + locale);
+  return dateFns;
 };
 
 export default getLocale;

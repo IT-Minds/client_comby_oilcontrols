@@ -84,8 +84,8 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
       awaitCallback(async () => {
         const client = await genRefillClient();
 
-        await Promise.allSettled([
-          client.complete(
+        try {
+          await client.complete(
             refillingLocation.refillId,
             new CompleteRefillCommand({
               couponNumber: Number(reportForm.couponNumber),
@@ -94,21 +94,29 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
               endAmount: reportForm.endliters,
               tankState: reportForm.isSpecialFill ? TankState.PARTIALLY_FILLED : TankState.FULL
             })
-          ),
-
-          client.saveCouponImage(refillingLocation.refillId, {
-            data: await urlToFile(reportForm.image, "temp.webp", "image/webp"),
-            fileName: "temp.webp"
-          })
-        ]);
-
-        toast({
-          title: "Location refill completed",
-          description: "Your location has been filled",
-          status: "success",
-          duration: 9000,
-          isClosable: true
-        });
+          );
+          if (reportForm.image) {
+            await client.saveCouponImage(refillingLocation.refillId, {
+              data: await urlToFile(reportForm.image, "temp.webp", "image/webp"),
+              fileName: "temp.webp"
+            });
+          }
+          toast({
+            title: t("toast.locationRefill"),
+            description: t("toast.successful"),
+            status: "success",
+            duration: 9000,
+            isClosable: true
+          });
+        } catch (err) {
+          toast({
+            title: t("toast.locationRefill"),
+            description: t("toast.error"),
+            status: "error",
+            duration: 9000,
+            isClosable: true
+          });
+        }
       }, Date.now().toString());
 
       setRefillingLocation(null);
