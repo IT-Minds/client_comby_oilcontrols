@@ -45,7 +45,6 @@ import { urlToFile } from "utils/urlToFile";
 
 import { Locale } from "../../i18n/Locale";
 import styles from "./index.module.css";
-import { catch } from "fetch-mock";
 
 type Props = {
   truckInfo: TruckInfoDetailsDto;
@@ -86,40 +85,38 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
         const client = await genRefillClient();
 
         try {
-        await client.complete(
-          refillingLocation.refillId,
-          new CompleteRefillCommand({
-            couponNumber: Number(reportForm.couponNumber),
-            actualDeliveryDate: new Date(),
-            startAmount: reportForm.startliters,
-            endAmount: reportForm.endliters,
-            tankState: reportForm.isSpecialFill ? TankState.PARTIALLY_FILLED : TankState.FULL
-          })
-        );
-        if (reportForm.image) {
-          await client.saveCouponImage(refillingLocation.refillId, {
-            data: await urlToFile(reportForm.image, "temp.webp", "image/webp"),
-            fileName: "temp.webp"
+          await client.complete(
+            refillingLocation.refillId,
+            new CompleteRefillCommand({
+              couponNumber: Number(reportForm.couponNumber),
+              actualDeliveryDate: new Date(),
+              startAmount: reportForm.startliters,
+              endAmount: reportForm.endliters,
+              tankState: reportForm.isSpecialFill ? TankState.PARTIALLY_FILLED : TankState.FULL
+            })
+          );
+          if (reportForm.image) {
+            await client.saveCouponImage(refillingLocation.refillId, {
+              data: await urlToFile(reportForm.image, "temp.webp", "image/webp"),
+              fileName: "temp.webp"
+            });
+          }
+          toast({
+            title: t("toast.locationRefill"),
+            description: t("toast.successful"),
+            status: "success",
+            duration: 9000,
+            isClosable: true
+          });
+        } catch (err) {
+          toast({
+            title: t("toast.locationRefill"),
+            description: t("toast.error"),
+            status: "error",
+            duration: 9000,
+            isClosable: true
           });
         }
-        toast({
-          title: t("toast.locationRefill"),
-          description: t("toast.successful"),
-          status: "success",
-          duration: 9000,
-          isClosable: true
-        });
-      } catch(err){
-        toast({
-          title: t("toast.locationRefill"),
-          description: t("toast.error"),
-          status: "error",
-          duration: 9000,
-          isClosable: true
-        });
-      }
-
-        
       }, Date.now().toString());
 
       setRefillingLocation(null);
