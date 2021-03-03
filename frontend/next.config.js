@@ -34,7 +34,27 @@ module.exports = withBundleAnalyzer(
       disable: process.env.NODE_ENV === "development",
       register: false,
       skipWaiting: true,
-      dest: "public"
+      dest: "public",
+      workboxOps: {
+        runtimeCaching: [
+          {
+            urlPattern: /.js$/,
+            handler: "CacheFirst"
+          },
+          {
+            urlPattern: /^https?.*/,
+            handler: "NetworkFirst",
+            options: {
+              cacheableResponse: {
+                statuses: [0, 200]
+              },
+              expiration: {
+                maxEntries: 200
+              }
+            }
+          }
+        ]
+      }
     },
     i18n: {
       locales,
