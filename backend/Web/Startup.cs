@@ -186,7 +186,7 @@ namespace Web
                   pattern: "{controller}/{action=Index}/{id?}");
 
         endpoints.MapHub<ExampleHub>("/examplehub");
-        endpoints.MapHangfireDashboard();
+        // endpoints.MapHangfireDashboard();
       });
 
       app.AddApplication(backgroundJobs);
