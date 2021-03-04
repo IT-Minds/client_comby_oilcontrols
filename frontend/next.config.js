@@ -30,31 +30,34 @@ try {
 
 module.exports = withBundleAnalyzer(
   withPWA({
-    workboxOpts: {
+    pwa: {
+      disable: process.env.NODE_ENV === "development",
+      register: false,
+      skipWaiting: true,
+      dest: "public",
       runtimeCaching: [
+        {
+          // MUST be the same as "start_url" in manifest.json
+          urlPattern: "/mytruck?thsort=t_address_ASC",
+          handler: "CacheFirst",
+          options: {
+            // don't change cache name
+            cacheName: "start-url"
+          }
+        },
         {
           urlPattern: /.js$/,
           handler: "CacheFirst"
         },
         {
-          urlPattern: /^https?.*/,
-          handler: "NetworkFirst",
-          options: {
-            cacheableResponse: {
-              statuses: [0, 200]
-            },
-            expiration: {
-              maxEntries: 200
-            }
-          }
+          urlPattern: /\/api\/.*$/i,
+          handler: "NetworkFirst"
+        },
+        {
+          urlPattern: /.*/i,
+          handler: "CacheFirst"
         }
       ]
-    },
-    pwa: {
-      disable: process.env.NODE_ENV === "development",
-      register: false,
-      skipWaiting: true,
-      dest: "public"
     },
     i18n: {
       locales,
