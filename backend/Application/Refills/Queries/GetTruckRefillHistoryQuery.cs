@@ -68,12 +68,10 @@ namespace Application.Refills.Queries
         var page = new PageResult<RefillDto, DateTimeOffset>();
 
         IQueryable<CompletedRefill> baseQuery = _context.CompletedRefills.AsQueryable()
-         // .Include(refill => refill.
          .Include(refill => refill.Coupon)
          .Include(refill => refill.Location)
-            .ThenInclude(location => location.FuelTank);
-        // .Where(l => l. == request.TruckId);
-
+            .ThenInclude(location => location.FuelTank)
+          .Where(x => x.TruckId == request.TruckId && x.RefillState == RefillState.COMPLETED);
 
         var query = request.PreparePage(baseQuery);
         var pagesRemaining = await request.PagesRemaining(query);
