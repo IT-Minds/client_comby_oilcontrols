@@ -30,8 +30,8 @@ namespace Application.Refills.Queries
     public IQueryable<CompletedRefill> PreparePage(IQueryable<CompletedRefill> query)
     {
       var partial = query
-            .OrderBy(x => x.Created)
-            .Where(x => x.Created > Needle);
+            .OrderByDescending(x => x.Created)
+            .Where(x => x.Created < Needle);
 
       if (Skip.HasValue)
       {
