@@ -16,9 +16,10 @@ import {
   useDisclosure
 } from "@chakra-ui/react";
 import DatePicker from "components/DatePicker/DatePicker";
+import { TruckContext } from "contexts/TruckContext";
 import { useRouter } from "next/router";
 import { useI18n } from "next-rosetta";
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useCallback, useContext, useState } from "react";
 import { GiGasPump } from "react-icons/gi";
 import { MdAdd } from "react-icons/md";
 import { FuelTypeRecord } from "services/backend/ext/enumConvertor";
@@ -26,15 +27,12 @@ import { FuelType } from "services/backend/nswagts";
 
 import { TruckRefuelForm } from "./TruckRefuelForm";
 
-type Props = {
-  fillData: (addCouponForm: TruckRefuelForm) => void;
-};
-
-const RefuelForm: FC<Props> = ({ fillData }) => {
+const RefuelForm: FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { t } = useI18n<Locale>();
   const { locale } = useRouter();
 
+  const { completeTruckRefuel, reloadData } = useContext(TruckContext);
   const [date, setDate] = useState(new Date());
 
   const [localFillingForm, setLocalFillingForm] = useState<TruckRefuelForm>({
@@ -51,10 +49,11 @@ const RefuelForm: FC<Props> = ({ fillData }) => {
     });
   }, []);
 
-  const addFilling = useCallback(() => {
+  const addFilling = useCallback(async () => {
     if (localFillingForm.fillAmount && localFillingForm.cardNumber && localFillingForm.fuelType) {
       localFillingForm.date = date;
-      fillData(localFillingForm);
+      await completeTruckRefuel(localFillingForm);
+      await reloadData();
       onClose();
     }
   }, [localFillingForm, date]);

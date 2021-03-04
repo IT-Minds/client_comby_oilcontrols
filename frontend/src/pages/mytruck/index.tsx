@@ -75,13 +75,12 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
 
     setRefills(refills);
     setTruckCoupons(coupons.results);
-
     setTruck(truck);
-  }, [truckInfo]);
+  }, []);
 
   useEffectAsync(async () => {
     await reloadData();
-  }, [reloadData]);
+  }, []);
 
   const completeLocationRefill = useCallback(
     async (reportForm: RefillForm, refillingLocation: ILocationRefillDto) => {
@@ -123,7 +122,7 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
         }
       }, Date.now().toString());
     },
-    [awaitCallback]
+    []
   );
 
   const completeTruckRefuel = useCallback(async (form: TruckRefuelForm) => {
@@ -197,8 +196,8 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
 
         {!viewOnly && (
           <HStack position="absolute" bottom={2} right={0}>
-            <RefuelForm fillData={completeTruckRefuel} />
-            <InvalidateCouponBtn data={coupons} />
+            <RefuelForm />
+            <InvalidateCouponBtn />
           </HStack>
         )}
       </TruckContext.Provider>
