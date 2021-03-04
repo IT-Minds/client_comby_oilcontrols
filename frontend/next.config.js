@@ -52,12 +52,31 @@ module.exports = withBundleAnalyzer(
           }
         },
         {
-          urlPattern: /.js$/,
-          handler: "CacheFirst"
+          urlPattern: /.js(on)?$/,
+          handler: "CacheFirst",
+          options: {
+            cacheName: "static-resources"
+          }
+        },
+        {
+          urlPattern: /\/_next\/image.*$/i,
+          handler: "CacheFirst",
+          options: {
+            cacheName: "next-images"
+          }
         },
         {
           urlPattern: /\/api\/.*$/i,
-          handler: "NetworkFirst"
+          handler: "NetworkFirst",
+          options: {
+            cacheName: "api",
+            fetchOptions: {
+              credentials: "include"
+            },
+            cacheableResponse: {
+              statuses: [200]
+            }
+          }
         },
         {
           urlPattern: /.*/i,
