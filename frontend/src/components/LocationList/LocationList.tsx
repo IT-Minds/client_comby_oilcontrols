@@ -127,13 +127,6 @@ const LocationList: FC<Props> = ({ data }) => {
               />
             </HStack>
           </Th>
-          <Th>
-            <HStack spacing={1}>
-              <Text>Næste påfyldning</Text>
-              <Spacer />
-              <QuerySortBtn queryKey="predictedFuelDate" sortCb={sortCb} />
-            </HStack>
-          </Th>
           <Th></Th>
         </Tr>
       </Thead>
@@ -149,7 +142,6 @@ const LocationList: FC<Props> = ({ data }) => {
             </Td>
             <Td>{dat.regionId}</Td>
             <Td>{RefillSchedule[dat.schedule]}</Td>
-            <Td>{dateTimeFormatter.format(dat.predictedFuelDate)}</Td>
             <Td>
               <HStack>
                 <EditLocationTriggerBtn data={dat} />

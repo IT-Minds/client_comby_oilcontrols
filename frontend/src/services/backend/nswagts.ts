@@ -3815,7 +3815,6 @@ export interface IPageResultOfLocationDetailsIdDtoAndDateTimeOffset {
 
 export class LocationDetailsIdDto extends LocationDetailsDto implements ILocationDetailsIdDto {
     id?: number;
-    predictedFuelDate?: Date;
 
     constructor(data?: ILocationDetailsIdDto) {
         super(data);
@@ -3825,7 +3824,6 @@ export class LocationDetailsIdDto extends LocationDetailsDto implements ILocatio
         super.init(_data);
         if (_data) {
             this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
-            this.predictedFuelDate = _data["predictedFuelDate"] ? new Date(_data["predictedFuelDate"].toString()) : <any>null;
         }
     }
 
@@ -3839,7 +3837,6 @@ export class LocationDetailsIdDto extends LocationDetailsDto implements ILocatio
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id !== undefined ? this.id : <any>null;
-        data["predictedFuelDate"] = this.predictedFuelDate ? this.predictedFuelDate.toISOString() : <any>null;
         super.toJSON(data);
         return data; 
     }
@@ -3847,7 +3844,6 @@ export class LocationDetailsIdDto extends LocationDetailsDto implements ILocatio
 
 export interface ILocationDetailsIdDto extends ILocationDetailsDto {
     id?: number;
-    predictedFuelDate?: Date;
 }
 
 export class PageResultOfLocationHistoryDtoAndString implements IPageResultOfLocationHistoryDtoAndString {
