@@ -10,7 +10,6 @@ import { MdCheck, MdPhotoCamera, MdRemoveRedEye, MdRepeat } from "react-icons/md
 import { FuelTypeRecord } from "services/backend/ext/enumConvertor";
 import { FuelType } from "services/backend/nswagts";
 import DropdownType from "types/DropdownType";
-import { capitalize } from "utils/capitalizeAnyString";
 import { formatInputNumber, parseInputToNumber } from "utils/formatNumber";
 import { logger } from "utils/logger";
 
@@ -27,7 +26,7 @@ const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) =>
     startliters: 0,
     endliters: 0,
     fuelType: null,
-    couponNumber: couponNumbers[0]?.name ?? "",
+    couponNumber: couponNumbers[0]?.name.toString() ?? "",
     isSpecialFill: false,
     image: ""
   });

@@ -1,64 +1,41 @@
 import { HStack, IconButton, Spacer, Table, useBreakpointValue } from "@chakra-ui/react";
 import { Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
+import RefillModalBtn from "components/FillOutRefillForm/RefillModalBtn";
 import LocationImageModal from "components/ImageModal/LocationImageModal";
 import QuerySortBtn, { Direction } from "components/SortFilter/QuerySortBtn";
-import { useEffectAsync } from "hooks/useEffectAsync";
+import { TruckContext } from "contexts/TruckContext";
 import { useRouter } from "next/router";
 import { useI18n } from "next-rosetta";
-import { FC, useCallback, useRef, useState } from "react";
-import { GiFuelTank } from "react-icons/gi";
+import { FC, useCallback, useContext, useRef, useState } from "react";
 import { MdPrint } from "react-icons/md";
 import { useReactToPrint } from "react-to-print";
-import { genTruckClient } from "services/backend/apiClients";
-import { FuelType, ILocationRefillDto, RefillSchedule } from "services/backend/nswagts";
+import { ILocationRefillDto, RefillSchedule } from "services/backend/nswagts";
 import { capitalize } from "utils/capitalizeAnyString";
-
-import data from "./data";
-
-type SelectRowCb = (obj: ILocationRefillDto) => void;
-
-type Props = {
-  truckId: number;
-  refillCb: SelectRowCb;
-};
 
 const defaultSort = (a: ILocationRefillDto, b: ILocationRefillDto) =>
   a.refillId > b.refillId ? 1 : -1;
 
-const RunListTable: FC<Props> = ({ truckId, refillCb }) => {
+const RunListTable: FC = () => {
   const { t } = useI18n<Locale>();
+  const { locale } = useRouter();
 
-  const [refills, setRefills] = useState<ILocationRefillDto[]>([]);
   const cols = useBreakpointValue({
     base: 1,
     sm: 2,
     md: 3,
     xl: 4
   });
-  const { locale } = useRouter();
 
-  useEffectAsync(async () => {
-    if (process.browser) {
-      const client = await genTruckClient();
-      client.setCacheableResponse();
-      const something = await client.getTrucksRefills(truckId).then(
-        x => x ?? [],
-        () => data
-      );
-      setRefills(something);
-    }
-  }, [truckId]);
+  const { refills } = useContext(TruckContext);
 
   const [sort, setSort] = useState<(a: ILocationRefillDto, b: ILocationRefillDto) => number>(
     () => defaultSort
   );
-
   const sortCb = useCallback((key: keyof ILocationRefillDto, direction: Direction) => {
     if (direction === null) {
       setSort(() => defaultSort);
       return;
     }
-
     const sortVal = direction === "ASC" ? 1 : -1;
     setSort(() => (a: ILocationRefillDto, b: ILocationRefillDto) =>
       a[key] > b[key] ? sortVal : -sortVal
@@ -158,13 +135,7 @@ const RunListTable: FC<Props> = ({ truckId, refillCb }) => {
             <Td>{row.expectedDeliveryDate.toLocaleDateString(locale)}</Td>
             <Td pl="0" hidden={isPrinting}>
               <HStack float="right">
-                <IconButton
-                  size="sm"
-                  colorScheme="orange"
-                  aria-label={"do something" + row.refillId}
-                  onClick={() => refillCb({ ...row })}
-                  icon={<GiFuelTank size={30} />}
-                />
+                <RefillModalBtn refill={row} />
                 <LocationImageModal location={row} />
               </HStack>
             </Td>

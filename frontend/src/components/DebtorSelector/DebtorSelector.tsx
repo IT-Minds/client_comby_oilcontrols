@@ -55,7 +55,7 @@ const DebtorSelector: FC<Props> = ({ cb, value }) => {
         if (x.id === "0") {
           cb({
             dbId: 0,
-            name: x.name
+            name: x.name.toString()
           });
         } else {
           const dto = debtors.find(s => s.dbId == Number(x.id));

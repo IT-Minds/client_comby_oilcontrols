@@ -1,20 +1,10 @@
-import {
-  Badge,
-  Box,
-  Collapse,
-  Heading,
-  HStack,
-  IconButton,
-  Text,
-  useToast,
-  VStack
-} from "@chakra-ui/react";
+import { Badge, Box, Heading, HStack, IconButton, Text, useToast, VStack } from "@chakra-ui/react";
 import RefuelForm from "components/CarInfo/Filling/RefuelForm";
 import { TruckRefuelForm } from "components/CarInfo/Filling/TruckRefuelForm";
-import FillOutRefillForm from "components/FillOutRefillForm/FillOutRefillForm";
 import { RefillForm } from "components/FillOutRefillForm/RefillForm";
 import InvalidateCouponBtn from "components/InvalidateCouponBtn/InvalidateCouponBtn";
 import RunListTable from "components/RunList/RunListTable";
+import { TruckContext } from "contexts/TruckContext";
 import { TOKEN_STORAGE_KEY } from "hooks/useAuth";
 import { useEffectAsync } from "hooks/useEffectAsync";
 import { useOffline } from "hooks/useOffline";
@@ -24,7 +14,6 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { I18nProps, useI18n } from "next-rosetta";
 import { useCallback, useState } from "react";
-import { MdArrowBack } from "react-icons/md";
 import {
   genAuthenticationClient,
   genRefillClient,
@@ -35,12 +24,10 @@ import {
   CouponIdDto,
   CreateTruckRefillCommand,
   ILocationRefillDto,
-  ITruckInfoDetailsDto,
   TankState,
   TruckInfoDetailsDto,
   UserIdDto
 } from "services/backend/nswagts";
-import DropdownType from "types/DropdownType";
 import { urlToFile } from "utils/urlToFile";
 
 import { Locale } from "../../i18n/Locale";
@@ -60,28 +47,31 @@ const getTruck = async (id: number): Promise<TruckInfoDetailsDto> => {
 const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
   const { t } = useI18n<Locale>();
   const { locale } = useRouter();
-
-  const [refillingLocation, setRefillingLocation] = useState<ILocationRefillDto>(null);
-  const [truckCoupons, setTruckCoupons] = useState<CouponIdDto[]>([]);
-  const [truckId, setTruckId] = useState<number>(9999);
-
-  const [truck, setTruck] = useState<ITruckInfoDetailsDto>({});
-
-  const { awaitCallback, isOnline } = useOffline();
-  const toast = useToast();
-
   const formatter = Intl.NumberFormat(locale, {
     minimumFractionDigits: 2
   });
 
-  const fetchCoupons = async () => {
-    const truckClient = await genTruckClient();
-    const coupons = await truckClient.getTrucksCoupons(truckInfo.id);
+  const [refills, setRefills] = useState<ILocationRefillDto[]>([]);
+  const [truckCoupons, setTruckCoupons] = useState<CouponIdDto[]>(coupons);
+
+  const { awaitCallback, isOnline } = useOffline();
+  const toast = useToast();
+
+  useEffectAsync(async () => {
+    const client = await genTruckClient();
+    client.setCacheableResponse();
+    const refills = await client.getTrucksRefills(truckInfo.id).then(
+      x => x ?? [],
+      () => []
+    );
+    setRefills(refills);
+
+    const coupons = await client.getTrucksCoupons(truckInfo.id);
     setTruckCoupons(coupons.results);
-  };
+  }, [truckInfo]);
 
   const completeLocationRefill = useCallback(
-    (reportForm: RefillForm) => {
+    (reportForm: RefillForm, refillingLocation: ILocationRefillDto) => {
       awaitCallback(async () => {
         const client = await genRefillClient();
 
@@ -102,8 +92,6 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
               fileName: "temp.webp"
             });
           }
-          setRefillingLocation(null);
-          reloadTruckList();
           toast({
             title: t("toast.locationRefill"),
             description: t("toast.successful"),
@@ -122,25 +110,13 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
         }
       }, Date.now().toString());
     },
-    [awaitCallback, refillingLocation]
+    [awaitCallback]
   );
-
-  const reloadTruckList = () => {
-    //Dummy ID to trigger state change
-    setTruckId(9999);
-    setTruckId(truckInfo.id);
-  };
-
-  useEffectAsync(async () => {
-    const truck: TruckInfoDetailsDto = await getTruck(truckInfo.id);
-    setTruck(truck);
-    setTruckId(truckInfo.id);
-  }, []);
 
   const completeTruckRefuel = useCallback((form: TruckRefuelForm) => {
     awaitCallback(async () => {
       const client = await genTruckClient();
-      const result = await client.createTruckRefuel(
+      await client.createTruckRefuel(
         truckInfo.id,
         new CreateTruckRefillCommand({
           amount: form.fillAmount,
@@ -150,9 +126,9 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
         })
       );
 
-      const truck: TruckInfoDetailsDto = (await getTruck(truckInfo.id)).toJSON();
-      setTruck(truck);
-    }, "asd");
+      const truck: TruckInfoDetailsDto = await getTruck(truckInfo.id).then(x => x.toJSON());
+      truckInfo = truck;
+    }, "refuel");
   }, []);
 
   return (
@@ -160,7 +136,7 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
       <Head>
         <title>
           {t("mytruck.title", {
-            id: truck.id
+            id: truckInfo.id
           })}
         </title>
       </Head>
@@ -175,64 +151,46 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
       )}
       <Heading>
         {t("mytruck.heading", {
-          id: truck.id
+          id: truckInfo.id
         })}
       </Heading>
 
-      <Box className={styles.fullWidthChildren}>
-        <Collapse in={refillingLocation !== null} unmountOnExit={true}>
-          <IconButton
-            size="sm"
-            left={1}
-            top={15}
-            position="absolute"
-            aria-label="goback"
-            onClick={() => setRefillingLocation(null)}
-            icon={<MdArrowBack />}
-          />
-          <FillOutRefillForm
-            submitCallback={completeLocationRefill}
-            couponNumbers={truckCoupons.map<DropdownType>(x => ({
-              id: x.id + "",
-              name: x.couponNumber + ""
-            }))}
-          />
-        </Collapse>
-
-        <Collapse in={refillingLocation === null}>
+      <TruckContext.Provider
+        value={{
+          truck: truckInfo,
+          coupons: truckCoupons,
+          refills,
+          completeLocationRefill,
+          completeTruckRefuel
+        }}>
+        <Box className={styles.fullWidthChildren}>
           <Text fontSize="xl" textAlign="center" justifyContent="center">
             {t("mytruck.tank.current")}
             <Badge
               fontSize="0.8em"
               mb={1}
               colorScheme={
-                truck.currentTankLevel > 4000
+                truckInfo.currentTankLevel > 4000
                   ? "green"
-                  : truck.currentTankLevel > 2000
+                  : truckInfo.currentTankLevel > 2000
                   ? "yellow"
                   : "red"
               }>
               {t("mytruck.tank.liters", {
-                liters: formatter.format(truck.currentTankLevel)
+                liters: formatter.format(truckInfo.currentTankLevel)
               })}
             </Badge>
           </Text>
-          <RunListTable
-            truckId={truckId}
-            refillCb={obj => {
-              fetchCoupons();
-              setRefillingLocation(obj);
-            }}
-          />
-        </Collapse>
-      </Box>
+          <RunListTable />
+        </Box>
 
-      {!viewOnly && (
-        <HStack position="absolute" bottom={2} right={0}>
-          <RefuelForm fillData={completeTruckRefuel} />
-          <InvalidateCouponBtn data={coupons} />
-        </HStack>
-      )}
+        {!viewOnly && (
+          <HStack position="absolute" bottom={2} right={0}>
+            <RefuelForm fillData={completeTruckRefuel} />
+            <InvalidateCouponBtn data={coupons} />
+          </HStack>
+        )}
+      </TruckContext.Provider>
     </VStack>
   );
 };

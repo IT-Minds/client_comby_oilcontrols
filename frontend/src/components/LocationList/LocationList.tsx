@@ -158,7 +158,7 @@ const LocationList: FC<Props> = ({ data }) => {
 
                 <OrderRefillComp locationId={dat.id} submitCallback={orderRefill} />
 
-                <RefillModalBtn />
+                <RefillModalBtn refill={dat} />
               </HStack>
             </Td>
           </Tr>

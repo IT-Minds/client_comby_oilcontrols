@@ -8,15 +8,23 @@ import {
   ModalOverlay,
   useDisclosure
 } from "@chakra-ui/react";
+import { TruckContext } from "contexts/TruckContext";
 import { useI18n } from "next-rosetta";
-import { FC } from "react";
+import { FC, useContext } from "react";
 import { GiFuelTank } from "react-icons/gi";
+import { ILocationRefillDto } from "services/backend/nswagts";
 
 import FillOutRefillForm from "./FillOutRefillForm";
 
-const RefillModalBtn: FC = () => {
+type Props = {
+  refill: ILocationRefillDto;
+};
+
+const RefillModalBtn: FC<Props> = ({ refill }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { t } = useI18n<Locale>();
+
+  const { completeLocationRefill, coupons } = useContext(TruckContext);
 
   return (
     <>
@@ -34,7 +42,13 @@ const RefillModalBtn: FC = () => {
           <ModalHeader>{t("mytruck.refill.refill")}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <FillOutRefillForm submitCallback={null} couponNumbers={[]} />
+            <FillOutRefillForm
+              submitCallback={x => completeLocationRefill(x, refill)}
+              couponNumbers={coupons.map(x => ({
+                id: x.id,
+                name: x.couponNumber
+              }))}
+            />
           </ModalBody>
         </ModalContent>
       </Modal>
