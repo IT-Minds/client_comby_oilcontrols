@@ -6,7 +6,7 @@ import QuerySortBtn, { Direction } from "components/SortFilter/QuerySortBtn";
 import { TruckContext } from "contexts/TruckContext";
 import { useRouter } from "next/router";
 import { useI18n } from "next-rosetta";
-import { FC, useCallback, useContext, useRef, useState } from "react";
+import { FC, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { MdPrint } from "react-icons/md";
 import { useReactToPrint } from "react-to-print";
 import { ILocationRefillDto, RefillSchedule } from "services/backend/nswagts";
@@ -26,7 +26,7 @@ const RunListTable: FC = () => {
     xl: 4
   });
 
-  const { refills } = useContext(TruckContext);
+  const { refills, truck } = useContext(TruckContext);
 
   const [sort, setSort] = useState<(a: ILocationRefillDto, b: ILocationRefillDto) => number>(
     () => defaultSort
@@ -61,49 +61,78 @@ const RunListTable: FC = () => {
             <HStack spacing={1}>
               <Text>{t("mytruck.runlist.bstNumber")}</Text>
               <Spacer />
-              <QuerySortBtn queryKey="bstNumber" sortCb={sortCb} />
+              <QuerySortBtn
+                queryGroup={"truckrefill" + truck.id}
+                queryKey="bstNumber"
+                sortCb={sortCb}
+              />
             </HStack>
           </Th>
           <Th hidden={!isPrinting && cols < 4}>
             <HStack spacing={1}>
               <Text>{t("mytruck.runlist.comments")}</Text>
               <Spacer />
-              <QuerySortBtn queryKey="???" sortCb={sortCb} />
+              <QuerySortBtn
+                queryGroup={"truckrefill" + truck.id}
+                queryKey="comments"
+                sortCb={sortCb}
+              />
             </HStack>
           </Th>
           <Th hidden={!isPrinting && cols < 4}>
             <HStack spacing={1}>
               <Text>{t("mytruck.runlist.debtorBlocked")}</Text>
               <Spacer />
-              <QuerySortBtn queryKey="locationType" sortCb={sortCb} />
+              <QuerySortBtn
+                queryGroup={"truckrefill" + truck.id}
+                queryKey="locationType"
+                sortCb={sortCb}
+              />
             </HStack>
           </Th>
           <Th>
             <HStack spacing={1}>
               <Text>{t("mytruck.runlist.address")}</Text>
               <Spacer />
-              <QuerySortBtn queryKey="address" sortCb={sortCb} />
+              <QuerySortBtn
+                queryGroup={"truckrefill" + truck.id}
+                queryKey="address"
+                sortCb={sortCb}
+                defaultVal="ASC"
+              />
             </HStack>
           </Th>
           <Th hidden={!isPrinting && cols < 3}>
             <HStack spacing={1}>
               <Text>{t("mytruck.runlist.agreementType")}</Text>
               <Spacer />
-              <QuerySortBtn queryKey="schedule" sortCb={sortCb} />
+              <QuerySortBtn
+                queryGroup={"truckrefill" + truck.id}
+                queryKey="schedule"
+                sortCb={sortCb}
+              />
             </HStack>
           </Th>
           <Th hidden={!isPrinting && cols < 2}>
             <HStack spacing={1}>
               <Text>{t("mytruck.runlist.fuelType")}</Text>
               <Spacer />
-              <QuerySortBtn queryKey="fuelType" sortCb={sortCb} />
+              <QuerySortBtn
+                queryGroup={"truckrefill" + truck.id}
+                queryKey="fuelType"
+                sortCb={sortCb}
+              />
             </HStack>
           </Th>
           <Th>
             <HStack spacing={1}>
               <Text>{t("mytruck.runlist.deadline")}</Text>
               <Spacer />
-              <QuerySortBtn queryKey="expectedDeliveryDate" sortCb={sortCb} />
+              <QuerySortBtn
+                queryGroup={"truckrefill" + truck.id}
+                queryKey="expectedDeliveryDate"
+                sortCb={sortCb}
+              />
             </HStack>
           </Th>
           <Th pl="0" hidden={isPrinting}>

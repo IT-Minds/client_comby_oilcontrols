@@ -21,48 +21,12 @@ namespace Domain.EntityExtensions
         .Where(x => x.TimeStamp.DayOfYear == date.DayOfYear && x.TimeStamp.Year == date.Year)
         .Sum(x => x.Amount);
 
-      var locationFills = truck.Refills
+      var locationFills = truck.CompletedRefills
         .Where(x => x.RefillState == RefillState.COMPLETED)
-        .Where(x => ((CompletedRefill)x).ActualDeliveryDate.DayOfYear == date.DayOfYear && ((CompletedRefill)x).ActualDeliveryDate.Year == date.Year)
-        .Sum(x => ((CompletedRefill)x).AmountDelivered());
-
-
+        .Where(x => x.ActualDeliveryDate.DayOfYear == date.DayOfYear && x.ActualDeliveryDate.Year == date.Year)
+        .Sum(x => x.AmountDelivered());
 
       return dailyState.MorningQuantity + truckFills - locationFills ;
     }
-
-    public static TruckDailyState GetCurrentDailyState(this Truck truck)
-    {
-      var date = DateTime.Now;
-      var dailyState = truck.DailyStates.FirstOrDefault(x => x.Date.DayOfYear == date.DayOfYear && x.Date.Year == date.Year);
-
-      return dailyState;
-    }
-
-    public static double GetCurrentTankLevel(this Truck truck)
-    {
-      var dailyState = truck.GetCurrentDailyState();
-
-      if (dailyState == null) return 0;
-
-      return dailyState.EveningQuantity;
-    }
-
-
-    // //Returns -1 if there is no "Refill Number" to be found at all.
-    // public static int CurrentRefillNumber(this Truck truck)
-    // {
-    //   var newestRefill = truck.Route?.Refills?.Where(x => x.ActualDeliveryDate != null)?.OrderByDescending(x => x.ActualDeliveryDate).FirstOrDefault();
-    //   if (newestRefill != null && newestRefill.RefillNumber != null)
-    //   {
-    //     return (int)newestRefill.RefillNumber;
-    //   }
-    //   var dailyState = truck.DailyStates?.OrderByDescending(x => x.Date).FirstOrDefault();
-    //   if (dailyState != null)
-    //   {
-    //     return dailyState.StartRefillNumber;
-    //   }
-    //   return -1;
-    // }
   }
 }

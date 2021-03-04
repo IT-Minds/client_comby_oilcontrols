@@ -38,11 +38,17 @@ module.exports = withBundleAnalyzer(
       runtimeCaching: [
         {
           // MUST be the same as "start_url" in manifest.json
-          urlPattern: "/mytruck?thsort=t_address_ASC",
+          urlPattern: /\/mytruck$/,
           handler: "CacheFirst",
           options: {
             // don't change cache name
-            cacheName: "start-url"
+            cacheName: "start-url",
+            fetchOptions: {
+              credentials: "include"
+            },
+            cacheableResponse: {
+              statuses: [200]
+            }
           }
         },
         {
