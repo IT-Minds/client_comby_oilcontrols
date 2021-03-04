@@ -8,6 +8,7 @@ type ContextType = {
   coupons: ICouponIdDto[];
   refills: ILocationRefillDto[];
 
+  reloadData: () => void;
   completeTruckRefuel: (form: TruckRefuelForm) => void;
   completeLocationRefill: (reportForm: RefillForm, refillingLocation: ILocationRefillDto) => void;
 };
@@ -17,5 +18,6 @@ export const TruckContext = createContext<ContextType>({
   refills: [],
   coupons: [],
   completeLocationRefill: null,
-  completeTruckRefuel: null
+  completeTruckRefuel: null,
+  reloadData: null
 });

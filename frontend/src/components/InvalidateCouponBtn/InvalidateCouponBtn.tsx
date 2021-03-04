@@ -14,11 +14,11 @@ import { useI18n } from "next-rosetta";
 import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { RiFileShredLine } from "react-icons/ri";
 import { genCouponsClient } from "services/backend/apiClients";
-import { CouponIdDto, CouponStatus } from "services/backend/nswagts";
+import { CouponStatus, ICouponIdDto } from "services/backend/nswagts";
 import { parseInputToNumber } from "utils/formatNumber";
 
 type Props = {
-  data: CouponIdDto[];
+  data: ICouponIdDto[];
 };
 
 const InvalidateCouponBtn: FC<Props> = ({ data = [] }) => {
@@ -27,7 +27,7 @@ const InvalidateCouponBtn: FC<Props> = ({ data = [] }) => {
 
   const { t } = useI18n<Locale>();
 
-  const [dataCoupons, setDataCoupons] = useState<CouponIdDto[]>([]);
+  const [dataCoupons, setDataCoupons] = useState<ICouponIdDto[]>([]);
   const [chosenCoupon, setChosenCoupon] = useState<number>();
 
   const invalidateActions = useCallback(async () => {

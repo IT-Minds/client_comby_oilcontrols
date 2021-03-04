@@ -24,7 +24,7 @@ const RefillModalBtn: FC<Props> = ({ refill }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { t } = useI18n<Locale>();
 
-  const { completeLocationRefill, coupons } = useContext(TruckContext);
+  const { completeLocationRefill, coupons, reloadData } = useContext(TruckContext);
 
   return (
     <>
@@ -43,7 +43,11 @@ const RefillModalBtn: FC<Props> = ({ refill }) => {
           <ModalCloseButton />
           <ModalBody>
             <FillOutRefillForm
-              submitCallback={x => completeLocationRefill(x, refill)}
+              submitCallback={x => {
+                completeLocationRefill(x, refill);
+                onClose();
+                reloadData();
+              }}
               couponNumbers={coupons.map(x => ({
                 id: x.id,
                 name: x.couponNumber

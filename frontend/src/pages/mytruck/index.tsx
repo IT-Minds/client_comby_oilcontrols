@@ -19,13 +19,14 @@ import {
   genRefillClient,
   genTruckClient
 } from "services/backend/apiClients";
+import { emptyPageResult, IPageResult } from "services/backend/ext/IPageResult";
 import {
   CompleteRefillCommand,
-  CouponIdDto,
   CreateTruckRefillCommand,
+  ICouponIdDto,
   ILocationRefillDto,
+  ITruckInfoDetailsDto,
   TankState,
-  TruckInfoDetailsDto,
   UserIdDto
 } from "services/backend/nswagts";
 import { urlToFile } from "utils/urlToFile";
@@ -34,14 +35,9 @@ import { Locale } from "../../i18n/Locale";
 import styles from "./index.module.css";
 
 type Props = {
-  truckInfo: TruckInfoDetailsDto;
-  coupons: CouponIdDto[];
+  truckInfo: ITruckInfoDetailsDto;
+  coupons: ICouponIdDto[];
   viewOnly?: boolean;
-};
-
-const getTruck = async (id: number): Promise<TruckInfoDetailsDto> => {
-  const client = await genTruckClient();
-  return await client.getTruck(id);
 };
 
 const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
@@ -52,23 +48,39 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
   });
 
   const [refills, setRefills] = useState<ILocationRefillDto[]>([]);
-  const [truckCoupons, setTruckCoupons] = useState<CouponIdDto[]>(coupons);
+  const [truckCoupons, setTruckCoupons] = useState<ICouponIdDto[]>(coupons);
 
   const { awaitCallback, isOnline } = useOffline();
   const toast = useToast();
 
-  useEffectAsync(async () => {
+  const reloadData = useCallback(async () => {
     const client = await genTruckClient();
+
+    const truck = await client.getTruck(truckInfo.id);
+
     client.setCacheableResponse();
-    const refills = await client.getTrucksRefills(truckInfo.id).then(
+    const refills: ILocationRefillDto[] = await client.getTrucksRefills(truckInfo.id).then(
       x => x ?? [],
       () => []
     );
-    setRefills(refills);
 
-    const coupons = await client.getTrucksCoupons(truckInfo.id);
+    client.setCacheableResponse();
+    const coupons: IPageResult<ICouponIdDto, number> = await client
+      .getTrucksCoupons(truckInfo.id)
+      .then(
+        x => x ?? emptyPageResult(),
+        () => emptyPageResult()
+      );
+
+    setRefills(refills);
     setTruckCoupons(coupons.results);
+
+    truckInfo = truck;
   }, [truckInfo]);
+
+  useEffectAsync(async () => {
+    await reloadData();
+  }, [reloadData]);
 
   const completeLocationRefill = useCallback(
     (reportForm: RefillForm, refillingLocation: ILocationRefillDto) => {
@@ -125,9 +137,6 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
           timeStamp: form.date
         })
       );
-
-      const truck: TruckInfoDetailsDto = await getTruck(truckInfo.id).then(x => x.toJSON());
-      truckInfo = truck;
     }, "refuel");
   }, []);
 
@@ -161,7 +170,8 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
           coupons: truckCoupons,
           refills,
           completeLocationRefill,
-          completeTruckRefuel
+          completeTruckRefuel,
+          reloadData
         }}>
         <Box className={styles.fullWidthChildren}>
           <Text fontSize="xl" textAlign="center" justifyContent="center">
@@ -219,7 +229,7 @@ export const getServerSideProps: GetServerSideProps<Props & I18nProps<Locale>> =
 
   const truckClient = await genTruckClient();
 
-  const truckInfo = (await getTruck(me.truckId)).toJSON(); // await truckClient.getTruck(me.truckId).then(x => x.toJSON());
+  const truckInfo = await truckClient.getTruck(me.truckId).then(x => x.toJSON());
   const coupons = await truckClient.getTrucksCoupons(me.truckId).then(
     x => x.results.map(y => y.toJSON()),
     () => []
