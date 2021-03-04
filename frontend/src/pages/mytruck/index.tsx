@@ -5,14 +5,20 @@ import { RefillForm } from "components/FillOutRefillForm/RefillForm";
 import InvalidateCouponBtn from "components/InvalidateCouponBtn/InvalidateCouponBtn";
 import RunListTable from "components/RunList/RunListTable";
 import { TruckContext } from "contexts/TruckContext";
+import { TOKEN_STORAGE_KEY } from "hooks/useAuth";
 import { useEffectAsync } from "hooks/useEffectAsync";
 import { useOffline } from "hooks/useOffline";
-import { NextPage } from "next";
+import { runTimeTable } from "i18n/runtimeTable";
+import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useI18n } from "next-rosetta";
+import { I18nProps, useI18n } from "next-rosetta";
 import { useCallback, useState } from "react";
-import { genRefillClient, genTruckClient } from "services/backend/apiClients";
+import {
+  genAuthenticationClient,
+  genRefillClient,
+  genTruckClient
+} from "services/backend/apiClients";
 import { emptyPageResult, IPageResult } from "services/backend/ext/IPageResult";
 import {
   CompleteRefillCommand,
@@ -20,7 +26,8 @@ import {
   ICouponIdDto,
   ILocationRefillDto,
   ITruckInfoDetailsDto,
-  TankState
+  TankState,
+  UserIdDto
 } from "services/backend/nswagts";
 import { urlToFile } from "utils/urlToFile";
 
@@ -197,6 +204,42 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
       </TruckContext.Provider>
     </VStack>
   );
+};
+
+export const getServerSideProps: GetServerSideProps<Props & I18nProps<Locale>> = async context => {
+  const locale = context.locale || context.defaultLocale;
+
+  const token = context.req.cookies[TOKEN_STORAGE_KEY];
+
+  if (!token) {
+    context.res.statusCode = 302;
+    context.res.setHeader("Location", "/");
+    return { props: {} as any };
+  }
+  process.env.AUTH_TOKEN = token;
+
+  const auth = await genAuthenticationClient();
+  const me: UserIdDto = await auth.checkAuth().catch(() => null);
+
+  if (!me?.truckId) {
+    context.res.statusCode = 302;
+    context.res.setHeader("Location", "/");
+    return { props: {} as any };
+  }
+
+  const truckClient = await genTruckClient();
+
+  const truckInfo = await truckClient.getTruck(me.truckId).then(x => x.toJSON());
+  const coupons = await truckClient.getTrucksCoupons(me.truckId).then(
+    x => x.results.map(y => y.toJSON()),
+    () => []
+  );
+
+  let { table = {} } = await import(`../../i18n/${locale}`);
+  table = runTimeTable(locale, table);
+
+  // return { props: { table, truckInfo, coupons }, revalidate: 5 };
+  return { props: { table, truckInfo, coupons } };
 };
 
 export default MyTruck;
