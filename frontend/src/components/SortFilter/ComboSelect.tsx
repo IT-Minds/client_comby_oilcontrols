@@ -55,7 +55,7 @@ const ComboSelect: FC<Props> = ({
   }, [lightColor, darkColor, borderColorToken]);
 
   const filteredOptions = useMemo(
-    () => options.filter(x => x.name.toString().indexOf(searchValue) !== -1),
+    () => options.filter(x => x.name?.toString().indexOf(searchValue) !== -1),
     [searchValue, options]
   );
 

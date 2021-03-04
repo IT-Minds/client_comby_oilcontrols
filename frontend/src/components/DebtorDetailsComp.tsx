@@ -20,9 +20,9 @@ const DebtorDetailsComp: FC<Props> = ({ debtorData }) => {
     async (isRequired: boolean) => {
       const client = await genDebtorClient();
       await client.printCouponRequired(
-        debtor.dbId,
+        debtor.id,
         new PrintCouponRequiredCommand({
-          debtorId: debtor.dbId,
+          debtorId: debtor.id,
           printCouponRequired: isRequired
         })
       );

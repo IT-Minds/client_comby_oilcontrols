@@ -26,7 +26,7 @@ const DebtorSelector: FC<Props> = ({ cb, value }) => {
 
   useEffect(() => {
     if (value > 0) {
-      setExistingDebtor({ id: value.toString(), name: debtors.find(u => u.dbId === value)?.name });
+      setExistingDebtor({ id: value.toString(), name: debtors.find(u => u.id === value)?.name });
     } else {
       setExistingDebtor({
         id: "0",
@@ -44,7 +44,7 @@ const DebtorSelector: FC<Props> = ({ cb, value }) => {
         },
         ...debtors.map(s => {
           return {
-            id: s.dbId.toString(),
+            id: s.id,
             name: s.name
           };
         })
@@ -52,13 +52,13 @@ const DebtorSelector: FC<Props> = ({ cb, value }) => {
       isLoading={isLoading}
       placeholder={t("debtorSelector.selectDebtor") as string}
       onSelect={x => {
-        if (x.id === "0") {
+        if (x.id.toString() === "0") {
           cb({
-            dbId: 0,
+            id: 0,
             name: x.name.toString()
           });
         } else {
-          const dto = debtors.find(s => s.dbId == Number(x.id));
+          const dto = debtors.find(s => s.id == Number(x.id));
           cb(dto);
         }
       }}

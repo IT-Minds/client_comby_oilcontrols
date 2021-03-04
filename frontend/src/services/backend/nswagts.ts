@@ -3058,7 +3058,7 @@ export interface ICreateDailyTemperatureCommand {
 }
 
 export class DebtorDto implements IDebtorDto {
-    dbId?: number;
+    id?: number;
     unicontaId?: number;
     blocked?: boolean;
     accountNumber?: string | null;
@@ -3077,7 +3077,7 @@ export class DebtorDto implements IDebtorDto {
 
     init(_data?: any) {
         if (_data) {
-            this.dbId = _data["dbId"] !== undefined ? _data["dbId"] : <any>null;
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
             this.unicontaId = _data["unicontaId"] !== undefined ? _data["unicontaId"] : <any>null;
             this.blocked = _data["blocked"] !== undefined ? _data["blocked"] : <any>null;
             this.accountNumber = _data["accountNumber"] !== undefined ? _data["accountNumber"] : <any>null;
@@ -3096,7 +3096,7 @@ export class DebtorDto implements IDebtorDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["dbId"] = this.dbId !== undefined ? this.dbId : <any>null;
+        data["id"] = this.id !== undefined ? this.id : <any>null;
         data["unicontaId"] = this.unicontaId !== undefined ? this.unicontaId : <any>null;
         data["blocked"] = this.blocked !== undefined ? this.blocked : <any>null;
         data["accountNumber"] = this.accountNumber !== undefined ? this.accountNumber : <any>null;
@@ -3108,7 +3108,7 @@ export class DebtorDto implements IDebtorDto {
 }
 
 export interface IDebtorDto {
-    dbId?: number;
+    id?: number;
     unicontaId?: number;
     blocked?: boolean;
     accountNumber?: string | null;
@@ -5240,6 +5240,7 @@ export class LocationRefillDto implements ILocationRefillDto {
     addressExtra?: string | null;
     expectedDeliveryDate?: Date;
     debtorBlocked?: boolean;
+    couponRequired?: boolean;
     bstNumber?: string | null;
     comments?: string | null;
 
@@ -5264,6 +5265,7 @@ export class LocationRefillDto implements ILocationRefillDto {
             this.addressExtra = _data["addressExtra"] !== undefined ? _data["addressExtra"] : <any>null;
             this.expectedDeliveryDate = _data["expectedDeliveryDate"] ? new Date(_data["expectedDeliveryDate"].toString()) : <any>null;
             this.debtorBlocked = _data["debtorBlocked"] !== undefined ? _data["debtorBlocked"] : <any>null;
+            this.couponRequired = _data["couponRequired"] !== undefined ? _data["couponRequired"] : <any>null;
             this.bstNumber = _data["bstNumber"] !== undefined ? _data["bstNumber"] : <any>null;
             this.comments = _data["comments"] !== undefined ? _data["comments"] : <any>null;
         }
@@ -5288,6 +5290,7 @@ export class LocationRefillDto implements ILocationRefillDto {
         data["addressExtra"] = this.addressExtra !== undefined ? this.addressExtra : <any>null;
         data["expectedDeliveryDate"] = this.expectedDeliveryDate ? this.expectedDeliveryDate.toISOString() : <any>null;
         data["debtorBlocked"] = this.debtorBlocked !== undefined ? this.debtorBlocked : <any>null;
+        data["couponRequired"] = this.couponRequired !== undefined ? this.couponRequired : <any>null;
         data["bstNumber"] = this.bstNumber !== undefined ? this.bstNumber : <any>null;
         data["comments"] = this.comments !== undefined ? this.comments : <any>null;
         return data; 
@@ -5305,6 +5308,7 @@ export interface ILocationRefillDto {
     addressExtra?: string | null;
     expectedDeliveryDate?: Date;
     debtorBlocked?: boolean;
+    couponRequired?: boolean;
     bstNumber?: string | null;
     comments?: string | null;
 }

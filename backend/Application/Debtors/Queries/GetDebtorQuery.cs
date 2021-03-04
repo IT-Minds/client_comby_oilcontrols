@@ -5,7 +5,9 @@ using Application.Common.Interfaces;
 using Application.Common.Security;
 using Application.Common.Services;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Debtors.Queries
 {
@@ -27,29 +29,11 @@ namespace Application.Debtors.Queries
 
       public async Task<List<DebtorDto>> Handle(GetDebtorQuery request, CancellationToken cancellationToken)
       {
-        _syncroniceDebtorService.SetDebtorQuery(
-          _context.Debtors
-        // .Include(x => x.Locations)
-        );
+        var result = await _context.Debtors
+          .ProjectTo<DebtorDto>(_mapper.ConfigurationProvider)
+          .ToListAsync(cancellationToken);
 
-        var result = await _syncroniceDebtorService.SyncroniceDebtor();
-
-        var debtorDtos = new List<DebtorDto>();
-        foreach (var (a, b) in result)
-        {
-          debtorDtos.Add(new DebtorDto
-          {
-            DbId = b.Id,
-            UnicontaId = a.RowId,
-            Blocked = a.Blocked,
-            AccountNumber = a.AccountNumber,
-            Name = a.Name,
-            GLN = a.GLN,
-            CouponRequired = b.CouponRequired
-          });
-        }
-
-        return debtorDtos;
+        return result;
       }
     }
   }

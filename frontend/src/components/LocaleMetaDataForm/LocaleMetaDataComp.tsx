@@ -402,13 +402,13 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
               formSubmitAttempts > 0 && !mainDebtorId && !baseDebtorId && !upcomingDebtorId
             }>
             <FormLabel>{t("localeMetaData.main")}</FormLabel>
-            <DebtorSelector cb={x => setMainDebtorId(x?.dbId)} value={localForm.mainDebtorId} />
+            <DebtorSelector cb={x => setMainDebtorId(x?.id)} value={localForm.mainDebtorId} />
 
             <FormLabel>{t("localeMetaData.base")}</FormLabel>
-            <DebtorSelector cb={x => setBaseDebtorId(x?.dbId)} value={localForm.baseDebtorId} />
+            <DebtorSelector cb={x => setBaseDebtorId(x?.id)} value={localForm.baseDebtorId} />
             <FormLabel>{t("localeMetaData.upcoming")}</FormLabel>
             <DebtorSelector
-              cb={x => setUpcomingDebtorId(x?.dbId)}
+              cb={x => setUpcomingDebtorId(x?.id)}
               value={localForm.upcomingDebtorId}
             />
             <FormLabel>{t("localeMetaData.selectDate")}</FormLabel>

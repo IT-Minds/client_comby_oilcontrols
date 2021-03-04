@@ -14,7 +14,7 @@ type Props = {
 const DebtorTableComp: FC<Props> = ({ preLoadedData = [] }) => {
   const { t } = useI18n<Locale>();
 
-  const [data, dataDispatch] = useReducer(ListReducer<DebtorDto>("dbId"), preLoadedData ?? []);
+  const [data, dataDispatch] = useReducer(ListReducer<DebtorDto>("id"), preLoadedData ?? []);
 
   useEffect(() => {
     if (preLoadedData) {
@@ -50,9 +50,9 @@ const DebtorTableComp: FC<Props> = ({ preLoadedData = [] }) => {
           }}>
           <Tbody>
             {data.map(debtor => (
-              <Tr key={debtor.dbId}>
+              <Tr key={debtor.id}>
                 <Td>{debtor.name}</Td>
-                <Td>{debtor.dbId}</Td>
+                <Td>{debtor.id}</Td>
                 <Td>{debtor.unicontaId}</Td>
                 <Td>
                   <DebtorDetailsTriggerBtn debtorData={debtor} />

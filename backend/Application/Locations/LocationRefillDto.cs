@@ -3,6 +3,7 @@ using Application.Common.Mappings;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Entities.Refills;
+using Domain.EntityExtensions;
 using Domain.Enums;
 
 namespace Application.Locations
@@ -18,7 +19,9 @@ namespace Application.Locations
     public string Address { get; set; }
     public string AddressExtra { get; set; }
     public DateTime ExpectedDeliveryDate { get; set; }
-    public bool DebtorBlocked { get; set; } = false; // TODO map real data
+    public bool DebtorBlocked { get; set; }
+    public bool CouponRequired { get; set; }
+
     public string BstNumber { get; set; }
     public string Comments { get; set; }
 
@@ -41,7 +44,8 @@ namespace Application.Locations
       .ForMember(dest => dest.FuelType,
           map => map.MapFrom(from => from.Location.FuelTank.FuelType))
 
-      .ForMember(dest => dest.DebtorBlocked, map => map.Ignore())
+      .ForMember(dest => dest.DebtorBlocked, map => map.MapFrom(from => from.Location.ActiveDebtor().Blocked ))
+      .ForMember(dest => dest.CouponRequired, map => map.MapFrom(from => from.Location.ActiveDebtor().CouponRequired ))
 
       .ForMember(dest => dest.BstNumber, map => map.MapFrom(from => from.Location.TankNumber))
 
