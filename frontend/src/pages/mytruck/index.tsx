@@ -5,20 +5,14 @@ import { RefillForm } from "components/FillOutRefillForm/RefillForm";
 import InvalidateCouponBtn from "components/InvalidateCouponBtn/InvalidateCouponBtn";
 import RunListTable from "components/RunList/RunListTable";
 import { TruckContext } from "contexts/TruckContext";
-import { TOKEN_STORAGE_KEY } from "hooks/useAuth";
 import { useEffectAsync } from "hooks/useEffectAsync";
 import { useOffline } from "hooks/useOffline";
-import { runTimeTable } from "i18n/runtimeTable";
-import { GetServerSideProps, NextPage } from "next";
+import { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { I18nProps, useI18n } from "next-rosetta";
+import { useI18n } from "next-rosetta";
 import { useCallback, useState } from "react";
-import {
-  genAuthenticationClient,
-  genRefillClient,
-  genTruckClient
-} from "services/backend/apiClients";
+import { genRefillClient, genTruckClient } from "services/backend/apiClients";
 import { emptyPageResult, IPageResult } from "services/backend/ext/IPageResult";
 import {
   CompleteRefillCommand,
@@ -26,8 +20,7 @@ import {
   ICouponIdDto,
   ILocationRefillDto,
   ITruckInfoDetailsDto,
-  TankState,
-  UserIdDto
+  TankState
 } from "services/backend/nswagts";
 import { urlToFile } from "utils/urlToFile";
 
@@ -46,12 +39,13 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
   const formatter = Intl.NumberFormat(locale, {
     minimumFractionDigits: 2
   });
+  const toast = useToast();
 
+  const [truck, setTruck] = useState(truckInfo);
   const [refills, setRefills] = useState<ILocationRefillDto[]>([]);
   const [truckCoupons, setTruckCoupons] = useState<ICouponIdDto[]>(coupons);
 
   const { awaitCallback, isOnline } = useOffline();
-  const toast = useToast();
 
   const reloadData = useCallback(async () => {
     const client = await genTruckClient();
@@ -75,7 +69,7 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
     setRefills(refills);
     setTruckCoupons(coupons.results);
 
-    truckInfo = truck;
+    setTruck(truck);
   }, [truckInfo]);
 
   useEffectAsync(async () => {
@@ -166,7 +160,7 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
 
       <TruckContext.Provider
         value={{
-          truck: truckInfo,
+          truck,
           coupons: truckCoupons,
           refills,
           completeLocationRefill,
@@ -180,14 +174,14 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
               fontSize="0.8em"
               mb={1}
               colorScheme={
-                truckInfo.currentTankLevel > 4000
+                truck.currentTankLevel > 4000
                   ? "green"
-                  : truckInfo.currentTankLevel > 2000
+                  : truck.currentTankLevel > 2000
                   ? "yellow"
                   : "red"
               }>
               {t("mytruck.tank.liters", {
-                liters: formatter.format(truckInfo.currentTankLevel)
+                liters: formatter.format(truck.currentTankLevel)
               })}
             </Badge>
           </Text>
