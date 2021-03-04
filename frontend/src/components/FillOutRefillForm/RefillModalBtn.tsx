@@ -43,10 +43,10 @@ const RefillModalBtn: FC<Props> = ({ refill }) => {
           <ModalCloseButton />
           <ModalBody>
             <FillOutRefillForm
-              submitCallback={x => {
-                completeLocationRefill(x, refill);
+              submitCallback={async x => {
+                await completeLocationRefill(x, refill);
+                await reloadData();
                 onClose();
-                reloadData();
               }}
               couponNumbers={coupons.map(x => ({
                 id: x.id,

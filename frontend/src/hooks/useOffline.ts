@@ -9,7 +9,7 @@ type SavedCallback = {
 };
 
 type Return = {
-  awaitCallback: (cb: Callback, id: string) => void;
+  awaitCallback: (cb: Callback, id: string) => Promise<unknown>;
   isOnline: boolean;
   savedCallbacks: SavedCallback[];
 };

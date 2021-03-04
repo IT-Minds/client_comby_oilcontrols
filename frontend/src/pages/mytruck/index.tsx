@@ -83,8 +83,8 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
   }, [reloadData]);
 
   const completeLocationRefill = useCallback(
-    (reportForm: RefillForm, refillingLocation: ILocationRefillDto) => {
-      awaitCallback(async () => {
+    async (reportForm: RefillForm, refillingLocation: ILocationRefillDto) => {
+      await awaitCallback(async () => {
         const client = await genRefillClient();
 
         try {
@@ -125,8 +125,8 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
     [awaitCallback]
   );
 
-  const completeTruckRefuel = useCallback((form: TruckRefuelForm) => {
-    awaitCallback(async () => {
+  const completeTruckRefuel = useCallback(async (form: TruckRefuelForm) => {
+    await awaitCallback(async () => {
       const client = await genTruckClient();
       await client.createTruckRefuel(
         truckInfo.id,
@@ -203,43 +203,6 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
       </TruckContext.Provider>
     </VStack>
   );
-};
-
-// export const getStaticProps: GetStaticProps<I18nProps<Locale> & Props> = async context => {
-export const getServerSideProps: GetServerSideProps<Props & I18nProps<Locale>> = async context => {
-  const locale = context.locale || context.defaultLocale;
-
-  const token = context.req.cookies[TOKEN_STORAGE_KEY];
-
-  if (!token) {
-    context.res.statusCode = 302;
-    context.res.setHeader("Location", "/");
-    return { props: {} as any };
-  }
-  process.env.AUTH_TOKEN = token;
-
-  const auth = await genAuthenticationClient();
-  const me: UserIdDto = await auth.checkAuth().catch(() => null);
-
-  if (!me?.truckId) {
-    context.res.statusCode = 302;
-    context.res.setHeader("Location", "/");
-    return { props: {} as any };
-  }
-
-  const truckClient = await genTruckClient();
-
-  const truckInfo = await truckClient.getTruck(me.truckId).then(x => x.toJSON());
-  const coupons = await truckClient.getTrucksCoupons(me.truckId).then(
-    x => x.results.map(y => y.toJSON()),
-    () => []
-  );
-
-  let { table = {} } = await import(`../../i18n/${locale}`);
-  table = runTimeTable(locale, table);
-
-  // return { props: { table, truckInfo, coupons }, revalidate: 5 };
-  return { props: { table, truckInfo, coupons } };
 };
 
 export default MyTruck;
