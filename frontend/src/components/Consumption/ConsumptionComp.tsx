@@ -34,8 +34,8 @@ const ConsumptionComp: FC<Props> = ({ locationId }) => {
   const [fuelConsumptionEntities, setFuelConsumptionEntities] = useState<FuelConsumptionDto[]>(
     null
   );
-  const [startDate, setStartDate] = useState(new Date(new Date().getFullYear(), 0, 1));
-  const [endDate, setEndDate] = useState(new Date(new Date().getFullYear(), 11, 31));
+  const [startDate, setStartDate] = useState(new Date(Date.UTC(new Date().getFullYear(), 0, 1)));
+  const [endDate, setEndDate] = useState(new Date(Date.UTC(new Date().getFullYear(), 11, 31)));
   const [dateLocale, setLocale] = useState<globalThis.Locale>();
 
   const downloadUsageHistory = useCallback(
@@ -60,7 +60,7 @@ const ConsumptionComp: FC<Props> = ({ locationId }) => {
 
   const updateStartDate = useCallback(
     async (newDate: Date) => {
-      setStartDate(newDate);
+      setStartDate(new Date(newDate.toUTCString()));
       if (interval != null) {
         const data = await genStatsClient().then(client =>
           client.getUsageHistory(locationId, interval, newDate, endDate)
@@ -73,7 +73,7 @@ const ConsumptionComp: FC<Props> = ({ locationId }) => {
 
   const updateEndDate = useCallback(
     async (newDate: Date) => {
-      setEndDate(newDate);
+      setEndDate(new Date(newDate.toUTCString()));
       if (interval != null) {
         const data = await genStatsClient().then(client =>
           client.getUsageHistory(locationId, interval, startDate, newDate)
@@ -90,7 +90,7 @@ const ConsumptionComp: FC<Props> = ({ locationId }) => {
         <VStack alignItems={"baseline"}>
           {<p>{t("consumptionTable.startDate")}</p>}
           <DatePicker
-            locale={dateLocale}
+            locale="UTC"
             selectedDate={startDate}
             onChange={(x: Date) => updateStartDate(x)}
             showPopperArrow={false}
@@ -100,7 +100,7 @@ const ConsumptionComp: FC<Props> = ({ locationId }) => {
         <VStack alignItems={"baseline"}>
           {<p>{t("consumptionTable.endDate")}</p>}
           <DatePicker
-            locale={dateLocale}
+            locale="UTC"
             selectedDate={endDate}
             onChange={(x: Date) => updateEndDate(x)}
             showPopperArrow={false}
