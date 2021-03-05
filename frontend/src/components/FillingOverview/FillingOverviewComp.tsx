@@ -47,7 +47,7 @@ const FillingOverviewComp: FC<Props> = ({
 
   const { done } = usePagedFetched(
     "createdAt",
-    (needle, size) => genRefillClient().then(client => client.get(needle, size)),
+    (needle, size) => genRefillClient().then(client => client.get(needle, size)), //TODO validate if this is correct
     dataDispatch,
     {
       autoStart: !preloadLoadedAll,
@@ -126,21 +126,7 @@ const FillingOverviewComp: FC<Props> = ({
               </HStack>
             </Th>
             <Th>
-              <HStack>
-                <Text>{t("fillingOverview.start")}</Text>
-                <Spacer />
-                <QuerySortBtn queryKey="startAmount" sortCb={sortCb} />
-              </HStack>
-            </Th>
-            <Th>
               <Text>{t("fillingOverview.amount")}</Text>
-            </Th>
-            <Th>
-              <HStack>
-                <Text>{t("fillingOverview.end")}</Text>
-                <Spacer />
-                <QuerySortBtn queryKey="endAmount" sortCb={sortCb} />
-              </HStack>
             </Th>
             <Th>{t("fillingOverview.coupon")}</Th>
           </Tr>
@@ -151,8 +137,6 @@ const FillingOverviewComp: FC<Props> = ({
               <Tr key={data.id}>
                 <Td>{capitalize(TankType[data.locationType])}</Td>
                 <Td>{new Date(data.expectedDeliveryDate).toLocaleDateString()}</Td>
-                <Td>{data.startAmount}</Td>
-                <Td>{data.endAmount}</Td>
                 <Td>{data.startAmount - data.endAmount}</Td>
                 <Td>{data.couponId}</Td>
               </Tr>

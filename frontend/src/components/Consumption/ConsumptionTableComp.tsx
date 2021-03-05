@@ -1,4 +1,4 @@
-import { Container, Table, TableCaption, Tbody, Td, Th, Thead, Tr, VStack } from "@chakra-ui/react";
+import { Container, Table, TableCaption, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { useI18n } from "next-rosetta";
 import React, { FC, useEffect, useReducer } from "react";
 import ListReducer, { ListReducerActionType } from "react-list-reducer";
@@ -41,18 +41,8 @@ const ConsumptionTableComp: FC<Props> = ({ preLoadedData = [] }) => {
             <Tr key={fc.locationId}>
               <Td>{fc.address}</Td>
               <Td>{fc.fuelConsumed}</Td>
-              <Td>{fc.startDate}</Td>
-              <Td>{fc.endDate}</Td>
-            </Tr>
-          ))}
-        </Tbody>
-        <Tbody>
-          {data.map(fc => (
-            <Tr key={fc.locationId}>
-              <Td>{fc.address}</Td>
-              <Td>{fc.fuelConsumed}</Td>
-              <Td>{fc.startDate}</Td>
-              <Td>{fc.endDate}</Td>
+              <Td>{fc.startDate.toLocaleDateString()}</Td>
+              <Td>{fc.endDate.toLocaleDateString()}</Td>
             </Tr>
           ))}
         </Tbody>
