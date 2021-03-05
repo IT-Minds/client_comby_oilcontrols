@@ -27,6 +27,7 @@ import {
   ILocationRefillDto,
   ITruckInfoDetailsDto,
   TankState,
+  TruckInfoDetailsDto,
   UserIdDto
 } from "services/backend/nswagts";
 import { urlToFile } from "utils/urlToFile";
@@ -56,8 +57,6 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
   const [truck, setTruck] = useState(truckInfo);
   const [refills, setRefills] = useState<ILocationRefillDto[]>([]);
   const [truckCoupons, setTruckCoupons] = useState<ICouponIdDto[]>(coupons);
-
-  const [truck, setTruck] = useState<ITruckInfoDetailsDto>({});
 
   const { awaitCallback, isOnline } = useOffline();
 
