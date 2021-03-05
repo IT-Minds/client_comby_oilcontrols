@@ -9,12 +9,14 @@ type Props = {
   queryKey: string;
   queryGroup?: string;
   sortCb?: (key: string, direction: Direction) => void;
+  defaultVal?: Direction;
 };
 
 const QuerySortBtn: FC<Props & Partial<IconButtonProps>> = ({
   sortCb = () => null,
   queryKey,
   queryGroup = "t",
+  defaultVal = null,
   ...rest
 }) => {
   const [direction, setDirection] = useState<Direction>(null);
@@ -40,6 +42,14 @@ const QuerySortBtn: FC<Props & Partial<IconButtonProps>> = ({
       }
     }
   }, [router, router.query]);
+
+  useEffect(() => {
+    if (defaultVal) {
+      setActive(true);
+      setDirection(defaultVal);
+      sortCb(queryKey, defaultVal);
+    }
+  }, []);
 
   const onClick = useCallback(() => {
     switch (direction) {

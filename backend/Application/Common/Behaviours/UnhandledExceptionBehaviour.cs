@@ -27,7 +27,7 @@ namespace Application.Common.Behaviours
 
         _logger.LogError(ex, "Request: Unhandled Exception for Request {Name} {@Request}", requestName, request);
 
-        throw;
+         throw ex;
       }
     }
   }

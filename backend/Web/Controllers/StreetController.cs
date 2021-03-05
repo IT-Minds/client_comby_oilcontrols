@@ -11,7 +11,7 @@ namespace Web.Controllers
     [HttpGet]
     [ResponseCache(Duration = 604800)] // 7 week cache
     public async Task<ActionResult<PageResult<StreetDto>>> Get(
-     [FromQuery] string needle, [FromQuery] int size = 1000, [FromQuery] int? skip = 0
+     [FromQuery] string needle = "", [FromQuery] int size = 1000, [FromQuery] int? skip = 0
     )
     {
       return await Mediator.Send(new GetStreetsQuery

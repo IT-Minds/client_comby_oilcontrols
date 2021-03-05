@@ -9,49 +9,44 @@ import {
   Select,
   useDisclosure
 } from "@chakra-ui/react";
+import { TruckContext } from "contexts/TruckContext";
 import { Locale } from "i18n/Locale";
 import { useI18n } from "next-rosetta";
-import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { FC, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { RiFileShredLine } from "react-icons/ri";
 import { genCouponsClient } from "services/backend/apiClients";
-import { CouponIdDto, CouponStatus } from "services/backend/nswagts";
+import { CouponStatus } from "services/backend/nswagts";
 import { parseInputToNumber } from "utils/formatNumber";
 
-type Props = {
-  data: CouponIdDto[];
-};
-
-const InvalidateCouponBtn: FC<Props> = ({ data = [] }) => {
+const InvalidateCouponBtn: FC = () => {
   const cancelRef = useRef();
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const { t } = useI18n<Locale>();
 
-  const [dataCoupons, setDataCoupons] = useState<CouponIdDto[]>([]);
+  const { coupons, reloadData } = useContext(TruckContext);
+
   const [chosenCoupon, setChosenCoupon] = useState<number>();
 
   const invalidateActions = useCallback(async () => {
     const client = await genCouponsClient();
     const result = await client.invalidateCoupon(Number(chosenCoupon));
     if (result.status === CouponStatus.DESTROYED) {
-      setDataCoupons(dataCoupons.filter(a => a.id !== result.id));
-
-      const selectedCouponIndex = dataCoupons.findIndex(d => d.couponNumber === chosenCoupon);
-      const isLastIndex = dataCoupons.length - 1 === selectedCouponIndex;
+      const selectedCouponIndex = coupons.findIndex(d => d.couponNumber === chosenCoupon);
+      const isLastIndex = coupons.length - 1 === selectedCouponIndex;
       if (isLastIndex) {
-        //If last index, select first coupon
-        setChosenCoupon(dataCoupons[0]?.couponNumber ?? 0);
+        setChosenCoupon(coupons[0]?.couponNumber ?? null);
       } else {
         //If not last index, select the next coupon
-        setChosenCoupon(dataCoupons[selectedCouponIndex + 1].couponNumber);
+        setChosenCoupon(coupons[selectedCouponIndex + 1].couponNumber);
       }
+
+      reloadData();
     }
-  }, [chosenCoupon, dataCoupons]);
+  }, [chosenCoupon, coupons]);
 
   useEffect(() => {
-    setDataCoupons(data);
-    setChosenCoupon(data[0]?.couponNumber ?? 0);
-  }, [data]);
+    setChosenCoupon(coupons[0]?.couponNumber ?? null);
+  }, [coupons]);
 
   return (
     <>
@@ -67,13 +62,13 @@ const InvalidateCouponBtn: FC<Props> = ({ data = [] }) => {
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              {dataCoupons.length > 0
+              {coupons.length > 0
                 ? t("coupons.invalidate.confirm", { coupon: chosenCoupon })
                 : t("coupons.invalidate.noMoreCoupons")}
               <Select
                 onChange={e => setChosenCoupon(parseInputToNumber(e.target.value))}
                 value={chosenCoupon}>
-                {dataCoupons.map(coupon => (
+                {coupons.map(coupon => (
                   <option key={coupon.couponNumber} value={coupon.couponNumber}>
                     {coupon.couponNumber}
                   </option>
@@ -88,10 +83,10 @@ const InvalidateCouponBtn: FC<Props> = ({ data = [] }) => {
               <Button
                 colorScheme="red"
                 onClick={() => {
-                  dataCoupons.length > 0 ? invalidateActions() : onClose();
+                  coupons.length > 0 ? invalidateActions() : onClose();
                 }}
                 ml={3}>
-                {dataCoupons.length > 0 ? t("actions.invalidate") : t("coupons.invalidate.close")}
+                {coupons.length > 0 ? t("actions.invalidate") : t("coupons.invalidate.close")}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
+using Domain.Entities.Refills;
 using Domain.EntityExtensions;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +28,7 @@ namespace Application.Common.Services
         .Include(x => x.Location)
           .ThenInclude(x => x.Debtors)
             .ThenInclude(x => x.Debtor)
-        .Where(x => x.ActualDeliveryDate.Year == year)
+        .Where(x => x.ActualDeliveryDate.Year == year && x.RefillState == RefillState.COMPLETED)
         .OrderBy(x => x.Location.Address)
           .ThenBy(x => x.ActualDeliveryDate)
         .ToListAsync();

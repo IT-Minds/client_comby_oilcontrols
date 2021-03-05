@@ -6,7 +6,7 @@
   "display": "fullscreen",
   "orientation": "portrait",
   "scope": "/",
-  "start_url": "/mytruck?thsort=t_address_ASC",
+  "start_url": "/mytruck",
   "icons": [
     {
       "src": "images/icons/icon-72x72.png",

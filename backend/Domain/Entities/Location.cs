@@ -26,14 +26,14 @@ namespace Domain.Entities
     {
       get
       {
-        return this.Refills.Where(x => x.RefillState == RefillState.ASSIGNED).OfType<AssignedRefill>();
+        return this.Refills.OfType<AssignedRefill>();
       }
     }
     public virtual IEnumerable<CompletedRefill> CompletedRefills
     {
       get
       {
-        return this.Refills.Where(x => x.RefillState == RefillState.COMPLETED).OfType<CompletedRefill>();
+        return this.Refills.OfType<CompletedRefill>();
       }
     }
     public ICollection<LocationHistory> LocationHistories { get; set; }
@@ -43,5 +43,7 @@ namespace Domain.Entities
     public double EstimateFuelConsumption { get; set; }
     public ICollection<LocationDebtor> Debtors { get; set; }
     public ICollection<LocationDebtorHistory> DebtorsHistory { get; set; }
+
+    public DateTime? InactiveSince { get; set; }
   }
 }

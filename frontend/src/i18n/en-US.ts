@@ -54,6 +54,7 @@ export const table: Locale = {
 
   toast: {
     successful: "Vellykket",
+    error: "Mislykket",
     updateDebtor: "Opdater debtor",
     createTruck: "Opret vogn",
     createLocation: "Opret lokation",
@@ -61,7 +62,8 @@ export const table: Locale = {
     updatePassword: "Opdater kodeord",
     updateRole: "Opdater rolle",
     createTemperature: "Opret temperatur",
-    deleteUser: "Slet bruger"
+    deleteUser: "Slet bruger",
+    locationRefill: "Påfyldning af lokation"
   },
 
   coupons: {
@@ -174,6 +176,7 @@ export const table: Locale = {
     refillSchedule: "Genopfyldningsplan:",
     daysBetweenRefill: "Dage mellem genopfyldninger:",
     numberOfDays: "# dage",
+    inactiveSince: "Inaktiv dato",
     comment: "Kommentar",
     comments: "Kommentarer:",
     selectAnImage: "Vælg et billede af tanklokationen",

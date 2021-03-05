@@ -1,4 +1,4 @@
-import { Container, Flex, Heading, Text } from "@chakra-ui/react";
+import { Container } from "@chakra-ui/react";
 import { useEffectAsync } from "hooks/useEffectAsync";
 import { Locale } from "i18n/Locale";
 import { runTimeTable } from "i18n/runtimeTable";

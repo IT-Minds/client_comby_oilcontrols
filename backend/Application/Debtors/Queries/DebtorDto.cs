@@ -1,8 +1,11 @@
+using Application.Common.Mappings;
+using Domain.Entities;
+
 namespace Application.Debtors.Queries
 {
-  public class DebtorDto
+  public class DebtorDto: IAutoMap<Debtor>
   {
-    public int DbId {get; set;}
+    public int Id {get; set;}
     public int UnicontaId {get; set;}
     public bool Blocked {get; set;}
     public string AccountNumber {get; set;}

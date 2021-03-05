@@ -145,7 +145,7 @@ const RefillHistoryComp: FC<Props> = ({
         <Tbody>
           {dataSplitter.data.map(lh => (
             <Tr key={lh.id}>
-              <Td>{lh.actualDeliveryDate}</Td>
+              <Td>{lh.actualDeliveryDate.toLocaleDateString()}</Td>
               <Td>{lh.endAmount - lh.startAmount}</Td>
               <Td>{lh.truckId}</Td>
               <Td>{lh.couponId}</Td>

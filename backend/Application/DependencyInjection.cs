@@ -58,6 +58,11 @@ namespace Application
         o => o.SyncLocationsToRefills(CancellationToken.None), "0 * * * *"
       );
 
+      jobs.AddOrUpdate<SynchronizeDebtorService>(
+        "UniContaDebtorSync",
+        o => o.SyncroniceDebtor(CancellationToken.None), "0,30 * * * *"
+      );
+
       app.UseEndpoints(endpoints =>
       {
         endpoints.MapHangfireDashboard();

@@ -111,7 +111,7 @@ namespace Application.Refills.Commands.CompleteRefill
         completingrefill.EndAmount = request.EndAmount;
         completingrefill.ActualDeliveryDate = request.ActualDeliveryDate;
         completingrefill.TankState = request.TankState;
-        completingrefill.CouponId = coupon.Id;
+        completingrefill.Coupon = coupon;
         completingrefill.RefillNumber = truck.RefillNumber++;
 
         coupon.Status = CouponStatus.USED;

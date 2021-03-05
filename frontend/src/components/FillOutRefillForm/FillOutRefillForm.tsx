@@ -5,12 +5,11 @@ import { ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui
 import { Select, useDisclosure, VStack } from "@chakra-ui/react";
 import CameraComp from "components/Camera/CameraComponent";
 import { useI18n } from "next-rosetta";
-import React, { FC, FormEvent, useCallback, useState } from "react";
+import React, { FC, FormEvent, useCallback, useEffect, useState } from "react";
 import { MdCheck, MdPhotoCamera, MdRemoveRedEye, MdRepeat } from "react-icons/md";
 import { FuelTypeRecord } from "services/backend/ext/enumConvertor";
 import { FuelType } from "services/backend/nswagts";
 import DropdownType from "types/DropdownType";
-import { capitalize } from "utils/capitalizeAnyString";
 import { formatInputNumber, parseInputToNumber } from "utils/formatNumber";
 import { logger } from "utils/logger";
 
@@ -27,10 +26,17 @@ const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) =>
     startliters: 0,
     endliters: 0,
     fuelType: null,
-    couponNumber: couponNumbers[0]?.name ?? "",
+    couponNumber: couponNumbers[0]?.name.toString() ?? "",
     isSpecialFill: false,
     image: ""
   });
+
+  useEffect(() => {
+    setLocalReportForm(form => {
+      (form.couponNumber as unknown) = couponNumbers[0]?.name ?? "";
+      return form;
+    });
+  }, [couponNumbers]);
 
   const [isTakingPic, setIsTakingPic] = useState(false);
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
@@ -94,7 +100,7 @@ const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) =>
               placeholder={t("mytruck.refill.selectFuelType") as string}>
               {Object.entries(FuelTypeRecord).map(([a, b]) => (
                 <option key={b} value={b}>
-                  {capitalize(a)}
+                  {t("enums.fuelType." + b)}
                 </option>
               ))}
             </Select>

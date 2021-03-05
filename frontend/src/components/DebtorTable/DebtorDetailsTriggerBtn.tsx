@@ -35,7 +35,7 @@ const DebtorDetailsTriggerBtn: FC<Props> = ({ debtorData }) => {
       <IconButton
         size="sm"
         colorScheme="gray"
-        aria-label={"Open details for debtor: " + debtor.dbId}
+        aria-label={"Open details for debtor: " + debtor.id}
         onClick={onOpen}
         icon={<MdVisibility size={24} />}
       />

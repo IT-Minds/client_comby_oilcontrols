@@ -3058,7 +3058,7 @@ export interface ICreateDailyTemperatureCommand {
 }
 
 export class DebtorDto implements IDebtorDto {
-    dbId?: number;
+    id?: number;
     unicontaId?: number;
     blocked?: boolean;
     accountNumber?: string | null;
@@ -3077,7 +3077,7 @@ export class DebtorDto implements IDebtorDto {
 
     init(_data?: any) {
         if (_data) {
-            this.dbId = _data["dbId"] !== undefined ? _data["dbId"] : <any>null;
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
             this.unicontaId = _data["unicontaId"] !== undefined ? _data["unicontaId"] : <any>null;
             this.blocked = _data["blocked"] !== undefined ? _data["blocked"] : <any>null;
             this.accountNumber = _data["accountNumber"] !== undefined ? _data["accountNumber"] : <any>null;
@@ -3096,7 +3096,7 @@ export class DebtorDto implements IDebtorDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["dbId"] = this.dbId !== undefined ? this.dbId : <any>null;
+        data["id"] = this.id !== undefined ? this.id : <any>null;
         data["unicontaId"] = this.unicontaId !== undefined ? this.unicontaId : <any>null;
         data["blocked"] = this.blocked !== undefined ? this.blocked : <any>null;
         data["accountNumber"] = this.accountNumber !== undefined ? this.accountNumber : <any>null;
@@ -3108,7 +3108,7 @@ export class DebtorDto implements IDebtorDto {
 }
 
 export interface IDebtorDto {
-    dbId?: number;
+    id?: number;
     unicontaId?: number;
     blocked?: boolean;
     accountNumber?: string | null;
@@ -3478,6 +3478,7 @@ export class LocationDto implements ILocationDto {
     mainDebtorId?: number | null;
     baseDebtorId?: number | null;
     upcomingDebtorId?: number | null;
+    inactiveSince?: Date | null;
     debtorChangeDate?: Date | null;
 
     constructor(data?: ILocationDto) {
@@ -3501,6 +3502,7 @@ export class LocationDto implements ILocationDto {
             this.mainDebtorId = _data["mainDebtorId"] !== undefined ? _data["mainDebtorId"] : <any>null;
             this.baseDebtorId = _data["baseDebtorId"] !== undefined ? _data["baseDebtorId"] : <any>null;
             this.upcomingDebtorId = _data["upcomingDebtorId"] !== undefined ? _data["upcomingDebtorId"] : <any>null;
+            this.inactiveSince = _data["inactiveSince"] ? new Date(_data["inactiveSince"].toString()) : <any>null;
             this.debtorChangeDate = _data["debtorChangeDate"] ? new Date(_data["debtorChangeDate"].toString()) : <any>null;
         }
     }
@@ -3524,6 +3526,7 @@ export class LocationDto implements ILocationDto {
         data["mainDebtorId"] = this.mainDebtorId !== undefined ? this.mainDebtorId : <any>null;
         data["baseDebtorId"] = this.baseDebtorId !== undefined ? this.baseDebtorId : <any>null;
         data["upcomingDebtorId"] = this.upcomingDebtorId !== undefined ? this.upcomingDebtorId : <any>null;
+        data["inactiveSince"] = this.inactiveSince ? this.inactiveSince.toISOString() : <any>null;
         data["debtorChangeDate"] = this.debtorChangeDate ? this.debtorChangeDate.toISOString() : <any>null;
         return data; 
     }
@@ -3540,6 +3543,7 @@ export interface ILocationDto {
     mainDebtorId?: number | null;
     baseDebtorId?: number | null;
     upcomingDebtorId?: number | null;
+    inactiveSince?: Date | null;
     debtorChangeDate?: Date | null;
 }
 
@@ -3811,7 +3815,6 @@ export interface IPageResultOfLocationDetailsIdDtoAndDateTimeOffset {
 
 export class LocationDetailsIdDto extends LocationDetailsDto implements ILocationDetailsIdDto {
     id?: number;
-    predictedFuelDate?: Date;
 
     constructor(data?: ILocationDetailsIdDto) {
         super(data);
@@ -3821,7 +3824,6 @@ export class LocationDetailsIdDto extends LocationDetailsDto implements ILocatio
         super.init(_data);
         if (_data) {
             this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
-            this.predictedFuelDate = _data["predictedFuelDate"] ? new Date(_data["predictedFuelDate"].toString()) : <any>null;
         }
     }
 
@@ -3835,7 +3837,6 @@ export class LocationDetailsIdDto extends LocationDetailsDto implements ILocatio
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id !== undefined ? this.id : <any>null;
-        data["predictedFuelDate"] = this.predictedFuelDate ? this.predictedFuelDate.toISOString() : <any>null;
         super.toJSON(data);
         return data; 
     }
@@ -3843,7 +3844,6 @@ export class LocationDetailsIdDto extends LocationDetailsDto implements ILocatio
 
 export interface ILocationDetailsIdDto extends ILocationDetailsDto {
     id?: number;
-    predictedFuelDate?: Date;
 }
 
 export class PageResultOfLocationHistoryDtoAndString implements IPageResultOfLocationHistoryDtoAndString {
@@ -5236,7 +5236,9 @@ export class LocationRefillDto implements ILocationRefillDto {
     addressExtra?: string | null;
     expectedDeliveryDate?: Date;
     debtorBlocked?: boolean;
+    couponRequired?: boolean;
     bstNumber?: string | null;
+    comments?: string | null;
 
     constructor(data?: ILocationRefillDto) {
         if (data) {
@@ -5259,7 +5261,9 @@ export class LocationRefillDto implements ILocationRefillDto {
             this.addressExtra = _data["addressExtra"] !== undefined ? _data["addressExtra"] : <any>null;
             this.expectedDeliveryDate = _data["expectedDeliveryDate"] ? new Date(_data["expectedDeliveryDate"].toString()) : <any>null;
             this.debtorBlocked = _data["debtorBlocked"] !== undefined ? _data["debtorBlocked"] : <any>null;
+            this.couponRequired = _data["couponRequired"] !== undefined ? _data["couponRequired"] : <any>null;
             this.bstNumber = _data["bstNumber"] !== undefined ? _data["bstNumber"] : <any>null;
+            this.comments = _data["comments"] !== undefined ? _data["comments"] : <any>null;
         }
     }
 
@@ -5282,7 +5286,9 @@ export class LocationRefillDto implements ILocationRefillDto {
         data["addressExtra"] = this.addressExtra !== undefined ? this.addressExtra : <any>null;
         data["expectedDeliveryDate"] = this.expectedDeliveryDate ? this.expectedDeliveryDate.toISOString() : <any>null;
         data["debtorBlocked"] = this.debtorBlocked !== undefined ? this.debtorBlocked : <any>null;
+        data["couponRequired"] = this.couponRequired !== undefined ? this.couponRequired : <any>null;
         data["bstNumber"] = this.bstNumber !== undefined ? this.bstNumber : <any>null;
+        data["comments"] = this.comments !== undefined ? this.comments : <any>null;
         return data; 
     }
 }
@@ -5298,7 +5304,9 @@ export interface ILocationRefillDto {
     addressExtra?: string | null;
     expectedDeliveryDate?: Date;
     debtorBlocked?: boolean;
+    couponRequired?: boolean;
     bstNumber?: string | null;
+    comments?: string | null;
 }
 
 export class CreateTruckRefillCommand implements ICreateTruckRefillCommand {

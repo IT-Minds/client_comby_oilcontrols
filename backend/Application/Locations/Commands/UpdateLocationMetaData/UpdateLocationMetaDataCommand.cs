@@ -50,6 +50,7 @@ namespace Application.Locations.Commands.UpdateLocationMetaData
         location.DaysBetweenRefills = request.Data.DaysBetweenRefills;
         location.TankType = request.Data.TankType;
         location.TankNumber = request.Data.BSTNumber;
+        location.InactiveSince = request.Data.InactiveSince;
 
         var tank = location.FuelTank;
         tank.TankCapacity = request.Data.TankCapacity;

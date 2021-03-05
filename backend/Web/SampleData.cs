@@ -139,10 +139,10 @@ namespace Web
       );
       context.SaveChanges();
 
-      var location1 = new Location { Address = "StreetName 1", Comments = "This is location", EstimateFuelConsumption = 5, FuelTankId = fueltank1.Id, RegionId = region1.Id, Schedule = RefillSchedule.AUTOMATIC, DaysBetweenRefills = 14, TankNumber = "1000", TankType = TankType.BUILDING };
-      var location2 = new Location { Address = "StreetName 2", Comments = "This is another location", EstimateFuelConsumption = 5, FuelTankId = fueltank1.Id, RegionId = region1.Id, Schedule = RefillSchedule.INTERVAL, DaysBetweenRefills = 10, TankNumber = "1001", TankType = TankType.BUILDING };
-      var location3 = new Location { Address = "Another Street 35", Comments = "This is the location", EstimateFuelConsumption = 5, FuelTankId = fueltank1.Id, RegionId = region1.Id, Schedule = RefillSchedule.MANUAL, DaysBetweenRefills = 300, TankNumber = "1002", TankType = TankType.BUILDING };
-      var location4 = new Location { Address = "The First Street 43", Comments = "This is yet another location", EstimateFuelConsumption = 5, FuelTankId = fueltank1.Id, RegionId = region1.Id, Schedule = RefillSchedule.AUTOMATIC, DaysBetweenRefills = 45, TankNumber = "1003", TankType = TankType.BUILDING };
+      var location1 = new Location { Address = "StreetName 1", Comments = "This is location", EstimateFuelConsumption = 5, FuelTankId = fueltank1.Id, RegionId = region1.Id, Schedule = RefillSchedule.AUTOMATIC, DaysBetweenRefills = 14, TankNumber = "1000", TankType = TankType.BUILDING, InactiveSince = DateTime.MaxValue };
+      var location2 = new Location { Address = "StreetName 2", Comments = "This is another location", EstimateFuelConsumption = 5, FuelTankId = fueltank1.Id, RegionId = region1.Id, Schedule = RefillSchedule.INTERVAL, DaysBetweenRefills = 10, TankNumber = "1001", TankType = TankType.BUILDING, InactiveSince = DateTime.MaxValue };
+      var location3 = new Location { Address = "Another Street 35", Comments = "This is the location", EstimateFuelConsumption = 5, FuelTankId = fueltank1.Id, RegionId = region1.Id, Schedule = RefillSchedule.MANUAL, DaysBetweenRefills = 300, TankNumber = "1002", TankType = TankType.BUILDING, InactiveSince = DateTime.MaxValue };
+      var location4 = new Location { Address = "The First Street 43", Comments = "This is yet another location", EstimateFuelConsumption = 5, FuelTankId = fueltank1.Id, RegionId = region1.Id, Schedule = RefillSchedule.AUTOMATIC, DaysBetweenRefills = 45, TankNumber = "1003", TankType = TankType.BUILDING, InactiveSince = DateTime.MaxValue };
 
       context.Locations.AddRange(
         location1,
@@ -181,6 +181,9 @@ namespace Web
       var refill2 = new CompletedRefill { CouponId = coupon2.Id, StartAmount = 1000, EndAmount = 10000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2000, 5, 10), ActualDeliveryDate = new DateTime(2000, 5, 10), LocationId = location1.Id, TruckId = truck1.Id, Created = DateTime.Now, LastModified = DateTime.Now };
       var refill3 = new CompletedRefill { CouponId = coupon3.Id, StartAmount = 1000, EndAmount = 10000, TankState = TankState.FULL, ExpectedDeliveryDate = new DateTime(2000, 5, 20), ActualDeliveryDate = new DateTime(2000, 5, 20), LocationId = location1.Id, TruckId = truck2.Id, Created = DateTime.Now, LastModified = DateTime.Now };
       var refill4 = new OrderedRefill { ExpectedDeliveryDate = new DateTime(2000, 5, 1), LocationId = location1.Id, Created = DateTime.Now, LastModified = DateTime.Now };
+      var refill5 = new AssignedRefill { ExpectedDeliveryDate = new DateTime(2000, 5, 1), LocationId = location1.Id, Created = DateTime.Now, LastModified = DateTime.Now, TruckId = truck1.Id };
+      var refill6 = new AssignedRefill { ExpectedDeliveryDate = new DateTime(2000, 5, 1), LocationId = location2.Id, Created = DateTime.Now, LastModified = DateTime.Now, TruckId = truck1.Id };
+      var refill7 = new AssignedRefill { ExpectedDeliveryDate = new DateTime(2000, 5, 1), LocationId = location3.Id, Created = DateTime.Now, LastModified = DateTime.Now, TruckId = truck1.Id };
 
       context.CompletedRefills.AddRange(
         refill1,
@@ -189,6 +192,9 @@ namespace Web
       );
       context.OrderedRefills.AddRange(
         refill4
+      );
+      context.AssignedRefills.AddRange(
+        refill5, refill6, refill7
       );
       context.SaveChanges();
 

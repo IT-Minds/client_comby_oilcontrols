@@ -38,11 +38,15 @@ namespace Application.Locations.Queries
           .Include(r => r.Truck)
           .Include(r => r.Location)
             .ThenInclude(l => l.FuelTank)
-          .Where(r => r.TruckId == request.TruckId && r.RefillState == RefillState.ASSIGNED)
-          .ProjectTo<LocationRefillDto>(_mapper.ConfigurationProvider)
+          .Include(r => r.Location)
+            .ThenInclude(l => l.Debtors)
+              .ThenInclude(l => l.Debtor)
+          .Where(x => x.Location.InactiveSince == null || x.Location.InactiveSince >= DateTime.Now)
+          .Where(r => r.TruckId == request.TruckId)
+          .Where(r => r.RefillState == RefillState.ASSIGNED)
           .ToListAsync();
 
-        return refillDtos;
+        return refillDtos.Select(x => _mapper.Map<LocationRefillDto>(x)).ToList();
       }
     }
   }

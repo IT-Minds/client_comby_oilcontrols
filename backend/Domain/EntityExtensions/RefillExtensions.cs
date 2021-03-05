@@ -1,4 +1,4 @@
-using Domain.Entities;
+using System;
 using Domain.Entities.Refills;
 
 namespace Domain.EntityExtensions
@@ -7,7 +7,8 @@ namespace Domain.EntityExtensions
   {
     public static double AmountDelivered(this CompletedRefill refill)
     {
-      return refill.StartAmount - refill.EndAmount;
+      // locations tank capacity -
+      return Math.Abs(refill.StartAmount - refill.EndAmount);
     }
   }
 }

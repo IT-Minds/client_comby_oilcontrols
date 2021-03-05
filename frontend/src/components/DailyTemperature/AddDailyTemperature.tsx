@@ -14,10 +14,10 @@ import RegionSelector from "components/RegionSelector/RegionSelector";
 import { authGuardHOC } from "hoc/authGuardHOC";
 import { useEffectAsync } from "hooks/useEffectAsync";
 import { Locale } from "i18n/Locale";
+import { useRouter } from "next/router";
 import { useI18n } from "next-rosetta";
 import React, { FC, FormEvent, useCallback, useState } from "react";
 import { MdCheck } from "react-icons/md";
-import { genStreetClient } from "services/backend/apiClients";
 import { Action, ICreateDailyTemperatureCommand } from "services/backend/nswagts";
 import getLocale from "utils/datepickerLocale";
 import { formatInputNumber, parseInputToNumber } from "utils/formatNumber";
@@ -40,15 +40,16 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback }) => {
   });
 
   const { t } = useI18n<Locale>();
+  const { locale } = useRouter();
 
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
   const [date, setDate] = useState<Date>(new Date());
-  const [locale, setLocale] = useState<globalThis.Locale>();
+  const [datelocale, setLocale] = useState<globalThis.Locale>();
 
   useEffectAsync(async () => {
-    const lang = await getLocale();
+    const lang = await getLocale(locale);
     setLocale(lang);
-  }, []);
+  }, [locale]);
 
   const updateLocalForm = useCallback(
     (value: unknown, key: keyof ICreateDailyTemperatureCommand) => {
@@ -95,7 +96,7 @@ const AddDailyTemperatureComp: FC<Props> = ({ submitCallback }) => {
           <FormControl isRequired>
             <FormLabel>{t("dailyTemperature.selectDate")}:</FormLabel>
             <DatePicker
-              locale={locale}
+              locale={datelocale}
               selectedDate={date}
               onChange={(x: Date) => setDate(x)}
               showPopperArrow={false}

@@ -114,13 +114,6 @@ const LocationList: FC<Props> = ({ data }) => {
           </Th>
           <Th>
             <HStack spacing={1}>
-              <Text>DEBUG</Text>
-              <Spacer />
-              <QuerySortBtn queryKey="predictedFuelDate" sortCb={sortCb} />
-            </HStack>
-          </Th>
-          <Th>
-            <HStack spacing={1}>
               <Text>{t("locationList.scheduleType")}</Text>
               <Spacer />
               <QuerySortBtn queryKey="scheduleType" sortCb={sortCb} />
@@ -148,8 +141,7 @@ const LocationList: FC<Props> = ({ data }) => {
               {dat.address} {dat.addressExtra}
             </Td>
             <Td>{dat.regionId}</Td>
-            <Td>{RefillSchedule[dat.schedule]}</Td>
-            <Td>{dateTimeFormatter.format(dat.predictedFuelDate)}</Td>
+            <Td>{t("enums.refillSchedule." + dat.schedule)}</Td>
             <Td>
               <HStack>
                 <EditLocationTriggerBtn data={dat} />
@@ -158,7 +150,7 @@ const LocationList: FC<Props> = ({ data }) => {
 
                 <OrderRefillComp locationId={dat.id} submitCallback={orderRefill} />
 
-                <RefillModalBtn />
+                <RefillModalBtn refill={dat} />
               </HStack>
             </Td>
           </Tr>

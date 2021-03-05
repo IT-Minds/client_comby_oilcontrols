@@ -35,7 +35,7 @@ namespace Application.TruckRefills.Commands.CreateTruckRefill
       public async Task<int> Handle(CreateTruckRefillCommand request, CancellationToken cancellationToken)
       {
         var truck = await _context.Trucks
-        .Include(x => x.DailyStates.Where(x => x.Date.DayOfYear == request.TimeStamp.DayOfYear && x.Date.Year == request.TimeStamp.Year))
+          .Include(x => x.DailyStates.Where(x => x.Date.DayOfYear == request.TimeStamp.DayOfYear && x.Date.Year == request.TimeStamp.Year))
         .FirstOrDefaultAsync(x => x.Id == request.TruckId);
 
         if (truck == null)
@@ -69,12 +69,9 @@ namespace Application.TruckRefills.Commands.CreateTruckRefill
           {
             Truck = truck,
             Date = request.TimeStamp.Date,
-            MorningQuantity = morningQuantity,
-            EveningQuantity = morningQuantity
+            MorningQuantity = morningQuantity
           };
         }
-
-        dailyState.EveningQuantity += request.Amount;
 
         var truckRefill = new TruckRefill
         {

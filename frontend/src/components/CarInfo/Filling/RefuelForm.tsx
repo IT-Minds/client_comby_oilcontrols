@@ -1,11 +1,9 @@
 import {
   Button,
   Center,
-  Container,
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -17,9 +15,11 @@ import {
   Select,
   useDisclosure
 } from "@chakra-ui/react";
+import DatePicker from "components/DatePicker/DatePicker";
+import { TruckContext } from "contexts/TruckContext";
 import { useRouter } from "next/router";
 import { useI18n } from "next-rosetta";
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useCallback, useContext, useState } from "react";
 import { GiGasPump } from "react-icons/gi";
 import { MdAdd } from "react-icons/md";
 import { FuelTypeRecord } from "services/backend/ext/enumConvertor";
@@ -27,21 +27,18 @@ import { FuelType } from "services/backend/nswagts";
 
 import { TruckRefuelForm } from "./TruckRefuelForm";
 
-type Props = {
-  fillData: (addCouponForm: TruckRefuelForm) => void;
-};
-
-const RefuelForm: FC<Props> = ({ fillData }) => {
+const RefuelForm: FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { t } = useI18n<Locale>();
   const { locale } = useRouter();
 
-  const formatter = Intl.DateTimeFormat(locale);
+  const { completeTruckRefuel, reloadData } = useContext(TruckContext);
+  const [date, setDate] = useState(new Date());
 
   const [localFillingForm, setLocalFillingForm] = useState<TruckRefuelForm>({
     fillAmount: null,
     cardNumber: null,
-    date: new Date(),
+    date: null,
     fuelType: null
   });
 
@@ -52,12 +49,14 @@ const RefuelForm: FC<Props> = ({ fillData }) => {
     });
   }, []);
 
-  const addFilling = useCallback(() => {
+  const addFilling = useCallback(async () => {
     if (localFillingForm.fillAmount && localFillingForm.cardNumber && localFillingForm.fuelType) {
-      fillData(localFillingForm);
+      localFillingForm.date = date;
+      await completeTruckRefuel(localFillingForm);
+      await reloadData();
       onClose();
     }
-  }, [localFillingForm]);
+  }, [localFillingForm, date]);
 
   const [formSubmitAttempts, setFormSubmitAttempts] = useState(0);
 
@@ -110,9 +109,14 @@ const RefuelForm: FC<Props> = ({ fillData }) => {
               </NumberInput>
               <FormErrorMessage>{t("mytruck.refuel.formErrors.enterCardNumber")}</FormErrorMessage>
             </FormControl>
-            <FormControl isReadOnly>
+            <FormControl>
               <FormLabel>{t("mytruck.refuel.date")}</FormLabel>
-              <Input value={formatter.format(new Date(localFillingForm.date))} />
+              <DatePicker
+                locale={locale}
+                selectedDate={date}
+                onChange={(date: Date) => setDate(date)}
+                showPopperArrow={false}
+              />
               <FormErrorMessage>{t("mytruck.refuel.formErrors.chooseDate")}</FormErrorMessage>
             </FormControl>
 

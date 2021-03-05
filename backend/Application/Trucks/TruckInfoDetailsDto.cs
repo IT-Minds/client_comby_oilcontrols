@@ -1,3 +1,4 @@
+using System;
 using Application.Common.Mappings;
 using AutoMapper;
 using Domain.Entities;
@@ -16,7 +17,7 @@ namespace Application.Trucks
         .IncludeBase<Truck, TruckInfoIdDto>()
 
         .ForMember(dest => dest.CurrentTankLevel,
-          opts => opts.MapFrom(source => source.GetCurrentTankLevel()));
+          opts => opts.MapFrom(source => source.EveningQuantity(DateTime.UtcNow)));
       ;
     }
 #pragma warning restore 0108

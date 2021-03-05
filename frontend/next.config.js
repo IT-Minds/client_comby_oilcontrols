@@ -34,7 +34,55 @@ module.exports = withBundleAnalyzer(
       disable: process.env.NODE_ENV === "development",
       register: false,
       skipWaiting: true,
-      dest: "public"
+      dest: "public",
+      runtimeCaching: [
+        {
+          // MUST be the same as "start_url" in manifest.json
+          urlPattern: /\/mytruck$/,
+          handler: "CacheFirst",
+          options: {
+            // don't change cache name
+            cacheName: "start-url",
+            fetchOptions: {
+              credentials: "include"
+            },
+            cacheableResponse: {
+              statuses: [200]
+            }
+          }
+        },
+        {
+          urlPattern: /.js(on)?$/,
+          handler: "CacheFirst",
+          options: {
+            cacheName: "static-resources"
+          }
+        },
+        {
+          urlPattern: /\/_next\/image.*$/i,
+          handler: "CacheFirst",
+          options: {
+            cacheName: "next-images"
+          }
+        },
+        {
+          urlPattern: /\/api\/.*$/i,
+          handler: "NetworkFirst",
+          options: {
+            cacheName: "api",
+            fetchOptions: {
+              credentials: "include"
+            },
+            cacheableResponse: {
+              statuses: [200]
+            }
+          }
+        },
+        {
+          urlPattern: /.*/i,
+          handler: "CacheFirst"
+        }
+      ]
     },
     i18n: {
       locales,

@@ -28,7 +28,8 @@ namespace Domain.EntityExtensions
         return location.EstimateFuelConsumption;
       }
 
-       var pastRefills = location.CompletedRefills.OrderByDescending(x => x.ActualDeliveryDate);
+      var pastRefills = location.CompletedRefills
+        .OrderByDescending(x => x.ActualDeliveryDate);
 
       if (pastRefills == null || pastRefills.Count() < 3)
       {
@@ -69,15 +70,16 @@ namespace Domain.EntityExtensions
         return DateTime.UtcNow; // TODO make logic for interval and manual?
       }
 
-      double limit = location.FuelTank.MinimumFuelAmount;
-      var newestRefill = location.CompletedRefills.OrderBy(x => x.ActualDeliveryDate).LastOrDefault();
+      var newestRefill = location.CompletedRefills
+        .OrderByDescending(x => x.ActualDeliveryDate)
+        .FirstOrDefault();
 
       if (newestRefill == null)
       {
         return DateTime.UtcNow;
       }
 
-      var fuelAmount = newestRefill.EndAmount;
+      var fuelAmount = location.FuelTank.TankCapacity;
       double fuelConsumptionPerDegree;
       try
       {

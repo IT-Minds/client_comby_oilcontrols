@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using UniContaDomain.Entities;
 
 namespace Application.Common.Services
@@ -14,17 +16,13 @@ namespace Application.Common.Services
     private readonly IUniContaService _uniContaService;
     private readonly object ensureCreatedLock = new object();
 
-    private IQueryable<Debtor> _debtors;
-
     public SynchronizeDebtorService(IApplicationDbContext context, IUniContaService uniContaService)
     {
       _context = context;
       _uniContaService = uniContaService;
-
-      _debtors = _context.Debtors.AsQueryable();
     }
 
-    public async Task<List<(UniContaDebtor ucDebtor, Debtor dbDebtor)>> SyncroniceDebtor()
+    public async Task SyncroniceDebtor(CancellationToken cancellationToken)
     {
       try
       {
@@ -40,50 +38,35 @@ namespace Application.Common.Services
 
 
       var uniDebtors = await _uniContaService.GetDebtors();
-      var dbDebtors = EnsureCreatedDebtors(uniDebtors.Select(x => x.RowId));
-
-      if (uniDebtors.Count() != dbDebtors.Count())
-      {
-        // TODO throw exception???
-      }
-
-      var joinedList = uniDebtors
-        .OrderBy(x => x.RowId)
-        .Zip(dbDebtors.OrderBy(x => x.UnicontaId),
-          (a, b) => (a, b))
-        .ToList();
-
-      return joinedList;
+      await EnsureCreatedDebtors(uniDebtors, cancellationToken);
     }
 
-    public void SetDebtorQuery(IQueryable<Debtor> debtors)
+    private async Task EnsureCreatedDebtors(IEnumerable<UniContaDebtor> uniDebtors, CancellationToken cancellationToken)
     {
-      _debtors = debtors;
-    }
-
-
-    private List<Debtor> EnsureCreatedDebtors(IEnumerable<int> uniDebtorIds)
-    {
-      List<Debtor> dbDebtors;
-      // lock (ensureCreatedLock)
-      // {
-      dbDebtors = _debtors
+      var uniDebtorIds = uniDebtors.Select(x => x.RowId);
+      var dbDebtors = await _context.Debtors.AsQueryable()
         .Where(x => uniDebtorIds.Contains(x.UnicontaId))
-        .ToList();
+        .ToListAsync();
 
-      foreach (var id in uniDebtorIds)
+      foreach (var debtor in uniDebtors)
       {
-        if (!dbDebtors.Select(x => x.UnicontaId).Contains(id))
+        var debtorExists = dbDebtors.Where(x => x.UnicontaId == debtor.RowId).FirstOrDefault();
+        if (debtorExists == null)
         {
-          var newDebtor = new Debtor { UnicontaId = id };
-
-          _context.Debtors.Add(newDebtor);
-          dbDebtors.Add(newDebtor);
+          debtorExists = new Debtor
+          {
+            UnicontaId = debtor.RowId,
+          };
         }
+        debtorExists.Blocked = debtor.Blocked;
+        debtorExists.AccountNumber = debtor.AccountNumber;
+        debtorExists.Name = debtor.Name;
+        debtorExists.GLN = debtor.GLN;
+
+        _context.Debtors.Update(debtorExists);
       }
-      _context.SaveChanges();
-      // }
-      return dbDebtors;
+
+      await _context.SaveChangesAsync(cancellationToken);
     }
   }
 }
