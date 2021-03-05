@@ -44,10 +44,9 @@ namespace Application.Locations.Queries
           .Where(x => x.Location.InactiveSince == null || x.Location.InactiveSince >= DateTime.Now)
           .Where(r => r.TruckId == request.TruckId)
           .Where(r => r.RefillState == RefillState.ASSIGNED)
-          .ProjectTo<LocationRefillDto>(_mapper.ConfigurationProvider)
           .ToListAsync();
 
-        return refillDtos;
+        return refillDtos.Select(x => _mapper.Map<LocationRefillDto>(x)).ToList();
       }
     }
   }
