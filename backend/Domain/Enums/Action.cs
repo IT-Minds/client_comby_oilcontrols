@@ -12,7 +12,7 @@ namespace Domain.Enums
     CREATE_LOCATION = 7,
     UPDATE_LOCATION = 8,
     GET_LOCATION = 9,
-    CREATE_REFILL = 10,
+    COMPLETE_REFILL = 10,
     ORDER_REFILL = 11,
     GET_REFILLS = 12,
     GET_STREETS = 13,

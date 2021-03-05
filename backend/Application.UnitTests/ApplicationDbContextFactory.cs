@@ -336,7 +336,7 @@ namespace Application.UnitTests
       context.RoleActions.AddRange(
         new RoleAction { Action = Domain.Enums.Action.ASSIGN_COUPON, RoleId = 100 },
         new RoleAction { Action = Domain.Enums.Action.CREATE_LOCATION, RoleId = 100 },
-        new RoleAction { Action = Domain.Enums.Action.CREATE_REFILL, RoleId = 100 }
+        new RoleAction { Action = Domain.Enums.Action.COMPLETE_REFILL, RoleId = 100 }
       );
       //END
 

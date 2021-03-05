@@ -71,7 +71,7 @@ namespace Web
         new RoleAction { Role = role2, Action = Domain.Enums.Action.SAVE_COUPON_IMAGE },
         new RoleAction { Role = role2, Action = Domain.Enums.Action.GET_TRUCK },
         new RoleAction { Role = role2, Action = Domain.Enums.Action.GET_REFILLS },
-        new RoleAction { Role = role2, Action = Domain.Enums.Action.CREATE_REFILL },
+        new RoleAction { Role = role2, Action = Domain.Enums.Action.COMPLETE_REFILL },
         new RoleAction { Role = role2, Action = Domain.Enums.Action.CREATE_TRUCK_REFILL },
         new RoleAction { Role = role2, Action = Domain.Enums.Action.GET_LOCATION }
       );

@@ -16,7 +16,7 @@ using UniContaDomain.Entities;
 
 namespace Application.Refills.Commands.CompleteRefill
 {
-  [AuthorizeAttribute(Domain.Enums.Action.CREATE_REFILL)]
+  [AuthorizeAttribute(Domain.Enums.Action.COMPLETE_REFILL)]
   public class CompleteRefillCommand : IRequest<int>
   {
     [JsonIgnore]
