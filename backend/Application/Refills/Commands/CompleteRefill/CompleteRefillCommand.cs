@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using Application.Common.Security;
 using Domain.Entities.Refills;
 using UniContaDomain.Entities;
+using Hangfire;
 
 namespace Application.Refills.Commands.CompleteRefill
 {
@@ -38,13 +39,8 @@ namespace Application.Refills.Commands.CompleteRefill
         _uniContaService = uniContaService;
       }
 
-      private async Task PostUniContaOrder(int refillId)
+      public async Task PostUniContaOrder(int refillId)
       {
-        if (!await _uniContaService.Login())
-        {
-          // TODO throw exception???
-        }
-
         var refill = await _context.CompletedRefills
           .Include(r => r.Location)
             .ThenInclude(r => r.Debtors)
@@ -52,7 +48,17 @@ namespace Application.Refills.Commands.CompleteRefill
           .Include(r => r.Coupon)
           .FirstOrDefaultAsync(x => x.Id == refillId);
 
-        (int OrderId, int OrderLineId) = await _uniContaService.CreateOrder(new UniContaOrder
+        if (refill.Location.ActiveDebtor() == null) {
+          return;
+        }
+
+        if (!await _uniContaService.Login())
+        {
+          // TODO throw exception???
+          return;
+        }
+
+        var order = new UniContaOrder
         {
           AmountFilled = refill.AmountDelivered(),
           BuildingId = refill.LocationId.ToString(),
@@ -61,7 +67,9 @@ namespace Application.Refills.Commands.CompleteRefill
           Date = refill.ActualDeliveryDate,
           DebtorId = refill.Location.ActiveDebtor().UnicontaId,
           ProductId = "1111"
-        });
+        };
+
+        (int OrderId, int OrderLineId) = await _uniContaService.CreateOrder(order);
 
         System.Console.WriteLine("CREATED ORDER " + OrderId + " WITH OL " + OrderLineId);
       }
@@ -123,15 +131,7 @@ namespace Application.Refills.Commands.CompleteRefill
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        try
-        {
-          await PostUniContaOrder(completingrefill.Id);
-        }
-        catch (System.FormatException e)
-        {
-          throw new ArgumentException("Couldn't access Uniconta.");
-        }
-
+        BackgroundJob.Enqueue(() => PostUniContaOrder(completingrefill.Id));
 
         return refill.Id;
       }

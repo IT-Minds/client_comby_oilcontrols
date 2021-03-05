@@ -17,7 +17,7 @@ namespace Domain.EntityExtensions
       {
         throw new ArgumentException("No temperature entries before: " + date);
       }
-      var avgTemp = pastTemps.Sum(x => x.Temperature) / pastTemps.Count();
+      var avgTemp = pastTemps.Average(x => x.Temperature);
       return avgTemp;
     }
   }
