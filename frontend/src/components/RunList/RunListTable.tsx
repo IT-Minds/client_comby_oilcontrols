@@ -159,7 +159,7 @@ const RunListTable: FC = () => {
             <Td>
               {row.address} {row.addressExtra}
             </Td>
-            <Td hidden={!isPrinting && cols < 3}>{capitalize(RefillSchedule[row.schedule])}</Td>
+            <Td hidden={!isPrinting && cols < 3}>{t("enums.refillSchedule." + row.schedule)}</Td>
             <Td hidden={!isPrinting && cols < 2}>{t("enums.fuelType." + row.fuelType)}</Td>
             <Td>{row.expectedDeliveryDate.toLocaleDateString(locale)}</Td>
             <Td pl="0" hidden={isPrinting}>
