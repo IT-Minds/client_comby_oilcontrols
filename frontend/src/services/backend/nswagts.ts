@@ -4729,6 +4729,7 @@ export enum Interval {
     WEEK = 0,
     MONTH = 1,
     YEAR = 2,
+    QUARTER = 3,
 }
 
 export class FuelConsumptionDto implements IFuelConsumptionDto {
