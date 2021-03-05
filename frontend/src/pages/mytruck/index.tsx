@@ -27,7 +27,6 @@ import {
   ILocationRefillDto,
   ITruckInfoDetailsDto,
   TankState,
-  TruckInfoDetailsDto,
   UserIdDto
 } from "services/backend/nswagts";
 import { urlToFile } from "utils/urlToFile";
@@ -39,11 +38,6 @@ type Props = {
   truckInfo: ITruckInfoDetailsDto;
   coupons: ICouponIdDto[];
   viewOnly?: boolean;
-};
-
-const getTruck = async (id: number): Promise<TruckInfoDetailsDto> => {
-  const client = await genTruckClient();
-  return await client.getTruck(id);
 };
 
 const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
@@ -151,7 +145,7 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
       <Head>
         <title>
           {t("mytruck.title", {
-            id: truck.id
+            id: truckInfo.id
           })}
         </title>
       </Head>
@@ -166,7 +160,7 @@ const MyTruck: NextPage<Props> = ({ truckInfo, coupons, viewOnly = false }) => {
       )}
       <Heading>
         {t("mytruck.heading", {
-          id: truck.id
+          id: truckInfo.id
         })}
       </Heading>
 
@@ -234,7 +228,7 @@ export const getServerSideProps: GetServerSideProps<Props & I18nProps<Locale>> =
 
   const truckClient = await genTruckClient();
 
-  const truckInfo = (await getTruck(me.truckId)).toJSON(); // await truckClient.getTruck(me.truckId).then(x => x.toJSON());
+  const truckInfo = await truckClient.getTruck(me.truckId).then(x => x.toJSON());
   const coupons = await truckClient.getTrucksCoupons(me.truckId).then(
     x => x.results.map(y => y.toJSON()),
     () => []
