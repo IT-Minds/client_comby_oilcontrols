@@ -48,7 +48,7 @@ const LocationHistoryComp: FC<Props> = ({
     "0",
     (needle, size, _sortBy, skip) =>
       genLocationClient().then(client =>
-        client.getLocationHistory(locationId, new Date(needle), size, skip)
+        client.getLocationHistory(locationId, needle ? new Date(needle) : new Date(), size, skip)
       ),
     dataDispatch,
     {
