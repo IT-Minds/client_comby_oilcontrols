@@ -66,21 +66,8 @@ module.exports = withBundleAnalyzer(
           }
         },
         {
-          urlPattern: /\/api\/.*$/i,
-          handler: "NetworkFirst",
-          options: {
-            cacheName: "api",
-            fetchOptions: {
-              credentials: "include"
-            },
-            cacheableResponse: {
-              statuses: [200]
-            }
-          }
-        },
-        {
           urlPattern: /.*/i,
-          handler: "CacheFirst"
+          handler: "NetworkFirst"
         }
       ]
     },
