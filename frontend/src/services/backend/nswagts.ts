@@ -2787,7 +2787,7 @@ export enum Action {
     CREATE_LOCATION = 7,
     UPDATE_LOCATION = 8,
     GET_LOCATION = 9,
-    CREATE_REFILL = 10,
+    COMPLETE_REFILL = 10,
     ORDER_REFILL = 11,
     GET_REFILLS = 12,
     GET_STREETS = 13,
@@ -4728,8 +4728,8 @@ export interface IPageResultOfRoleIdDtoAndString {
 export enum Interval {
     WEEK = 0,
     MONTH = 1,
-    YEAR = 2,
-    QUARTER = 3,
+    QUARTER = 2,
+    YEAR = 3,
 }
 
 export class FuelConsumptionDto implements IFuelConsumptionDto {

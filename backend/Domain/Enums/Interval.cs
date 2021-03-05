@@ -4,7 +4,7 @@ namespace Domain.Enums
   {
     WEEK = 0,
     MONTH = 1,
-    YEAR = 2,
-    QUARTER = 3
+    QUARTER = 2,
+    YEAR = 3
   }
 }
