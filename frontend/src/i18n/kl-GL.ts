@@ -441,7 +441,7 @@ export const table: Locale = {
       "7": "Opret lokation",
       "8": "Opdater lokation",
       "9": "Hent lokation",
-      "10": "Opret påfyldning",
+      "10": "Udfør påfyldning",
       "11": "Bestil påfyldning",
       "12": "Hent påfyldninger",
       "13": "Hent adresser",

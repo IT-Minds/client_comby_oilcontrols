@@ -52,6 +52,7 @@ namespace Application.UnitTests.EntityExtensions.TruckExtension
       eveningQuantity.Should().Be(2500);
     }
 
+
     [Fact(Skip = "Client does not wish for exceptions")]
     public async Task Handle_CalculateEveningAmountNothingRegistered()
     {
@@ -70,12 +71,12 @@ namespace Application.UnitTests.EntityExtensions.TruckExtension
     [Fact]
     public async Task Handle_CalculateEveningAmountNoDeliveries()
     {
-       var truck = await Context.Trucks
-        .Where(x => x.Id == 100)
-        .Include(x => x.DailyStates)
-          .ThenInclude(x => x.TruckRefills)
-        .Include(x => x.Refills)
-        .FirstOrDefaultAsync();
+      var truck = await Context.Trucks
+       .Where(x => x.Id == 100)
+       .Include(x => x.DailyStates)
+         .ThenInclude(x => x.TruckRefills)
+       .Include(x => x.Refills)
+       .FirstOrDefaultAsync();
 
       var eveningQuantity = truck.EveningQuantity(new System.DateTime(2020, 1, 5));
       eveningQuantity.Should().Be(1000);

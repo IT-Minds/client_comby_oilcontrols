@@ -56,7 +56,7 @@ List of actions defined under `Domain.Enums.Action` and their related commands.
 - `GetHistoricConsumptionCsvQuery`
 - `GetHistoricConsumptionQuery`
 
-### 10 CREATE_REFILL
+### 10 COMPLETE_REFILL
 
 - `CompleteRefillCommand`
 
