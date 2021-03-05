@@ -31,7 +31,7 @@ namespace Web.Controllers
 
     [HttpGet("AllRoles")]
     public async Task<ActionResult<PageResult<RoleIdDto, string>>> GetAllRole(
-      [FromQuery] string? needle = "", [FromQuery] int size = 1000, [FromQuery] int? skip = 0
+      [FromQuery] string needle = "", [FromQuery] int size = 1000, [FromQuery] int? skip = 0
     )
     {
       return await Mediator.Send(new GetAllRolesQuery

@@ -17,7 +17,7 @@ namespace Web.Controllers
     }
 
     [HttpGet]
-    [ResponseCache(Duration = 3600)] // 1 hour cache
+    // [ResponseCache(Duration = 3600)] // 1 hour cache
     public async Task<ActionResult<List<DebtorDto>>> Get()
     {
       return await Mediator.Send(new GetDebtorQuery());

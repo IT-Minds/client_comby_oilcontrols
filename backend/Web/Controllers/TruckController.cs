@@ -84,7 +84,7 @@ namespace Web.Controllers
     }
 
     [HttpGet("{id}/refillHistory")]
-    [ResponseCache(Duration = 43200)] // 12 hour cache
+    // [ResponseCache(Duration = 43200)] // 12 hour cache
     public async Task<ActionResult<PageResult<RefillDto, DateTimeOffset>>> GetRefillHistory(
     [FromRoute] int id, [FromQuery] DateTimeOffset? needle = null, [FromQuery] int size = 1000, [FromQuery] int? skip = 0)
     {
