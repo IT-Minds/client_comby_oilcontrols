@@ -52,7 +52,7 @@ namespace Application.UnitTests.EntityExtensions.TruckExtension
       eveningQuantity.Should().Be(2500);
     }
 
-    [Fact]
+    [Fact(Skip = "Client does not wish for exceptions")]
     public async Task Handle_CalculateEveningAmountNothingRegistered()
     {
       var truck = await Context.Trucks

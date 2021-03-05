@@ -1,10 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using Domain.Common;
 using Domain.Entities;
-using Domain.Entities.Refills;
-using Domain.Enums;
 
 namespace Domain.EntityExtensions
 {
