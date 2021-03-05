@@ -149,7 +149,7 @@ const FillingOverviewComp: FC<Props> = ({
           {dataSplitter.sort(sort).map(data => {
             return (
               <Tr key={data.id}>
-                <Td>{capitalize(TankType[data.locationType])}</Td>
+                <Td>{t("enums.tankType." + data.locationType)}</Td>
                 <Td>{new Date(data.expectedDeliveryDate).toLocaleDateString()}</Td>
                 <Td>{data.startAmount}</Td>
                 <Td>{data.endAmount}</Td>
