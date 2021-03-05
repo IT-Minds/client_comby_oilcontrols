@@ -141,7 +141,7 @@ const LocationList: FC<Props> = ({ data }) => {
               {dat.address} {dat.addressExtra}
             </Td>
             <Td>{dat.regionId}</Td>
-            <Td>{RefillSchedule[dat.schedule]}</Td>
+            <Td>{t("enums.refillSchedule." + dat.schedule)}</Td>
             <Td>
               <HStack>
                 <EditLocationTriggerBtn data={dat} />
