@@ -73,11 +73,8 @@ namespace Application.Locations.Queries.GetLocations
 
         var query = request.PreparePage(
           _context.Locations
-          .Include(x=> x.Debtors)
-          .Include(x => x.FuelTank)
-          .Include(x => x.Refills)
-          .Include(x => x.Region)
-            .ThenInclude(x => x.DailyTemperatures)
+            .Include(x=> x.Debtors)
+            .Include(x => x.FuelTank)
         );
         var pagesRemaining = await request.PagesRemaining(query);
         var needle = request.GetNewNeedle(query);
