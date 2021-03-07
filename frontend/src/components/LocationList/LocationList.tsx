@@ -1,6 +1,18 @@
 import "ts-array-ext/distinct";
 
-import { HStack, Spacer, Spinner, Table, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
+import {
+  Fade,
+  HStack,
+  Spacer,
+  Spinner,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr
+} from "@chakra-ui/react";
 import RefillModalBtn from "components/FillOutRefillForm/RefillModalBtn";
 import EditLocationTriggerBtn from "components/LocaleMetaDataForm/EditLocationTriggerBtn";
 import ViewLocationHistoryModalBtn from "components/LocationHistory/ViewLocationHistoryModalBtn";
@@ -34,7 +46,7 @@ const LocationList: FC<Props> = ({ data }) => {
   const [origData, setOrigData] = useState<LocationDetailsIdDto[]>([]);
   const [filteredData, setFilteredData] = useState<LocationDetailsIdDto[]>([]);
 
-  const { renderIndex } = useLazyScrollLoad({ maxItems: filteredData.length, renderInterval: 20 });
+  const { renderIndex } = useLazyScrollLoad({ maxItems: filteredData.length, renderInterval: 50 });
 
   const orderRefill = useCallback(async (orderRefillForm: IOrderRefillCommand) => {
     const client = await genRefillClient();
@@ -148,15 +160,17 @@ const LocationList: FC<Props> = ({ data }) => {
               <Td>{dat.regionId}</Td>
               <Td>{t("enums.refillSchedule." + dat.schedule)}</Td>
               <Td>
-                <HStack>
-                  <EditLocationTriggerBtn data={dat} />
+                <Fade in={true}>
+                  <HStack>
+                    <EditLocationTriggerBtn data={dat} />
 
-                  <ViewLocationHistoryModalBtn data={dat} />
+                    <ViewLocationHistoryModalBtn data={dat} />
 
-                  <OrderRefillComp locationId={dat.id} submitCallback={orderRefill} />
+                    <OrderRefillComp locationId={dat.id} submitCallback={orderRefill} />
 
-                  <RefillModalBtn refill={dat} />
-                </HStack>
+                    <RefillModalBtn refill={dat} />
+                  </HStack>
+                </Fade>
               </Td>
             </Tr>
           ))}

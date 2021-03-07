@@ -6,6 +6,7 @@ import {
   DrawerCloseButton,
   DrawerContent,
   DrawerOverlay,
+  forwardRef,
   HStack,
   IconButton,
   useBreakpointValue,
@@ -20,7 +21,7 @@ import { useRouter } from "next/router";
 import { FC, useContext, useEffect } from "react";
 import { MdSort } from "react-icons/md";
 
-const LayoutDesktop: FC = ({ children }) => {
+const LayoutDesktop = forwardRef(({ children }, ref) => {
   const displaymenu = useBreakpointValue({ base: false, md: true });
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -101,6 +102,7 @@ const LayoutDesktop: FC = ({ children }) => {
         )}
 
         <Container
+          ref={ref}
           maxW="unset"
           w="100%"
           h="100%"
@@ -114,6 +116,6 @@ const LayoutDesktop: FC = ({ children }) => {
       </HStack>
     </>
   );
-};
+});
 
 export default LayoutDesktop;
