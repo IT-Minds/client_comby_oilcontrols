@@ -1,6 +1,6 @@
 import "ts-array-ext/distinct";
 
-import { HStack, Spacer, Table, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
+import { HStack, Spacer, Spinner, Table, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
 import RefillModalBtn from "components/FillOutRefillForm/RefillModalBtn";
 import EditLocationTriggerBtn from "components/LocaleMetaDataForm/EditLocationTriggerBtn";
 import ViewLocationHistoryModalBtn from "components/LocationHistory/ViewLocationHistoryModalBtn";
@@ -8,6 +8,7 @@ import OrderRefillComp from "components/OrderRefill/OrderRefillComp";
 import QuerySingleSelectBtn from "components/SortFilter/QuerySingleSelectBtn";
 import QuerySortBtn, { Direction } from "components/SortFilter/QuerySortBtn";
 import { useColors } from "hooks/useColors";
+import { useLazyScrollLoad } from "hooks/useLazyScrollLoad";
 import { useRouter } from "next/router";
 import { useI18n } from "next-rosetta";
 import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
@@ -16,8 +17,7 @@ import {
   ILocationDetailsIdDto,
   IOrderRefillCommand,
   LocationDetailsIdDto,
-  OrderRefillCommand,
-  RefillSchedule
+  OrderRefillCommand
 } from "services/backend/nswagts";
 import DropdownType from "types/DropdownType";
 
@@ -33,6 +33,8 @@ const LocationList: FC<Props> = ({ data }) => {
 
   const [origData, setOrigData] = useState<LocationDetailsIdDto[]>([]);
   const [filteredData, setFilteredData] = useState<LocationDetailsIdDto[]>([]);
+
+  const { renderIndex } = useLazyScrollLoad({ maxItems: filteredData.length, renderInterval: 20 });
 
   const orderRefill = useCallback(async (orderRefillForm: IOrderRefillCommand) => {
     const client = await genRefillClient();
@@ -131,30 +133,40 @@ const LocationList: FC<Props> = ({ data }) => {
         </Tr>
       </Thead>
       <Tbody>
-        {filteredData.sort(sort).map(dat => (
-          <Tr
-            key={dat.id}
-            _hover={{
-              bg: hoverBg
-            }}>
-            <Td>
-              {dat.address} {dat.addressExtra}
-            </Td>
-            <Td>{dat.regionId}</Td>
-            <Td>{t("enums.refillSchedule." + dat.schedule)}</Td>
-            <Td>
-              <HStack>
-                <EditLocationTriggerBtn data={dat} />
+        {filteredData
+          .sort(sort)
+          .slice(0, renderIndex)
+          .map(dat => (
+            <Tr
+              key={dat.id}
+              _hover={{
+                bg: hoverBg
+              }}>
+              <Td>
+                {dat.address} {dat.addressExtra}
+              </Td>
+              <Td>{dat.regionId}</Td>
+              <Td>{t("enums.refillSchedule." + dat.schedule)}</Td>
+              <Td>
+                <HStack>
+                  <EditLocationTriggerBtn data={dat} />
 
-                <ViewLocationHistoryModalBtn data={dat} />
+                  <ViewLocationHistoryModalBtn data={dat} />
 
-                <OrderRefillComp locationId={dat.id} submitCallback={orderRefill} />
+                  <OrderRefillComp locationId={dat.id} submitCallback={orderRefill} />
 
-                <RefillModalBtn refill={dat} />
-              </HStack>
+                  <RefillModalBtn refill={dat} />
+                </HStack>
+              </Td>
+            </Tr>
+          ))}
+        {renderIndex < filteredData.length && (
+          <Tr>
+            <Td colSpan={4}>
+              <Spinner />
             </Td>
           </Tr>
-        ))}
+        )}
       </Tbody>
     </Table>
   );

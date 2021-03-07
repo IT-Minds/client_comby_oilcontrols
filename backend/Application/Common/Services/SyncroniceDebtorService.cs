@@ -48,22 +48,23 @@ namespace Application.Common.Services
         .Where(x => uniDebtorIds.Contains(x.UnicontaId))
         .ToListAsync();
 
-      foreach (var debtor in uniDebtors)
+      foreach (var uniDebtor in uniDebtors)
       {
-        var debtorExists = dbDebtors.Where(x => x.UnicontaId == debtor.RowId).FirstOrDefault();
-        if (debtorExists == null)
+        var debtor = dbDebtors.Where(x => x.UnicontaId == uniDebtor.RowId).FirstOrDefault();
+        if (debtor == null)
         {
-          debtorExists = new Debtor
+          debtor = new Debtor
           {
-            UnicontaId = debtor.RowId,
+            UnicontaId = uniDebtor.RowId,
           };
+          _context.Debtors.Add(debtor);
+        } else {
+          _context.Debtors.Update(debtor);
         }
-        debtorExists.Blocked = debtor.Blocked;
-        debtorExists.AccountNumber = debtor.AccountNumber;
-        debtorExists.Name = debtor.Name;
-        debtorExists.GLN = debtor.GLN;
-
-        _context.Debtors.Update(debtorExists);
+        debtor.Blocked = uniDebtor.Blocked;
+        debtor.AccountNumber = uniDebtor.AccountNumber;
+        debtor.Name = uniDebtor.Name;
+        debtor.GLN = uniDebtor.GLN;
       }
 
       await _context.SaveChangesAsync(cancellationToken);

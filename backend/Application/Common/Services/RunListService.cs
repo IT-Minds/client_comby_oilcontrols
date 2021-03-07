@@ -99,21 +99,20 @@ namespace Application.Common.Services
 
       var trucks = await _context.Trucks
         .Include(r => r.Refills)
-      .ToListAsync();
+          .ThenInclude(r => r.Location)
+        .ToListAsync();
 
-      var seed = (int)(DateTime.Now.Ticks / 1e7);
-      System.Console.WriteLine("SyncLocationsToRefills Seed: " + seed);
-      var rand = new Random(seed);
-      trucks = trucks.OrderBy(x => rand.Next()).ToList();
-
-      var truckCount = 0;
       foreach (var refill in refills)
       {
-        if (truckCount >= trucks.Count())
-        {
-          truckCount = 0;
+        var truck = trucks
+          .FirstOrDefault(truck => truck.Refills
+            .Any(r => r.RefillState == RefillState.ASSIGNED && r.Location.Address == refill.Location.Address)
+          );
+
+        if (truck == null) {
+          truck = trucks.OrderBy(x => x.Refills.Count()).First();
         }
-        var truck = trucks[truckCount++];
+
         refill.Truck = truck;
         _context.AssignedRefills.Add(refill);
       }

@@ -21,9 +21,9 @@ namespace Application.Locations
     public DateTime ExpectedDeliveryDate { get; set; }
     public bool DebtorBlocked { get; set; }
     public bool CouponRequired { get; set; }
-
     public string BstNumber { get; set; }
     public string Comments { get; set; }
+    public bool HasImage { get; set; }
 
 
     public void Mapping(Profile profile)
@@ -50,6 +50,8 @@ namespace Application.Locations
       .ForMember(dest => dest.BstNumber, map => map.MapFrom(from => from.Location.TankNumber))
 
       .ForMember(dest => dest.Comments, map => map.MapFrom(from => from.Location.Comments))
+
+      .ForMember(dest => dest.HasImage, map => map.MapFrom(from => from.Location.HasImage))
 
       ;
     }

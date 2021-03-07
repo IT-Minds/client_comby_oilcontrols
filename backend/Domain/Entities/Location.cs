@@ -45,5 +45,7 @@ namespace Domain.Entities
     public ICollection<LocationDebtorHistory> DebtorsHistory { get; set; }
 
     public DateTime? InactiveSince { get; set; }
+
+    public bool HasImage { get; set; }
   }
 }

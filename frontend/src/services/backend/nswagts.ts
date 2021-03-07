@@ -5239,6 +5239,7 @@ export class LocationRefillDto implements ILocationRefillDto {
     couponRequired?: boolean;
     bstNumber?: string | null;
     comments?: string | null;
+    hasImage?: boolean;
 
     constructor(data?: ILocationRefillDto) {
         if (data) {
@@ -5264,6 +5265,7 @@ export class LocationRefillDto implements ILocationRefillDto {
             this.couponRequired = _data["couponRequired"] !== undefined ? _data["couponRequired"] : <any>null;
             this.bstNumber = _data["bstNumber"] !== undefined ? _data["bstNumber"] : <any>null;
             this.comments = _data["comments"] !== undefined ? _data["comments"] : <any>null;
+            this.hasImage = _data["hasImage"] !== undefined ? _data["hasImage"] : <any>null;
         }
     }
 
@@ -5289,6 +5291,7 @@ export class LocationRefillDto implements ILocationRefillDto {
         data["couponRequired"] = this.couponRequired !== undefined ? this.couponRequired : <any>null;
         data["bstNumber"] = this.bstNumber !== undefined ? this.bstNumber : <any>null;
         data["comments"] = this.comments !== undefined ? this.comments : <any>null;
+        data["hasImage"] = this.hasImage !== undefined ? this.hasImage : <any>null;
         return data; 
     }
 }
@@ -5307,6 +5310,7 @@ export interface ILocationRefillDto {
     couponRequired?: boolean;
     bstNumber?: string | null;
     comments?: string | null;
+    hasImage?: boolean;
 }
 
 export class CreateTruckRefillCommand implements ICreateTruckRefillCommand {

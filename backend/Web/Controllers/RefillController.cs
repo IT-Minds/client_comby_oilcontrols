@@ -59,6 +59,7 @@ namespace Web.Controllers
     }
 
     [HttpGet("{id}/image")]
+    [ResponseCache(Duration = 3600)]
     public async Task<List<ImageResponseDto>> GetCouponImage([FromRoute] int id)
     {
       return await Mediator.Send(new GetCouponImageQuery

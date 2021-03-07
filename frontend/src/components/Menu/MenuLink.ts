@@ -63,7 +63,7 @@ export const testLinks: MenuLink[] = [
     access: Action.GET_DEBTOR
   },
   {
-    id: "debtor",
+    id: "temperature",
     title: "menu.temperature.temperature",
     href: "/temperature",
 

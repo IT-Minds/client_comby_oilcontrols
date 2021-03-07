@@ -200,8 +200,8 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
               placeholder={t("localeMetaData.selectALocation") as string}
               onChange={e => updateLocalForm(e.target.value, "tankType")}
               value={localForm.tankType}>
-              {Object.entries(TankTypeRecord).map(([, b]) => (
-                <option key={b} value={b}>
+              {Object.entries(TankTypeRecord).map(([a, b]) => (
+                <option key={a} value={b}>
                   {t("enums.tankType." + b)}
                 </option>
               ))}
@@ -376,8 +376,8 @@ const LocaleMetaDataComp: FC<Props> = ({ submitCallback, localeMetaData }) => {
               onChange={e => updateLocalForm(e.target.value, "fuelType")}
               value={localForm.fuelType}
               placeholder={t("localeMetaData.selectFuelType") as string}>
-              {Object.entries(FuelTypeRecord).map(([, b]) => (
-                <option key={b} value={b}>
+              {Object.entries(FuelTypeRecord).map(([a, b]) => (
+                <option key={a} value={b}>
                   {t("enums.fuelType." + b)}
                 </option>
               ))}

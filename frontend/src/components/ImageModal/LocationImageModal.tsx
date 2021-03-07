@@ -13,10 +13,12 @@ const LocationImageModal: FC<Props> = ({ location }) => {
   const [base64, setBase64] = useState<string>(null);
 
   useEffectAsync(async () => {
-    const client = await genLocationClient();
-    const image = await client.getLocationImage(location.locationId);
+    if (location.hasImage) {
+      const client = await genLocationClient();
+      const image = await client.getLocationImage(location.locationId);
 
-    if (image[0]?.stream) setBase64("data:text/plain;base64," + image[0]?.stream);
+      if (image[0]?.stream) setBase64("data:text/plain;base64," + image[0]?.stream);
+    }
   }, [location]);
 
   return base64 && <ImageModal image={base64} />;

@@ -35,8 +35,8 @@ namespace Application.Locations.Commands.AddLocationImage
 
       public async Task<string> Handle(AddLocationImageCommand request, CancellationToken cancellationToken)
       {
-        var refill = await _context.Locations.FindAsync(request.LocationId);
-        if (refill == null)
+        var location = await _context.Locations.FindAsync(request.LocationId);
+        if (location == null)
         {
           throw new NotFoundException("No location with ID: " + request.LocationId);
         }
@@ -65,6 +65,9 @@ namespace Application.Locations.Commands.AddLocationImage
           throw new ForbiddenAccessException();
         }
 
+        location.HasImage = true;
+        _context.Locations.Update(location);
+        await _context.SaveChangesAsync(cancellationToken);
 
         return filename;
       }

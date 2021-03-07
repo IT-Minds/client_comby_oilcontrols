@@ -52,6 +52,7 @@ const RefillModalBtn: FC<Props> = ({ refill }) => {
                 id: x.id,
                 name: x.couponNumber
               }))}
+              requireImage={refill.couponRequired}
             />
           </ModalBody>
         </ModalContent>

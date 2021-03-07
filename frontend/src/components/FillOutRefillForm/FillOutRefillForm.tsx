@@ -18,9 +18,10 @@ import { RefillForm } from "./RefillForm";
 type Props = {
   submitCallback: (reportForm: RefillForm) => void;
   couponNumbers?: DropdownType[];
+  requireImage: boolean;
 };
 
-const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) => {
+const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [], requireImage }) => {
   const { t } = useI18n<Locale>();
   const [localReportForm, setLocalReportForm] = useState<RefillForm>({
     startliters: 0,
@@ -49,12 +50,19 @@ const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) =>
     });
   }, []);
 
-  const handleSubmit = useCallback((event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    logger.debug("Submitting form ReportingComp");
-    submitCallback(localReportForm);
-    setFormSubmitAttempts(0);
-  }, []);
+  const handleSubmit = useCallback(
+    (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      if (requireImage && !localReportForm.image) {
+        return;
+      }
+
+      logger.debug("Submitting form ReportingComp");
+      submitCallback(localReportForm);
+      setFormSubmitAttempts(0);
+    },
+    [localReportForm]
+  );
 
   return (
     <Container>
@@ -162,7 +170,11 @@ const FillOutRefillForm: FC<Props> = ({ submitCallback, couponNumbers = [] }) =>
           </FormControl>
 
           <HStack justifyContent="space-between" w="100%">
-            <FormControl id="photo" w="unset">
+            <FormControl
+              id="photo"
+              w="unset"
+              isInvalid={formSubmitAttempts > 0 && requireImage}
+              isRequired={requireImage}>
               {localReportForm.image.length > 0 ? (
                 <Button onClick={onOpen} rightIcon={<MdRemoveRedEye />}>
                   {t("mytruck.refill.viewImage")}

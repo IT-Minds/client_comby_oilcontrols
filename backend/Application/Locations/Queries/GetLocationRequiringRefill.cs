@@ -42,8 +42,7 @@ namespace Application.Locations.Queries
             .ThenInclude(l => l.Debtors)
               .ThenInclude(l => l.Debtor)
           .Where(x => x.Location.InactiveSince == null || x.Location.InactiveSince >= DateTime.Now)
-          .Where(r => r.TruckId == request.TruckId)
-          .Where(r => r.RefillState == RefillState.ASSIGNED)
+          .Where(r => r.TruckId == request.TruckId && r.RefillState == RefillState.ASSIGNED)
           .ToListAsync();
 
         return refillDtos.Select(x => _mapper.Map<LocationRefillDto>(x)).ToList();

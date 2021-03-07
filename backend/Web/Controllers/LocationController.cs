@@ -147,6 +147,7 @@ namespace Web.Controllers
     }
 
     [HttpGet("{id}/image")]
+    [ResponseCache(Duration = 43200)]
     public async Task<List<ImageResponseDto>> GetLocationImage([FromRoute] int id)
     {
       return await Mediator.Send(new GetLocationImageQuery

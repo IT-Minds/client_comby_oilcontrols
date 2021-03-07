@@ -1,16 +1,16 @@
-import { HStack, IconButton, Spacer, Table, useBreakpointValue } from "@chakra-ui/react";
+import { HStack, IconButton, Spacer, Spinner, Table, useBreakpointValue } from "@chakra-ui/react";
 import { Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
 import RefillModalBtn from "components/FillOutRefillForm/RefillModalBtn";
 import LocationImageModal from "components/ImageModal/LocationImageModal";
 import QuerySortBtn, { Direction } from "components/SortFilter/QuerySortBtn";
 import { TruckContext } from "contexts/TruckContext";
+import { useLazyScrollLoad } from "hooks/useLazyScrollLoad";
 import { useRouter } from "next/router";
 import { useI18n } from "next-rosetta";
-import { FC, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { FC, useCallback, useContext, useRef, useState } from "react";
 import { MdPrint } from "react-icons/md";
 import { useReactToPrint } from "react-to-print";
-import { ILocationRefillDto, RefillSchedule } from "services/backend/nswagts";
-import { capitalize } from "utils/capitalizeAnyString";
+import { ILocationRefillDto } from "services/backend/nswagts";
 
 const defaultSort = (a: ILocationRefillDto, b: ILocationRefillDto) =>
   a.refillId > b.refillId ? 1 : -1;
@@ -23,10 +23,11 @@ const RunListTable: FC = () => {
     base: 1,
     sm: 2,
     md: 3,
-    xl: 4
+    xl: 8
   });
 
   const { refills, truck } = useContext(TruckContext);
+  const { renderIndex } = useLazyScrollLoad({ maxItems: refills.length, renderInterval: 20 });
 
   const [sort, setSort] = useState<(a: ILocationRefillDto, b: ILocationRefillDto) => number>(
     () => defaultSort
@@ -151,25 +152,35 @@ const RunListTable: FC = () => {
         </Tr>
       </Thead>
       <Tbody>
-        {refills.sort(sort).map(row => (
-          <Tr key={row.refillId}>
-            <Td hidden={!isPrinting && cols < 4}>{row.bstNumber}</Td>
-            <Td hidden={!isPrinting && cols < 4}>{row.comments}</Td>
-            <Td hidden={!isPrinting && cols < 4}>{row.debtorBlocked.toString()}</Td>
-            <Td>
-              {row.address} {row.addressExtra}
-            </Td>
-            <Td hidden={!isPrinting && cols < 3}>{t("enums.refillSchedule." + row.schedule)}</Td>
-            <Td hidden={!isPrinting && cols < 2}>{t("enums.fuelType." + row.fuelType)}</Td>
-            <Td>{row.expectedDeliveryDate.toLocaleDateString(locale)}</Td>
-            <Td pl="0" hidden={isPrinting}>
-              <HStack float="right">
-                <RefillModalBtn refill={row} />
-                <LocationImageModal location={row} />
-              </HStack>
+        {refills
+          .sort(sort)
+          .slice(0, renderIndex)
+          .map(row => (
+            <Tr key={row.refillId}>
+              <Td hidden={!isPrinting && cols < 4}>{row.bstNumber}</Td>
+              <Td hidden={!isPrinting && cols < 4}>{row.comments}</Td>
+              <Td hidden={!isPrinting && cols < 4}>{row.debtorBlocked.toString()}</Td>
+              <Td>
+                {row.address} {row.addressExtra}
+              </Td>
+              <Td hidden={!isPrinting && cols < 3}>{t("enums.refillSchedule." + row.schedule)}</Td>
+              <Td hidden={!isPrinting && cols < 2}>{t("enums.fuelType." + row.fuelType)}</Td>
+              <Td>{row.expectedDeliveryDate.toLocaleDateString(locale)}</Td>
+              <Td pl="0" hidden={isPrinting}>
+                <HStack float="right">
+                  <RefillModalBtn refill={row} />
+                  <LocationImageModal location={row} />
+                </HStack>
+              </Td>
+            </Tr>
+          ))}
+        {renderIndex < refills.length && (
+          <Tr>
+            <Td colSpan={cols}>
+              <Spinner />
             </Td>
           </Tr>
-        ))}
+        )}
       </Tbody>
     </Table>
   );
