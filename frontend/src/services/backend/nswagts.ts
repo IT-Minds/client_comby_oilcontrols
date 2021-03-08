@@ -4728,7 +4728,8 @@ export interface IPageResultOfRoleIdDtoAndString {
 export enum Interval {
     WEEK = 0,
     MONTH = 1,
-    YEAR = 2,
+    QUARTER = 2,
+    YEAR = 3,
 }
 
 export class FuelConsumptionDto implements IFuelConsumptionDto {

@@ -422,9 +422,10 @@ export const table: Locale = {
       "3": "Andet"
     },
     interval: {
-      "0": "Måned",
-      "1": "Kvartal",
-      "2": "År"
+      "0": "Uge",
+      "1": "Måned",
+      "2": "Kvartal",
+      "3": "År"
     },
     tankType: {
       "0": "Bygning",

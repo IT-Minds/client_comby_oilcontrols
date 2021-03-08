@@ -112,6 +112,9 @@ namespace Application.Common.Services
         case Domain.Enums.Interval.YEAR:
           intervalEnd = intervalStart.AddYears(1);
           break;
+        case Domain.Enums.Interval.QUARTER:
+          intervalEnd = intervalStart.AddMonths(3);
+          break;
       }
 
       List<FuelConsumptionDto> result = new List<FuelConsumptionDto>();
@@ -157,6 +160,9 @@ namespace Application.Common.Services
             break;
           case Domain.Enums.Interval.YEAR:
             intervalEnd = intervalStart.AddYears(1);
+            break;
+          case Domain.Enums.Interval.QUARTER:
+            intervalEnd = intervalStart.AddMonths(3);
             break;
         }
         if (intervalEnd > endDate)
